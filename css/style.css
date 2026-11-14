@@ -454,3 +454,36 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .m .draw { stroke-dashoffset: 0; }
 }
+
+/* ---------- percorso dei mondi: una strada sola, dal facile al difficile ---------- */
+.worlds.path { display: flex; flex-direction: column; gap: 14px; max-width: 680px; margin: 18px auto 0; }
+.pstep { position: relative; padding-left: 54px; }
+.pstep::before { content: ""; position: absolute; left: 19px; top: 50%; height: calc(100% + 14px); width: 2px; background: repeating-linear-gradient(to bottom, var(--edge) 0 6px, transparent 6px 12px); }
+.pstep.done::before { background: var(--c); opacity: .7; }
+.pstep.last::before { display: none; }
+.pnode {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; z-index: 1;
+  display: flex; align-items: center; justify-content: center; font: 600 .95rem var(--f-num); color: var(--muted);
+  background: var(--night); box-shadow: inset 0 0 0 2px var(--edge);
+}
+.pnode svg { width: 20px; height: 20px; }
+.pstep.done .pnode { background: var(--c); color: var(--night); box-shadow: none; }
+.pstep.here .pnode { color: var(--c); box-shadow: inset 0 0 0 2.5px var(--c); animation: node-pulse 2s ease-out infinite; }
+@keyframes node-pulse { 0% { box-shadow: inset 0 0 0 2.5px var(--c), 0 0 0 0 color-mix(in srgb, var(--c) 55%, transparent); } 80%, 100% { box-shadow: inset 0 0 0 2.5px var(--c), 0 0 0 14px transparent; } }
+.phere { position: absolute; left: 54px; top: -9px; z-index: 2; font: 600 .7rem var(--f-num); letter-spacing: .08em; text-transform: uppercase; color: var(--night); background: var(--c); border-radius: 99px; padding: .2em .65em; }
+.world.here { box-shadow: var(--hi), var(--lift), inset 0 0 0 1.5px color-mix(in srgb, var(--c) 60%, transparent); }
+.wdiff { display: flex; align-items: center; gap: .5em; margin-top: .35em; font-size: .78rem; }
+.wdiff .wdots { display: inline-flex; gap: 3px; }
+.wdiff i { width: 7px; height: 7px; border-radius: 50%; background: var(--edge); }
+.wdiff i.on { background: var(--c); }
+.world.locked .wdiff i.on { background: var(--muted); }
+.worlds.path > * { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) both; }
+@media (max-width: 560px) {
+  .pstep { padding-left: 40px; }
+  .pstep::before { left: 14px; }
+  .pnode { width: 30px; height: 30px; font-size: .8rem; }
+  .pnode svg { width: 16px; height: 16px; }
+  .phere { left: 40px; }
+  .world .wicon, .world .wicon svg.m { width: 64px; height: 64px; }
+}
+@media (prefers-reduced-motion: reduce) { .pstep.here .pnode { animation: none; } }

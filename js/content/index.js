@@ -25,7 +25,7 @@ export const ZONES = { F01, F02, M01, M02, M03 };
 
 export const WORLDS = [
   {
-    id: 'laboratorio', n: 1, name: 'Il Laboratorio', place: 'Il laboratorio di partenza',
+    id: 'laboratorio', n: 1, name: 'Il Laboratorio', field: 'Metodo e misure', place: 'Il laboratorio di partenza',
     color: 'var(--mint)', mascot: 'ampolla',
     zones: ['F01', 'F02'], soon: ['F03 Grafici e vettori'], requires: [],
     intro: {
@@ -35,7 +35,7 @@ export const WORLDS = [
     },
   },
   {
-    id: 'pista', n: 2, name: 'La Pista', place: 'Il circuito delle gare',
+    id: 'pista', n: 2, name: 'La Pista', field: 'Il moto', place: 'Il circuito delle gare',
     color: 'var(--orange)', mascot: 'tic',
     zones: ['M01', 'M02', 'M03'], soon: [], requires: ['laboratorio'],
     intro: {
@@ -44,16 +44,27 @@ export const WORLDS = [
       c: 'Sono Tic, il cronometro della Pista. Qui c’è il moto, da Galileo ai giorni nostri: perché le cose cadono come cadono e i proiettili disegnano parabole.',
     },
   },
-  { id: 'officina', n: 3, name: 'L’Officina', place: 'Carrelli, rampe e montagne russe', color: 'var(--coral)', mascot: 'mela', soon: ['M04 Forze e Newton', 'M05 Attrito', 'M06 Lavoro ed energia', 'M07 Urti', 'M08 Leve'], requires: ['pista'] },
-  { id: 'oceano', n: 4, name: 'L’Oceano', place: 'Porto e fondali', color: 'var(--sky)', mascot: 'goccia', soon: ['FL01 Pressione', 'FL02 Archimede', 'FL03 Fluidi e volo'], requires: ['officina'] },
-  { id: 'valle', n: 5, name: 'La Valle delle Onde', place: 'Altalene, corde e strumenti', color: 'var(--mint)', mascot: 'boing', soon: ['M10 Pendolo e molla', 'O01 Onde', 'O02 Suono', 'O03 Doppler'], requires: ['officina'] },
-  { id: 'vulcano', n: 6, name: 'Il Vulcano', place: 'Dal ghiacciaio alla lava', color: 'var(--coral)', mascot: 'termo', soon: ['T01 Temperatura e calore', 'T02 Stati della materia', 'T03-T06'], requires: ['laboratorio'] },
-  { id: 'centrale', n: 7, name: 'La Centrale', place: 'Elettricità e magneti', color: 'var(--sun)', mascot: 'lampo', soon: ['E01 Cariche', 'E03 Circuiti', 'E04 Magnetismo', 'E02, E05, E06'], requires: ['officina'] },
-  { id: 'prisma', n: 8, name: 'Il Prisma', place: 'Specchi, lenti e colori', color: 'var(--pink)', mascot: 'iride', soon: ['OT01 Luce e riflessione', 'OT03 Colori', 'OT02, OT04'], requires: ['laboratorio'] },
-  { id: 'cielo', n: 9, name: 'Il Cielo', place: 'Osservatorio e sistema solare', color: '#a9b8ff', mascot: 'saturnino', soon: ['M09 Gravitazione e orbite', 'A01 Sistema solare', 'A02 Cosmologia'], requires: ['officina', 'prisma'] },
-  { id: 'abisso', n: 10, name: 'L’Abisso Quantico', place: 'Dentro l’atomo', color: 'var(--sky)', mascot: 'elettra', soon: ['Q02 Atomo e livelli', 'Q01, Q03-Q07'], requires: ['centrale'] },
-  { id: 'frontiera', n: 11, name: 'La Frontiera', place: 'Vicino alla velocità della luce', color: 'var(--sun)', mascot: 'attimo', buddy: 'lux', soon: ['R01 Relatività ristretta', 'R02 Buchi neri'], requires: ['cielo', 'centrale'] },
-  { id: 'casa', n: 12, name: 'Pianeta Casa', place: 'L’energia di una città', color: 'var(--green)', mascot: 'carica', soon: ['X01 Energia, clima e ambiente'], requires: ['officina', 'vulcano', 'centrale'] },
+  // Dal più semplice al più difficile: ogni mondo è un campo della fisica e si apre solo dopo aver finito quello prima.
+  { id: 'officina', n: 3, name: 'L’Officina', field: 'Forze ed energia', place: 'Carrelli, rampe e montagne russe', color: 'var(--coral)', mascot: 'mela',
+    soon: ['M04 Le forze e Newton', 'M05 Attrito e piani inclinati', 'M06 Lavoro ed energia', 'M07 Quantità di moto e urti', 'M08 Leve e rotazioni'], requires: ['pista'] },
+  { id: 'oceano', n: 4, name: 'L’Oceano', field: 'I fluidi', place: 'Porto e fondali', color: 'var(--sky)', mascot: 'goccia',
+    soon: ['FL01 La pressione', 'FL02 Galleggiare: Archimede', 'FL03 Fluidi in movimento e volo'], requires: ['officina'] },
+  { id: 'vulcano', n: 5, name: 'Il Vulcano', field: 'Il calore', place: 'Dal ghiacciaio alla lava', color: 'var(--coral)', mascot: 'termo',
+    soon: ['T01 Temperatura e calore', 'T02 Stati della materia', 'T03 I gas', 'T04 Motori ed entropia'], requires: ['oceano'] },
+  { id: 'valle', n: 6, name: 'La Valle delle Onde', field: 'Onde e suono', place: 'Altalene, corde e strumenti', color: 'var(--mint)', mascot: 'boing',
+    soon: ['O01 Molle e oscillazioni', 'O02 Le onde', 'O03 Il suono', 'O04 Risonanza ed effetto Doppler'], requires: ['vulcano'] },
+  { id: 'prisma', n: 7, name: 'Il Prisma', field: 'La luce', place: 'Specchi, lenti e colori', color: 'var(--pink)', mascot: 'iride',
+    soon: ['OT01 Raggi e riflessione', 'OT02 Rifrazione e lenti', 'OT03 Colori e spettro', 'OT04 La luce è un’onda'], requires: ['valle'] },
+  { id: 'cielo', n: 8, name: 'Il Cielo', field: 'Gravità e spazio', place: 'Osservatorio e sistema solare', color: '#a9b8ff', mascot: 'saturnino',
+    soon: ['A01 La gravitazione universale', 'A02 Orbite e leggi di Keplero', 'A03 Il sistema solare', 'A04 Stelle e universo'], requires: ['prisma'] },
+  { id: 'centrale', n: 9, name: 'La Centrale', field: 'Elettricità e magnetismo', place: 'Cariche, circuiti e magneti', color: 'var(--sun)', mascot: 'lampo',
+    soon: ['E01 Cariche e campi', 'E02 Corrente e circuiti', 'E03 I magneti', 'E04 Induzione e generatori'], requires: ['cielo'] },
+  { id: 'abisso', n: 10, name: 'L’Abisso Quantico', field: 'Il mondo dei quanti', place: 'Dentro l’atomo', color: 'var(--sky)', mascot: 'elettra',
+    soon: ['Q01 Dentro l’atomo', 'Q02 Fotoni e livelli di energia', 'Q03 Onde di materia', 'Q04 Nuclei e radioattività'], requires: ['centrale'] },
+  { id: 'frontiera', n: 11, name: 'La Frontiera', field: 'La relatività', place: 'Vicino alla velocità della luce', color: 'var(--sun)', mascot: 'attimo', buddy: 'lux',
+    soon: ['R01 La luce ha un limite', 'R02 Tempo e spazio elastici', 'R03 E = mc²', 'R04 Buchi neri'], requires: ['abisso'] },
+  { id: 'casa', n: 12, name: 'Pianeta Casa', field: 'Energia e pianeta', place: 'L’energia di una città', color: 'var(--green)', mascot: 'carica',
+    soon: ['X01 Da dove viene l’energia', 'X02 Clima ed effetto serra', 'X03 La città sostenibile'], requires: ['frontiera'] },
 ];
 
 export const GRADES = [
@@ -62,11 +73,11 @@ export const GRADES = [
   { name: 'Galileo', world: 'pista', desc: 'Galileo Galilei (1564-1642) capì che, senza aria, tutto cade allo stesso modo e che il moto si può misurare.' },
   { name: 'Newton', world: 'officina', desc: 'In arrivo.' },
   { name: 'Archimede', world: 'oceano', desc: 'In arrivo.' },
-  { name: 'Hooke', world: 'valle', desc: 'In arrivo.' },
   { name: 'Kelvin', world: 'vulcano', desc: 'In arrivo.' },
-  { name: 'Faraday', world: 'centrale', desc: 'In arrivo.' },
+  { name: 'Hooke', world: 'valle', desc: 'In arrivo.' },
   { name: 'Huygens', world: 'prisma', desc: 'In arrivo.' },
   { name: 'Keplero', world: 'cielo', desc: 'In arrivo.' },
+  { name: 'Faraday', world: 'centrale', desc: 'In arrivo.' },
   { name: 'Bohr', world: 'abisso', desc: 'In arrivo.' },
   { name: 'Einstein', world: 'frontiera', desc: 'In arrivo.' },
   { name: 'Curie', world: 'casa', desc: 'Il traguardo finale.' },

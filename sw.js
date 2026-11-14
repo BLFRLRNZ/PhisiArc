@@ -1,6 +1,6 @@
 /* PhisiArc: funziona offline dopo la prima visita.
    I file dell'app si chiedono prima alla rete (così le novità arrivano subito) e, se manca, si usa la copia salvata. */
-const CACHE = 'phisiarc-v5';
+const CACHE = 'phisiarc-v6';
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './css/style.css',
   './js/app.js', './js/util.js', './js/state.js', './js/audio.js', './js/cast.js', './js/icons.js', './js/intro.js', './js/fx.js', './js/level.js',

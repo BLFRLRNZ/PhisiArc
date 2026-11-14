@@ -7,6 +7,7 @@ Si gioca nel browser, si installa come app e funziona anche offline.
 ## Cosa c'è in questa prima versione
 
 - **Due mondi giocabili** su dodici: **Il Laboratorio** (F01 Il metodo scientifico, F02 Grandezze e misure) e **La Pista** (M01 Posizione e velocità, M02 Accelerazione e caduta libera, M03 Proiettili). Gli altri dieci mondi sono già sulla mappa, con gli argomenti che arriveranno.
+- **Un percorso solo**: i dodici mondi sono in fila dal più semplice al più difficile, uno per campo della fisica, e ognuno si apre quando finisci il precedente. Il piano completo è in [docs/percorso.md](docs/percorso.md).
 - **Lo stesso ritmo in ogni zona**: due **Lezioni**, un **Prevedi** (scegli cosa succederà, poi guardi l'esperimento), un **Costruisci**, un **Ripasso** e il **Boss**.
 - **Tre lenti per età** sullo stesso percorso, scelte all'inizio e cambiabili quando vuoi:
   - **Esploratore** (6-11 anni): niente formule, poche parole, una voce che legge (🔊).

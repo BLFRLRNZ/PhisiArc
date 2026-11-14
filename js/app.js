@@ -57,29 +57,41 @@ function welcome() {
 
 // ---------- mappa dei mondi ----------
 function home() {
-  const list = WORLDS.map((w) => {
-    const ready = worldReady(w), open = ready && worldOpen(w), done = worldDone(w);
+  // Il percorso è una sola strada: ogni mondo è un campo della fisica e si apre quando finisci quello prima.
+  const here = WORLDS.find((w) => worldReady(w) && worldOpen(w) && !worldDone(w));
+  const list = WORLDS.map((w, i) => {
+    const ready = worldReady(w), open = ready && worldOpen(w), done = worldDone(w), cur = w === here;
     let total = 0, got = 0;
     if (ready) for (const z of w.zones) for (const l of ZONES[z].levels) { total++; if (S.done[l.id]) got++; }
-    const status = !ready ? 'In arrivo' : !open ? `Si apre dopo ${w.requires.map((r) => worldById(r).name).join(' e ')}` : done ? 'Completato' : `${got} di ${total} livelli`;
+    const prev = w.requires.map((r) => worldById(r).name).join(' e ');
+    const status = done ? 'Completato' : open ? `${got} di ${total} livelli` : !ready && worldOpen(w) ? 'In arrivo: lo stiamo costruendo' : `Si apre quando finisci ${prev}`;
+    const diff = Math.ceil((w.n / WORLDS.length) * 5);
     const body = h('div', { class: 'wbody' },
-      h('div', { class: 'wnum' }, `Mondo ${String(w.n).padStart(2, '0')}`),
+      h('div', { class: 'wnum' }, `Mondo ${String(w.n).padStart(2, '0')} · ${w.field}`),
       h('h3', {}, w.name),
       h('div', { class: 'muted small' }, w.place),
+      h('div', { class: 'wdiff', title: `Difficoltà ${diff} su 5` }, h('span', { class: 'muted' }, 'Difficoltà'), h('span', { class: 'wdots' }, ...[1, 2, 3, 4, 5].map((k) => h('i', { class: k <= diff ? 'on' : '' })))),
       ready ? h('div', { class: 'bar' }, h('span', { style: `width:${total ? (100 * got) / total : 0}%` })) : null,
       h('div', { class: 'small wstatus' }, status),
       !ready ? h('div', { class: 'small muted soon' }, w.soon.join(' · ')) : null);
     const who = [w.mascot, w.buddy].filter(Boolean).map((id) => charSVG(id)).join('');
     const icon = h('div', { class: 'wicon' + (w.buddy ? ' two' : ''), html: who });
     if (!open) icon.append(h('span', { class: 'wlock', html: IC.lock }));
-    const cls = 'world' + (open ? ' open' : ' locked') + (done ? ' done' : '') + (ready ? '' : ' soon-w');
-    return open ? h('a', { class: cls, style: `--c:${w.color}`, href: `#/mondo/${w.id}` }, icon, body) : hopOnTap(h('div', { class: cls, style: `--c:${w.color}` }, icon, body));
+    const cls = 'world' + (open ? ' open' : ' locked') + (done ? ' done' : '') + (ready ? '' : ' soon-w') + (cur ? ' here' : '');
+    const card = open ? h('a', { class: cls, style: `--c:${w.color}`, href: `#/mondo/${w.id}` }, icon, body) : hopOnTap(h('div', { class: cls, style: `--c:${w.color}` }, icon, body));
+    const node = h('div', { class: 'pnode' }, done ? h('span', { html: IC.check }) : String(w.n));
+    const step = h('div', { class: 'pstep' + (done ? ' done' : '') + (cur ? ' here' : '') + (open ? '' : ' locked') + (i === WORLDS.length - 1 ? ' last' : ''), style: `--c:${w.color}` },
+      node, cur ? h('div', { class: 'phere' }, 'Sei qui') : null, card);
+    return step;
   });
-  return h('div', { class: 'page' }, topbar(),
+  const doneN = WORLDS.filter(worldDone).length;
+  const page = h('div', { class: 'page' }, topbar(),
     h('div', { class: 'page-in' },
-      h('h1', {}, 'I mondi'),
-      h('p', { class: 'muted' }, `Stai giocando come ${LENSES[S.lens].name}. Ogni mondo è un’area della fisica: ci sono 12 mondi, i primi due sono già aperti.`),
-      h('div', { class: 'worlds' }, list)));
+      h('h1', {}, 'Il percorso'),
+      h('p', { class: 'muted' }, `Stai giocando come ${LENSES[S.lens].name}. Dodici mondi in fila, dal più semplice al più difficile: ognuno è un campo della fisica e si apre quando finisci quello prima. Mondi completati: ${doneN} di ${WORLDS.length}.`),
+      h('div', { class: 'worlds path' }, list)));
+  if (here && here.n > 2) requestAnimationFrame(() => page.querySelector('.pstep.here')?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
+  return page;
 }
 
 // ---------- un mondo: zone e livelli ----------
