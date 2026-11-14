@@ -9,7 +9,9 @@ const fresh = () => ({
   joule: 0,
   park: [],            // pezzi del parco costruiti
   seen: {},            // scene d'apertura già viste
-  settings: { sound: true, voice: false, intro: true },
+  aperti: {},          // mondi e zone già sbloccati: restano aperti anche se si aggiungono zone
+  introSeen: false,    // l'animazione d'apertura parte da sola solo la prima volta
+  settings: { sound: true, voice: false, intro: false },
 });
 
 function load() {
@@ -17,7 +19,10 @@ function load() {
     const o = JSON.parse(localStorage.getItem(KEY));
     if (!o) return fresh();
     const f = fresh();
-    return { ...f, ...o, settings: { ...f.settings, ...(o.settings || {}) } };
+    const st = { ...f, ...o, settings: { ...f.settings, ...(o.settings || {}) }, aperti: o.aperti || {} };
+    // Chi giocava prima di questa versione ha già visto l'animazione: d'ora in poi parte solo se la si chiede.
+    if (o.introSeen === undefined) { st.introSeen = true; st.settings.intro = false; }
+    return st;
   } catch {
     return fresh();
   }
@@ -43,6 +48,7 @@ export function importCode(code) {
   for (const [k, v] of Object.entries(o.done || {})) S.done[k] = Math.max(S.done[k] || 0, v);
   S.park = [...new Set([...S.park, ...(o.park || [])])];
   Object.assign(S.seen, o.seen || {});
+  Object.assign(S.aperti, o.aperti || {});
   if (!S.lens && o.lens) S.lens = o.lens;
   recomputeJoule();
   save();

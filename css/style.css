@@ -328,13 +328,13 @@ input[type=range] { flex: 1; accent-color: var(--sky); height: 30px; }
 .intro-enter.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 
 /* ---------- movimento dell'interfaccia: entrate morbide, stelle, spunte, coriandoli ---------- */
-@keyframes rise-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-.page-in > *, .welcome > *, .hero > * { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(14px); } }
+@keyframes fade-in { from { opacity: 0; } }
+.page-in > *, .welcome > *, .hero > * { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) backwards; }
 .page-in > :nth-child(2), .welcome > :nth-child(2), .hero > :nth-child(2) { animation-delay: .05s; }
 .page-in > :nth-child(3), .welcome > :nth-child(3), .hero > :nth-child(3) { animation-delay: .1s; }
 .page-in > :nth-child(n+4), .welcome > :nth-child(n+4) { animation-delay: .15s; }
-.worlds > *, .lvl-list > *, .lens-grid > *, .pieces > *, .grades > *, .zone { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) both; }
+.worlds > *, .lvl-list > *, .lens-grid > *, .pieces > *, .grades > *, .zone { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) backwards; }
 .worlds > :nth-child(1), .lvl-list > :nth-child(1), .lens-grid > :nth-child(1) { animation-delay: .08s; }
 .worlds > :nth-child(2), .lvl-list > :nth-child(2), .lens-grid > :nth-child(2) { animation-delay: .13s; }
 .worlds > :nth-child(3), .lvl-list > :nth-child(3), .lens-grid > :nth-child(3) { animation-delay: .18s; }
@@ -342,16 +342,16 @@ input[type=range] { flex: 1; accent-color: var(--sky); height: 30px; }
 .worlds > :nth-child(5), .lvl-list > :nth-child(5) { animation-delay: .28s; }
 .worlds > :nth-child(6), .lvl-list > :nth-child(6) { animation-delay: .33s; }
 .worlds > :nth-child(n+7) { animation-delay: .38s; }
-.strip-c { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) both; }
+.strip-c { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) backwards; }
 .strip-c:nth-child(odd) { animation-delay: .06s; } .strip-c:nth-child(3n) { animation-delay: .12s; } .strip-c:nth-child(4n) { animation-delay: .18s; }
 .bar span { transform-origin: left; animation: grow 1s .3s cubic-bezier(.2, .7, .2, 1) both; }
 @keyframes grow { from { transform: scaleX(0); } }
-.lvl > .pane > *, .lvl-head { animation: fade-in .4s ease both; }
-.quest.enter { animation: rise-in .45s cubic-bezier(.2, .7, .2, 1) both; }
-.area > * { animation: rise-in .4s .08s cubic-bezier(.2, .7, .2, 1) both; }
-.opts > * { animation: rise-in .4s cubic-bezier(.2, .7, .2, 1) both; }
+.lvl > .pane > *, .lvl-head { animation: fade-in .4s ease backwards; }
+.quest.enter { animation: rise-in .45s cubic-bezier(.2, .7, .2, 1) backwards; }
+.area > * { animation: rise-in .4s .08s cubic-bezier(.2, .7, .2, 1) backwards; }
+.opts > * { animation: rise-in .4s cubic-bezier(.2, .7, .2, 1) backwards; }
 .opts > :nth-child(2) { animation-delay: .06s; } .opts > :nth-child(3) { animation-delay: .12s; } .opts > :nth-child(4) { animation-delay: .18s; }
-.say { animation: rise-in .35s cubic-bezier(.2, .7, .2, 1) both; }
+.say { animation: rise-in .35s cubic-bezier(.2, .7, .2, 1) backwards; }
 .opt { position: relative; display: flex; align-items: center; justify-content: space-between; gap: .6em; }
 .opt.right { animation: right-pulse .7s ease-out; }
 @keyframes right-pulse { 0% { box-shadow: 0 0 0 0 rgba(79, 227, 181, .45); } 100% { box-shadow: 0 0 0 14px rgba(79, 227, 181, 0); } }
@@ -477,7 +477,7 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .wdiff i { width: 7px; height: 7px; border-radius: 50%; background: var(--edge); }
 .wdiff i.on { background: var(--c); }
 .world.locked .wdiff i.on { background: var(--muted); }
-.worlds.path > * { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) both; }
+.worlds.path > * { animation: rise-in .5s cubic-bezier(.2, .7, .2, 1) backwards; }
 @media (max-width: 560px) {
   .pstep { padding-left: 40px; }
   .pstep::before { left: 14px; }
@@ -513,3 +513,9 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 @keyframes pz-tassel { 50% { transform: rotate(14deg); } }
 .piece-card.locked .pz, .piece-card.locked .pz * { animation: none; }
 @media (prefers-reduced-motion: reduce) { .pz *, .pz path { animation: none !important; stroke-dashoffset: 0; } .pz path.fl { fill-opacity: .22; } }
+/* mondi ancora in costruzione: scheda compatta */
+.world.soon-w { padding-top: 6px; padding-bottom: 6px; }
+.world.soon-w .wicon, .world.soon-w .wicon svg.m { width: 52px; height: 52px; }
+.world.soon-w h3 { font-size: 1rem; }
+.world.soon-w .wdiff { display: none; }
+@media (min-width: 561px) { .pstep:has(.soon-w) .pnode { width: 30px; height: 30px; left: 5px; font-size: .8rem; } }

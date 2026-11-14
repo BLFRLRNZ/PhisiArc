@@ -19,7 +19,7 @@ export default {
           text: T('La piuma arriva molto dopo. Perché?', 'Perché la piuma impiega molto più tempo del martello?', 'Che cosa rallenta davvero la piuma?'),
           options: [
             T('Perché la Terra non la vuole', 'Perché la gravità non agisce sulle cose leggere', 'La gravità sulla piuma è quasi zero'),
-            T('Perché è gialla', 'Perché la piuma cade sempre a velocità costante', 'Gli oggetti leggeri hanno una gravità tutta loro'),
+            T('Perché le cose leggere cadono sempre piano, anche senz’aria', 'Perché la piuma cade sempre a velocità costante', 'Gli oggetti leggeri hanno una gravità tutta loro'),
             T('Perché l’aria la frena', 'Perché la resistenza dell’aria la frena molto', 'La resistenza dell’aria, enorme rispetto al suo peso'),
           ],
           answer: 2,

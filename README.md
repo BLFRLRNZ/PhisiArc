@@ -7,19 +7,19 @@ Si gioca nel browser, si installa come app e funziona anche offline.
 ## Cosa c'è in questa prima versione
 
 - **Due mondi giocabili** su dodici: **Il Laboratorio** (F01 Il metodo scientifico, F02 Grandezze e misure) e **La Pista** (M01 Posizione e velocità, M02 Accelerazione e caduta libera, M03 Proiettili). Gli altri dieci mondi sono già sulla mappa, con gli argomenti che arriveranno.
-- **Un percorso solo**: i dodici mondi sono in fila dal più semplice al più difficile, uno per campo della fisica, e ognuno si apre quando finisci il precedente. Il piano completo è in [docs/percorso.md](docs/percorso.md).
-- **Lo stesso ritmo in ogni zona**: due **Lezioni**, un **Prevedi** (scegli cosa succederà, poi guardi l'esperimento), un **Costruisci**, un **Ripasso** e il **Boss**.
+- **Un percorso solo**: i dodici mondi sono in fila dal più semplice al più difficile, uno per campo della fisica, e ognuno si apre quando finisci il precedente. Quello che hai già aperto resta aperto anche quando arrivano zone nuove. Il piano completo è in [docs/percorso.md](docs/percorso.md).
+- **Il ritmo delle zone**: per ora ogni zona ha due **Lezioni**, un **Prevedi** (scegli cosa succederà, poi guardi l'esperimento), un **Costruisci**, un **Ripasso** e il **Boss**; dai prossimi mondi il ritmo cambierà da zona a zona.
 - **Tre lenti per età** sullo stesso percorso, scelte all'inizio e cambiabili quando vuoi:
   - **Esploratore** (6-11 anni): niente formule, poche parole, una voce che legge (🔊).
   - **Studente** (12-19 anni): formule, unità, grafici e calcoli.
   - **Curioso** (adulti): le idee della fisica e dove si incontrano ogni giorno.
-- **Cinque simulazioni**: il pendolo, lo zoom delle grandezze (dall'atomo alla Via Lattea), la gara con il grafico spazio-tempo, la caduta libera (con o senza aria, sulla Terra o sulla Luna) e il cannone.
+- **Cinque simulazioni**, disegnate a linee in stile lavagna animata: il pendolo, lo zoom delle grandezze (dal protone all'universo osservabile, 30 tappe), la gara con il grafico spazio-tempo, la caduta libera (con o senza aria, sulla Terra o sulla Luna) e il cannone.
 - **Verifiche a prova di memoria**: nei livelli Costruisci il compito torna con valori nuovi, così passa chi ha capito la regola e non chi ha indovinato il numero.
 - **Il tuo parco divertimenti**: ogni livello Costruisci aggiunge un gioco (l'altalena, i cartelli, il trenino, la torre a caduta libera, il tiro al bersaglio).
 - **I boss di Vetrino e Bilancia**: ogni zona finisce con un mito da smontare con un esperimento. Vetrino, il microscopio investigatore, risponde con domande, non con soluzioni.
-- **Aiuti a gradini**: due suggerimenti, poi la soluzione. **Stelle**: ★★★ senza aiuti e senza errori, ★★ con i suggerimenti, ★ con la soluzione.
+- **Aiuti a gradini**: uno o due suggerimenti (dipende dal livello), poi la soluzione. **Stelle**: si parte da ★★★ senza aiuti, ★★ se usi un suggerimento, ★ se guardi la soluzione; ogni errore toglie una stella, ma un livello superato vale sempre almeno ★.
 - **Joule e gradi**: ogni stella vale 10 joule; ogni mondo finito dà il nome di uno scienziato (Sperimentatore, Galileo, … fino a Curie).
-- **Salvataggio** sul dispositivo, con un codice da copiare per portare i progressi altrove. Tema chiaro e scuro, suoni disattivabili.
+- **Salvataggio** sul dispositivo, con un codice da copiare per portare i progressi altrove. Tema scuro, suoni e voce disattivabili; l'animazione d'apertura parte da sola solo al primo avvio (si può rivedere dalle impostazioni).
 
 ## Come usarla
 
@@ -32,10 +32,11 @@ Non serve nessuna installazione né compilazione: sono file statici.
 
 ```
 index.html            la pagina
-css/style.css         grafica, tema chiaro e scuro
+css/style.css         grafica (tema scuro, stile vetro)
 js/app.js             schermate: benvenuto, mondi, zone, parco, gradi, impostazioni
 js/level.js           il motore dei livelli (domande, previsioni, regolazioni, stelle)
 js/sims/              le simulazioni, una per file, su canvas
+js/cast.js, pieces.js personaggi e pezzi del parco, disegnati a linee (SVG)
 js/content/index.js   i 12 mondi, i gradi e le regole di sblocco
 js/content/f01.js …   i testi e i livelli di ogni zona, nelle tre lenti
 sw.js, manifest       app installabile e offline

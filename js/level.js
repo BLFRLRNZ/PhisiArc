@@ -7,7 +7,7 @@ import { CAST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { starsSVG, confetti, countUp, CHECK } from './fx.js';
-import { KIND, worldOf, zoneOf, nextLevel, gradeNow } from './content/index.js';
+import { KIND, worldOf, zoneOf, nextLevel, gradeNow, worldDone, nextWorld, worldReady, worldOpen } from './content/index.js';
 
 export function runLevel(root, level, nav) {
   const lens = S.lens || 's';
@@ -48,8 +48,9 @@ export function runLevel(root, level, nav) {
     canvasWrap, SimClass.staticSim ? null : h('div', { class: 'launch' }, launch, resetB), ctrls)) : null;
   // Se la simulazione non si vede tutta (telefono), la si porta in vista prima di partire.
   const showSim = () => {
-    const r = canvasWrap.getBoundingClientRect(), top = 70;
-    if (r.top < top || r.bottom > window.innerHeight) window.scrollBy({ top: r.top - top, behavior: 'smooth' });
+    // La barra Lancia è appiccicata in fondo alla scheda: conta come spazio occupato sotto la simulazione.
+    const r = canvasWrap.getBoundingClientRect(), top = 70, bar = simPane?.querySelector('.launch')?.offsetHeight || 0;
+    if (r.top < top || r.bottom + bar > window.innerHeight) window.scrollBy({ top: Math.min(r.top - top, r.bottom + bar - window.innerHeight + 8), behavior: 'smooth' });
   };
 
   root.style.setProperty('--c', world.color);
@@ -378,11 +379,15 @@ export function runLevel(root, level, nav) {
     const after = gradeNow();
     sfx.win();
     const nx = nextLevel(level.id);
+    // Ultimo livello del mondo: festa del mondo completato e strada verso il mondo dopo.
+    const wDone = !nx && worldDone(world), nw = wDone ? nextWorld(world) : null;
+    const nwOpen = nw && worldReady(nw) && worldOpen(nw);
     const joule = h('span', { class: 'num' }, '+0 joule');
     const modal = h('div', { class: 'modal' }, h('div', { class: 'card pop' },
       h('div', { class: 'cele', html: charSVG(who.id, { cls: 'party' }) }),
       h('div', { class: 'stars big', html: starsSVG(stars), 'aria-label': `${stars} stelle su 3` }),
-      h('h2', {}, boss ? 'Mito smontato!' : 'Livello superato!'),
+      h('h2', {}, wDone ? `${world.name}: completato!` : boss ? 'Mito smontato!' : 'Livello superato!'),
+      wDone ? h('p', {}, nw ? (nwOpen ? `Si apre ${nw.name}: ${nw.field.toLowerCase()}.` : `Il prossimo mondo è ${nw.name} (${nw.field.toLowerCase()}): è in costruzione, arriva presto.`) : 'Hai finito tutto il percorso!') : null,
       gained ? h('p', { class: 'gain' }, h('span', { class: 'sun', html: IC.bolt }), joule) : h('p', {}, 'Nessun joule in più: avevi già fatto così bene.'),
       errors || hints || solution ? h('p', { class: 'muted small' }, stars < 3 ? 'Rigiocalo senza aiuti e senza errori per avere ★★★.' : '') : null,
       newPiece ? h('div', { class: 'piece' }, h('span', { class: 'pi', html: pieceSVG(newPiece.id) }), h('div', {}, h('b', {}, 'Nuovo pezzo per il tuo parco: ', newPiece.name), h('div', { class: 'small' }, newPiece.desc))) : null,
@@ -390,7 +395,8 @@ export function runLevel(root, level, nav) {
       h('div', { class: 'row' },
         h('button', { class: 'btn', onclick: () => nav('#/livello/' + level.id) }, h('span', { html: IC.reset }), 'Rigioca'),
         h('button', { class: 'btn', onclick: () => leave() }, 'Mappa'),
-        nx ? h('button', { class: 'btn primary', onclick: () => nav('#/livello/' + nx) }, 'Prossimo →') : null)));
+        nx ? h('button', { class: 'btn primary', onclick: () => nav('#/livello/' + nx) }, 'Prossimo →') : null,
+        nwOpen ? h('button', { class: 'btn primary', onclick: () => nav('#/mondo/' + nw.id) }, `${nw.name} →`) : null)));
     root.append(modal);
     const card = modal.firstChild;
     if (gained) setTimeout(() => countUp(joule, gained, { prefix: '+', suffix: ' joule' }), 500);

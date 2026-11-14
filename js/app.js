@@ -65,16 +65,16 @@ function home() {
     let total = 0, got = 0;
     if (ready) for (const z of w.zones) for (const l of ZONES[z].levels) { total++; if (S.done[l.id]) got++; }
     const prev = w.requires.map((r) => worldById(r).name).join(' e ');
-    const status = done ? 'Completato' : open ? `${got} di ${total} livelli` : !ready && worldOpen(w) ? 'In arrivo: lo stiamo costruendo' : `Si apre quando finisci ${prev}`;
+    const status = done ? 'Completato' : open ? `${got} di ${total} livelli` : !ready ? `In costruzione · ${w.soon.length} zone in arrivo` : `Si apre quando finisci ${prev}`;
     const diff = Math.ceil((w.n / WORLDS.length) * 5);
-    const body = h('div', { class: 'wbody' },
+    const body = h('div', { class: 'wbody', title: ready ? '' : w.soon.join(' · ') },
       h('div', { class: 'wnum' }, `Mondo ${String(w.n).padStart(2, '0')} · ${w.field}`),
       h('h3', {}, w.name),
-      h('div', { class: 'muted small' }, w.place),
+      ready ? h('div', { class: 'muted small' }, w.place) : null,
       h('div', { class: 'wdiff', title: `Difficoltà ${diff} su 5` }, h('span', { class: 'muted' }, 'Difficoltà'), h('span', { class: 'wdots' }, ...[1, 2, 3, 4, 5].map((k) => h('i', { class: k <= diff ? 'on' : '' })))),
       ready ? h('div', { class: 'bar' }, h('span', { style: `width:${total ? (100 * got) / total : 0}%` })) : null,
       h('div', { class: 'small wstatus' }, status),
-      !ready ? h('div', { class: 'small muted soon' }, w.soon.join(' · ')) : null);
+      null);
     const who = [w.mascot, w.buddy].filter(Boolean).map((id) => charSVG(id)).join('');
     const icon = h('div', { class: 'wicon' + (w.buddy ? ' two' : ''), html: who });
     if (!open) icon.append(h('span', { class: 'wlock', html: IC.lock }));
@@ -215,7 +215,7 @@ function render() {
 window.addEventListener('hashchange', render);
 render();
 const calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (S.settings.intro !== false && !calm) playIntro();
+if ((S.settings.intro || !S.introSeen) && !calm) { S.introSeen = true; save(); playIntro(); }
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   navigator.serviceWorker.register('./sw.js').catch(() => {});

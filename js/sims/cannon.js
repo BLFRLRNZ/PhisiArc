@@ -61,14 +61,18 @@ export class Cannon extends Sim {
     this.clear();
     const sky = this.c('sky'), chalk = this.c('chalk'), muted = this.c('muted'), sun = this.c('sun'), coral = this.c('coral');
     const ox = 34, oy = H - 40;
-    const s = Math.min((W - 56) / p.xmax, (H - 80) / (p.xmax * 0.5));
+    // La scala si adatta al lancio: la palla resta sempre dentro lo schermo (gittata e altezza previste).
+    const a0 = (p.ang * Math.PI) / 180, R = (p.v * p.v * Math.sin(2 * a0)) / p.g, Hm = (p.v * Math.sin(a0)) ** 2 / (2 * p.g);
+    const xm = this.sm('xm', Math.max(p.xmax, R * 1.08, (p.target ?? 0) + 2 * p.tw), 6), hm = this.sm('hm', Math.max(xm * 0.5, Hm * 1.12), 6);
+    const s = Math.min((W - 56) / xm, (H - 90) / hm);
     const X = (x) => ox + x * s, Y = (y) => oy - y * s;
     this.ground(oy, { x0: 10 });
-    for (let d = 0; d <= p.xmax; d += p.xmax > 100 ? 25 : 20) {
+    const span = (W - 56) / s, stepD = [10, 20, 25, 50, 100].find((d) => span / d <= 7) || 100;
+    for (let d = 0; d <= span; d += stepD) {
       this.line([[X(d), oy + 2], [X(d), oy + 7]], { color: muted, width: 1.5 });
       this.text(`${d}`, X(d), oy + 20, { size: 10, align: 'center', color: muted, mono: true });
     }
-    this.text('m', X(p.xmax) + 10, oy + 20, { size: 10, color: muted });
+    this.text('m', Math.min(W - 12, X(Math.floor(span / stepD) * stepD) + 14), oy + 20, { size: 10, color: muted });
 
     // bersaglio: zona sul terreno e bandierina a linee
     if (p.target != null) {
@@ -134,7 +138,9 @@ export class Cannon extends Sim {
         const [tx, ty] = this.top;
         this.line([[X(tx), Y(ty)], [X(tx), oy]], { color: sun, width: 1.6, dash: [3, 5], upto: u1 });
         g.globalAlpha = u1;
-        this.text(`altezza max ${fmt(ty, 1)} m`, X(tx) + 8, Y(ty) - 10, { size: 11, color: sun });
+        // l'etichetta non deve coprire la scritta in alto né uscire dallo schermo
+        const lab = `altezza max ${fmt(ty, 1)} m`, ly = Y(ty) - 10 < 46 ? Y(ty) + 18 : Y(ty) - 10, right = X(tx) + 140 > W;
+        this.text(lab, right ? X(tx) - 8 : X(tx) + 8, ly, { size: 11, color: sun, align: right ? 'right' : 'left' });
         g.globalAlpha = 1;
       }
       const u2 = easeInOut((age - 0.6) / 0.6);

@@ -50,7 +50,7 @@ export class Fall extends Sim {
   draw() {
     const g = this.ctx, p = this.params, W = this.W, H = this.H;
     this.clear();
-    const top = 50, ground = H - 40;
+    const top = 62, ground = H - 40;
     const sy = (y) => top + ((ground - top) * y) / p.h;
     const luna = p.planet === 'luna';
     this.ground(ground, { color: luna ? this.c('moon') : this.c('ink') });
@@ -145,7 +145,8 @@ export class Fall extends Sim {
       }
     });
     const where = luna ? 'Luna (niente aria)' : p.air ? 'Terra, con aria' : 'Terra, senza aria (tubo a vuoto)';
-    this.text(where, W - 14, 24, { size: 13, align: 'right', weight: 600 });
+    // Tempo e luogo sulla stessa riga in alto a sinistra: niente si sovrappone agli oggetti che partono.
     this.text(`Tempo: ${fmt(this.t, 2)} s`, 14, 24, { size: 14, weight: 600 });
+    this.text(where, 14 + g.measureText(`Tempo: ${fmt(9.99, 2)} s`).width + 14, 24, { size: 12, color: this.c('muted'), weight: 500 });
   }
 }

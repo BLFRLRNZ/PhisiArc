@@ -1,5 +1,5 @@
 // Mondi, zone e regole di sblocco. I testi dei livelli stanno nei file delle zone.
-import { S } from '../state.js';
+import { S, save } from '../state.js';
 import { IC } from '../icons.js';
 import F01 from './f01.js';
 import F02 from './f02.js';
@@ -95,21 +95,32 @@ export const levelById = (id) => LEVEL_ZONE[id]?.levels.find((l) => l.id === id)
 export const zoneDone = (z) => ZONES[z].levels.every((l) => S.done[l.id]);
 export const worldReady = (w) => !!(w.zones && w.zones.length);
 export const worldDone = (w) => worldReady(w) && w.zones.every(zoneDone);
-export const worldOpen = (w) => w.requires.every((r) => worldDone(worldById(r)));
+// Quello che si è aperto resta aperto: se più avanti si aggiunge una zona (per esempio F03),
+// chi aveva già sbloccato un mondo, una zona o un livello non se lo ritrova chiuso.
+function remember(key, open) {
+  S.aperti = S.aperti || {};
+  if (S.aperti[key]) return true;
+  if (open) { S.aperti[key] = 1; save(); }
+  return open;
+}
+export const worldOpen = (w) => remember('w:' + w.id, w.requires.every((r) => worldDone(worldById(r))));
 
 export function zoneOpen(zid) {
   const w = worldOf(zid);
   if (!worldOpen(w)) return false;
   const i = w.zones.indexOf(zid);
-  return i === 0 || zoneDone(w.zones[i - 1]);
+  return remember('z:' + zid, i === 0 || zoneDone(w.zones[i - 1]) || ZONES[zid].levels.some((l) => S.done[l.id]));
 }
 
 export function levelOpen(id) {
   const z = zoneOf(id);
   if (!zoneOpen(z.id)) return false;
   const i = z.levels.findIndex((l) => l.id === id);
-  return i === 0 || !!S.done[z.levels[i - 1].id];
+  return i === 0 || !!S.done[id] || !!S.done[z.levels[i - 1].id];
 }
+
+// Il mondo che viene dopo questo nel percorso.
+export const nextWorld = (w) => WORLDS[WORLDS.indexOf(w) + 1] || null;
 
 export function nextLevel(id) {
   const z = zoneOf(id);
