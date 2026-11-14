@@ -1,10 +1,75 @@
-// M03 · Moto nel piano e proiettili. Simulazione: il cannone con angolo, velocità e bersaglio.
+// M03 · Vettori, moto nel piano e proiettili. Simulazioni: la barca sul fiume (vettori), poi il cannone.
 import { T, pick, num } from '../util.js';
 
 export default {
   id: 'M03',
-  title: 'Moto nel piano e proiettili',
+  title: 'Vettori e proiettili',
   levels: [
+    {
+      id: 'm03-v1', kind: 'lezione', title: 'Frecce che si sommano',
+      sim: 'river', params: { vb: 4, vc: 0, ang: 0 }, controls: ['vb', 'vc'],
+      intro: T(
+        'Prima di lanciare palle, attraversiamo un <b>fiume</b> in barca! La barca punta dritta verso il pontile di fronte. Ma l’acqua scorre…',
+        'Una velocità non è solo un numero: ha anche una <b>direzione</b>. Per questo si disegna con una freccia, che si chiama <b>vettore</b>. La barca punta dritta verso il pontile, ma la corrente la trascina di lato.',
+        'Le velocità sono <b>vettori</b>: hanno intensità, direzione e verso, e si sommano come frecce, punta contro coda. Barca e corrente: quale sarà il moto vero?'),
+      steps: [
+        { kind: 'free', runs: 2, text: T('Fai una traversata <b>senza corrente</b>, poi una <b>con la corrente</b>.', 'Attraversa una volta con corrente 0 e una volta con la corrente accesa.') },
+        {
+          kind: 'q',
+          text: T('Con la corrente, dove arriva la barca?', 'Con la corrente, in che direzione si muove davvero la barca?', 'Qual è la velocità effettiva della barca rispetto alla riva?'),
+          options: [
+            T('Più in là del pontile, spinta dall’acqua', 'In diagonale: lungo la freccia bianca, somma delle altre due', 'La somma vettoriale di velocità della barca e della corrente'),
+            T('Dritta al pontile', 'Dritta verso il pontile, come punta la prua', 'Quella della barca: la corrente non conta'),
+            T('Torna indietro', 'Lungo la corrente', 'Quella della corrente'),
+          ],
+          answer: 0,
+          explain: T(
+            'Giusto! La barca va avanti <b>e</b> la corrente la porta di lato: le due spinte si sommano. La freccia bianca mostra dove va davvero.',
+            'Giusto: la velocità vera è la <b>somma dei vettori</b>. Si mette la freccia della corrente in coda a quella della barca: la freccia bianca, dalla partenza alla punta, è la somma.',
+            'Giusto: v = v_barca + v_corrente, somma vettoriale. Con le due frecce perpendicolari l’intensità si trova con Pitagora.'),
+        },
+        {
+          kind: 'num', only: ['s', 'c'], rounds: 2, text: T('Somma due frecce perpendicolari.'),
+          gen: () => {
+            const [b, c, v] = pick([[4, 3, 5], [3, 4, 5], [8, 6, 10], [6, 8, 10], [5, 12, 13]]);
+            return { text: `La barca va a <b>${b} m/s</b> verso la riva opposta, la corrente a <b>${c} m/s</b> di lato. Quanto vale la velocità totale?`, ans: v, tol: 0.05, unit: 'm/s', explain: `Esatto: le frecce sono perpendicolari, quindi √(${b}² + ${c}²) = √${b * b + c * c} = ${v} m/s. Non ${b + c}: le frecce non sono nella stessa direzione.` };
+          },
+        },
+      ],
+      hints: [T('Guarda le tre frecce sulla barca: arancione, azzurra e bianca.', 'Metti la freccia azzurra in coda all’arancione: dove arriva la punta?'), T('Le frecce sono a squadra: serve Pitagora.', 'v = √(v_barca² + v_corrente²).')],
+      solution: T('Arriva più in là del pontile: la corrente la porta di lato.', 'In diagonale: la velocità vera è la somma vettoriale. Con frecce perpendicolari, v = √(a² + b²).'),
+    },
+    {
+      id: 'm03-v2', kind: 'prevedi', title: 'Il fiume non ruba tempo',
+      sim: 'river', params: { vb: 4, vc: 0, ang: 0 }, controls: ['ang'],
+      intro: T(
+        'Una domanda furba: se il fiume scorre, la barca ci mette <b>di più</b> ad attraversarlo?',
+        'La corrente spinge la barca di lato. Ma cambia il <b>tempo</b> della traversata? Prevedi, poi guarda.',
+        'Moti perpendicolari e indipendenti: la corrente cambia il tempo di traversata? Prevedi.'),
+      steps: [
+        {
+          kind: 'q', predict: [{ vc: 0, ang: 0 }, { vc: 3, ang: 0 }],
+          text: T('Prima senza corrente, poi con una corrente forte. Quanto tempo ci mette la seconda volta?', 'Traversata senza corrente, poi con corrente 3 m/s. Il tempo della seconda traversata…'),
+          options: [T('Lo stesso tempo', 'è uguale'), T('Di più', 'è maggiore'), T('Di meno', 'è minore')],
+          answer: 0,
+          explain: T(
+            'Lo stesso: 10 secondi! La corrente la porta di lato, ma non la frena verso la riva. Sono due moti separati.',
+            'Uguale, 10 s: la corrente è perpendicolare e non cambia la velocità verso l’altra riva. I due moti sono <b>indipendenti</b>, come nel volo di una palla: avanti e su-giù.',
+            'Uguale: t = 40 m / 4 m/s = 10 s. Le componenti perpendicolari sono indipendenti: lo stesso principio di Galileo per i proiettili.'),
+        },
+        {
+          kind: 'tune', rounds: 1, set: { vc: 2 },
+          text: T('Ora tocca a te: gira la <b>prua controcorrente</b> e porta la barca dritta al pontile.', 'Inclina la prua controcorrente quanto basta per arrivare dritto al pontile.'),
+          gen: () => ({ text: 'Arriva al pontile (al massimo 1,5 m di scarto).' }),
+          check: (res, tg, lens) => {
+            if (Math.abs(res.drift) <= 1.5) return { ok: true, msg: `Al pontile! Ci hai messo ${num(res.t, 1)} s: un po’ di più, perché parte della spinta va contro la corrente.` };
+            return { ok: false, msg: res.drift > 0 ? `Sei finito ${num(res.drift, 1)} m a valle. ${lens === 'e' ? 'Gira di più la prua.' : 'Serve un angolo maggiore.'}` : `Sei finito ${num(-res.drift, 1)} m a monte. ${lens === 'e' ? 'Gira un po’ meno.' : 'Angolo troppo grande.'}` };
+          },
+        },
+      ],
+      hints: [T('La corrente spinge di lato: cambia quanto manca all’altra riva?', 'Con la prua girata, una parte della spinta della barca deve annullare la corrente.'), T('Circa 30 gradi.', 'sin θ = corrente / barca = 2/4: θ = 30°.')],
+      solution: T('Stesso tempo. Per il pontile serve una prua girata di circa 30°.', 'Il tempo non cambia. Per arrivare dritto: sin θ = 2/4, θ = 30°.'),
+    },
     {
       id: 'm03-1', kind: 'lezione', title: 'Il volo della palla',
       sim: 'cannon', params: { ang: 45, v: 20, xmax: 100 }, controls: ['ang', 'v'],
