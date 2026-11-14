@@ -50,8 +50,12 @@ export class Race extends Sim {
     const L = 30, R = W - 30;
     const sx = (x) => L + ((R - L) * x) / p.D;
     const lane = (trackH - 20) / st.length;
-    g.fillStyle = this.c('track');
-    g.fillRect(L - 10, 10, R - L + 20, trackH - 10);
+    g.strokeStyle = this.c('edge'); g.lineWidth = 1.5;
+    g.setLineDash([10, 8]);
+    for (let i = 1; i < st.length; i++) { const y = 10 + 10 + lane * i - 2; g.beginPath(); g.moveTo(L - 10, y); g.lineTo(R + 10, y); g.stroke(); }
+    g.setLineDash([]);
+    this.ground(trackH - 2, { x0: L - 10, x1: R + 10 });
+    g.lineWidth = 1.5;
     g.strokeStyle = this.c('ink');
     g.setLineDash([6, 4]);
     g.beginPath(); g.moveTo(R, 10); g.lineTo(R, trackH); g.stroke();

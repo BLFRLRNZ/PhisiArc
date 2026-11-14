@@ -173,9 +173,9 @@ export default {
       id: 'm02-6', kind: 'boss', title: 'Il mito di Aristotele',
       sim: 'fall', params: { h: 2, air: true, planet: 'terra', objs: ['pallina', 'boccia'] }, controls: ['h', 'air'],
       intro: T(
-        'Sono Dubbia. Tanto tempo fa un sapiente greco, <b>Aristotele</b>, diceva: <i>“Le cose pesanti cadono più in fretta”</i>. Lo credettero tutti per duemila anni. Ma qualcuno ha controllato?',
-        'Sono Dubbia. <b>Aristotele</b> sosteneva: <i>“Gli oggetti pesanti cadono più in fretta: con il doppio del peso, metà del tempo”</i>. Per secoli nessuno lo mise alla prova. Tu sì?',
-        'Sono Dubbia. Per <b>Aristotele</b> <i>“un corpo che pesa il doppio cade in metà tempo”</i>. Un’idea durata quasi duemila anni. Ma cosa dice l’esperimento?'),
+        'Sono Vetrino. Tanto tempo fa un sapiente greco, <b>Aristotele</b>, diceva: <i>“Le cose pesanti cadono più in fretta”</i>. Lo credettero tutti per duemila anni. Ma qualcuno ha controllato?',
+        'Sono Vetrino. <b>Aristotele</b> sosteneva: <i>“Gli oggetti pesanti cadono più in fretta: con il doppio del peso, metà del tempo”</i>. Per secoli nessuno lo mise alla prova. Tu sì?',
+        'Sono Vetrino. Per <b>Aristotele</b> <i>“un corpo che pesa il doppio cade in metà tempo”</i>. Un’idea durata quasi duemila anni. Ma cosa dice l’esperimento?'),
       steps: [
         {
           kind: 'q', text: T('Quale esperimento ci serve per controllare?', 'Quale esperimento mette alla prova il mito?'),
@@ -214,7 +214,7 @@ export default {
           explain: T('Mito smontato! Anche le idee di un grande sapiente vanno controllate.', 'Mito smontato: a parte l’aria, il tempo di caduta non dipende dalla massa. Anche l’autorità di Aristotele cede davanti all’esperimento.'),
         },
       ],
-      hints: [T('Dubbia chiede: se cambi peso e forma insieme, a chi dai la colpa?'), T('Dubbia chiede: i due tempi che hai visto sono uno la metà dell’altro?')],
+      hints: [T('Vetrino chiede: se cambi peso e forma insieme, a chi dai la colpa?'), T('Vetrino chiede: i due tempi che hai visto sono uno la metà dell’altro?')],
       solution: T('Pallina e boccia, stessa forma: arrivano quasi insieme, quindi il mito è falso.', 'Pallina e boccia (stessa forma, massa diversa): circa 0,66 s e 0,64 s. Il tempo non dipende dalla massa: il mito è falso.'),
     },
   ],

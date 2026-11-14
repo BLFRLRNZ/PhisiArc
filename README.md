@@ -15,7 +15,7 @@ Si gioca nel browser, si installa come app e funziona anche offline.
 - **Cinque simulazioni**: il pendolo, lo zoom delle grandezze (dall'atomo alla Via Lattea), la gara con il grafico spazio-tempo, la caduta libera (con o senza aria, sulla Terra o sulla Luna) e il cannone.
 - **Verifiche a prova di memoria**: nei livelli Costruisci il compito torna con valori nuovi, così passa chi ha capito la regola e non chi ha indovinato il numero.
 - **Il tuo parco divertimenti**: ogni livello Costruisci aggiunge un gioco (l'altalena, i cartelli, il trenino, la torre a caduta libera, il tiro al bersaglio).
-- **I boss di Dubbia**: ogni zona finisce con un mito da smontare con un esperimento. Dubbia risponde con domande, non con soluzioni.
+- **I boss di Vetrino e Bilancia**: ogni zona finisce con un mito da smontare con un esperimento. Vetrino, il microscopio investigatore, risponde con domande, non con soluzioni.
 - **Aiuti a gradini**: due suggerimenti, poi la soluzione. **Stelle**: ★★★ senza aiuti e senza errori, ★★ con i suggerimenti, ★ con la soluzione.
 - **Joule e gradi**: ogni stella vale 10 joule; ogni mondo finito dà il nome di uno scienziato (Sperimentatore, Galileo, … fino a Curie).
 - **Salvataggio** sul dispositivo, con un codice da copiare per portare i progressi altrove. Tema chiaro e scuro, suoni disattivabili.

@@ -35,8 +35,7 @@ export class Pendulum extends Sim {
     const px = W / 2, py = 28;
     const scale = (H - 70) / 2.6;
     // soffitto
-    g.fillStyle = this.c('line');
-    g.fillRect(px - 60, py - 10, 120, 8);
+    this.ground(py - 4, { x0: px - 60, x1: px + 60 });
     const len = p.L * scale;
     const bx = px + len * Math.sin(this.th);
     const by = py + len * Math.cos(this.th);

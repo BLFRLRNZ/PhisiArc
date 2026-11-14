@@ -3,7 +3,8 @@ import { h, tx, shuffle, plain, wait } from './util.js';
 import { S, save } from './state.js';
 import { SIMS } from './sims/index.js';
 import { sfx, speak, stopSpeaking } from './audio.js';
-import { mascot, DUBBIA } from './mascot.js';
+import { CAST, charSVG, hop } from './cast.js';
+import { IC } from './icons.js';
 import { KIND, worldOf, zoneOf, nextLevel, gradeNow } from './content/index.js';
 
 export function runLevel(root, level, nav) {
@@ -17,18 +18,18 @@ export function runLevel(root, level, nav) {
   let sim = null, pending = null, onResult = null, busy = false;
 
   // ---------- struttura della pagina ----------
-  const back = h('button', { class: 'btn ghost', onclick: () => leave() }, '← ', zone.title);
-  const hintBtn = h('button', { class: 'btn ghost', onclick: () => showHint() }, '💡 Aiuto');
+  const back = h('button', { class: 'btn ghost', onclick: () => leave() }, h('span', { html: IC.back }), h('span', { class: 'back-t' }, zone.title));
+  const hintBtn = h('button', { class: 'btn ghost hint-btn', onclick: () => showHint() }, h('span', { html: IC.hint }), 'Aiuto');
   const dots = h('div', { class: 'dots' });
   const head = h('header', { class: 'lvl-head' }, back, h('div', { class: 'lvl-title' },
-    h('span', { class: 'kind' }, KIND[level.kind].icon, ' ', KIND[level.kind].name), h('strong', {}, level.title)), dots, hintBtn);
+    h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', KIND[level.kind].name), h('strong', {}, level.title)), dots, hintBtn);
 
   const boss = level.kind === 'boss';
-  const who = boss ? DUBBIA : world.mascot;
+  const who = CAST[boss ? 'vetrino' : world.mascot];
   const introText = tx(level.intro, lens);
-  const speakBtn = h('button', { class: 'btn icon', title: 'Ascolta', onclick: () => speak(plain(introText + ' ' + quest.innerHTML)) }, '🔊');
-  const intro = h('div', { class: 'intro' },
-    h('div', { class: 'who', html: mascot(who.color, who.acc, boss ? 'doubt' : 'happy', 56) }),
+  const speakBtn = h('button', { class: 'btn icon', title: 'Ascolta', 'aria-label': 'Ascolta', onclick: () => speak(plain(introText + ' ' + quest.innerHTML)), html: IC.sound });
+  const intro = h('div', { class: 'intro', style: `--c:${who.c}` },
+    h('div', { class: 'who', html: charSVG(who.id), onclick: (e) => hop(e.currentTarget.firstChild) }),
     h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), h('div', { html: introText })));
   const quest = h('div', { class: 'quest' });
   const area = h('div', { class: 'area' });
@@ -37,11 +38,12 @@ export function runLevel(root, level, nav) {
 
   const canvas = h('canvas', { class: 'sim' });
   const ctrls = h('div', { class: 'ctrls' });
-  const launch = h('button', { class: 'btn primary', onclick: () => fire() }, '▶ Lancia');
-  const resetB = h('button', { class: 'btn', onclick: () => { sim.stop(); sim.reset(); } }, '↺');
+  const launch = h('button', { class: 'btn primary', onclick: () => fire() }, h('span', { html: IC.play }), 'Lancia');
+  const resetB = h('button', { class: 'btn', title: 'Ricomincia', 'aria-label': 'Ricomincia', onclick: () => { sim.stop(); sim.reset(); }, html: IC.reset });
   const simPane = SimClass ? h('section', { class: 'pane simpane' }, h('div', { class: 'canvas-wrap' }, canvas), ctrls,
     SimClass.staticSim ? null : h('div', { class: 'launch' }, launch, resetB)) : null;
 
+  root.style.setProperty('--c', world.color);
   root.replaceChildren(head, h('main', { class: 'lvl' + (SimClass ? '' : ' nosim') }, textPane, simPane));
 
   if (SimClass) {
@@ -207,7 +209,7 @@ export function runLevel(root, level, nav) {
   }
 
   async function stepRun(st) {
-    const go = h('button', { class: 'btn primary' }, '▶ Guarda l’esperimento');
+    const go = h('button', { class: 'btn primary' }, h('span', { html: IC.play }), 'Guarda l’esperimento');
     area.append(go);
     go.onclick = async () => {
       go.remove();
@@ -337,8 +339,8 @@ export function runLevel(root, level, nav) {
     const parts = hs.slice(0, hints).map((x, i) => `<p><b>Suggerimento ${i + 1}.</b> ${tx(x, lens)}</p>`);
     if (solution) parts.push(`<p><b>Soluzione.</b> ${tx(level.solution, lens)}</p>`);
     let more = '';
-    if (hints < hs.length) more = '<p class="muted small">Premi di nuovo 💡 per un altro suggerimento (le stelle massime scendono a ★★).</p>';
-    else if (!solution && level.solution) more = '<p class="muted small">Premi ancora 💡 per vedere la soluzione (stella massima ★).</p>';
+    if (hints < hs.length) more = '<p class="muted small">Premi di nuovo Aiuto per un altro suggerimento (le stelle massime scendono a ★★).</p>';
+    else if (!solution && level.solution) more = '<p class="muted small">Premi ancora Aiuto per vedere la soluzione (stella massima ★).</p>';
     hintBox.innerHTML = parts.join('') + more;
     if (!hs.length && !level.solution) hintBox.innerHTML = '<p>Rileggi la domanda con calma e prova l’esperimento: la risposta si vede.</p>';
   }
@@ -359,6 +361,7 @@ export function runLevel(root, level, nav) {
     sfx.win();
     const nx = nextLevel(level.id);
     const modal = h('div', { class: 'modal' }, h('div', { class: 'card pop' },
+      h('div', { class: 'cele', html: charSVG(who.id, { cls: 'party' }) }),
       h('div', { class: 'stars big' }, '★'.repeat(stars), h('span', { class: 'off' }, '★'.repeat(3 - stars))),
       h('h2', {}, boss ? 'Mito smontato!' : 'Livello superato!'),
       h('p', {}, gained ? `+${gained} joule` : 'Nessun joule in più: avevi già fatto così bene.'),
@@ -366,7 +369,7 @@ export function runLevel(root, level, nav) {
       newPiece ? h('div', { class: 'piece' }, h('span', { class: 'pi' }, newPiece.icon), h('div', {}, h('b', {}, 'Nuovo pezzo per il tuo parco: ', newPiece.name), h('div', { class: 'small' }, newPiece.desc))) : null,
       after.name !== before.name ? h('div', { class: 'piece' }, h('span', { class: 'pi' }, '🎓'), h('div', {}, h('b', {}, 'Nuovo grado: ', after.name), h('div', { class: 'small' }, after.desc))) : null,
       h('div', { class: 'row' },
-        h('button', { class: 'btn', onclick: () => nav('#/livello/' + level.id) }, '↺ Rigioca'),
+        h('button', { class: 'btn', onclick: () => nav('#/livello/' + level.id) }, h('span', { html: IC.reset }), 'Rigioca'),
         h('button', { class: 'btn', onclick: () => leave() }, 'Mappa'),
         nx ? h('button', { class: 'btn primary', onclick: () => nav('#/livello/' + nx) }, 'Prossimo →') : null)));
     root.append(modal);

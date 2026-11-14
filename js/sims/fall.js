@@ -46,8 +46,7 @@ export class Fall extends Sim {
     const top = 50, ground = H - 40;
     const sy = (y) => top + ((ground - top) * y) / p.h;
     const luna = p.planet === 'luna';
-    g.fillStyle = luna ? this.c('moon') : this.c('grass');
-    g.fillRect(0, ground, W, H - ground);
+    this.ground(ground, { color: luna ? this.c('moon') : this.c('ink') });
     // righello
     g.strokeStyle = this.c('line');
     g.beginPath(); g.moveTo(40, top); g.lineTo(40, ground); g.stroke();
@@ -64,9 +63,9 @@ export class Fall extends Sim {
       g.textBaseline = 'bottom';
       g.fillText(s.icon, x, sy(s.y));
       g.textBaseline = 'alphabetic';
-      this.text(s.name, x, ground + 18, { size: 12, align: 'center', color: luna ? '#222' : this.c('ink') });
+      this.text(s.name, x, ground + 18, { size: 12, align: 'center', color: this.c('ink') });
       if (s.tEnd != null) {
-        this.text(`${fmt(s.tEnd, 2)} s`, x, ground + 34, { size: 13, align: 'center', weight: 700, color: luna ? '#222' : this.c('ink') });
+        this.text(`${fmt(s.tEnd, 2)} s`, x, ground + 34, { size: 13, align: 'center', weight: 700, color: this.c('ink') });
       }
     });
     const where = luna ? 'Luna (niente aria)' : p.air ? 'Terra, con aria' : 'Terra, senza aria (tubo a vuoto)';

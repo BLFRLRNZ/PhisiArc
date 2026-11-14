@@ -125,9 +125,9 @@ export default {
       id: 'f02-6', kind: 'boss', title: 'Il mito dell’atomo quasi visibile',
       sim: 'scale', params: { exp: -3 }, controls: ['exp'],
       intro: T(
-        'Sono Dubbia. Un bambino dice: <i>“Un atomo è un granello di sabbia un po’ più piccolo”</i>. Sarà vero?',
-        'Sono Dubbia. Un compagno sostiene: <i>“Un atomo è solo un po’ più piccolo di un granello di sabbia”</i>. Quanto è “un po’”?',
-        'Sono Dubbia. Si sente dire che un atomo è “appena più piccolo di un granello di sabbia”. Vediamo i numeri.'),
+        'Sono Vetrino. Un bambino dice: <i>“Un atomo è un granello di sabbia un po’ più piccolo”</i>. Sarà vero?',
+        'Sono Vetrino. Un compagno sostiene: <i>“Un atomo è solo un po’ più piccolo di un granello di sabbia”</i>. Quanto è “un po’”?',
+        'Sono Vetrino. Si sente dire che un atomo è “appena più piccolo di un granello di sabbia”. Vediamo i numeri.'),
       steps: [
         {
           kind: 'q', text: T('Secondo te, quanti atomi in fila servono per fare un granello di sabbia?', 'Granello: 10⁻³ m. Atomo: 10⁻¹⁰ m. Quante volte è più piccolo l’atomo?'),
@@ -141,7 +141,7 @@ export default {
           explain: T('Mito smontato! Gli atomi sono così piccoli che non si vedono nemmeno col microscopio normale.', 'Mito smontato: 7 ordini di grandezza. Se un atomo fosse grande come un granello, il granello sarebbe lungo 10 km!'),
         },
       ],
-      hints: [T('Dubbia chiede: quante volte hai mosso lo zoom per passare dal granello all’atomo?'), T('Dubbia chiede: ogni scatto dello zoom vale 10 volte. Quanti scatti sono 7?')],
+      hints: [T('Vetrino chiede: quante volte hai mosso lo zoom per passare dal granello all’atomo?'), T('Vetrino chiede: ogni scatto dello zoom vale 10 volte. Quanti scatti sono 7?')],
       solution: T('Dieci milioni di volte (10⁷): il mito è falso.'),
     },
   ],

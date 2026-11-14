@@ -57,12 +57,11 @@ export class Cannon extends Sim {
     const ox = 30, oy = H - 34;
     const s = Math.min((W - 50) / p.xmax, (H - 70) / (p.xmax * 0.5));
     const X = (x) => ox + x * s, Y = (y) => oy - y * s;
-    g.fillStyle = this.c('grass');
-    g.fillRect(0, oy, W, H - oy);
+    this.ground(oy);
     for (let d = 0; d <= p.xmax; d += p.xmax > 100 ? 25 : 20) {
-      this.text(`${d}`, X(d), oy + 16, { size: 10, align: 'center', color: this.c('ink') });
+      this.text(`${d}`, X(d), oy + 16, { size: 10, align: 'center', color: this.c('muted') });
     }
-    this.text('m', X(p.xmax) + 10, oy + 16, { size: 10, color: this.c('ink') });
+    this.text('m', X(p.xmax) + 10, oy + 16, { size: 10, color: this.c('muted') });
     if (p.target != null) {
       g.fillStyle = this.c('target');
       g.fillRect(X(p.target - p.tw), oy - 4, 2 * p.tw * s, 8);
