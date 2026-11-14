@@ -106,6 +106,7 @@ export default {
  "Cambia solo {v}; tutto il resto resta uguale.": "Change only {v}; everything else stays the same.",
  "Se non cambi niente, l’esperimento non può dirti niente!": "If you change nothing, the experiment can’t tell you anything!",
  "Vuoi studiare <b>{v}</b>: è proprio quella che deve <b>cambiare</b>. Tutto il resto resta <b>uguale</b>.": "You want to study <b>{v}</b>: that’s exactly what has to <b>change</b>. Everything else stays the <b>same</b>.",
+ "Un’oscillazione dura <b>{T} s</b>. Ora cambia una cosa sola e rilancia.": "One swing takes <b>{T} s</b>. Now change just one thing and launch again.",
  "Uguale": "Same",
  "Cambia": "Change",
  "Per ogni riga scegli <b>Uguale</b> o <b>Cambia</b>. Manca ancora: {v}.": "For each row choose <b>Same</b> or <b>Change</b>. Still missing: {v}.",

@@ -54,29 +54,24 @@ export default {
         'Per capire da cosa dipende qualcosa, gli scienziati cambiano <b>una sola cosa alla volta</b> e tengono ferme le altre. Si chiama controllo delle variabili.'),
       steps: [
         {
-          // Controllo delle variabili come passo interattivo: per ogni variabile scegli se cambia o resta uguale.
-          kind: 'vars',
-          text: T('Vuoi scoprire se il <b>peso</b> della pallina cambia il pendolo. Tra un esperimento e l’altro, cosa cambi e cosa tieni uguale?', 'Vuoi scoprire se la <b>massa</b> influisce sul periodo. Prepara l’esperimento: per ogni variabile, cambia o resta uguale?'),
-          vars: [{ k: 'L', t: T('il filo', 'la lunghezza del filo') }, { k: 'm', t: T('il peso', 'la massa') }, { k: 'a', t: T('quanto lo sposti', 'l’angolo di partenza') }],
-          change: 'm',
-          explain: T('Giusto: cambi solo il peso, così se qualcosa cambia sai che è merito suo.', 'Giusto: se cambi solo la massa, ogni differenza nel periodo dipende dalla massa.'),
-          wrong: T('Se cambi due cose insieme, poi non sai quale delle due ha fatto la differenza!', 'Se cambi due variabili insieme non puoi sapere quale ha causato l’effetto.'),
-        },
-        {
-          kind: 'free', runs: 2, controls: ['m'],
-          text: T('Prova tu: lancia con un peso, poi cambia <b>solo il peso</b> e lancia di nuovo.', 'Esperimento: lancia, cambia <b>solo la massa</b>, rilancia. Confronta i due periodi.'),
-          onRun: (r) => t('Questa volta: un’oscillazione dura <b>{T} s</b>.', { T: r.T }),
+          // Il passo è una scoperta: la domanda non dice quale cosa non conta, lo trova chi gioca cambiando una cosa alla volta.
+          kind: 'free', runs: 3, controls: ['L', 'm', 'a'],
+          text: T('Una di queste tre cose <b>non cambia</b> il ritmo del pendolo: anche se la cambi, va avanti e indietro sempre con lo stesso tempo. <b>Scopri quale!</b> Lancia, poi cambia <b>una cosa sola</b> e rilancia. Guarda quanto dura un’oscillazione.',
+            'Una delle tre variabili <b>non influisce</b> sul periodo, cioè sul tempo di un’andata e ritorno. <b>Scopri quale.</b> Fai un lancio, poi cambia <b>una sola variabile</b> e rilancia: se ne cambi due insieme, non sai quale ha fatto la differenza.'),
+          onRun: (r) => t('Un’oscillazione dura <b>{T} s</b>. Ora cambia una cosa sola e rilancia.', { T: r.T }),
         },
         {
           kind: 'q',
-          text: T('Hai fatto due lanci con lo stesso filo: uno con la pallina leggera e uno con quella pesante. Guarda i due tempi sul cronometro. Il peso ha cambiato il tempo che il pendolo ci mette ad andare e tornare?', 'Nei due esperimenti hai cambiato solo la massa, lasciando uguali il filo e l’angolo. Confronta i due periodi misurati: il periodo è il tempo di un’oscillazione completa, andata e ritorno. Che cosa mostrano?'),
-          options: [T('Sì, molto', 'Più massa, periodo molto più lungo'), T('No, quasi per niente', 'Il periodo non dipende dalla massa'), T('Sì, è più veloce', 'Più massa, periodo molto più breve')],
+          text: T('Allora: quale di queste tre cose <b>non cambia</b> il tempo del pendolo?', 'Quale variabile <b>non influisce</b> sul periodo del pendolo?'),
+          options: [T('il filo', 'la lunghezza del filo'), T('il peso della pallina', 'la massa della pallina'), T('quanto lo sposti all’inizio', 'l’angolo di partenza')],
           answer: 1,
-          explain: T('Proprio così: pesante o leggero, il pendolo va allo stesso ritmo. Sorprendente, vero?', 'Esatto: il periodo non dipende dalla massa. Lo scoprì Galileo, e lo spiegò Newton.'),
+          wrong: T('Non è questa: prova a cambiare solo quella e rilancia. Il tempo cambia?', 'Non è questa: cambia solo quella variabile e rilancia. Il periodo cambia?'),
+          explain: T('Esatto: pesante o leggera, la pallina va allo stesso ritmo. L’hai scoperto cambiando <b>una cosa alla volta</b>, come fanno gli scienziati!',
+            'Esatto: il periodo <b>non dipende dalla massa</b> (lo scoprì Galileo). Il filo invece conta molto, e l’angolo conta poco, solo quando è grande. L’hai scoperto cambiando una variabile alla volta: si chiama <b>controllo delle variabili</b>.'),
         },
       ],
-      hints: [T('Guarda il numero in basso dopo ogni lancio: è cambiato tanto?'), T('Confronta i due tempi: differiscono solo di qualche millesimo.')],
-      solution: T('Si cambia solo il peso, e il tempo resta lo stesso: il peso non conta.', 'Si cambia solo la massa; il periodo resta uguale, quindi non dipende dalla massa.'),
+      hints: [T('Muovi un cursore solo per volta. Prova con il peso: lancia con la pallina leggera, poi con quella pesante. Il tempo cambia?', 'Muovi un cursore solo per volta. Prova con la massa: lancia con 0,5 kg, poi con 3 kg. Il periodo cambia?'), T('Se il numero resta quasi uguale dopo che hai cambiato una cosa, quella cosa non conta.')],
+      solution: T('Il peso: se cambi solo il peso, il tempo di andata e ritorno resta uguale.', 'La massa: se cambi solo la massa, il periodo resta uguale.'),
     },
     {
       id: 'f01-3', kind: 'prevedi', title: 'Il filo lungo',
@@ -141,7 +136,7 @@ export default {
           answer: 1, explain: T('Esatto: conta il filo!', 'Esatto: per angoli piccoli conta solo la lunghezza (e la gravità del pianeta).'),
         },
         {
-          kind: 'vars', text: T('Vuoi sapere se il <b>filo</b> conta. Prepara l’esperimento: cosa cambi e cosa tieni uguale?', 'Vuoi studiare l’effetto della <b>lunghezza</b>. Per ogni variabile: cambia o resta fissa?'),
+          kind: 'vars', text: T('Ora vuoi scoprire se il <b>filo</b> cambia il pendolo. Prepara i due lanci: tra il primo e il secondo, ogni cosa la <b>cambi</b> o la lasci <b>uguale</b>?', 'Ora vuoi scoprire se la <b>lunghezza</b> del filo influisce sul periodo. Prepara i due lanci: per ogni variabile, tra un lancio e l’altro la <b>cambi</b> o la tieni <b>uguale</b>?'),
           vars: [{ k: 'L', t: T('il filo', 'la lunghezza del filo') }, { k: 'm', t: T('il peso', 'la massa') }, { k: 'a', t: T('quanto lo sposti', 'l’angolo di partenza') }],
           change: 'L',
           wrong: T('Tieni tutto uguale tranne quello che vuoi studiare.', 'Si cambia solo la variabile studiata.'),
