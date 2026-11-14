@@ -1,4 +1,5 @@
 // Piccoli aiuti condivisi.
+import { LOCALE } from './i18n.js';
 
 export const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -42,7 +43,7 @@ export function shuffle(a) {
 }
 
 export const num = (x, d = 1) =>
-  Number(x).toLocaleString('it-IT', { maximumFractionDigits: d, minimumFractionDigits: 0 });
+  Number(x).toLocaleString(LOCALE, { maximumFractionDigits: d, minimumFractionDigits: 0 });
 
 export const plain = (html) => {
   const d = document.createElement('div');

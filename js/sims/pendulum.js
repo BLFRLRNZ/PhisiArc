@@ -1,5 +1,6 @@
 // Pendolo: lunghezza, massa e angolo regolabili. Conta n oscillazioni e misura il periodo.
 // Sotto c'è un "foglio che scorre": la pallina ci disegna sopra la sua onda, e ogni oscillazione diventa un tratto del grafico.
+import { t as i18n } from '../i18n.js';
 import { Sim, fmt, easeOut } from './base.js';
 
 export class Pendulum extends Sim {
@@ -140,13 +141,13 @@ export class Pendulum extends Sim {
     this.ball(bx, top, 4.5, { color: sky, fill: 1, shine: false });
 
     // letture
-    this.text(`Tempo: ${fmt(this.t, 2)} s`, 14, 24, { size: 14, weight: 600, mono: false });
-    this.text(`Oscillazioni: ${this.count} di ${p.n}`, 14, 42, { size: 12, color: muted });
-    this.text(`Filo: ${fmt(p.L, 2)} m`, W - 14, 24, { size: 12, align: 'right', color: muted });
+    this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 2) }), 14, 24, { size: 14, weight: 600, mono: false });
+    this.text(i18n('Oscillazioni: {a} di {b}', { a: this.count, b: p.n }), 14, 42, { size: 12, color: muted });
+    this.text(i18n('Filo: {a} m', { a: fmt(p.L, 2) }), W - 14, 24, { size: 12, align: 'right', color: muted });
     if (this.result) {
       const u = easeOut(this.age / 0.5);
       g.globalAlpha = u;
-      this.text(`Un'oscillazione: ${fmt(this.result.T, 2)} s`, W - 14, 44 + (1 - u) * 8, { size: 15, weight: 700, align: 'right', color: this.c('accent2') });
+      this.text(i18n('Un’oscillazione: {a} s', { a: fmt(this.result.T, 2) }), W - 14, 44 + (1 - u) * 8, { size: 15, weight: 700, align: 'right', color: this.c('accent2') });
       g.globalAlpha = 1;
     }
   }

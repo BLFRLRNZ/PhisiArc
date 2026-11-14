@@ -1,4 +1,5 @@
 // Caduta libera: oggetti diversi, con o senza aria, sulla Terra o sulla Luna.
+import { t as i18n } from '../i18n.js';
 import { Sim, fmt, easeOut } from './base.js';
 import { drawFallObject } from './art/fall-objects.js';
 
@@ -101,7 +102,7 @@ export class Fall extends Sim {
     });
     const where = luna ? 'Luna (niente aria)' : p.air ? 'Terra, con aria' : 'Terra, senza aria (tubo a vuoto)';
     // Tempo e luogo sulla stessa riga in alto a sinistra: niente si sovrappone agli oggetti che partono.
-    this.text(`Tempo: ${fmt(this.t, 2)} s`, 14, 24, { size: 14, weight: 600 });
+    this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 2) }), 14, 24, { size: 14, weight: 600 });
     this.text(where, 14 + g.measureText(`Tempo: ${fmt(9.99, 2)} s`).width + 14, 24, { size: 12, color: this.c('muted'), weight: 500 });
   }
 }

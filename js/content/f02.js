@@ -1,21 +1,22 @@
 // F02 · Grandezze, unità di misura e ordini di grandezza. Simulazione: lo zoom delle scale.
 import { T, pick } from '../util.js';
+import { t } from '../i18n.js';
 
 const conv = (lens, r) => {
   if (lens === 'e') {
     const kind = r === 0 ? 'treno' : 'ruota';
     if (kind === 'treno') {
       const n = pick([3, 4, 5, 6, 7]);
-      return { text: `Il trenino del parco ha <b>${n} vagoni</b>, e ogni vagone è lungo <b>2 metri</b>. Quanto è lungo tutto il trenino?`, ans: n * 2, tol: 0, unit: 'metri', explain: `Giusto: ${n} volte 2 fa ${n * 2} metri.` };
+      return { text: t('Il trenino del parco ha <b>{n} vagoni</b>, e ogni vagone è lungo <b>2 metri</b>. Quanto è lungo tutto il trenino?', { n }), ans: n * 2, tol: 0, unit: t('metri'), explain: t('Giusto: {n} volte 2 fa {a} metri.', { n, a: n * 2 }) };
     }
     const m = pick([2, 3, 4, 5]);
-    return { text: `Un giro sulla ruota panoramica dura <b>${m} minuti</b>. Un minuto ha 60 secondi. Quanti secondi dura il giro?`, ans: m * 60, tol: 0, unit: 'secondi', explain: `Giusto: ${m} × 60 = ${m * 60} secondi.` };
+    return { text: t('Un giro sulla ruota panoramica dura <b>{m} minuti</b>. Un minuto ha 60 secondi. Quanti secondi dura il giro?', { m }), ans: m * 60, tol: 0, unit: t('secondi'), explain: t('Giusto: {m} × 60 = {a} secondi.', { m, a: m * 60 }) };
   }
   const opts = [
-    () => { const v = pick([35, 42, 48, 55, 63]); return { text: `La montagna russa è alta <b>0,0${v} km</b>. Quanti metri sono?`, ans: v, tol: 0.01, unit: 'm', explain: `1 km = 1000 m, quindi 0,0${v} × 1000 = ${v} m.` }; },
-    () => { const v = pick([120, 135, 150, 185]); return { text: `Per salire su una giostra bisogna essere alti almeno <b>${v} cm</b>. In metri?`, ans: v / 100, tol: 0.001, unit: 'm', explain: `100 cm = 1 m, quindi ${v} cm = ${String(v / 100).replace('.', ',')} m.` }; },
-    () => { const m = pick([2, 3, 4]), s = pick([15, 20, 40]); return { text: `Un giro di giostra dura <b>${m} minuti e ${s} secondi</b>. Quanti secondi in tutto?`, ans: m * 60 + s, tol: 0, unit: 's', explain: `${m} × 60 + ${s} = ${m * 60 + s} s.` }; },
-    () => { const g = pick([250, 400, 750, 1500]); return { text: `Il sacchetto di zucchero filato pesa <b>${g} g</b>. In chilogrammi?`, ans: g / 1000, tol: 0.0001, unit: 'kg', explain: `1 kg = 1000 g, quindi ${g} g = ${String(g / 1000).replace('.', ',')} kg.` }; },
+    () => { const v = pick([35, 42, 48, 55, 63]); return { text: t('La montagna russa è alta <b>{k:3} km</b>. Quanti metri sono?', { k: v / 1000 }), ans: v, tol: 0.01, unit: 'm', explain: t('1 km = 1000 m, quindi {k:3} × 1000 = {v} m.', { k: v / 1000, v }) }; },
+    () => { const v = pick([120, 135, 150, 185]); return { text: t('Per salire su una giostra bisogna essere alti almeno <b>{v} cm</b>. In metri?', { v }), ans: v / 100, tol: 0.001, unit: 'm', explain: t('100 cm = 1 m, quindi {v} cm = {m} m.', { v, m: v / 100 }) }; },
+    () => { const m = pick([2, 3, 4]), s = pick([15, 20, 40]); return { text: t('Un giro di giostra dura <b>{m} minuti e {s} secondi</b>. Quanti secondi in tutto?', { m, s }), ans: m * 60 + s, tol: 0, unit: 's', explain: t('{m} × 60 + {s} = {a} s.', { m, s, a: m * 60 + s }) }; },
+    () => { const g = pick([250, 400, 750, 1500]); return { text: t('Il sacchetto di zucchero filato pesa <b>{g} g</b>. In chilogrammi?', { g }), ans: g / 1000, tol: 0.0001, unit: 'kg', explain: t('1 kg = 1000 g, quindi {g} g = {k:3} kg.', { g, k: g / 1000 }) }; },
   ];
   return opts[(r * 2 + Math.floor(Math.random() * 2)) % opts.length]();
 };
@@ -117,7 +118,7 @@ export default {
         },
         {
           kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da kg a grammi.',
-          gen: () => { const k = pick([0.15, 0.25, 0.4, 0.75, 1.2]), g = Math.round(k * 1000); return { text: `<b>${String(k).replace('.', ',')} kg</b> quanti grammi sono?`, ans: g, tol: 0, unit: 'g', explain: `Giusto: ${String(k).replace('.', ',')} × 1000 = ${g} g.` }; },
+          gen: () => { const k = pick([0.15, 0.25, 0.4, 0.75, 1.2]), g = Math.round(k * 1000); return { text: t('<b>{k} kg</b> quanti grammi sono?', { k }), ans: g, tol: 0, unit: 'g', explain: t('Giusto: {k} × 1000 = {g} g.', { k, g }) }; },
         },
       ],
       hints: [T('Confronta due cose vicine alla volta: quale è più grande?')],

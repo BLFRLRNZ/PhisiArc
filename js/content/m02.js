@@ -1,5 +1,6 @@
 // M02 · La caduta libera (dopo M04, l'accelerazione). Simulazione: la caduta (piuma, martello, aria, Luna).
-import { T, pick, num } from '../util.js';
+import { T, pick } from '../util.js';
+import { t as tr } from '../i18n.js';
 
 export default {
   id: 'M02',
@@ -119,18 +120,18 @@ export default {
           text: T('Scegli l’altezza della torre e lascia cadere la cabina.', 'Regola l’altezza e lancia. La seconda prova chiederà un tempo diverso.'),
           gen: (lens, r) => {
             const t = pick(r === 0 ? [1.5, 2, 2.5] : [1.8, 2.2, 2.8, 3]);
-            return { t, text: `La caduta deve durare <b>${num(t, 1)} secondi</b>.` };
+            return { t, text: tr('La caduta deve durare <b>{t:1} secondi</b>.', { t }) };
           },
           solve: (tg) => ({ h: 0.5 * 9.81 * tg.t * tg.t }),
           check: (res, tg, lens) => {
             const t = res.times[0];
             const tol = lens === 'e' ? 0.3 : 0.15;
-            if (t != null && Math.abs(t - tg.t) <= tol) return { ok: true, msg: `Caduta di ${num(t, 2)} s. Che brivido, proprio giusto!` };
+            if (t != null && Math.abs(t - tg.t) <= tol) return { ok: true, msg: tr('Caduta di {t} s. Che brivido, proprio giusto!', { t }) };
             return {
               ok: false,
               msg: t > tg.t
-                ? `Ci ha messo ${num(t, 2)} s: troppo. ${lens === 'e' ? 'Abbassa la torre.' : 'L’altezza va diminuita: di quanto?'}`
-                : `Ci ha messo ${num(t, 2)} s: troppo poco. ${lens === 'e' ? 'Alza la torre.' : 'L’altezza va aumentata: di quanto?'}`,
+                ? tr('Ci ha messo {t} s: troppo.', { t }) + ' ' + (lens === 'e' ? tr('Abbassa la torre.') : tr('L’altezza va diminuita: di quanto?'))
+                : tr('Ci ha messo {t} s: troppo poco.', { t }) + ' ' + (lens === 'e' ? tr('Alza la torre.') : tr('L’altezza va aumentata: di quanto?')),
             };
           },
         },
@@ -162,8 +163,8 @@ export default {
           gen: (lens) => {
             const t = pick([5, 8, 10, 12]), v = pick([3, 4, 5, 6]), d = v * t;
             return lens === 'e'
-              ? { text: `Un trenino fa <b>${d} metri</b> in <b>${t} secondi</b>. Quanti metri fa ogni secondo?`, ans: v, tol: 0, unit: 'metri', explain: `Esatto: ${d} diviso ${t} fa ${v}.` }
-              : { text: `Un trenino percorre <b>${d} m</b> in <b>${t} s</b>. Qual è la sua velocità?`, ans: v, tol: 0.01, unit: 'm/s', explain: `Esatto: v = ${d} m / ${t} s = ${v} m/s.` };
+              ? { text: tr('Un trenino fa <b>{d} metri</b> in <b>{t} secondi</b>. Quanti metri fa ogni secondo?', { d, t }), ans: v, tol: 0, unit: tr('metri'), explain: tr('Esatto: {d} diviso {t} fa {v}.', { d, t, v }) }
+              : { text: tr('Un trenino percorre <b>{d} m</b> in <b>{t} s</b>. Qual è la sua velocità?', { d, t }), ans: v, tol: 0.01, unit: 'm/s', explain: tr('Esatto: v = {d} m / {t} s = {v} m/s.', { d, t, v }) };
           },
         },
         {

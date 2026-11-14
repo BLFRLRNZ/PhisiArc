@@ -533,3 +533,6 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .varrow .chips { display: flex; gap: 6px; flex: none; }
 .quest:focus { outline: none; }
 .quest:focus-visible { outline: 2px solid var(--sky); outline-offset: 3px; }
+
+/* scelta della lingua nella schermata di benvenuto */
+.welcome .lang-chips { justify-content: center; margin: 4px 0 8px; }

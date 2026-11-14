@@ -1,3 +1,4 @@
+import { t as i18n, LOCALE } from '../i18n.js';
 // Base comune delle simulazioni: canvas nitido, ciclo a passi piccoli, fine esperimento.
 
 export class Sim {
@@ -212,6 +213,7 @@ export class Sim {
 
   // Testo: Lexend per le parole, IBM Plex Mono per i numeri (mono: true).
   text(str, x, y, { size = 14, color, align = 'left', weight = 500, base = 'alphabetic', mono } = {}) {
+    str = i18n(String(str));
     const g = this.ctx;
     if (mono == null) mono = /^[\s\d.,:+−\-°%/=]*[\d][\s\d.,:+−\-°%/=a-zA-Z²]*$/.test(String(str)) && String(str).length < 14;
     g.font = mono ? `${Math.min(weight, 500)} ${size}px "IBM Plex Mono", ui-monospace, monospace` : `${weight} ${size}px Lexend, system-ui, -apple-system, "Segoe UI", sans-serif`;
@@ -242,7 +244,7 @@ export class Sim {
 }
 
 export const fmt = (x, d = 2) =>
-  Number(x).toLocaleString('it-IT', { maximumFractionDigits: d, minimumFractionDigits: d });
+  Number(x).toLocaleString(LOCALE, { maximumFractionDigits: d, minimumFractionDigits: d });
 
 export const clamp01 = (u) => Math.max(0, Math.min(1, u));
 export const easeOut = (u) => 1 - (1 - clamp01(u)) ** 3;

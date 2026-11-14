@@ -1,4 +1,5 @@
 // Cannone: angolo e velocità di lancio, bersaglio, traiettorie precedenti in trasparenza.
+import { t as i18n } from '../i18n.js';
 import { Sim, fmt, easeOut, easeInOut } from './base.js';
 
 export class Cannon extends Sim {
@@ -191,12 +192,12 @@ export class Cannon extends Sim {
       }
     }
 
-    this.text(`${fmt(p.ang, 0)}°  ·  ${fmt(p.v, 1)} m/s${p.air ? '  ·  con l’aria' : ''}`, 14, 24, { size: 14, weight: 600 });
+    this.text(`${fmt(p.ang, 0)}°  ·  ${fmt(p.v, 1)} m/s${p.air ? '  ·  ' + i18n('con l’aria') : ''}`, 14, 24, { size: 14, weight: 600 });
     if (this.result) {
       const msg = `Atterra a ${fmt(this.result.x, 1)} m` + (p.target != null && this.result.hit ? ' · Centro!' : '');
       g.globalAlpha = easeOut(this.age / 0.4);
       this.text(msg, W - 14, 24, { size: 14, align: 'right', weight: 700, color: this.result.hit ? sun : this.c('accent2') });
-      if (p.drop) this.text(`in volo ${fmt(this.result.t, 2)} s · lasciata cadere ${fmt(this.result.tDrop, 2)} s`, W - 14, 44, { size: 12, align: 'right', color: muted });
+      if (p.drop) this.text(i18n('in volo {a} s · lasciata cadere {b} s', { a: fmt(this.result.t, 2), b: fmt(this.result.tDrop, 2) }), W - 14, 44, { size: 12, align: 'right', color: muted });
       g.globalAlpha = 1;
     }
   }

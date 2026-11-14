@@ -3,6 +3,7 @@ import { S, save } from '../state.js';
 import { IC } from '../icons.js';
 import { T } from '../util.js';
 import { compileZone } from './declarative.js';
+import { t as tr, translateTree } from '../i18n.js';
 import F01 from './f01.js';
 import F02 from './f02.js';
 import F03 from './f03.js';
@@ -27,7 +28,8 @@ export const LENSES = {
 };
 
 export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05 };
-for (const z of Object.values(ZONES)) compileZone(z); // i passi scritti solo a testo diventano giocabili
+// in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
+for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
 export const WORLDS = [
   {
@@ -91,6 +93,8 @@ export const GRADES = [
   { name: 'Curie', world: 'casa', desc: 'Il traguardo finale.' },
 ];
 
+translateTree({ KIND, LENSES, WORLDS, GRADES });
+
 // ---------- aiuti per cercare ----------
 const LEVEL_ZONE = {};
 for (const z of Object.values(ZONES)) for (const l of z.levels) LEVEL_ZONE[l.id] = z;
@@ -107,14 +111,14 @@ export const worldDone = (w) => worldReady(w) && (!!(S.skip && S.skip[w.id]) || 
 // Prova d'ingresso: chi conosce già un mondo può superarlo rispondendo alle domande dei suoi ripassi.
 export const EXAM_MAX_ERRORS = 2;
 export const examFor = (w) => ({
-  id: 'esame-' + w.id, exam: w.id, kind: 'ripasso', title: 'Prova d’ingresso',
+  id: 'esame-' + w.id, exam: w.id, kind: 'ripasso', title: tr('Prova d’ingresso'),
   zoneRef: ZONES[w.zones[0]],
   intro: T(
-    `Conosci già ${w.name}? Rispondi a queste domande: con al massimo ${EXAM_MAX_ERRORS} errori il mondo dopo si apre subito. I livelli restano lì, da giocare quando vuoi.`,
-    `Prova d’ingresso: le domande dei ripassi di ${w.name}. Con al massimo ${EXAM_MAX_ERRORS} errori, e senza aiuti, il mondo successivo si apre. I livelli restano giocabili.`),
+    tr('Conosci già {w}? Rispondi a queste domande: con al massimo {n} errori il mondo dopo si apre subito. I livelli restano lì, da giocare quando vuoi.', { w: w.name, n: EXAM_MAX_ERRORS }),
+    tr('Prova d’ingresso: le domande dei ripassi di {w}. Con al massimo {n} errori, e senza aiuti, il mondo successivo si apre. I livelli restano giocabili.', { w: w.name, n: EXAM_MAX_ERRORS })),
   steps: w.zones.flatMap((z) => ZONES[z].levels.filter((l) => l.kind === 'ripasso')
     .flatMap((l) => l.steps.filter((st) => (st.kind === 'q' && !st.predict) || st.kind === 'num').map((st) => (st.kind === 'num' ? { ...st, rounds: 1 } : st)))),
-  hints: [T('Questa è una prova: gli aiuti ci sono, ma se li usi la prova non vale. Puoi sempre giocare i livelli.')],
+  hints: [tr('Questa è una prova: gli aiuti ci sono, ma se li usi la prova non vale. Puoi sempre giocare i livelli.')],
 });
 // Quello che si è aperto resta aperto: se più avanti si aggiunge una zona (per esempio F03),
 // chi aveva già sbloccato un mondo, una zona o un livello non se lo ritrova chiuso.

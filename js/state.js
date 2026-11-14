@@ -1,6 +1,8 @@
 // I progressi restano sul dispositivo (localStorage), come in Arcode.
 // Più giocatori sullo stesso dispositivo: ognuno ha il suo salvataggio. Il primo usa la chiave storica.
 
+import { t as tr } from './i18n.js';
+
 const KEY = 'phisiarc-v1';
 const PKEY = 'phisiarc-giocatori';
 const keyOf = (id) => (id === 'p1' ? KEY : `${KEY}:${id}`);
@@ -123,11 +125,11 @@ export function exportCode() {
 // known = { levels, pieces, worlds, zones } (insiemi di id), dato dall'app.
 export function importCode(code, known) {
   const txt = typeof code === 'string' ? code.trim() : '';
-  if (!txt) throw new Error('Incolla prima un codice.');
-  if (txt.length > 60000 || !/^[A-Za-z0-9+/=\s]+$/.test(txt)) throw new Error('Questo non sembra un codice di PhisiArc.');
+  if (!txt) throw new Error(tr('Incolla prima un codice.'));
+  if (txt.length > 60000 || !/^[A-Za-z0-9+/=\s]+$/.test(txt)) throw new Error(tr('Questo non sembra un codice di PhisiArc.'));
   let o;
-  try { o = JSON.parse(decodeURIComponent(escape(atob(txt.replace(/\s+/g, ''))))); } catch { throw new Error('Il codice è incompleto o rovinato: copialo di nuovo per intero.'); }
-  if (!o || typeof o !== 'object' || Array.isArray(o)) throw new Error('Questo non sembra un codice di PhisiArc.');
+  try { o = JSON.parse(decodeURIComponent(escape(atob(txt.replace(/\s+/g, ''))))); } catch { throw new Error(tr('Il codice è incompleto o rovinato: copialo di nuovo per intero.')); }
+  if (!o || typeof o !== 'object' || Array.isArray(o)) throw new Error(tr('Questo non sembra un codice di PhisiArc.'));
   o = migrate(o);
   const obj = (x) => (x && typeof x === 'object' && !Array.isArray(x) ? x : {});
   const has = (set, k) => !set || set.has(k);
@@ -141,7 +143,7 @@ export function importCode(code, known) {
   const isWorld = (k) => has(known && known.worlds, k);
   const seen = flags(o.seen, isWorld), skip = flags(o.skip, isWorld);
   const aperti = flags(o.aperti, (k) => (k.startsWith('w:') ? isWorld(k.slice(2)) : k.startsWith('z:') ? has(known && known.zones, k.slice(2)) : false));
-  if (!Object.keys(done).length && !park.length && !Object.keys(skip).length) throw new Error('Nel codice non ci sono progressi da ripristinare.');
+  if (!Object.keys(done).length && !park.length && !Object.keys(skip).length) throw new Error(tr('Nel codice non ci sono progressi da ripristinare.'));
   for (const [k, v] of Object.entries(done)) S.done[k] = Math.max(S.done[k] || 0, v);
   S.park = [...new Set([...S.park, ...park])];
   Object.assign(S.seen, seen);

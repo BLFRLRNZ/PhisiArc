@@ -1,15 +1,16 @@
 // F01 · Cos'è la fisica e il metodo scientifico. Simulazione: il pendolo.
-import { T, pick, num } from '../util.js';
+import { T, pick } from '../util.js';
+import { t } from '../i18n.js';
 
 const swingCheck = (r, tg, lens) => {
   const tol = lens === 'e' ? 0.2 : 0.1;
   const d = r.T - tg.T;
-  if (Math.abs(d) <= tol) return { ok: true, msg: `Un’oscillazione dura ${num(r.T, 2)} s: proprio quello che serviva!` };
+  if (Math.abs(d) <= tol) return { ok: true, msg: t('Un’oscillazione dura {T} s: proprio quello che serviva!', { T: r.T }) };
   return {
     ok: false,
     msg: d > 0
-      ? `Dura ${num(r.T, 2)} s: troppo lenta. ${lens === 'e' ? 'Prova a cambiare il filo.' : 'Quale grandezza la rende più veloce?'}`
-      : `Dura ${num(r.T, 2)} s: troppo veloce. ${lens === 'e' ? 'Prova a cambiare il filo.' : 'Quale grandezza la rende più lenta?'}`,
+      ? t('Dura {T} s: troppo lenta.', { T: r.T }) + ' ' + (lens === 'e' ? t('Prova a cambiare il filo.') : t('Quale grandezza la rende più veloce?'))
+      : t('Dura {T} s: troppo veloce.', { T: r.T }) + ' ' + (lens === 'e' ? t('Prova a cambiare il filo.') : t('Quale grandezza la rende più lenta?')),
   };
 };
 
@@ -64,7 +65,7 @@ export default {
         {
           kind: 'free', runs: 2, controls: ['m'],
           text: T('Prova tu: lancia con un peso, poi cambia <b>solo il peso</b> e lancia di nuovo.', 'Esperimento: lancia, cambia <b>solo la massa</b>, rilancia. Confronta i due periodi.'),
-          onRun: (r) => `Questa volta: un’oscillazione dura <b>${num(r.T, 2)} s</b>.`,
+          onRun: (r) => t('Questa volta: un’oscillazione dura <b>{T} s</b>.', { T: r.T }),
         },
         {
           kind: 'q',
@@ -110,7 +111,7 @@ export default {
           text: T('Regola l’altalena e lanciala.', 'Regola il pendolo per ottenere il periodo richiesto. La verifica cambierà valore: serve la regola, non la fortuna.'),
           gen: (lens, r) => {
             const T0 = pick(r === 0 ? [1.4, 1.6, 2.0, 2.2] : [1.2, 1.8, 2.4, 2.8]);
-            return { T: T0, text: `Un’oscillazione deve durare <b>${num(T0, 1)} secondi</b>.` };
+            return { T: T0, text: t('Un’oscillazione deve durare <b>{T:1} secondi</b>.', { T: T0 }) };
           },
           // valori che risolvono la prova: servono al test automatico che gioca tutti i livelli
           solve: (tg) => ({ L: (9.81 * tg.T * tg.T) / (4 * Math.PI * Math.PI) }),

@@ -3,6 +3,7 @@
 // nella scatola dopo, che torna più tardi (3, 7, 14, 30 giorni). Un errore le rimette nella prima scatola.
 // Nel salvataggio: S.rev = { 'm03-3#0': { b: scatola 1-5, d: giorno in cui torna } }.
 import { T } from './util.js';
+import { t as tr } from './i18n.js';
 import { S, save } from './state.js';
 import { ZONES, levelById } from './content/index.js';
 
@@ -76,11 +77,11 @@ export function reviewLevel() {
   const first = stepOf(keys[0]).level;
   const zoneRef = Object.values(ZONES).find((z) => z.levels.includes(first));
   return {
-    id: REVIEW_ID, review: true, kind: 'ripasso', title: 'Ripasso del giorno', zoneRef,
+    id: REVIEW_ID, review: true, kind: 'ripasso', title: tr('Ripasso del giorno'), zoneRef,
     intro: T(
-      'Ti ricordi? Ecco qualche domanda dei livelli che hai già finito. Quelle che sai tornano più avanti, le altre tornano presto.',
-      'Ripasso del giorno: domande dei livelli già fatti. Se rispondi giusto al primo colpo, la domanda torna fra più giorni; se sbagli, torna domani.'),
+      tr('Ti ricordi? Ecco qualche domanda dei livelli che hai già finito. Quelle che sai tornano più avanti, le altre tornano presto.'),
+      tr('Ripasso del giorno: domande dei livelli già fatti. Se rispondi giusto al primo colpo, la domanda torna fra più giorni; se sbagli, torna domani.')),
     steps: keys.map((k) => { const { st } = stepOf(k); return { ...st, rk: k, ...(st.kind === 'num' ? { rounds: 1 } : {}) }; }),
-    hints: [T('Se non ricordi, usa pure l’aiuto: la domanda tornerà domani.')],
+    hints: [tr('Se non ricordi, usa pure l’aiuto: la domanda tornerà domani.')],
   };
 }

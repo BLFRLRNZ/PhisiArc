@@ -1,5 +1,6 @@
 // M03 · Vettori, moto nel piano e proiettili. Simulazioni: la barca sul fiume (vettori), poi il cannone.
-import { T, pick, num } from '../util.js';
+import { T, pick } from '../util.js';
+import { t as tr } from '../i18n.js';
 
 export default {
   id: 'M03',
@@ -32,7 +33,7 @@ export default {
           kind: 'num', only: ['s', 'c'], rounds: 2, text: T('Somma due frecce perpendicolari.'),
           gen: () => {
             const [b, c, v] = pick([[4, 3, 5], [3, 4, 5], [8, 6, 10], [6, 8, 10], [5, 12, 13]]);
-            return { text: `La barca va a <b>${b} m/s</b> verso la riva opposta, la corrente a <b>${c} m/s</b> di lato. Quanto vale la velocità totale?`, ans: v, tol: 0.05, unit: 'm/s', explain: `Esatto: le frecce sono perpendicolari, quindi √(${b}² + ${c}²) = √${b * b + c * c} = ${v} m/s. Non ${b + c}: le frecce non sono nella stessa direzione.` };
+            return { text: tr('La barca va a <b>{b} m/s</b> verso la riva opposta, la corrente a <b>{c} m/s</b> di lato. Quanto vale la velocità totale?', { b, c }), ans: v, tol: 0.05, unit: 'm/s', explain: tr('Esatto: le frecce sono perpendicolari, quindi √({b}² + {c}²) = √{q} = {v} m/s. Non {s}: le frecce non sono nella stessa direzione.', { b, c, q: b * b + c * c, v, s: b + c }) };
           },
         },
       ],
@@ -60,11 +61,11 @@ export default {
         {
           kind: 'tune', rounds: 1, set: { vc: 2 },
           text: T('Ora tocca a te: gira la <b>prua controcorrente</b> e porta la barca dritta al pontile.', 'Inclina la prua controcorrente quanto basta per arrivare dritto al pontile.'),
-          gen: () => ({ text: 'Arriva al pontile (al massimo 1,5 m di scarto).' }),
+          gen: () => ({ text: tr('Arriva al pontile (al massimo 1,5 m di scarto).') }),
           solve: () => ({ ang: 30 }),
           check: (res, tg, lens) => {
-            if (Math.abs(res.drift) <= 1.5) return { ok: true, msg: `Al pontile! Ci hai messo ${num(res.t, 1)} s: un po’ di più, perché parte della spinta va contro la corrente.` };
-            return { ok: false, msg: res.drift > 0 ? `Sei finito ${num(res.drift, 1)} m a valle. ${lens === 'e' ? 'Gira di più la prua.' : 'Serve un angolo maggiore.'}` : `Sei finito ${num(-res.drift, 1)} m a monte. ${lens === 'e' ? 'Gira un po’ meno.' : 'Angolo troppo grande.'}` };
+            if (Math.abs(res.drift) <= 1.5) return { ok: true, msg: tr('Al pontile! Ci hai messo {t:1} s: un po’ di più, perché parte della spinta va contro la corrente.', { t: res.t }) };
+            return { ok: false, msg: res.drift > 0 ? tr('Sei finito {d:1} m a valle.', { d: res.drift }) + ' ' + (lens === 'e' ? tr('Gira di più la prua.') : tr('Serve un angolo maggiore.')) : tr('Sei finito {d:1} m a monte.', { d: -res.drift }) + ' ' + (lens === 'e' ? tr('Gira un po’ meno.') : tr('Angolo troppo grande.')) };
           },
         },
       ],
@@ -186,17 +187,17 @@ export default {
           gen: (lens, r) => {
             const d = Math.round(30 + Math.random() * 60);
             const tw = lens === 'e' ? 5 : 3;
-            return { d, set: { target: d, tw }, text: `Il bersaglio è a <b>${d} metri</b>.` };
+            return { d, set: { target: d, tw }, text: tr('Il bersaglio è a <b>{d} metri</b>.', { d }) };
           },
           solve: (tg) => ({ ang: 45, v: Math.sqrt(tg.d * 9.81) }),
           check: (res, tg, lens) => {
-            if (res.hit) return { ok: true, msg: `Atterrata a ${num(res.x, 1)} m. Centro!` };
+            if (res.hit) return { ok: true, msg: tr('Atterrata a {x:1} m. Centro!', { x: res.x }) };
             const d = res.x - tg.d;
             return {
               ok: false,
               msg: d < 0
-                ? `Troppo corto di ${num(-d, 1)} m. ${lens === 'e' ? 'Spara più forte!' : 'Cosa puoi cambiare per allungare il tiro?'}`
-                : `Troppo lungo di ${num(d, 1)} m. ${lens === 'e' ? 'Spara più piano!' : 'Cosa puoi cambiare per accorciare il tiro?'}`,
+                ? tr('Troppo corto di {d:1} m.', { d: -d }) + ' ' + (lens === 'e' ? tr('Spara più forte!') : tr('Cosa puoi cambiare per allungare il tiro?'))
+                : tr('Troppo lungo di {d:1} m.', { d }) + ' ' + (lens === 'e' ? tr('Spara più piano!') : tr('Cosa puoi cambiare per accorciare il tiro?')),
             };
           },
         },

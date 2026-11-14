@@ -1,5 +1,6 @@
 // F03 · Grafici e proporzionalità, con gli errori di misura. Simulazione: il laboratorio dei grafici.
-import { T, pick, num } from '../util.js';
+import { T, pick } from '../util.js';
+import { t } from '../i18n.js';
 
 const TEMPO = { label: 'Tempo aperto', min: 1, max: 10, step: 0.5, unit: 's' };
 const VEL = (min, max) => ({ label: 'Velocità', min, max, step: 1, unit: 'm/s' });
@@ -8,15 +9,15 @@ const VEL = (min, max) => ({ label: 'Velocità', min, max, step: 1, unit: 'm/s' 
 const media3 = (lens) => {
   if (lens === 'e') {
     const m = pick([4, 5, 6, 7]), d = pick([1, 2]);
-    return { text: `Hai cronometrato la stessa corsa tre volte: <b>${m - d} s</b>, <b>${m} s</b> e <b>${m + d} s</b>. Qual è la media?`, ans: m, tol: 0, unit: 's', explain: `Giusto: ${m - d} + ${m} + ${m + d} = ${3 * m}, diviso 3 fa ${m}.` };
+    return { text: t('Hai cronometrato la stessa corsa tre volte: <b>{a} s</b>, <b>{m} s</b> e <b>{b} s</b>. Qual è la media?', { a: m - d, m, b: m + d }), ans: m, tol: 0, unit: 's', explain: t('Giusto: {a} + {m} + {b} = {s}, diviso 3 fa {m}.', { a: m - d, m, b: m + d, s: 3 * m }) };
   }
   const base = pick([2, 2.5, 3, 3.5]), a = pick([-0.2, -0.1]), b = pick([0.1, 0.3]), c = -(a + b) + pick([0, 0.3]);
   const xs = [base + a, base + b, base + c].map((v) => Math.round(v * 10) / 10);
   const m = Math.round(((xs[0] + xs[1] + xs[2]) / 3) * 100) / 100;
   return {
-    text: `Tre misure dell’acqua uscita in ${num(base * 2, 0)} s: <b>${xs.map((v) => num(v, 1)).join(' L</b>, <b>')} L</b>. Qual è la media?`,
+    text: t('Tre misure dell’acqua uscita in {t:0} s: <b>{a:1} L</b>, <b>{b:1} L</b>, <b>{c:1} L</b>. Qual è la media?', { t: base * 2, a: xs[0], b: xs[1], c: xs[2] }),
     ans: m, tol: 0.02, unit: 'L',
-    explain: `Esatto: (${xs.map((v) => num(v, 1)).join(' + ')}) / 3 = ${num(m, 2)} L.`,
+    explain: t('Esatto: ({a:1} + {b:1} + {c:1}) / 3 = {m} L.', { a: xs[0], b: xs[1], c: xs[2], m }),
   };
 };
 
@@ -51,10 +52,10 @@ export default {
         {
           kind: 'num', rounds: 2, text: T('Usa quello che hai scoperto.', 'Usa la proporzionalità.'),
           gen: (lens) => {
-            const t = pick([2, 4, 6]), k = pick([2, 3]);
+            const tt = pick([2, 4, 6]), k = pick([2, 3]);
             return lens === 'e'
-              ? { text: `In <b>${t} secondi</b> escono <b>${num(t / 2, 1)} litri</b>. Quanti litri escono in <b>${t * k} secondi</b>?`, ans: (t * k) / 2, tol: 0, unit: 'litri', explain: `Giusto: il tempo è ${k} volte tanto, quindi anche l’acqua: ${num((t * k) / 2, 1)} litri.` }
-              : { text: `In <b>${t} s</b> escono <b>${num(t / 2, 1)} L</b>. Quanti litri in <b>${num(t * k * 0.75, 1)} s</b>?`, ans: (t * k * 0.75) / 2, tol: 0.01, unit: 'L', explain: `Esatto: il rapporto è 0,5 L/s, quindi 0,5 × ${num(t * k * 0.75, 1)} = ${num((t * k * 0.75) / 2, 2)} L.` };
+              ? { text: t('In <b>{t} secondi</b> escono <b>{l:1} litri</b>. Quanti litri escono in <b>{t2} secondi</b>?', { t: tt, l: tt / 2, t2: tt * k }), ans: (tt * k) / 2, tol: 0, unit: t('litri'), explain: t('Giusto: il tempo è {k} volte tanto, quindi anche l’acqua: {l:1} litri.', { k, l: (tt * k) / 2 }) }
+              : { text: t('In <b>{t} s</b> escono <b>{l:1} L</b>. Quanti litri in <b>{t2:1} s</b>?', { t: tt, l: tt / 2, t2: tt * k * 0.75 }), ans: (tt * k * 0.75) / 2, tol: 0.01, unit: 'L', explain: t('Esatto: il rapporto è 0,5 L/s, quindi 0,5 × {t2:1} = {l} L.', { t2: tt * k * 0.75, l: (tt * k * 0.75) / 2 }) };
           },
         },
       ],

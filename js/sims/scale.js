@@ -2,6 +2,7 @@
 // Ogni oggetto è disegnato a linee morbide, con un velo di colore e un leggero bagliore.
 // Vive dentro (o accanto) a un oggetto più grande: zoomando la camera scivola dall'uno all'altro,
 // i piccoli nascono da un puntino e si disegnano da soli.
+import { t as i18n, LOCALE } from '../i18n.js';
 import { Sim, clamp01, easeInOut } from './base.js';
 import { SHAPES, TAU } from './art/scale-shapes.js';
 
@@ -68,15 +69,15 @@ export const sup = (n) => String(n).replace(/-/g, '⁻').replace(/\d/g, (d) => '
 
 const nice = (m) => {
   const units = [[1e-9, 'nm'], [1e-6, 'µm'], [1e-3, 'mm'], [1e-2, 'cm'], [1, 'm'], [1e3, 'km']];
-  const f = (x) => x.toLocaleString('it-IT', { maximumSignificantDigits: 2 });
-  if (m >= 9.46e24) return `${f(m / 9.46e24)} miliardi di anni luce`;
-  if (m >= 9.46e15) return `${f(m / 9.46e15)} anni luce`;
+  const f = (x) => x.toLocaleString(LOCALE, { maximumSignificantDigits: 2 });
+  if (m >= 9.46e24) return `${f(m / 9.46e24)} ${i18n('miliardi di anni luce')}`;
+  if (m >= 9.46e15) return `${f(m / 9.46e15)} ${i18n('anni luce')}`;
   if (m >= 1e9) return `${f(m / 1e3)} km`;
-  if (m < 1e-12) return `${f(m / 1e-15)} femtometri`;
+  if (m < 1e-12) return `${f(m / 1e-15)} ${i18n('femtometri')}`;
   if (m < 1e-9) return `${f(m / 1e-9)} nm`;
   let u = units[0];
   for (const x of units) if (m >= x[0]) u = x;
-  return `${(m / u[0]).toLocaleString('it-IT', { maximumSignificantDigits: 3 })} ${u[1]}`;
+  return `${(m / u[0]).toLocaleString(LOCALE, { maximumSignificantDigits: 3 })} ${u[1]}`;
 };
 
 export class Scale extends Sim {
@@ -212,7 +213,7 @@ export class Scale extends Sim {
     this.arrow(bx0 + sb / 2, 24, bx1, 24, { color: this.c('sky'), width: 2, head: 6 });
     this.arrow(bx0 + sb / 2, 24, bx0, 24, { color: this.c('sky'), width: 2, head: 6 });
     const be = Math.round(r + Math.log10(sb / base));
-    this.text(W < 520 ? `≈ 10${sup(be)} m` : `questa barra ≈ 10${sup(be)} m`, W - 14, 44, { size: 12, align: 'right', weight: 600 });
+    this.text(W < 520 ? `≈ 10${sup(be)} m` : `${i18n('questa barra')} ≈ 10${sup(be)} m`, W - 14, 44, { size: 12, align: 'right', weight: 600 });
     this.text(`10${sup(Math.round(r))} m`, 14, 30, { size: 22, weight: 700, color: this.c('accent2') });
     const w = words(r);
     if (w && Math.abs(r - Math.round(r)) < 0.15) this.text(w, 14, 50, { size: W < 520 ? 11.5 : 13, color: this.c('muted') });

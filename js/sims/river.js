@@ -1,5 +1,6 @@
 // La barca e il fiume: due velocità che si sommano come frecce (vettori).
 // La barca spinge in una direzione, la corrente la trascina di lato: il moto vero è la somma delle due frecce.
+import { t as i18n } from '../i18n.js';
 import { Sim, fmt, easeOut, easeInOut } from './base.js';
 
 export class River extends Sim {
@@ -101,11 +102,11 @@ export class River extends Sim {
       if (p.vc > 0) {
         this.arrow(A[0], A[1], B[0], B[1], { color: this.c('sky'), width: 2.2, dash: [5, 4], label: 'corrente' });
         this.arrow(ox2, oy2, B[0], B[1], { color: this.c('chalk'), width: 2.8 });
-        this.text(`totale ${fmt(Math.hypot(this.vx, this.vy), 1)} m/s`, (ox2 + B[0]) / 2 + 10, (oy2 + B[1]) / 2 + 12, { size: 11, color: this.c('chalk'), weight: 600 });
+        this.text(i18n('totale {a} m/s', { a: fmt(Math.hypot(this.vx, this.vy), 1) }), (ox2 + B[0]) / 2 + 10, (oy2 + B[1]) / 2 + 12, { size: 11, color: this.c('chalk'), weight: 600 });
       }
     }
 
-    this.text(`Tempo: ${fmt(this.t, 1)} s`, 14, 24, { size: 14, weight: 600 });
+    this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), 14, 24, { size: 14, weight: 600 });
     this.text(`barca ${fmt(p.vb, 1)} m/s · corrente ${fmt(p.vc, 1)} m/s${p.ang ? ` · prua ${p.ang}°` : ''}`, W - 14, 24, { size: 12, align: 'right', color: this.c('muted') });
     if (this.result) {
       const d = this.result.drift, u = easeOut(this.age / 0.5);

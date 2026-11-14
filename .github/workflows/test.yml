@@ -18,6 +18,8 @@ jobs:
         run: node tools/check-content.mjs
       - name: Controllo dei prerequisiti
         run: node tools/check-prereq.mjs
+      - name: Controllo delle traduzioni inglesi
+        run: node tools/i18n-strings.mjs --check
       - name: Installa Playwright e Chrome
         run: |
           npm install --no-save --no-package-lock playwright@1.48.2
@@ -27,3 +29,4 @@ jobs:
           python3 -m http.server 8765 >/dev/null 2>&1 &
           sleep 1
           node tests/play-all.mjs http://localhost:8765
+          LINGUA=en node tests/play-all.mjs http://localhost:8765 s

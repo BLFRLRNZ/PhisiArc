@@ -1,5 +1,6 @@
 // PhisiArc: schermate, navigazione e impostazioni.
 import { h, tx, asDialog } from './util.js';
+import { t as tr, LANG, LANGS, setLang } from './i18n.js';
 import { S, save, exportCode, importCode, resetAll, voiceOn, PLAYERS, switchPlayer, addPlayer, renamePlayer, removePlayer, playerName } from './state.js';
 import { CAST, CAST_LIST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
@@ -13,6 +14,7 @@ import {
 } from './content/index.js';
 
 const app = document.getElementById('app');
+document.documentElement.lang = LANG;
 
 // Niente zoom della pagina, come in un'app: pizzico, Ctrl + rotella e Ctrl +/− (il doppio tocco lo blocca il CSS).
 const noZoom = (e) => e.preventDefault();
@@ -24,7 +26,7 @@ let cleanup = null;
 
 const go = (hash) => { if (location.hash === hash) render(); else location.hash = hash; };
 
-const logo = () => h('a', { class: 'logo', href: '#/', 'aria-label': 'PhisiArc, torna ai mondi' },
+const logo = () => h('a', { class: 'logo', href: '#/', 'aria-label': tr('PhisiArc, torna ai mondi') },
   h('span', { class: 'logo-mark', html: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 27 Q16 -7 28 27"/><path d="M2 27h28"/><circle cx="16" cy="10" r="2.6"/></svg>' }),
   h('span', {}, 'Phisi', h('span', { class: 'arc' }, 'Arc')));
 const hopOnTap = (el) => { el.addEventListener('click', (e) => { const svg = e.currentTarget.querySelector('svg.m'); if (svg) hop(svg); }); return el; };
@@ -34,11 +36,11 @@ function topbar() {
   return h('header', { class: 'top' },
     logo(),
     h('nav', { class: 'top-right' },
-      PLAYERS.list.length > 1 ? h('a', { class: 'pill', href: '#/impostazioni', title: 'Cambia giocatore' }, h('span', { class: 'pill-t' }, playerName())) : null,
-      h('a', { class: 'pill', href: '#/gradi', title: 'Il tuo grado' }, h('span', { html: IC.grade }), h('span', { class: 'pill-t' }, g.name)),
-      h('span', { class: 'pill num', title: 'Joule guadagnati' }, h('span', { class: 'sun', html: IC.bolt }), `${S.joule} J`),
-      h('a', { class: 'pill icon', href: '#/parco', title: 'Il tuo parco', 'aria-label': 'Il tuo parco', html: IC.park }),
-      h('a', { class: 'pill icon', href: '#/impostazioni', title: 'Impostazioni', 'aria-label': 'Impostazioni', html: IC.gear })));
+      PLAYERS.list.length > 1 ? h('a', { class: 'pill', href: '#/impostazioni', title: tr('Cambia giocatore') }, h('span', { class: 'pill-t' }, playerName())) : null,
+      h('a', { class: 'pill', href: '#/gradi', title: tr('Il tuo grado') }, h('span', { html: IC.grade }), h('span', { class: 'pill-t' }, g.name)),
+      h('span', { class: 'pill num', title: tr('Joule guadagnati') }, h('span', { class: 'sun', html: IC.bolt }), `${S.joule} J`),
+      h('a', { class: 'pill icon', href: '#/parco', title: tr('Il tuo parco'), 'aria-label': tr('Il tuo parco'), html: IC.park }),
+      h('a', { class: 'pill icon', href: '#/impostazioni', title: tr('Impostazioni'), 'aria-label': tr('Impostazioni'), html: IC.gear })));
 }
 
 // ---------- benvenuto: scelta della lente ----------
@@ -52,11 +54,16 @@ function welcome() {
     h('div', { class: 'hero' },
       h('div', { class: 'strip' }, strip),
       h('h1', { class: 'big-logo' }, 'Phisi', h('span', { class: 'arc' }, 'Arc')),
-      h('p', { class: 'tag' }, 'La fisica a livelli. ', h('b', {}, 'Prevedi. Prova. Scopri.'))),
-    h('h2', {}, 'Come vuoi giocare?'),
-    h('p', { class: 'muted' }, 'Il percorso è lo stesso per tutti; cambia come si spiega. Puoi cambiare quando vuoi dalle impostazioni.'),
+      h('p', { class: 'tag' }, tr('La fisica a livelli.') + ' ', h('b', {}, tr('Prevedi. Prova. Scopri.')))),
+    langChips(),
+    h('h2', {}, tr('Come vuoi giocare?')),
+    h('p', { class: 'muted' }, tr('Il percorso è lo stesso per tutti; cambia come si spiega. Puoi cambiare quando vuoi dalle impostazioni.')),
     h('div', { class: 'lens-grid' }, cards));
 }
+
+// scelta della lingua (la pagina si ricarica nella lingua nuova)
+const langChips = () => h('div', { class: 'chips lang-chips' }, Object.entries(LANGS).map(([k, name]) =>
+  h('button', { class: 'chip' + (LANG === k ? ' on' : ''), 'aria-pressed': String(LANG === k), lang: k, onclick: () => { if (LANG !== k) setLang(k); } }, name)));
 
 // ---------- mappa dei mondi ----------
 function home() {
@@ -66,14 +73,14 @@ function home() {
     const ready = worldReady(w), open = ready && worldOpen(w), done = worldDone(w), cur = w === here;
     let total = 0, got = 0;
     if (ready) for (const z of w.zones) for (const l of ZONES[z].levels) { total++; if (S.done[l.id]) got++; }
-    const prev = w.requires.map((r) => worldById(r).name).join(' e ');
-    const status = done ? (got < total ? `Superato con la prova · ${got} di ${total} livelli` : 'Completato') : open ? `${got} di ${total} livelli` : !ready ? `In costruzione · ${w.soon.length} zone in arrivo` : `Si apre quando finisci ${prev}`;
+    const prev = w.requires.map((r) => worldById(r).name).join(tr(' e '));
+    const status = done ? (got < total ? tr('Superato con la prova · {got} di {total} livelli', { got, total }) : tr('Completato')) : open ? tr('{got} di {total} livelli', { got, total }) : !ready ? tr('In costruzione · {n} zone in arrivo', { n: w.soon.length }) : tr('Si apre quando finisci {prev}', { prev });
     const diff = w.diff ?? Math.ceil((w.n / WORLDS.length) * 5); // difficoltà decisa sul contenuto, non sul numero
     const body = h('div', { class: 'wbody', title: ready ? '' : w.soon.join(' · ') },
-      h('div', { class: 'wnum' }, `Mondo ${String(w.n).padStart(2, '0')} · ${w.field}`),
+      h('div', { class: 'wnum' }, `${tr('Mondo')} ${String(w.n).padStart(2, '0')} · ${w.field}`),
       h('h3', {}, w.name),
       ready ? h('div', { class: 'muted small' }, w.place) : null,
-      h('div', { class: 'wdiff', title: `Difficoltà ${diff} su 5` }, h('span', { class: 'muted' }, 'Difficoltà'), h('span', { class: 'wdots' }, ...[1, 2, 3, 4, 5].map((k) => h('i', { class: k <= diff ? 'on' : '' })))),
+      h('div', { class: 'wdiff', title: tr('Difficoltà {d} su 5', { d: diff }) }, h('span', { class: 'muted' }, tr('Difficoltà')), h('span', { class: 'wdots' }, ...[1, 2, 3, 4, 5].map((k) => h('i', { class: k <= diff ? 'on' : '' })))),
       ready ? h('div', { class: 'bar' }, h('span', { style: `width:${total ? (100 * got) / total : 0}%` })) : null,
       h('div', { class: 'small wstatus' }, status),
       null);
@@ -84,14 +91,14 @@ function home() {
     const card = open ? h('a', { class: cls, style: `--c:${w.color}`, href: `#/mondo/${w.id}` }, icon, body) : hopOnTap(h('div', { class: cls, style: `--c:${w.color}` }, icon, body));
     const node = h('div', { class: 'pnode' }, done ? h('span', { html: IC.check }) : String(w.n));
     const step = h('div', { class: 'pstep' + (done ? ' done' : '') + (cur ? ' here' : '') + (open ? '' : ' locked') + (i === WORLDS.length - 1 ? ' last' : ''), style: `--c:${w.color}` },
-      node, cur ? h('div', { class: 'phere' }, 'Sei qui') : null, card);
+      node, cur ? h('div', { class: 'phere' }, tr('Sei qui')) : null, card);
     return step;
   });
   const doneN = WORLDS.filter(worldDone).length;
   const page = h('div', { class: 'page' }, topbar(),
     h('div', { class: 'page-in' },
-      h('h1', {}, 'Il percorso'),
-      h('p', { class: 'muted' }, `Stai giocando come ${LENSES[S.lens].name}. Dodici mondi in fila, dal più semplice al più difficile: ognuno è un campo della fisica e si apre quando finisci quello prima. Mondi completati: ${doneN} di ${WORLDS.length}.`),
+      h('h1', {}, tr('Il percorso')),
+      h('p', { class: 'muted' }, tr('Stai giocando come {lens}. Dodici mondi in fila, dal più semplice al più difficile: ognuno è un campo della fisica e si apre quando finisci quello prima. Mondi completati: {n} di {tot}.', { lens: LENSES[S.lens].name, n: doneN, tot: WORLDS.length })),
       reviewCard(),
       h('div', { class: 'worlds path' }, list)));
   if (here && here.n > 2) requestAnimationFrame(() => page.querySelector('.pstep.here')?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
@@ -104,13 +111,13 @@ function reviewCard() {
   const due = dueKeys().length;
   if (!due) {
     const n = nextDueIn();
-    return n == null ? null : h('p', { class: 'muted small' }, `Prossimo ripasso: ${n <= 1 ? 'domani' : `fra ${n} giorni`}.`);
+    return n == null ? null : h('p', { class: 'muted small' }, n <= 1 ? tr('Prossimo ripasso: domani.') : tr('Prossimo ripasso: fra {n} giorni.', { n }));
   }
   const k = Math.min(due, REVIEW_MAX);
   return h('section', { class: 'zone review-card' },
-    h('h3', {}, 'Ripasso del giorno'),
-    h('p', { class: 'muted small' }, `${k} ${k === 1 ? 'domanda' : 'domande'} dai livelli che hai già finito. Ripassare dopo qualche giorno aiuta a ricordare a lungo.`),
-    h('a', { class: 'btn primary', href: '#/ripasso' }, 'Ripassa'));
+    h('h3', {}, tr('Ripasso del giorno')),
+    h('p', { class: 'muted small' }, k === 1 ? tr('1 domanda dai livelli che hai già finito. Ripassare dopo qualche giorno aiuta a ricordare a lungo.') : tr('{k} domande dai livelli che hai già finito. Ripassare dopo qualche giorno aiuta a ricordare a lungo.', { k })),
+    h('a', { class: 'btn primary', href: '#/ripasso' }, tr('Ripassa')));
 }
 
 // ---------- un mondo: zone e livelli ----------
@@ -122,31 +129,31 @@ function world(id) {
     const lv = z.levels.map((l) => {
       const ok = levelOpen(l.id), st = S.done[l.id] || 0;
       const inner = [h('span', { class: 'lk k-' + l.kind, title: KIND[l.kind].name, html: KIND[l.kind].ic }), h('span', { class: 'ln' }, l.title),
-        h('span', { class: 'lst' }, st ? h('span', {}, '★'.repeat(st), h('span', { class: 'off' }, '★'.repeat(3 - st))) : ok ? 'nuovo' : h('span', { html: IC.lock }))];
+        h('span', { class: 'lst' }, st ? h('span', {}, '★'.repeat(st), h('span', { class: 'off' }, '★'.repeat(3 - st))) : ok ? tr('nuovo') : h('span', { html: IC.lock }))];
       return ok ? h('a', { class: 'lvl-item' + (st ? ' done' : ' next'), href: `#/livello/${l.id}` }, inner) : h('div', { class: 'lvl-item locked' }, inner);
     });
     return h('section', { class: 'zone' + (open ? '' : ' locked') },
       h('div', { class: 'zone-head' }, h('span', { class: 'zid' }, z.id), h('h2', {}, z.title), zoneDone(zid) ? h('span', { class: 'ok', html: IC.check }) : null),
       h('div', { class: 'lvl-list' }, lv));
   });
-  const soon = w.soon && w.soon.length ? h('section', { class: 'zone locked' }, h('div', { class: 'zone-head' }, h('h2', {}, 'In arrivo')), h('p', { class: 'muted small' }, w.soon.join(' · '))) : null;
+  const soon = w.soon && w.soon.length ? h('section', { class: 'zone locked' }, h('div', { class: 'zone-head' }, h('h2', {}, tr('In arrivo'))), h('p', { class: 'muted small' }, w.soon.join(' · '))) : null;
   const page = h('div', { class: 'page', style: `--c:${w.color}` }, topbar(),
     h('div', { class: 'page-in' },
-      h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), 'I mondi'),
+      h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), tr('I mondi')),
       h('div', { class: 'world-head' }, hopOnTap(h('div', { class: 'wh-who', html: charSVG(w.mascot) })),
-        h('div', {}, h('div', { class: 'wnum' }, `Mondo ${String(w.n).padStart(2, '0')} · ${w.place}`), h('h1', {}, w.name))),
+        h('div', {}, h('div', { class: 'wnum' }, `${tr('Mondo')} ${String(w.n).padStart(2, '0')} · ${w.place}`), h('h1', {}, w.name))),
       zones, soon,
       // chi conosce già questo mondo può saltarlo con la prova d'ingresso
       !worldDone(w) && examFor(w).steps.length >= 4 ? h('section', { class: 'zone exam' },
-        h('div', { class: 'zone-head' }, h('h2', {}, 'Lo conosci già?')),
-        h('p', { class: 'muted small' }, `Fai la prova d’ingresso: ${examFor(w).steps.filter((st) => !st.only || st.only.includes(S.lens)).length} domande dai ripassi. Con al massimo ${EXAM_MAX_ERRORS} errori, senza aiuti, si apre il mondo dopo.`),
-        h('a', { class: 'btn', href: `#/esame/${w.id}` }, 'Fai la prova d’ingresso')) : null));
+        h('div', { class: 'zone-head' }, h('h2', {}, tr('Lo conosci già?'))),
+        h('p', { class: 'muted small' }, tr('Fai la prova d’ingresso: {n} domande dai ripassi. Con al massimo {e} errori, senza aiuti, si apre il mondo dopo.', { n: examFor(w).steps.filter((st) => !st.only || st.only.includes(S.lens)).length, e: EXAM_MAX_ERRORS })),
+        h('a', { class: 'btn', href: `#/esame/${w.id}` }, tr('Fai la prova d’ingresso'))) : null));
   if (!S.seen[w.id]) {
     const modal = h('div', { class: 'modal' }, h('div', { class: 'card pop scene', style: `--c:${w.color}` },
       hopOnTap(h('div', { class: 'scene-who', html: charSVG(w.mascot) })),
       h('h2', {}, w.name),
       h('p', { html: tx(w.intro, S.lens) }),
-      h('button', { class: 'btn primary', onclick: () => { S.seen[w.id] = true; save(); modal.remove(); } }, 'Cominciamo!')));
+      h('button', { class: 'btn primary', onclick: () => { S.seen[w.id] = true; save(); modal.remove(); } }, tr('Cominciamo!'))));
     page.append(asDialog(modal));
   }
   return page;
@@ -157,12 +164,12 @@ function park() {
   const items = ALL_PIECES.map((p) => {
     const has = S.park.includes(p.id);
     return h('div', { class: 'piece-card' + (has ? '' : ' locked') },
-      has ? h('div', { class: 'pi big', html: pieceSVG(p.id) }) : h('div', { class: 'pi big' }, '?'), h('h3', {}, has ? p.name : 'Da costruire'), h('p', { class: 'small muted' }, has ? p.desc : 'Lo costruisci in un livello Costruisci.'));
+      has ? h('div', { class: 'pi big', html: pieceSVG(p.id) }) : h('div', { class: 'pi big' }, '?'), h('h3', {}, has ? p.name : tr('Da costruire')), h('p', { class: 'small muted' }, has ? p.desc : tr('Lo costruisci in un livello Costruisci.')));
   });
   return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in' },
-    h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), 'I mondi'),
-    h('h1', {}, 'Il tuo parco divertimenti'),
-    h('p', { class: 'muted' }, `Ogni livello Costruisci aggiunge un gioco che funziona con la fisica che hai imparato. Ne hai costruiti ${S.park.length} di ${ALL_PIECES.length}.`),
+    h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), tr('I mondi')),
+    h('h1', {}, tr('Il tuo parco divertimenti')),
+    h('p', { class: 'muted' }, tr('Ogni livello Costruisci aggiunge un gioco che funziona con la fisica che hai imparato. Ne hai costruiti {n} di {tot}.', { n: S.park.length, tot: ALL_PIECES.length })),
     h('div', { class: 'pieces' }, items)));
 }
 
@@ -174,66 +181,67 @@ function grades() {
     const w = g.world ? worldById(g.world) : null;
     return h('div', { class: 'grade' + (got ? ' got' : '') + (g === cur ? ' cur' : '') },
       h('span', { class: 'gi', html: got ? IC.grade : '·' }),
-      h('div', {}, h('b', {}, g.name), h('div', { class: 'small muted' }, w ? `Finisci ${w.name}` : 'All’inizio'), got && g.desc ? h('div', { class: 'small' }, g.desc) : null));
+      h('div', {}, h('b', {}, g.name), h('div', { class: 'small muted' }, w ? tr('Finisci {w}', { w: w.name }) : tr('All’inizio')), got && g.desc ? h('div', { class: 'small' }, g.desc) : null));
   });
   return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in' },
-    h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), 'I mondi'),
-    h('h1', {}, 'I gradi'), h('p', { class: 'muted' }, 'Ogni mondo finito ti dà il nome di uno scienziato.'), h('div', { class: 'grades' }, rows)));
+    h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), tr('I mondi')),
+    h('h1', {}, tr('I gradi')), h('p', { class: 'muted' }, tr('Ogni mondo finito ti dà il nome di uno scienziato.')), h('div', { class: 'grades' }, rows)));
 }
 
 // ---------- giocatori: ognuno con i suoi progressi, sullo stesso dispositivo ----------
 function players() {
-  const name = h('input', { class: 'numin', type: 'text', maxlength: 20, placeholder: 'Nome', 'aria-label': 'Nome del giocatore' });
+  const name = h('input', { class: 'numin', type: 'text', maxlength: 20, placeholder: tr('Nome'), 'aria-label': tr('Nome del giocatore') });
   const chips = PLAYERS.list.map((p) => h('button', { class: 'chip' + (p.id === PLAYERS.active ? ' on' : ''), 'aria-pressed': String(p.id === PLAYERS.active), onclick: () => { switchPlayer(p.id); render(); } }, p.name));
   const del = PLAYERS.list.length > 1 ? h('button', { class: 'btn ghost', onclick: (e) => {
     if (e.currentTarget.dataset.sure) { removePlayer(PLAYERS.active); render(); return; }
-    e.currentTarget.dataset.sure = '1'; e.currentTarget.textContent = `Sicuro? Si cancellano i progressi di ${playerName()}`;
-  } }, `Togli ${playerName()}`) : null;
+    e.currentTarget.dataset.sure = '1'; e.currentTarget.textContent = tr('Sicuro? Si cancellano i progressi di {p}', { p: playerName() });
+  } }, tr('Togli {p}', { p: playerName() })) : null;
   return h('div', {},
     h('div', { class: 'chips' }, chips),
     h('div', { class: 'row' }, name,
-      h('button', { class: 'btn', onclick: () => { addPlayer(name.value); go('#/'); } }, 'Nuovo giocatore'),
-      h('button', { class: 'btn ghost', onclick: () => { if (name.value.trim()) { renamePlayer(PLAYERS.active, name.value); render(); } } }, 'Rinomina'),
+      h('button', { class: 'btn', onclick: () => { addPlayer(name.value); go('#/'); } }, tr('Nuovo giocatore')),
+      h('button', { class: 'btn ghost', onclick: () => { if (name.value.trim()) { renamePlayer(PLAYERS.active, name.value); render(); } } }, tr('Rinomina')),
       del),
-    h('p', { class: 'small muted' }, 'Ogni giocatore ha le sue stelle, il suo parco e la sua lente.'));
+    h('p', { class: 'small muted' }, tr('Ogni giocatore ha le sue stelle, il suo parco e la sua lente.')));
 }
 
 // ---------- impostazioni ----------
 function settings() {
   const st = S.settings;
   const lensBtns = Object.entries(LENSES).map(([k, l]) => h('button', { class: 'chip' + (S.lens === k ? ' on' : ''), onclick: () => { S.lens = k; save(); render(); } }, l.name));
-  const tog = (key, label) => h('button', { class: 'chip' + (st[key] !== false ? ' on' : ''), onclick: () => { st[key] = st[key] === false; save(); render(); } }, `${label}: ${st[key] !== false ? 'sì' : 'no'}`);
-  const code = h('textarea', { class: 'code', rows: 3, placeholder: 'Incolla qui un codice di salvataggio' });
+  const tog = (key, label) => h('button', { class: 'chip' + (st[key] !== false ? ' on' : ''), onclick: () => { st[key] = st[key] === false; save(); render(); } }, `${label}: ${st[key] !== false ? tr('sì') : tr('no')}`);
+  const code = h('textarea', { class: 'code', rows: 3, placeholder: tr('Incolla qui un codice di salvataggio') });
   const msg = h('div', { class: 'small muted' });
   return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in narrow' },
-    h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), 'I mondi'),
-    h('h1', {}, 'Impostazioni'),
-    h('h3', {}, 'Chi gioca'), players(),
-    h('h3', {}, 'Come giochi'), h('div', { class: 'chips' }, lensBtns),
-    h('p', { class: 'small muted' }, 'Cambiare lente non cancella stelle né progressi.'),
-    h('h3', {}, 'Suoni e voce'), h('div', { class: 'chips' }, tog('sound', 'Suoni'), h('button', { class: 'chip' + (voiceOn() ? ' on' : ''), onclick: () => { st.voice = !voiceOn(); st.voiceChosen = true; save(); render(); } }, `Leggi ad alta voce domande e risposte: ${voiceOn() ? 'sì' : 'no'}`)),
-    h('p', { class: 'small muted' }, 'Per l’Esploratore la voce è accesa da sola, finché non la spegni.'),
-    h('h3', {}, 'Animazione d’apertura'),
-    h('div', { class: 'chips' }, tog('intro', 'Mostrala all’avvio'),
-      h('button', { class: 'chip', onclick: () => playIntro() }, h('span', { html: IC.film }), 'Guardala ora')),
-    h('h3', {}, 'Salvataggio'),
-    h('p', { class: 'small muted' }, 'I progressi restano su questo dispositivo. Copia il codice per portarli su un altro: il ripristino unisce i progressi, non li sovrascrive.'),
+    h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), tr('I mondi')),
+    h('h1', {}, tr('Impostazioni')),
+    h('h3', {}, tr('Chi gioca')), players(),
+    h('h3', {}, tr('Come giochi')), h('div', { class: 'chips' }, lensBtns),
+    h('p', { class: 'small muted' }, tr('Cambiare lente non cancella stelle né progressi.')),
+    h('h3', {}, 'Lingua · Language'), langChips(),
+    h('h3', {}, tr('Suoni e voce')), h('div', { class: 'chips' }, tog('sound', tr('Suoni')), h('button', { class: 'chip' + (voiceOn() ? ' on' : ''), onclick: () => { st.voice = !voiceOn(); st.voiceChosen = true; save(); render(); } }, `${tr('Leggi ad alta voce domande e risposte')}: ${voiceOn() ? tr('sì') : tr('no')}`)),
+    h('p', { class: 'small muted' }, tr('Per l’Esploratore la voce è accesa da sola, finché non la spegni.')),
+    h('h3', {}, tr('Animazione d’apertura')),
+    h('div', { class: 'chips' }, tog('intro', tr('Mostrala all’avvio')),
+      h('button', { class: 'chip', onclick: () => playIntro() }, h('span', { html: IC.film }), tr('Guardala ora'))),
+    h('h3', {}, tr('Salvataggio')),
+    h('p', { class: 'small muted' }, tr('I progressi restano su questo dispositivo. Copia il codice per portarli su un altro: il ripristino unisce i progressi, non li sovrascrive.')),
     h('div', { class: 'row' },
-      h('button', { class: 'btn', onclick: () => { code.value = exportCode(); code.select(); msg.textContent = 'Codice pronto: copialo e conservalo.'; } }, 'Crea codice'),
+      h('button', { class: 'btn', onclick: () => { code.value = exportCode(); code.select(); msg.textContent = tr('Codice pronto: copialo e conservalo.'); } }, tr('Crea codice')),
       h('button', { class: 'btn', onclick: () => {
         try {
           const known = { levels: new Set(Object.values(ZONES).flatMap((z) => z.levels.map((l) => l.id))), pieces: new Set(ALL_PIECES.map((p) => p.id)), worlds: new Set(WORLDS.map((w) => w.id)), zones: new Set(Object.keys(ZONES)) };
           const r = importCode(code.value, known);
-          msg.textContent = `Progressi ripristinati: ${r.levels} livelli${r.pieces ? ` e ${r.pieces} pezzi del parco` : ''}.`;
-        } catch (err) { msg.textContent = err.message || 'Il codice non è valido.'; }
-      } }, 'Ripristina')),
+          msg.textContent = r.pieces ? tr('Progressi ripristinati: {l} livelli e {p} pezzi del parco.', { l: r.levels, p: r.pieces }) : tr('Progressi ripristinati: {l} livelli.', { l: r.levels });
+        } catch (err) { msg.textContent = tr(err.message) || tr('Il codice non è valido.'); }
+      } }, tr('Ripristina'))),
     code, msg,
-    h('h3', {}, 'Ricomincia da capo'),
+    h('h3', {}, tr('Ricomincia da capo')),
     h('button', { class: 'btn danger', onclick: (e) => {
       if (e.currentTarget.dataset.sure) { resetAll(); go('#/'); return; }
-      e.currentTarget.dataset.sure = '1'; e.currentTarget.textContent = 'Sicuro? Premi di nuovo per cancellare tutto';
-    } }, 'Cancella tutti i progressi'),
-    h('p', { class: 'small muted foot' }, 'PhisiArc · versione di prova')));
+      e.currentTarget.dataset.sure = '1'; e.currentTarget.textContent = tr('Sicuro? Premi di nuovo per cancellare tutto');
+    } }, tr('Cancella tutti i progressi')),
+    h('p', { class: 'small muted foot' }, tr('PhisiArc · versione di prova'))));
 }
 
 // ---------- router ----------

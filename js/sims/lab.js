@@ -1,6 +1,7 @@
 // Laboratorio dei grafici: un esperimento in alto, i suoi punti sul grafico in basso.
 // Tre esperimenti, tre leggi: il rubinetto (proporzionalità diretta), il viaggio (inversa), la frenata (quadratica).
 // Con "errore di misura" acceso, ogni misura esce un po' diversa, come con un cronometro a mano.
+import { t as i18n } from '../i18n.js';
 import { Sim, fmt, clamp01, easeOut, easeInOut } from './base.js';
 import { drawCar } from './art/car.js';
 
@@ -89,7 +90,7 @@ export class Lab extends Sim {
       this.line([[bx, by], [bx, by + bh], [bx + bw, by + bh], [bx + bw, by]], { color: chalk, width: 2.4 });
       for (let l = 1; l <= 5; l++) { const yy = by + bh - (l / 5) * bh; this.line([[bx + bw, yy], [bx + bw + 6, yy]], { color: muted, width: 1.4 }); this.text(`${l} L`, bx + bw + 10, yy + 4, { size: 10, color: muted, mono: true }); }
       this.text(`${fmt(this.y, 2)} L`, bx + bw / 2, by + bh - lvl - 8, { size: 12, align: 'center', color: sky, weight: 600, mono: true });
-      this.text(`Tempo: ${fmt(this.t, 1)} s`, 14, 24, { size: 14, weight: 600 });
+      this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), 14, 24, { size: 14, weight: 600 });
     } else {
       const L = 40, R = W - 40, gy = top - 30;
       this.ground(gy + 12, { x0: 10, x1: W - 10 });
@@ -99,7 +100,7 @@ export class Lab extends Sim {
         this.line([[X(60), gy - 18], [X(60), gy + 12]], { color: chalk, width: 1.6, dash: [4, 4] });
         this.text('60 m', X(60), gy + 28, { size: 11, align: 'center', color: muted, mono: true });
         this.car(X(this.pos) + 15, gy, this.c('car1'), this.pos / 0.35);
-        this.text(`Tempo: ${fmt(this.t, 1)} s`, 14, 24, { size: 14, weight: 600 });
+        this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), 14, 24, { size: 14, weight: 600 });
       } else {
         const span = 70, X = (d) => L + 40 + ((R - L - 40) * d) / span;
         this.line([[X(0), gy - 18], [X(0), gy + 12]], { color: this.c('coral'), width: 2 });
@@ -115,7 +116,7 @@ export class Lab extends Sim {
         }
         this.car(X(this.pos) + 15, gy, this.c('car2'), this.pos / 0.35);
         this.text(`${fmt(this.v, 1)} m/s`, X(this.pos), gy - 22, { size: 11, align: 'center', color: this.c('car2'), mono: true });
-        this.text(`Velocità di partenza: ${fmt(Math.max(0.5, p.x), 1)} m/s`, 14, 24, { size: 14, weight: 600 });
+        this.text(i18n('Velocità di partenza: {a} m/s', { a: fmt(Math.max(0.5, p.x), 1) }), 14, 24, { size: 14, weight: 600 });
       }
     }
     if (p.noise) this.text('± errore di misura', W - 14, 24, { size: 12, align: 'right', color: this.c('pink') });

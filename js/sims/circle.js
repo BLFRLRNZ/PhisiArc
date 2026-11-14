@@ -1,5 +1,6 @@
 // Moto circolare: la giostra vista dall'alto. Velocità tangente, accelerazione verso il centro,
 // e cosa succede quando il seggiolino "lascia la presa": vola via dritto, lungo la tangente.
+import { t as i18n } from '../i18n.js';
 import { Sim, fmt, easeOut } from './base.js';
 
 export class Circle extends Sim {
@@ -80,7 +81,7 @@ export class Circle extends Sim {
       this.arrow(X, Y, X + ux * this.a * ka, Y - uy * this.a * ka, { color: this.c('mint'), label: 'a', width: 2 });
     }
     // testi
-    this.text(`Giro: ${fmt(p.T, 1)} s · raggio ${fmt(p.r, 1)} m`, 14, 24, { size: 14, weight: 600 });
+    this.text(i18n('Giro: {a} s · raggio {b} m', { a: fmt(p.T, 1), b: fmt(p.r, 1) }), 14, 24, { size: 14, weight: 600 });
     this.text(`v = ${fmt(this.v, 2)} m/s`, W - 14, 24, { size: 13, align: 'right', color: this.c('orange'), weight: 600, mono: true });
     this.text(`a = ${fmt(this.a, 2)} m/s²`, W - 14, 42, { size: 13, align: 'right', color: this.c('mint'), weight: 600, mono: true });
     if (this.free) {

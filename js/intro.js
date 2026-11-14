@@ -8,6 +8,7 @@
 //     in cielo le orbite si disegnano e diventano Elettra e Saturnino; arrivano Ampolla e Attimo.
 //  4. In fila: tutti saltano sulla linea del terreno, che si piega e diventa la parabola dell'"Arc".
 //  5. Arrivano i boss, Vetrino dubita, il titolo si scrive da solo.
+import { t as tr } from './i18n.js';
 import { charSVG } from './cast.js';
 
 const NS = 'http://www.w3.org/2000/svg';
@@ -42,7 +43,7 @@ export function playIntro({ onDone } = {}) {
   const ov = document.createElement('div');
   ov.className = 'intro-ov';
   ov.setAttribute('role', 'dialog');
-  ov.setAttribute('aria-label', 'Animazione di apertura di PhisiArc');
+  ov.setAttribute('aria-label', tr('Animazione di apertura di PhisiArc'));
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
@@ -50,8 +51,8 @@ export function playIntro({ onDone } = {}) {
   svg.setAttribute('aria-hidden', 'true');
   svg.innerHTML = `<defs><pattern id="ig" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.3" fill="var(--edge)"/></pattern>
     <radialGradient id="ivig" cx="50%" cy="45%" r="75%"><stop offset="55%" stop-color="#0a0f1c" stop-opacity="0"/><stop offset="100%" stop-color="#05080f" stop-opacity=".85"/></radialGradient></defs>`;
-  const skip = Object.assign(document.createElement('button'), { className: 'btn ghost intro-skip', type: 'button', textContent: 'Salta ›' });
-  const enter = Object.assign(document.createElement('button'), { className: 'btn primary intro-enter', type: 'button', textContent: 'Entra nel gioco' });
+  const skip = Object.assign(document.createElement('button'), { className: 'btn ghost intro-skip', type: 'button', textContent: tr('Salta ›') });
+  const enter = Object.assign(document.createElement('button'), { className: 'btn primary intro-enter', type: 'button', textContent: tr('Entra nel gioco') });
   ov.append(svg, skip, enter);
   document.body.append(ov);
   document.body.classList.add('intro-open');

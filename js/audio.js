@@ -1,4 +1,5 @@
 // Suoni morbidi e voce che legge (per l'Esploratore).
+import { SPEECH } from './i18n.js';
 import { S } from './state.js';
 
 let ctx;
@@ -30,9 +31,9 @@ export function speak(text) {
   if (!('speechSynthesis' in window)) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'it-IT';
+  u.lang = SPEECH;
   u.rate = 0.95;
-  const it = speechSynthesis.getVoices().find((v) => v.lang && v.lang.startsWith('it'));
+  const it = speechSynthesis.getVoices().find((v) => v.lang && v.lang.startsWith(SPEECH.slice(0, 2)));
   if (it) u.voice = it;
   speechSynthesis.speak(u);
 }

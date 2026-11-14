@@ -21,6 +21,8 @@ Si gioca nel browser, si installa come app e funziona anche offline.
 - **I boss di Vetrino e Bilancia**: ogni zona finisce con un mito da smontare con un esperimento. Vetrino, il microscopio investigatore, risponde con domande, non con soluzioni.
 - **Aiuti a gradini**: uno o due suggerimenti (dipende dal livello), poi la soluzione. **Stelle**: si parte da ★★★ senza aiuti, ★★ se usi un suggerimento, ★ se guardi la soluzione; una sola regola sugli errori: **sbagliare una risposta costa una stella, sperimentare no** (le previsioni sbagliate e i lanci di prova con i cursori sono gratis); un livello superato vale sempre almeno ★. Gli aiuti seguono il passo in cui sei, e ogni passo ha la sua soluzione.
 - **Joule e gradi**: ogni stella vale 10 joule; ogni mondo finito dà il nome di uno scienziato (Sperimentatore, Galileo, … fino a Curie).
+- **Italiano e inglese**: la lingua si sceglie all'inizio e nelle impostazioni (di base quella del browser); numeri e voce seguono la lingua. Come si traduce: [docs/contenuti.md](docs/contenuti.md).
+- **Ripasso del giorno**: le domande dei livelli finiti tornano dopo qualche giorno (1, 3, 7, 14, 30), finché non le sai al primo colpo.
 - **Più giocatori** sullo stesso dispositivo, ognuno con le sue stelle, il suo parco e la sua lente.
 - **Salvataggio** sul dispositivo, con un codice da copiare per portare i progressi altrove (il codice si controlla prima di usarlo). Funziona offline, con i font inclusi nel gioco. Tema scuro, suoni e voce disattivabili; l'animazione d'apertura parte da sola solo al primo avvio (si può rivedere dalle impostazioni).
 

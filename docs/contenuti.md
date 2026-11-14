@@ -69,3 +69,16 @@ le stelle e gli sblocchi dei giocatori seguono il nome nuovo. Se cambi la forma 
 
 Il ripasso del giorno (`js/review.js`) ricorda le domande per livello e posizione del passo (`m03-3#1`): se riordini i passi di un livello già pubblicato
 non si rompe niente, ma qualche domanda tornerà prima o dopo del previsto. Entrano nel ripasso le domande `q` senza esperimento e le `num`.
+
+## L’inglese
+
+I testi si scrivono sempre in italiano. La versione inglese sta in `js/i18n/`: un dizionario per zona (`en-m03.js`…) che ha come chiave
+la frase italiana esatta. Se cambi una frase italiana, la sua traduzione non vale più e quella frase resta in italiano finché non la traduci.
+
+1. `node tools/i18n-strings.mjs` elenca le frasi senza traduzione, zona per zona (`--json file.json` le scrive in un file).
+2. Aggiungi le coppie `'frase italiana': 'English sentence'` nel file della zona, con gli stessi segnaposto (`{a}`, `{got:1}`) e gli stessi `<b>`.
+3. `node tools/i18n-strings.mjs --check` deve dire 0 frasi senza traduzione (gira anche su GitHub).
+
+Nelle frasi scritte dentro una funzione (per esempio i messaggi di un `check`) si usa `t('frase con {x}', { x })` da `js/i18n.js`:
+così la frase finisce nell’elenco e i numeri si scrivono all’inglese (3.5 invece di 3,5).
+Per provare: `?lang=en` in fondo all’indirizzo, oppure Impostazioni → Lingua. `LINGUA=en node tests/play-all.mjs …` gioca tutto in inglese.

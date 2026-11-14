@@ -1,5 +1,6 @@
 // M05 · Il moto circolare. Simulazione: la giostra vista dall'alto.
-import { T, pick, num } from '../util.js';
+import { T, pick } from '../util.js';
+import { t as tr } from '../i18n.js';
 
 const GIRO = { label: 'Durata di un giro', min: 2, max: 15, step: 0.1, unit: 's' };
 
@@ -71,10 +72,10 @@ export default {
           gen: (lens) => {
             if (lens === 'e') {
               const c = pick([24, 30, 36]), t = pick([4, 6]);
-              return { text: `Un giro della giostra è lungo <b>${c} metri</b> e dura <b>${t} secondi</b>. Quanti metri fa il seggiolino ogni secondo?`, ans: c / t, tol: 0.01, unit: 'm/s', explain: `Giusto: ${c} diviso ${t} fa ${num(c / t, 1)}.` };
+              return { text: tr('Un giro della giostra è lungo <b>{c} metri</b> e dura <b>{t} secondi</b>. Quanti metri fa il seggiolino ogni secondo?', { c, t }), ans: c / t, tol: 0.01, unit: 'm/s', explain: tr('Giusto: {c} diviso {t} fa {v:1}.', { c, t, v: c / t }) };
             }
             const r = pick([3, 4, 5, 6]), t = pick([4, 5, 6, 8]), v = (2 * Math.PI * r) / t;
-            return { text: `Raggio <b>${r} m</b>, un giro in <b>${t} s</b>. Qual è la velocità del seggiolino?`, ans: Math.round(v * 100) / 100, tol: 0.06, unit: 'm/s', explain: `Esatto: v = 2πr / T = 2π × ${r} / ${t} ≈ ${num(v, 2)} m/s.` };
+            return { text: tr('Raggio <b>{r} m</b>, un giro in <b>{t} s</b>. Qual è la velocità del seggiolino?', { r, t }), ans: Math.round(v * 100) / 100, tol: 0.06, unit: 'm/s', explain: tr('Esatto: v = 2πr / T = 2π × {r} / {t} ≈ {v} m/s.', { r, t, v }) };
           },
         },
       ],
@@ -155,8 +156,8 @@ export default {
           gen: (lens) => {
             const a = pick([2, 3]), t = pick([5, 6]);
             return lens === 'e'
-              ? { text: `Un kart parte fermo e ogni secondo va <b>${a} m/s</b> più forte. Quanto va veloce dopo <b>${t} secondi</b>?`, ans: a * t, tol: 0, unit: 'm/s', explain: `Giusto: ${t} × ${a} = ${a * t} m/s.` }
-              : { text: `Un kart parte da fermo con a = <b>${a} m/s²</b>. Che velocità ha dopo <b>${t} s</b>?`, ans: a * t, tol: 0.01, unit: 'm/s', explain: `Esatto: v = a·t = ${a * t} m/s.` };
+              ? { text: tr('Un kart parte fermo e ogni secondo va <b>{a} m/s</b> più forte. Quanto va veloce dopo <b>{t} secondi</b>?', { a, t }), ans: a * t, tol: 0, unit: 'm/s', explain: tr('Giusto: {t} × {a} = {v} m/s.', { a, t, v: a * t }) }
+              : { text: tr('Un kart parte da fermo con a = <b>{a} m/s²</b>. Che velocità ha dopo <b>{t} s</b>?', { a, t }), ans: a * t, tol: 0.01, unit: 'm/s', explain: tr('Esatto: v = a·t = {v} m/s.', { a, t, v: a * t }) };
           },
         },
         {

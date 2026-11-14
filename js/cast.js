@@ -1,5 +1,7 @@
 // Il cast di PhisiArc: quindici personaggi disegnati a linee (SVG, viewBox 120×120).
 // Ogni personaggio usa var(--c) come colore del tratto; gli stili delle animazioni sono in css/style.css (.m ...).
+import { translateTree } from './i18n.js';
+
 // ---------- disegno: pezzi comuni ----------
 // Occhi: bianco ovale, pupilla scura che guarda un po' in basso, un punto di luce.
 const eyes = (x1, x2, y, s = 1) => [x1, x2].map((x) => `<g class="eye">
@@ -132,6 +134,7 @@ const LIST = [
 ];
 
 
+translateTree(LIST); // in inglese: nomi, descrizioni e battute
 export const CAST = Object.fromEntries(LIST.map((m) => [m.id, m]));
 export const CAST_LIST = LIST;
 let n = 0;

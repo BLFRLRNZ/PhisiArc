@@ -1,6 +1,6 @@
 // Controllo dei prerequisiti: segue il percorso (mondi in ordine, zone scritte e poi quelle in arrivo)
 // e segnala ogni idea usata prima di essere spiegata. Uso: node tools/check-prereq.mjs
-globalThis.localStorage = { getItem: () => null, setItem() {} };
+globalThis.localStorage = { getItem: (k) => (k === 'phisiarc-lingua' ? 'it' : null), setItem() {} };
 const { WORLDS } = await import('../js/content/index.js');
 const { PREREQ } = await import('../js/content/prereq.js');
 

@@ -3,6 +3,7 @@
 // Uso: avvia un server statico sulla cartella del gioco (es. python3 -m http.server 8765) e poi
 //      node tests/play-all.mjs [indirizzo] [lenti] [livelli]
 //      es. node tests/play-all.mjs http://localhost:8765 s m04-1,m04-2
+//      Lingua: LINGUA=en node tests/play-all.mjs … (di base l'italiano)
 import { createRequire } from 'node:module';
 
 // playwright dal progetto (npm install) o, se manca, da quello installato nel sistema (NODE_PATH)
@@ -14,6 +15,7 @@ const BASE = process.argv[2] || 'http://localhost:8765';
 const LENSES = (process.argv[3] || 'e,s,c').split(',');
 const ONLY = process.argv[4] ? process.argv[4].split(',') : null;
 const LEVEL_TIMEOUT = 120_000;
+const LINGUA = process.env.LINGUA || 'it';
 
 const launchOpts = process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {};
 const browser = await chromium.launch(launchOpts);
@@ -32,10 +34,11 @@ for (const lens of LENSES) {
     return Object.values(m.ZONES).flatMap((z) => z.levels.map((l) => l.id));
   });
   // tutti i livelli aperti, niente suoni, voce, animazione d'apertura
-  await page.evaluate(({ ids, lens }) => {
+  await page.evaluate(({ ids, lens, lingua }) => {
+    localStorage.setItem('phisiarc-lingua', lingua);
     const done = Object.fromEntries(ids.map((i) => [i, 1]));
     localStorage.setItem('phisiarc-v1', JSON.stringify({ lens, done, joule: 0, park: [], seen: Object.fromEntries(['laboratorio', 'pista', 'officina', 'cielo'].map((w) => [w, true])), introSeen: true, settings: { sound: false, voice: false, voiceChosen: true, intro: false } }));
-  }, { ids, lens });
+  }, { ids, lens, lingua: LINGUA });
   for (const id of ids) {
     if (ONLY && !ONLY.includes(id)) continue;
     const before = errors.length, start = Date.now();
@@ -46,7 +49,7 @@ for (const lens of LENSES) {
     let ok = false;
     while (Date.now() - start < LEVEL_TIMEOUT) {
       if (await page.$('.modal')) { ok = true; break; }
-      const next = await page.$('button:has-text("Avanti"):enabled');
+      const next = await page.$('button[data-next]:enabled');
       if (next) { await next.click(); await page.waitForTimeout(150); continue; }
       const busy = await page.evaluate(() => window.__phisiarcTest.busy && window.__phisiarcTest.busy());
       if (!busy) await page.evaluate(() => window.__phisiarcTest.solve && window.__phisiarcTest.solve());
@@ -55,7 +58,7 @@ for (const lens of LENSES) {
     const errs = errors.slice(before);
     const secs = ((Date.now() - start) / 1000).toFixed(1);
     if (!ok || errs.length) failures.push(`${id} [${lens}]: ${ok ? '' : 'non arriva alla fine. '}${errs.join(' | ')}`);
-    console.log(`${ok && !errs.length ? 'ok ' : 'NO '} ${id} [${lens}] ${secs} s`);
+    console.log(`${ok && !errs.length ? 'ok ' : 'NO '} ${id} [${lens}${LINGUA === 'it' ? '' : ' ' + LINGUA}] ${secs} s`);
   }
   await page.close();
 }

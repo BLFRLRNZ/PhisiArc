@@ -5,7 +5,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} };
+globalThis.localStorage = { getItem: (k) => (k === 'phisiarc-lingua' ? 'it' : null), setItem() {}, removeItem() {} };
 globalThis.window = globalThis.window || {};
 const root = new URL('..', import.meta.url).pathname;
 const { ZONES, WORLDS, KIND } = await import('../js/content/index.js');

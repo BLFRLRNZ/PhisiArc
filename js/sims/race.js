@@ -1,5 +1,6 @@
 // Gara fra due auto, a velocità costante o in accelerazione, con il grafico che si disegna in diretta:
 // posizione–tempo oppure velocità–tempo.
+import { t as i18n } from '../i18n.js';
 import { Sim, fmt, easeOut, easeInOut } from './base.js';
 import { drawCar } from './art/car.js';
 
@@ -153,9 +154,9 @@ export class Race extends Sim {
       }
     }
     g.lineWidth = 1;
-    this.text(`Tempo: ${fmt(this.t, 1)} s`, W - 20, gy + 10, { size: 13, align: 'right', weight: 600 });
+    this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), W - 20, gy + 10, { size: 13, align: 'right', weight: 600 });
     if (this.result) {
-      const parts = st.map((s, i) => s.tEnd != null ? `${p.names[i]}: ${fmt(s.tEnd, 1)} s` : `${p.names[i]}: non arriva`);
+      const parts = st.map((s, i) => s.tEnd != null ? `${i18n(p.names[i])}: ${fmt(s.tEnd, 1)} s` : `${i18n(p.names[i])}: ${i18n('non arriva')}`);
       this.text(parts.join('   '), W - 20, gy + 28, { size: 13, align: 'right', weight: 700, color: this.c('accent2') });
     }
   }

@@ -1,5 +1,6 @@
 // M01 · Il moto: posizione e velocità. Simulazione: la gara con il grafico spazio-tempo.
-import { T, pick, num } from '../util.js';
+import { T, pick } from '../util.js';
+import { t as tr } from '../i18n.js';
 
 export default {
   id: 'M01',
@@ -98,13 +99,13 @@ export default {
         {
           kind: 'tune', rounds: 2,
           text: T('Scegli la velocità e lancia il trenino.', 'Imposta la velocità e lancia. La seconda prova avrà un tempo diverso.'),
-          gen: (lens, r) => { const t = pick(r === 0 ? [6, 10, 12] : [8, 15, 20]); return { t, text: `Il viaggio di 60 m deve durare <b>${t} secondi</b>.` }; },
+          gen: (lens, r) => { const t = pick(r === 0 ? [6, 10, 12] : [8, 15, 20]); return { t, text: tr('Il viaggio di 60 m deve durare <b>{t} secondi</b>.', { t }) }; },
           solve: (tg) => ({ v1: 60 / tg.t }),
           check: (res, tg, lens) => {
             const t = res.times[0];
             const tol = lens === 'e' ? 0.6 : 0.3;
-            if (t != null && Math.abs(t - tg.t) <= tol) return { ok: true, msg: `Arrivato in ${num(t, 1)} s. Puntualissimo!` };
-            return { ok: false, msg: t == null ? 'Il trenino non è arrivato: è troppo lento.' : t > tg.t ? `Ci ha messo ${num(t, 1)} s: troppo lento.` : `Ci ha messo ${num(t, 1)} s: troppo veloce.` };
+            if (t != null && Math.abs(t - tg.t) <= tol) return { ok: true, msg: tr('Arrivato in {t:1} s. Puntualissimo!', { t }) };
+            return { ok: false, msg: t == null ? tr('Il trenino non è arrivato: è troppo lento.') : t > tg.t ? tr('Ci ha messo {t:1} s: troppo lento.', { t }) : tr('Ci ha messo {t:1} s: troppo veloce.', { t }) };
           },
         },
       ],
@@ -118,7 +119,7 @@ export default {
         { kind: 'q', text: T('Cosa dice la velocità?', 'Che cosa misura la velocità?'), options: [T('Quanto sei pesante', 'La massa'), T('Quanta strada fai in un secondo', 'Lo spazio fatto in un secondo'), T('Quanto sei lontano da casa', 'La distanza da casa')], answer: 1, explain: T('Esatto!', 'Esatto: v = Δs / Δt.') },
         { kind: 'q', text: T('Una macchinina è ferma. La sua linea nel disegno è…', 'Un oggetto fermo nel grafico spazio-tempo è…'), options: [T('ripida', 'una retta ripida'), T('orizzontale', 'una retta orizzontale'), T('in discesa', 'una retta in discesa')], answer: 1, explain: T('Giusto: il tempo passa, lei resta lì.', 'Giusto: la posizione non cambia.') },
         // Valori nuovi a ogni partita: si ripassa la regola, non la risposta.
-        { kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da km/h a m/s.', gen: () => { const k = pick([18, 36, 54, 72, 90, 108]); return { text: `<b>${k} km/h</b> quanti m/s sono?`, ans: k / 3.6, tol: 0.01, unit: 'm/s', explain: `Giusto: ${k} ÷ 3,6 = ${Math.round(k / 3.6)} m/s.` }; } },
+        { kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da km/h a m/s.', gen: () => { const k = pick([18, 36, 54, 72, 90, 108]); return { text: tr('<b>{k} km/h</b> quanti m/s sono?', { k }), ans: k / 3.6, tol: 0.01, unit: 'm/s', explain: tr('Giusto: {k} ÷ 3,6 = {v} m/s.', { k, v: Math.round(k / 3.6) }) }; } },
         { kind: 'q', text: T('Per sapere chi è più veloce, cosa misuri?', 'Per confrontare due velocità, cosa misuri?'), options: [T('Spazio e tempo', 'Spazio e tempo'), T('Solo la strada', 'Solo la massa'), T('Solo il tempo', 'Solo la forma')], answer: 0, explain: T('Proprio così: due misure insieme.', 'Esatto: la velocità è un rapporto tra due misure.') },
       ],
       hints: [T('Ripensa alla gara e al suo grafico.')],
