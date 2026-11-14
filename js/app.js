@@ -213,16 +213,16 @@ function grades() {
 // ---------- giocatori: ognuno con i suoi progressi, sullo stesso dispositivo ----------
 function players() {
   const name = h('input', { class: 'numin', type: 'text', maxlength: 20, placeholder: tr('Nome'), 'aria-label': tr('Nome del giocatore') });
-  const chips = PLAYERS.list.map((p) => h('button', { class: 'chip' + (p.id === PLAYERS.active ? ' on' : ''), 'aria-pressed': String(p.id === PLAYERS.active), onclick: () => { switchPlayer(p.id); render(); } }, shownName(p.name)));
+  const chips = PLAYERS.list.map((p) => h('button', { class: 'chip' + (p.id === PLAYERS.active ? ' on' : ''), 'aria-pressed': String(p.id === PLAYERS.active), onclick: () => { switchPlayer(p.id); render(true); } }, shownName(p.name)));
   const del = PLAYERS.list.length > 1 ? h('button', { class: 'btn ghost', onclick: (e) => {
-    if (e.currentTarget.dataset.sure) { removePlayer(PLAYERS.active); render(); return; }
+    if (e.currentTarget.dataset.sure) { removePlayer(PLAYERS.active); render(true); return; }
     e.currentTarget.dataset.sure = '1'; e.currentTarget.textContent = tr('Sicuro? Si cancellano i progressi di {p}', { p: playerName() });
   } }, tr('Togli {p}', { p: playerName() })) : null;
   return h('div', {},
     h('div', { class: 'chips' }, chips),
     h('div', { class: 'row left' }, name,
       h('button', { class: 'btn', onclick: () => { addPlayer(name.value); go('#/'); } }, tr('Nuovo giocatore')),
-      h('button', { class: 'btn', onclick: () => { if (name.value.trim()) { renamePlayer(PLAYERS.active, name.value); render(); } } }, tr('Rinomina')),
+      h('button', { class: 'btn', onclick: () => { if (name.value.trim()) { renamePlayer(PLAYERS.active, name.value); render(true); } } }, tr('Rinomina')),
       del),
     h('p', { class: 'small muted' }, tr('Ogni giocatore ha le sue stelle, il suo parco e la sua lente.')));
 }
@@ -230,8 +230,21 @@ function players() {
 // ---------- impostazioni ----------
 function settings() {
   const st = S.settings;
-  const lensBtns = Object.entries(LENSES).map(([k, l]) => h('button', { class: 'chip' + (S.lens === k ? ' on' : ''), onclick: () => { S.lens = k; save(); render(); } }, l.name));
-  const tog = (key, label) => h('button', { class: 'chip' + (st[key] !== false ? ' on' : ''), onclick: () => { st[key] = st[key] === false; st[key + 'Chosen'] = true; save(); render(); } }, `${label}: ${st[key] !== false ? tr('sì') : tr('no')}`);
+  // Gli interruttori cambiano sul posto: niente ricarica della pagina, si resta dove si era.
+  const sw = (label, isOn, flip) => {
+    const b = h('button', { class: 'chip', onclick: () => { flip(); save(); paint(); } });
+    const paint = () => { const on = isOn(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.textContent = `${label}: ${on ? tr('sì') : tr('no')}`; };
+    paint(); b.paint = paint;
+    return b;
+  };
+  const tog = (key, label) => sw(label, () => st[key] !== false, () => { st[key] = st[key] === false; st[key + 'Chosen'] = true; });
+  const voiceBtn = sw(tr('Leggi ad alta voce domande e risposte'), voiceOn, () => { st.voice = !voiceOn(); st.voiceChosen = true; });
+  // la lente cambia solo i bottoni della lente (e la voce, che per l'Esploratore è accesa da sola)
+  const lensBtns = Object.entries(LENSES).map(([k, l]) => h('button', { class: 'chip' + (S.lens === k ? ' on' : ''), 'aria-pressed': String(S.lens === k), 'data-lens': k, onclick: (e) => {
+    S.lens = k; save();
+    for (const b of e.currentTarget.parentNode.children) { const on = b.dataset.lens === k; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
+    voiceBtn.paint();
+  } }, l.name));
   const code = h('textarea', { class: 'code', rows: 3, placeholder: tr('Incolla qui un codice di salvataggio') });
   const msg = h('div', { class: 'small muted' });
   return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in narrow' },
@@ -241,7 +254,7 @@ function settings() {
     h('h3', {}, tr('Come giochi')), h('div', { class: 'chips' }, lensBtns),
     h('p', { class: 'small muted' }, tr('Cambiare lente non cancella stelle né progressi.')),
     h('h3', {}, 'Lingua · Language'), langChips(),
-    h('h3', {}, tr('Suoni e voce')), h('div', { class: 'chips' }, tog('sound', tr('Suoni')), h('button', { class: 'chip' + (voiceOn() ? ' on' : ''), onclick: () => { st.voice = !voiceOn(); st.voiceChosen = true; save(); render(); } }, `${tr('Leggi ad alta voce domande e risposte')}: ${voiceOn() ? tr('sì') : tr('no')}`)),
+    h('h3', {}, tr('Suoni e voce')), h('div', { class: 'chips' }, tog('sound', tr('Suoni')), voiceBtn),
     h('p', { class: 'small muted' }, tr('Per l’Esploratore la voce è accesa da sola, finché non la spegni.')),
     voicePanel(),
     h('h3', {}, tr('Animazione d’apertura')),
@@ -269,9 +282,11 @@ function settings() {
 }
 
 // ---------- router ----------
-function render() {
+// stay = true: si ridisegna la pagina restando allo stesso punto (es. cambiare giocatore nelle impostazioni)
+function render(stay) {
   if (cleanup) { cleanup(); cleanup = null; }
-  window.scrollTo(0, 0);
+  const y = window.scrollY;
+  if (stay !== true) window.scrollTo(0, 0);
   const parts = location.hash.replace(/^#\/?/, '').split('/');
   if (!S.lens && parts[0] !== 'benvenuto') { app.replaceChildren(welcome()); return; }
   switch (parts[0]) {
@@ -307,6 +322,7 @@ function render() {
     case 'impostazioni': app.replaceChildren(settings()); break;
     default: app.replaceChildren(home());
   }
+  if (stay === true) window.scrollTo(0, y);
 }
 
 window.addEventListener('hashchange', render);

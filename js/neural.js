@@ -48,7 +48,19 @@ async function cachedFetch(url, onProgress) {
   return buf;
 }
 export async function isDownloaded(v) {
+  if (loaded?.id === v.id) return true;
   try { const c = await caches.open(CACHE); return !!(await c.match(modelUrl(v))); } catch { return false; }
+}
+// Chiede al browser di non buttare i file salvati quando cerca spazio (le voci pesano decine di MB).
+export function keepStorage() {
+  try { navigator.storage?.persist?.().catch(() => {}); } catch { /* non c'è */ }
+}
+// Se una voce si sta scaricando: chi apre di nuovo le impostazioni può seguirne l'avanzamento.
+// Restituisce null, oppure { p (la promessa), watch(fn) } dove fn(got, tot) riceve l'avanzamento.
+export function downloading(v) {
+  if (loading?.id !== v.id) return null;
+  const l = loading;
+  return { p: l.p, watch: (fn) => { l.fns.add(fn); if (l.last) fn(...l.last); } };
 }
 export async function forget(v) {
   try { const c = await caches.open(CACHE); await c.delete(modelUrl(v)); await c.delete(modelUrl(v) + '.json'); } catch { /* niente */ }
@@ -91,12 +103,16 @@ async function phonemize(text, espeakVoice) {
 let loaded = null, loading = null;
 export async function loadVoice(v, onProgress) {
   if (loaded?.id === v.id) return loaded;
-  if (loading?.id === v.id) return loading.p;
+  if (loading?.id === v.id) { if (onProgress) loading.fns.add(onProgress); return loading.p; }
+  const fns = new Set(onProgress ? [onProgress] : []);
+  const entry = { id: v.id, fns, last: null };
+  const progress = (got, tot) => { entry.last = [got, tot]; for (const f of fns) f(got, tot); };
+  keepStorage();
   const p = (async () => {
     const [ort, cfgBuf, model] = await Promise.all([
       loadOrt(),
       cachedFetch(modelUrl(v) + '.json'),
-      cachedFetch(modelUrl(v), onProgress),
+      cachedFetch(modelUrl(v), progress),
       loadPhon(),
     ]);
     const cfg = JSON.parse(new TextDecoder().decode(cfgBuf));
@@ -104,7 +120,8 @@ export async function loadVoice(v, onProgress) {
     loaded = { id: v.id, cfg, session, ort };
     return loaded;
   })();
-  loading = { id: v.id, p };
+  entry.p = p;
+  loading = entry;
   try { return await p; } finally { if (loading?.p === p) loading = null; }
 }
 export const voiceReady = (v) => loaded?.id === v.id;

@@ -4,7 +4,7 @@ import { h } from './util.js';
 import { t as tr, LOCALE } from './i18n.js';
 import { IC } from './icons.js';
 import { speak, stopSpeaking, voiceList, bestVoice, setVoice, voiceLabel, voiceCfg, setVoiceCfg, VOICE_DEFAULTS } from './audio.js';
-import { NEURAL_VOICES, isDownloaded, loadVoice, forget } from './neural.js';
+import { NEURAL_VOICES, isDownloaded, loadVoice, forget, downloading } from './neural.js';
 
 const sample = () => speak(tr('Ciao! Sono la voce di PhysiArc. Ti leggo le domande e le risposte: tu prevedi, provi e scopri. Pronto a cominciare?'));
 const fmt = (x, d = 1) => Number(x).toLocaleString(LOCALE, { maximumFractionDigits: d, signDisplay: 'exceptZero' });
@@ -42,18 +42,23 @@ function neuralList(c, refill) {
       h('button', { class: 'nv-pick', 'aria-pressed': String(on), onclick: () => { setVoiceCfg({ neural: v.id }); refill(); } },
         h('b', {}, v.name), h('span', { class: 'small muted' }, ` · ${tr(v.who)} · ${v.mb} MB`)),
       state, bar, act);
-    const download = async () => {
+    const show = (got, tot) => { if (tot && row.isConnected) { bar.value = got / tot; state.textContent = `${Math.round((got / tot) * 100)}%`; } };
+    // segue un download: quello appena premuto, o uno già in corso da prima (se si era usciti dalle impostazioni)
+    const follow = async (p, pick) => {
       act.disabled = true; bar.hidden = false; state.textContent = tr('Scarico…');
       try {
-        await loadVoice(v, (got, tot) => { if (tot) { bar.value = got / tot; state.textContent = `${Math.round((got / tot) * 100)}%`; } });
-        setVoiceCfg({ engine: 'neural', neural: v.id });
-        refill(); sample();
+        await p;
+        if (pick) setVoiceCfg({ engine: 'neural', neural: v.id });
+        if (!row.isConnected) return;
+        refill(); if (pick) sample();
       } catch {
         state.textContent = tr('Download non riuscito: controlla la connessione e riprova.');
         act.disabled = false; bar.hidden = true;
       }
     };
-    isDownloaded(v).then((ok) => {
+    const download = () => follow(loadVoice(v, show), true);
+    const going = downloading(v);
+    if (going) { follow(going.p, false); going.watch(show); } else isDownloaded(v).then((ok) => {
       if (ok) {
         state.textContent = tr('pronta');
         act.textContent = tr('Togli');

@@ -19,9 +19,11 @@ self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).catch(() => {}));
 });
 
+// Si buttano le copie delle versioni vecchie del gioco, ma MAI le voci neurali scaricate (decine di MB):
+// prima ogni aggiornamento del gioco le cancellava, e bisognava riscaricarle.
 self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys()
-    .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+    .then((keys) => Promise.all(keys.filter((k) => k !== CACHE && k !== 'phisiarc-voci').map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 
