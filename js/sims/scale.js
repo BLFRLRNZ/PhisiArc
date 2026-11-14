@@ -436,6 +436,7 @@ export class Scale extends Sim {
         const k = Math.min(1, (now - t0) / dur);
         const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
         this.params.exp = from + (to - from) * e;
+        this.wake();
         if (this.onTick) this.onTick(this.params);
         if (k < 1) requestAnimationFrame(tick);
         else res({ exp: to });

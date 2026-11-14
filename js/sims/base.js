@@ -1,6 +1,7 @@
 // Base comune delle simulazioni: canvas nitido, ciclo a passi piccoli, fine esperimento.
 
 export class Sim {
+  static IDLE = 6; // secondi di quiete dopo i quali si smette di ridisegnare
   static controls = {};
   static staticSim = false; // true = niente pulsante Lancia (si esplora con i cursori)
 
@@ -19,8 +20,12 @@ export class Sim {
     this.calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.resize();
     this.init();
-    this._ro = new ResizeObserver(() => { this.resize(); this.draw(); });
+    this._act = 0; this._seen = true;
+    this._ro = new ResizeObserver(() => { this.resize(); this.wake(); this.draw(); });
     this._ro.observe(canvas);
+    this._io = typeof IntersectionObserver === 'function' ? new IntersectionObserver((en) => { this._seen = en[en.length - 1].isIntersecting; if (this._seen) this.wake(); }) : null;
+    if (this._io) this._io.observe(canvas);
+    canvas.addEventListener('pointerdown', () => this.wake());
     this.draw();
     // Un solo ciclo sempre acceso: fa la fisica quando l'esperimento corre e anima tutto il resto.
     let last = performance.now();
@@ -34,7 +39,10 @@ export class Sim {
         const dt = real * this.speed * (this.mul || 1), sub = 20 * (this.mul || 1);
         for (let i = 0; i < sub && this.running; i++) { this.t += dt / sub; this.step(dt / sub); }
       }
-      if (this.cv.isConnected) this.draw();
+      // si disegna solo se serve: esperimento in corso, oppure qualcosa è cambiato da poco (le animazioni di contorno
+      // si fermano dopo qualche secondo di quiete), e mai se il disegno è fuori dallo schermo o la scheda è nascosta
+      const idle = !this.running && this.clock - this._act > Sim.IDLE;
+      if (this.cv.isConnected && this._seen && !document.hidden && !idle) this.draw();
       this._raf = requestAnimationFrame(loop);
     };
     this._raf = requestAnimationFrame(loop);
@@ -67,12 +75,17 @@ export class Sim {
     this.ctx.setTransform(d, 0, 0, d, 0, 0);
   }
 
+  // qualcosa è cambiato: si torna a disegnare per qualche secondo
+  wake() { this._act = this.clock; }
+
   set(p) {
+    this.wake();
     Object.assign(this.params, p);
     if (!this.running) this.reset();
   }
 
   reset() {
+    this.wake();
     this.stop();
     this.t = 0;
     this.result = null;
@@ -87,6 +100,7 @@ export class Sim {
   }
 
   finish(result) {
+    this.wake();
     this.running = false;
     this.result = result;
     this.doneAt = this.clock;
@@ -103,6 +117,7 @@ export class Sim {
     this._dead = true;
     if (this._raf) cancelAnimationFrame(this._raf);
     this._ro.disconnect();
+    if (this._io) this._io.disconnect();
   }
 
   // Colori presi dal foglio di stile (memorizzati: si leggono una volta sola).

@@ -1,8 +1,12 @@
 /* PhisiArc: funziona offline dopo la prima visita.
-   I file dell'app si chiedono prima alla rete (così le novità arrivano subito) e, se manca, si usa la copia salvata. */
-const CACHE = 'phisiarc-v12';
+   Ogni file si chiede alla rete, così le novità arrivano subito. Ma se la rete è lenta (oltre 2,5 secondi)
+   o assente, si usa subito la copia salvata, e intanto la risposta della rete, quando arriva, aggiorna la copia. */
+const CACHE = 'phisiarc-v13';
+const WAIT = 2500;
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './css/style.css',
+  './fonts/fonts.css', './fonts/lexend-latin.woff2', './fonts/lexend-latin-ext.woff2',
+  './fonts/plexmono-400-latin.woff2', './fonts/plexmono-400-latin-ext.woff2', './fonts/plexmono-500-latin.woff2', './fonts/plexmono-500-latin-ext.woff2',
   './js/app.js', './js/util.js', './js/state.js', './js/audio.js', './js/cast.js', './js/icons.js', './js/intro.js', './js/fx.js', './js/pieces.js', './js/level.js',
   './js/sims/index.js', './js/sims/base.js', './js/sims/pendulum.js', './js/sims/scale.js', './js/sims/race.js', './js/sims/fall.js', './js/sims/cannon.js', './js/sims/lab.js', './js/sims/river.js', './js/sims/circle.js',
   './js/content/index.js', './js/content/f01.js', './js/content/f02.js', './js/content/f03.js', './js/content/m01.js', './js/content/m02.js', './js/content/m03.js', './js/content/m04.js', './js/content/m05.js',
@@ -21,9 +25,20 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET' || new URL(e.request.url).origin !== self.location.origin) return;
-  e.respondWith(
-    fetch(e.request, { cache: 'no-cache' })
-      .then((res) => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); } return res; })
-      .catch(() => caches.match(e.request).then((r) => r || caches.match('./index.html')))
-  );
+  // la rete, che se risponde bene aggiorna anche la copia salvata
+  const net = fetch(e.request, { cache: 'no-cache' }).then((res) => {
+    if (res.ok) { const copy = res.clone(); return caches.open(CACHE).then((c) => c.put(e.request, copy)).then(() => res); }
+    return res;
+  });
+  e.waitUntil(net.catch(() => {}));
+  const saved = caches.match(e.request);
+  const slow = new Promise((ok) => setTimeout(ok, WAIT));
+  e.respondWith((async () => {
+    // vince la rete se arriva in tempo; altrimenti la copia salvata (se c'è), altrimenti si aspetta la rete
+    const first = await Promise.race([net.then((r) => ({ r })).catch(() => ({ fail: true })), slow.then(() => ({ slow: true }))]);
+    if (first.r && first.r.ok) return first.r;
+    const copy = await saved;
+    if (copy) return copy;
+    try { return await net; } catch { return (await caches.match('./index.html')) || Response.error(); }
+  })());
 });

@@ -1,6 +1,6 @@
 // Il motore di un livello: testo, simulazione, passi (domande, prove, regolazioni) e stelle.
-import { h, tx, shuffle, plain, wait, T } from './util.js';
-import { S, save } from './state.js';
+import { h, tx, shuffle, plain, wait, T, asDialog } from './util.js';
+import { S, save, voiceOn } from './state.js';
 import { SIMS } from './sims/index.js';
 import { sfx, speak, stopSpeaking } from './audio.js';
 import { CAST, charSVG, hop } from './cast.js';
@@ -29,14 +29,19 @@ export function runLevel(root, level, nav) {
   const boss = level.kind === 'boss';
   const who = CAST[boss ? 'vetrino' : world.mascot];
   const introText = tx(level.intro, lens);
-  const speakBtn = h('button', { class: 'btn icon', title: 'Ascolta', 'aria-label': 'Ascolta', onclick: () => speak(plain(introText + ' ' + quest.innerHTML)), html: IC.sound });
+  const speakBtn = h('button', { class: 'btn icon', title: 'Ascolta', 'aria-label': 'Ascolta', onclick: () => speak(readOut(true)), html: IC.sound });
   const intro = h('div', { class: 'intro', style: `--c:${who.c}` },
     h('div', { class: 'who', html: charSVG(who.id), onclick: (e) => hop(e.currentTarget.firstChild) }),
     h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), h('div', { html: introText })));
-  const quest = h('div', { class: 'quest' });
-  const area = h('div', { class: 'area' });
-  const hintBox = h('div', { class: 'hintbox', hidden: true });
+  const quest = h('div', { class: 'quest', tabindex: '-1' });
+  const area = h('div', { class: 'area', 'aria-live': 'polite' });
+  const hintBox = h('div', { class: 'hintbox', hidden: true, 'aria-live': 'polite' });
   const textPane = h('section', { class: 'pane text' }, intro, hintBox, quest, area);
+  // testo da leggere ad alta voce: (introduzione,) domanda e, se ci sono, le risposte da scegliere
+  const readOut = (withIntro) => {
+    const opts = [...area.querySelectorAll('.opt')].map((b, i) => `${i + 1}: ${b.textContent.trim()}`);
+    return plain((withIntro ? introText + ' ' : '') + quest.innerHTML) + (opts.length ? '. Le risposte. ' + opts.join('. ') + '.' : '');
+  };
 
   const canvas = h('canvas', { class: 'sim' });
   const ctrls = h('div', { class: 'ctrls' });
@@ -172,6 +177,8 @@ export function runLevel(root, level, nav) {
     autoSol = null;
     quest.classList.remove('enter'); void quest.offsetWidth; quest.classList.add('enter');
     drawDots();
+    // dal secondo passo in poi il fuoco va alla nuova domanda, così chi usa tastiera o lettore di schermo non si perde
+    if (si > 0) quest.focus({ preventScroll: true });
     onResult = null;
     area.replaceChildren();
     quest.innerHTML = tx(st.text, lens);
@@ -185,7 +192,7 @@ export function runLevel(root, level, nav) {
     renderControls(locked ? keys : keys, locked);
     setLaunch(!locked);
     ({ q: stepQ, free: stepFree, run: stepRun, tune: stepTune, num: stepNum, order: stepOrder, vars: stepVars })[st.kind](st);
-    if (S.settings.voice) speak(plain(quest.innerHTML));
+    if (voiceOn()) speak(readOut(si === 0));
   }
 
   function stepQ(st) {
@@ -460,7 +467,7 @@ export function runLevel(root, level, nav) {
         h('button', { class: 'btn', onclick: () => leave() }, 'Mappa'),
         nx ? h('button', { class: 'btn primary', onclick: () => nav('#/livello/' + nx) }, 'Prossimo →') : null,
         nwOpen ? h('button', { class: 'btn primary', onclick: () => nav('#/mondo/' + nw.id) }, `${nw.name} →`) : null)));
-    root.append(modal);
+    root.append(asDialog(modal));
     const card = modal.firstChild;
     if (gained) setTimeout(() => countUp(joule, gained, { prefix: '+', suffix: ' joule' }), 500);
     else joule.textContent = '';
@@ -481,7 +488,7 @@ export function runLevel(root, level, nav) {
       h('div', { class: 'row' },
         h('button', { class: 'btn', onclick: () => leave() }, world.name),
         nwOpen ? h('button', { class: 'btn primary', onclick: () => nav('#/mondo/' + nw.id) }, `${nw.name} →`) : null)));
-    root.append(modal);
+    root.append(asDialog(modal));
     if (ok) setTimeout(() => confetti(modal.firstChild, {}), 250);
   }
 

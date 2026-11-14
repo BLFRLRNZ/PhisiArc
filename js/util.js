@@ -51,3 +51,28 @@ export const plain = (html) => {
 };
 
 export const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Rende una finestra sopra la pagina accessibile: ruolo di dialogo, titolo letto dal lettore di schermo,
+// fuoco sul pulsante principale e Tab che resta dentro la finestra finché è aperta.
+export function asDialog(modal, onEsc) {
+  const card = modal.firstElementChild || modal;
+  const title = card.querySelector('h2, h1');
+  if (title && !title.id) title.id = 'dlg-' + Math.random().toString(36).slice(2, 8);
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  if (title) modal.setAttribute('aria-labelledby', title.id);
+  const prev = document.activeElement;
+  const focusables = () => [...modal.querySelectorAll('button, a[href], input, textarea, [tabindex]:not([tabindex="-1"])')].filter((e) => !e.disabled);
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && onEsc) { e.preventDefault(); onEsc(); return; }
+    if (e.key !== 'Tab') return;
+    const f = focusables(); if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+  setTimeout(() => { const f = modal.querySelector('.btn.primary') || focusables()[0]; if (f) f.focus({ preventScroll: true }); }, 60);
+  // quando la finestra si chiude, il fuoco torna dov'era
+  new MutationObserver((_, ob) => { if (!modal.isConnected) { ob.disconnect(); if (prev && prev.isConnected) prev.focus({ preventScroll: true }); } }).observe(document.body, { childList: true, subtree: true });
+  return modal;
+}

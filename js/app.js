@@ -1,6 +1,6 @@
 // PhisiArc: schermate, navigazione e impostazioni.
-import { h, tx } from './util.js';
-import { S, save, exportCode, importCode, resetAll } from './state.js';
+import { h, tx, asDialog } from './util.js';
+import { S, save, exportCode, importCode, resetAll, voiceOn, PLAYERS, switchPlayer, addPlayer, renamePlayer, removePlayer, playerName } from './state.js';
 import { CAST, CAST_LIST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
@@ -33,6 +33,7 @@ function topbar() {
   return h('header', { class: 'top' },
     logo(),
     h('nav', { class: 'top-right' },
+      PLAYERS.list.length > 1 ? h('a', { class: 'pill', href: '#/impostazioni', title: 'Cambia giocatore' }, h('span', { class: 'pill-t' }, playerName())) : null,
       h('a', { class: 'pill', href: '#/gradi', title: 'Il tuo grado' }, h('span', { html: IC.grade }), h('span', { class: 'pill-t' }, g.name)),
       h('span', { class: 'pill num', title: 'Joule guadagnati' }, h('span', { class: 'sun', html: IC.bolt }), `${S.joule} J`),
       h('a', { class: 'pill icon', href: '#/parco', title: 'Il tuo parco', 'aria-label': 'Il tuo parco', html: IC.park }),
@@ -129,7 +130,7 @@ function world(id) {
       h('h2', {}, w.name),
       h('p', { html: tx(w.intro, S.lens) }),
       h('button', { class: 'btn primary', onclick: () => { S.seen[w.id] = true; save(); modal.remove(); } }, 'Cominciamo!')));
-    page.append(modal);
+    page.append(asDialog(modal));
   }
   return page;
 }
@@ -163,6 +164,23 @@ function grades() {
     h('h1', {}, 'I gradi'), h('p', { class: 'muted' }, 'Ogni mondo finito ti dà il nome di uno scienziato.'), h('div', { class: 'grades' }, rows)));
 }
 
+// ---------- giocatori: ognuno con i suoi progressi, sullo stesso dispositivo ----------
+function players() {
+  const name = h('input', { class: 'numin', type: 'text', maxlength: 20, placeholder: 'Nome', 'aria-label': 'Nome del giocatore' });
+  const chips = PLAYERS.list.map((p) => h('button', { class: 'chip' + (p.id === PLAYERS.active ? ' on' : ''), 'aria-pressed': String(p.id === PLAYERS.active), onclick: () => { switchPlayer(p.id); render(); } }, p.name));
+  const del = PLAYERS.list.length > 1 ? h('button', { class: 'btn ghost', onclick: (e) => {
+    if (e.currentTarget.dataset.sure) { removePlayer(PLAYERS.active); render(); return; }
+    e.currentTarget.dataset.sure = '1'; e.currentTarget.textContent = `Sicuro? Si cancellano i progressi di ${playerName()}`;
+  } }, `Togli ${playerName()}`) : null;
+  return h('div', {},
+    h('div', { class: 'chips' }, chips),
+    h('div', { class: 'row' }, name,
+      h('button', { class: 'btn', onclick: () => { addPlayer(name.value); go('#/'); } }, 'Nuovo giocatore'),
+      h('button', { class: 'btn ghost', onclick: () => { if (name.value.trim()) { renamePlayer(PLAYERS.active, name.value); render(); } } }, 'Rinomina'),
+      del),
+    h('p', { class: 'small muted' }, 'Ogni giocatore ha le sue stelle, il suo parco e la sua lente.'));
+}
+
 // ---------- impostazioni ----------
 function settings() {
   const st = S.settings;
@@ -173,9 +191,11 @@ function settings() {
   return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in narrow' },
     h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), 'I mondi'),
     h('h1', {}, 'Impostazioni'),
+    h('h3', {}, 'Chi gioca'), players(),
     h('h3', {}, 'Come giochi'), h('div', { class: 'chips' }, lensBtns),
     h('p', { class: 'small muted' }, 'Cambiare lente non cancella stelle né progressi.'),
-    h('h3', {}, 'Suoni e voce'), h('div', { class: 'chips' }, tog('sound', 'Suoni'), tog('voice', 'Leggi ad alta voce ogni domanda')),
+    h('h3', {}, 'Suoni e voce'), h('div', { class: 'chips' }, tog('sound', 'Suoni'), h('button', { class: 'chip' + (voiceOn() ? ' on' : ''), onclick: () => { st.voice = !voiceOn(); st.voiceChosen = true; save(); render(); } }, `Leggi ad alta voce domande e risposte: ${voiceOn() ? 'sì' : 'no'}`)),
+    h('p', { class: 'small muted' }, 'Per l’Esploratore la voce è accesa da sola, finché non la spegni.'),
     h('h3', {}, 'Animazione d’apertura'),
     h('div', { class: 'chips' }, tog('intro', 'Mostrala all’avvio'),
       h('button', { class: 'chip', onclick: () => playIntro() }, h('span', { html: IC.film }), 'Guardala ora')),
@@ -183,7 +203,13 @@ function settings() {
     h('p', { class: 'small muted' }, 'I progressi restano su questo dispositivo. Copia il codice per portarli su un altro: il ripristino unisce i progressi, non li sovrascrive.'),
     h('div', { class: 'row' },
       h('button', { class: 'btn', onclick: () => { code.value = exportCode(); code.select(); msg.textContent = 'Codice pronto: copialo e conservalo.'; } }, 'Crea codice'),
-      h('button', { class: 'btn', onclick: () => { try { importCode(code.value); msg.textContent = 'Progressi ripristinati.'; } catch { msg.textContent = 'Il codice non è valido.'; } } }, 'Ripristina')),
+      h('button', { class: 'btn', onclick: () => {
+        try {
+          const known = { levels: new Set(Object.values(ZONES).flatMap((z) => z.levels.map((l) => l.id))), pieces: new Set(ALL_PIECES.map((p) => p.id)), worlds: new Set(WORLDS.map((w) => w.id)), zones: new Set(Object.keys(ZONES)) };
+          const r = importCode(code.value, known);
+          msg.textContent = `Progressi ripristinati: ${r.levels} livelli${r.pieces ? ` e ${r.pieces} pezzi del parco` : ''}.`;
+        } catch (err) { msg.textContent = err.message || 'Il codice non è valido.'; }
+      } }, 'Ripristina')),
     code, msg,
     h('h3', {}, 'Ricomincia da capo'),
     h('button', { class: 'btn danger', onclick: (e) => {
