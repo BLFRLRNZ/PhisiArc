@@ -1,4 +1,4 @@
-/* PhisiArc: lavagna di notte. Sfondo quasi nero, tratti bianchi, azzurro come colore guida,
+/* PhysiArc: lavagna di notte. Sfondo quasi nero, tratti bianchi, azzurro come colore guida,
    un colore vivo per ogni mondo (variabile --c). Un solo tema scuro, scelto apposta. */
 :root {
   --night: #0a0f1c; --surface: #111829; --surface2: #172036; --edge: #233050; --chalk: #eef4ff; --sky: #7cc8ff; --muted: #8d9bbd;

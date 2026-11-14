@@ -6,7 +6,7 @@ import { IC } from './icons.js';
 import { speak, stopSpeaking, voiceList, bestVoice, setVoice, voiceLabel, voiceCfg, setVoiceCfg, VOICE_DEFAULTS } from './audio.js';
 import { NEURAL_VOICES, isDownloaded, loadVoice, forget } from './neural.js';
 
-const sample = () => speak(tr('Ciao! Sono la voce di PhisiArc. Ti leggo le domande e le risposte: tu prevedi, provi e scopri. Pronto a cominciare?'));
+const sample = () => speak(tr('Ciao! Sono la voce di PhysiArc. Ti leggo le domande e le risposte: tu prevedi, provi e scopri. Pronto a cominciare?'));
 const fmt = (x, d = 1) => Number(x).toLocaleString(LOCALE, { maximumFractionDigits: d, signDisplay: 'exceptZero' });
 
 export function voicePanel() {

@@ -1,4 +1,4 @@
-// PhisiArc: schermate, navigazione e impostazioni.
+// PhysiArc: schermate, navigazione e impostazioni.
 import { h, tx, asDialog } from './util.js';
 import { t as tr, LANG, LANGS, setLang } from './i18n.js';
 import { S, save, exportCode, importCode, resetAll, voiceOn, PLAYERS, switchPlayer, addPlayer, renamePlayer, removePlayer, playerName } from './state.js';
@@ -28,9 +28,9 @@ let cleanup = null;
 
 const go = (hash) => { if (location.hash === hash) render(); else location.hash = hash; };
 
-const logo = () => h('a', { class: 'logo', href: '#/', 'aria-label': tr('PhisiArc, torna ai mondi') },
+const logo = () => h('a', { class: 'logo', href: '#/', 'aria-label': tr('PhysiArc, torna ai mondi') },
   h('span', { class: 'logo-mark', html: '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 27 Q16 -7 28 27"/><path d="M2 27h28"/><circle cx="16" cy="10" r="2.6"/></svg>' }),
-  h('span', {}, 'Phisi', h('span', { class: 'arc' }, 'Arc')));
+  h('span', {}, 'Physi', h('span', { class: 'arc' }, 'Arc')));
 const hopOnTap = (el) => { el.addEventListener('click', (e) => { const svg = e.currentTarget.querySelector('svg.m'); if (svg) hop(svg); }); return el; };
 
 function topbar() {
@@ -55,7 +55,7 @@ function welcome() {
   return h('div', { class: 'welcome' },
     h('div', { class: 'hero' },
       h('div', { class: 'strip' }, strip),
-      h('h1', { class: 'big-logo' }, 'Phisi', h('span', { class: 'arc' }, 'Arc')),
+      h('h1', { class: 'big-logo' }, 'Physi', h('span', { class: 'arc' }, 'Arc')),
       h('p', { class: 'tag' }, tr('La fisica a livelli.') + ' ', h('b', {}, tr('Prevedi. Prova. Scopri.')))),
     langChips(),
     h('h2', {}, tr('Come vuoi giocare?')),
@@ -261,7 +261,7 @@ function settings() {
       if (e.currentTarget.dataset.sure) { resetAll(); go('#/'); return; }
       e.currentTarget.dataset.sure = '1'; e.currentTarget.textContent = tr('Sicuro? Premi di nuovo per cancellare tutto');
     } }, tr('Cancella tutti i progressi')),
-    h('p', { class: 'small muted foot' }, tr('PhisiArc · versione di prova'))));
+    h('p', { class: 'small muted foot' }, tr('PhysiArc · versione di prova'))));
 }
 
 // ---------- router ----------

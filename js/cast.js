@@ -1,4 +1,4 @@
-// Il cast di PhisiArc: quindici personaggi disegnati a linee (SVG, viewBox 120×120).
+// Il cast di PhysiArc: quindici personaggi disegnati a linee (SVG, viewBox 120×120).
 // Ogni personaggio usa var(--c) come colore del tratto; gli stili delle animazioni sono in css/style.css (.m ...).
 import { translateTree } from './i18n.js';
 

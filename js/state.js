@@ -133,10 +133,10 @@ export function exportCode() {
 export function importCode(code, known) {
   const txt = typeof code === 'string' ? code.trim() : '';
   if (!txt) throw new Error(tr('Incolla prima un codice.'));
-  if (txt.length > 60000 || !/^[A-Za-z0-9+/=\s]+$/.test(txt)) throw new Error(tr('Questo non sembra un codice di PhisiArc.'));
+  if (txt.length > 60000 || !/^[A-Za-z0-9+/=\s]+$/.test(txt)) throw new Error(tr('Questo non sembra un codice di PhysiArc.'));
   let o;
   try { o = JSON.parse(decodeURIComponent(escape(atob(txt.replace(/\s+/g, ''))))); } catch { throw new Error(tr('Il codice è incompleto o rovinato: copialo di nuovo per intero.')); }
-  if (!o || typeof o !== 'object' || Array.isArray(o)) throw new Error(tr('Questo non sembra un codice di PhisiArc.'));
+  if (!o || typeof o !== 'object' || Array.isArray(o)) throw new Error(tr('Questo non sembra un codice di PhysiArc.'));
   o = migrate(o);
   const obj = (x) => (x && typeof x === 'object' && !Array.isArray(x) ? x : {});
   const has = (set, k) => !set || set.has(k);

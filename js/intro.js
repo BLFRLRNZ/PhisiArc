@@ -43,7 +43,7 @@ export function playIntro({ onDone } = {}) {
   const ov = document.createElement('div');
   ov.className = 'intro-ov';
   ov.setAttribute('role', 'dialog');
-  ov.setAttribute('aria-label', tr('Animazione di apertura di PhisiArc'));
+  ov.setAttribute('aria-label', tr('Animazione di apertura di PhysiArc'));
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
@@ -169,7 +169,7 @@ export function playIntro({ onDone } = {}) {
   const speed = [0, 1].map(() => el('path', stroke('var(--chalk)', 2.4, { 'stroke-opacity': .5 }), world));
   const titleY = G - (portrait ? 0.3 : 0.35) * A, tsize = portrait ? 118 : 100;
   const title = el('text', { x: 500, y: titleY, 'text-anchor': 'middle', class: 'intro-title', 'font-size': tsize, 'stroke-width': 2.2, 'stroke-dasharray': 700, 'stroke-linejoin': 'round' }, world);
-  title.innerHTML = `<tspan fill="var(--chalk)" stroke="var(--chalk)">Phisi</tspan><tspan fill="var(--sky)" stroke="var(--sky)">Arc</tspan>`;
+  title.innerHTML = `<tspan fill="var(--chalk)" stroke="var(--chalk)">Physi</tspan><tspan fill="var(--sky)" stroke="var(--sky)">Arc</tspan>`;
   const tag = el('text', { x: 500, y: titleY + 56 * fs, 'text-anchor': 'middle', class: 'intro-tag', 'font-size': 28 * fs, fill: 'var(--muted)' }, world);
   tag.innerHTML = `Prevedi. Prova. <tspan fill="var(--sky)">Scopri.</tspan>`;
 

@@ -1,4 +1,4 @@
-# Il percorso di PhisiArc
+# Il percorso di PhysiArc
 
 Dodici mondi in fila. Ogni mondo è **un campo della fisica**, e si apre quando hai finito quello prima
 (tutti i livelli di tutte le zone con almeno una stella) oppure quando superi la sua **prova d'ingresso**.

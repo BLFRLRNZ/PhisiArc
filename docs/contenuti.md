@@ -1,4 +1,4 @@
-# Scrivere una zona di PhisiArc
+# Scrivere una zona di PhysiArc
 
 Una zona è un file in `js/content/` (per esempio `m04.js`) con sei livelli. Chi scrive i contenuti lavora con **testi, numeri e formule brevi**:
 non serve scrivere funzioni. Le funzioni restano possibili per i casi speciali, ma non sono la strada normale.
