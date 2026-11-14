@@ -6,7 +6,7 @@
 //     in parabola e dove atterra nasce un personaggio.
 //  3. La gravità: Mela salta su Boing (con ombre a tempi uguali e vettore velocità) e rimbalza;
 //     in cielo le orbite si disegnano e diventano Elettra e Saturnino; arrivano Ampolla e Attimo.
-//  4. In fila: tutti saltano sulla linea del terreno, che si piega e diventa la parabola dell'"Arc".
+//  4. In fila: tutti saltano sulla linea del terreno, poi in orbita attorno al titolo, come pianeti.
 //  5. Arrivano i boss, Vetrino dubita, il titolo si scrive da solo.
 import { t as tr } from './i18n.js';
 import { charSVG } from './cast.js';
@@ -19,7 +19,7 @@ const eOut = (u) => 1 - (1 - cl(u)) ** 3;
 const eInOut = (u) => { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2; };
 const eBack = (u) => { u = cl(u); const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * (u - 1) ** 3 + c1 * (u - 1) ** 2; };
 
-// Ordine dei mondi: è anche l'ordine sulla parabola finale.
+// Ordine dei mondi: è anche l'ordine nell'orbita finale (dall'alto, in senso orario).
 const ORDER = ['ampolla', 'tic', 'mela', 'goccia', 'boing', 'termo', 'lampo', 'iride', 'saturnino', 'elettra', 'attimo', 'lux', 'carica'];
 
 const T = {
@@ -74,22 +74,20 @@ export function playIntro({ onDone } = {}) {
   el('rect', { width: W, height: H, fill: 'url(#ivig)', 'pointer-events': 'none' });
   const E = (tag, attrs) => el(tag, attrs, world);
 
-  // ---------- posti finali: la parabola dell'Arc ----------
-  const apexY = Math.max(S * 1.15 + 20, H * (portrait ? 0.32 : 0.22)), A = G - apexY;
-  const ax0 = 60, ax1 = 940;
-  const archY = (x, m) => { const u = (x - ax0) / (ax1 - ax0); return G - 4 * A * m * u * (1 - u); };
-  const samples = [{ x: ax0, L: 0 }];
-  for (let i = 1; i <= 400; i++) {
-    const x = ax0 + ((ax1 - ax0) * i) / 400, p = samples[i - 1];
-    samples.push({ x, L: p.L + Math.hypot(x - p.x, archY(x, 1) - archY(p.x, 1)) });
-  }
-  const Ltot = samples[400].L;
-  const spotX = ORDER.map((_, i) => samples.find((p) => p.L >= (Ltot * (i + 0.5)) / ORDER.length).x);
-  const Sa = Math.min(portrait ? 175 : S, (Ltot / ORDER.length) * 1.02), sa = Sa / 120;
-  let minGap = 1e9;
-  for (let i = 1; i < spotX.length; i++) minGap = Math.min(minGap, spotX[i] - spotX[i - 1]);
+  // ---------- la fila sul terreno, prima dell'orbita ----------
+  const spotX = ORDER.map((_, i) => 60 + (880 * (i + 0.5)) / ORDER.length), minGap = 880 / ORDER.length;
   const sl = Math.min(sc, (minGap * 1.35) / 120);               // grandezza sulla linea piatta
   const Sb = portrait ? 160 : S, sb = Sb / 120;
+
+  // ---------- la disposizione finale: un'orbita attorno al titolo ----------
+  const bossTo = { vetrino: portrait ? 230 : 250, bilancia: portrait ? 770 : 750 };
+  // tutti in cerchio attorno al titolo, come pianeti
+  // un'orbita: tutti in cerchio attorno al titolo, come pianeti
+  const so = portrait ? 1.35 : 0.66, ocx = 500, ocy = portrait ? H * 0.43 : H * 0.42;
+  const rx = portrait ? 350 : 340, ry = portrait ? 500 : Math.min(175, ocy - 60 * so - 20);
+  const FIN = ORDER.map((_, i) => { const a = -Math.PI / 2 + (2 * Math.PI * i) / ORDER.length; return { x: ocx + rx * Math.cos(a), y: ocy + ry * Math.sin(a) + 54 * so, s: so }; });
+  if (!portrait) { bossTo.vetrino = 85; bossTo.bilancia = 915; }
+  const titleY = ocy + (portrait ? 10 : 20);
 
   // ---------- atto 1: il punto, il cerchio, l'onda ----------
   const O = { x: portrait ? 330 : 300, y: G - (portrait ? 330 : 200) }, R = portrait ? 78 : 60;
@@ -136,9 +134,6 @@ export function playIntro({ onDone } = {}) {
   const satBody = E('circle', stroke('#a9b8ff', 2.6, { cx: SAT.x, cy: SAT.y, r: 28 * sc, pathLength: 1, 'stroke-dasharray': 1 }));
   const satRing = E('ellipse', stroke('var(--sun)', 3, { cx: SAT.x, cy: SAT.y + 8 * sc, rx: 48 * sc, ry: 12 * sc, transform: `rotate(-12 ${SAT.x} ${SAT.y + 8 * sc})`, pathLength: 1, 'stroke-dasharray': 1 }));
 
-  // ---------- atto 4: la parabola ----------
-  const arch = E('path', stroke('var(--sky)', 3));
-  const archTicks = E('path', stroke('var(--sky)', 2, { 'stroke-opacity': .55 }));
 
   // ---------- personaggi ----------
   const layer = el('g', {}, world);
@@ -162,12 +157,12 @@ export function playIntro({ onDone } = {}) {
 
   // ---------- fumetto, titolo, motto ----------
   const bubble = el('g', {}, world);
-  const bw = 270 * fs, bh = 86 * fs, bx = Math.max(16, (portrait ? 230 : 250) - 60 * fs), by = G - Sb - bh - 14;
+  const bw = 270 * fs, bh = 86 * fs, bx = Math.max(16, bossTo.vetrino - 60 * fs), by = G - Sb - bh - 14;
   el('path', { d: `M${bx + 18} ${by} H${bx + bw - 18} q18 0 18 18 V${by + bh - 18} q0 18 -18 18 H${bx + 70} l-26 22 l4 -22 H${bx + 18} q-18 0 -18 -18 V${by + 18} q0 -18 18 -18 Z`, fill: 'var(--surface)', stroke: '#b9a4ff', 'stroke-width': 2.4, 'stroke-linejoin': 'round' }, bubble);
   const b1 = el('text', { x: bx + 22, y: by + 36 * fs, class: 'intro-mono', 'font-size': 21 * fs, fill: 'var(--chalk)' }, bubble); b1.textContent = 'Ne siete sicuri?';
   const b2 = el('text', { x: bx + 22, y: by + 68 * fs, class: 'intro-mono', 'font-size': 21 * fs, fill: '#b9a4ff' }, bubble); b2.textContent = 'Controlliamo!';
   const speed = [0, 1].map(() => el('path', stroke('var(--chalk)', 2.4, { 'stroke-opacity': .5 }), world));
-  const titleY = G - (portrait ? 0.3 : 0.35) * A, tsize = portrait ? 118 : 100;
+  const tsize = portrait ? 118 : 100;
   const title = el('text', { x: 500, y: titleY, 'text-anchor': 'middle', class: 'intro-title', 'font-size': tsize, 'stroke-width': 2.2, 'stroke-dasharray': 700, 'stroke-linejoin': 'round' }, world);
   title.innerHTML = `<tspan fill="var(--chalk)" stroke="var(--chalk)">Physi</tspan><tspan fill="var(--sky)" stroke="var(--sky)">Arc</tspan>`;
   const tag = el('text', { x: 500, y: titleY + 56 * fs, 'text-anchor': 'middle', class: 'intro-tag', 'font-size': 28 * fs, fill: 'var(--muted)' }, world);
@@ -341,31 +336,29 @@ export function playIntro({ onDone } = {}) {
     op(satBody, t < T.saturn[0] ? 0 : 1 - seg(t, ...T.saturnino));
     op(satRing, t < T.ring[0] ? 0 : 1 - seg(t, ...T.saturnino));
 
-    // atto 4: tutti sulla linea, poi la linea si piega nella parabola
-    const m = eInOut(seg(t, ...T.bend));
-    const ax = [], an = 60;
-    for (let i = 0; i <= an; i++) { const x = lerp(ax0, ax1, i / an); ax.push([x, archY(x, m)]); }
-    set(arch, { d: 'M' + ax.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L') });
-    op(arch, seg(t, T.bend[0] - 0.4, T.bend[0]));
-    set(archTicks, { d: spotX.map((x) => `M${x} ${archY(x, m) + 6} v8`).join(' ') });
-    op(archTicks, seg(t, T.bend[1] - 0.3, T.bend[1] + 0.2));
+    // atto 4: tutti in fila sul terreno, poi in orbita attorno al titolo
     ORDER.forEach((id, i) => {
       const tj = T.regroup + i * T.gap;
       if (t < tj) { place(id, home(id, t)); return; }
       const from = home(id, tj) || { x: 500, y: G, s: sc };
       const u = seg(t, tj, tj + T.hop), x1 = spotX[i];
-      const s = t < T.bend[0] ? lerp(from.s, sl, eInOut(u)) : lerp(sl, sa, m);
+      const s = lerp(from.s, sl, eInOut(u));
+      const t2 = T.bend[0] + i * 0.05;
       const hh = 70 + Math.abs(x1 - from.x) * 0.14;
       if (u < 1) {
         place(id, { x: lerp(from.x, x1, u), y: lerp(from.y, G, u) - hh * 4 * u * (1 - u), s, rot: (from.rot || 0) * (1 - u) });
+      } else if (t >= t2) { // secondo salto: dalla fila al suo posto nell'orbita
+        const f = FIN[i], u2 = seg(t, t2, t2 + 0.55);
+        if (u2 < 1) place(id, { x: lerp(x1, f.x, u2), y: lerp(G, f.y, u2) - (80 + Math.abs(f.x - x1) * 0.2) * 4 * u2 * (1 - u2), s: lerp(sl, f.s, eInOut(u2)) });
+        else { const land = t - t2 - 0.55; place(id, { x: f.x, y: f.y, s: f.s, sy: 1 - 0.14 * Math.exp(-9 * land) * Math.cos(22 * land) }); }
       } else {
         const land = t - tj - T.hop, sy = 1 - 0.14 * Math.exp(-9 * land) * Math.cos(22 * land);
-        place(id, { x: x1, y: archY(x1, m), s, sy });
+        place(id, { x: x1, y: G, s, sy });
       }
     });
 
     // atto 5: boss, fumetto, titolo
-    const bossTo = { vetrino: portrait ? 230 : 250, bilancia: portrait ? 770 : 750 }, bossFrom = { vetrino: -160, bilancia: W + 160 };
+    const bossFrom = { vetrino: -160, bilancia: W + 160 };
     ['vetrino', 'bilancia'].forEach((id, i) => {
       const t0 = T.boss[0] + i * 0.14, u = eOut(seg(t, t0, T.boss[1] + i * 0.14));
       if (t < t0) { place(id, null); op(speed[i], 0); return; }
