@@ -28,11 +28,11 @@ export default {
       id: 'f02-1', kind: 'lezione', title: 'Dal piccolo al grandissimo',
       sim: 'scale', params: { exp: 0 }, controls: ['exp'],
       intro: T(
-        'Muovi il cursore dello <b>zoom</b>: puoi rimpicciolire fino agli atomi o ingrandire fino alle galassie!',
+        'Muovi il cursore dello <b>zoom</b>: puoi rimpicciolire fino al cuore dell’atomo o ingrandire fino a tutto l’universo!',
         'Ogni passo dello zoom moltiplica o divide per 10: è una <b>potenza di 10</b>. 10³ m = 1000 m, 10⁻³ m = 0,001 m.',
-        'In natura le misure vanno dall’atomo (10⁻¹⁰ m) alla Via Lattea (10²¹ m): 31 potenze di 10. Esplorale con lo zoom.'),
+        'In natura le misure vanno dal protone (10⁻¹⁵ m) all’universo osservabile (circa 10²⁷ m): oltre 40 potenze di 10. Esplorale con lo zoom.'),
       steps: [
-        { kind: 'free', text: T('Esplora: trova la formica, la Terra e il Sole. Poi premi Avanti.', 'Esplora tutta la scala, dall’atomo alla Via Lattea. Poi premi Avanti.') },
+        { kind: 'free', text: T('Esplora: trova la formica, la Terra e il Sole. Poi premi Avanti.', 'Esplora tutta la scala, dal protone all’universo osservabile. Poi premi Avanti.') },
         {
           kind: 'q',
           text: T('Chi è più grande?', 'Il diametro del Sole è circa quante volte quello della Terra?', 'Quante Terre servono, in fila, per coprire il diametro del Sole?'),

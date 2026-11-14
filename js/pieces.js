@@ -1,27 +1,41 @@
-// Disegni a linee dei pezzi del parco (al posto delle emoji): si disegnano da soli e poi si muovono un poco.
-const svg = (body, cls = '') => `<svg class="pz ${cls}" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
-const P = (d, extra = '') => `<path pathLength="1" d="${d}" ${extra}/>`;
+// Disegni a linee dei pezzi del parco (al posto delle emoji): si disegnano da soli, si colorano e poi si muovono.
+const svg = (body) => `<svg class="pz" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+// P = tratto che si disegna da solo; col = colore; fill = velo di colore che compare dopo.
+const P = (d, col, fill, w) => `<path pathLength="1" d="${d}"${col ? ` stroke="var(--${col})"` : ''}${fill ? ` class="fl" fill="var(--${fill})"` : ''}${w ? ` stroke-width="${w}"` : ''}/>`;
+const C = (cx, cy, r) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`;
 
 export const PIECE_SVG = {
   altalena: svg(
-    P('M8 58L18 8M30 58L18 8M34 58L46 8M58 58L46 8M18 8h28') +
-    `<g class="pz-swing">${P('M26 9v30M38 9v30')}${P('M23 39h18', 'stroke="var(--orange)"')}</g>`),
+    P('M4 60h56', 'green', null, 1.6) + P('M7 59l3 1M14 59l3 1M44 59l3 1M52 59l3 1', 'green', null, 1.2) +
+    P('M10 58L18 8M26 58L18 8M38 58L46 8M54 58L46 8', 'sun') + P('M14 34h8M42 34h8', 'sun', null, 1.6) + P('M15 8h34', 'orange', null, 3) +
+    `<g class="pz-swing">${P('M27 9v28M37 9v28', 'muted', null, 1.4)}${P('M24 37h16l-1 3H25z', 'orange', 'orange')}` +
+    `${P(C(32, 25, 3.2), 'sky', 'sky')}${P('M32 28.5v6M28 31l4 2 4-2M32 34.5l-3 2.5M32 34.5l3 2.5', 'sky', null, 1.6)}</g>`),
   cartelli: svg(
-    P('M20 60V8') + P('M8 12h26l5 5-5 5H8z', 'stroke="var(--orange)"') + P('M8 28h24l5 5-5 5H8z', 'stroke="var(--sky)"') +
-    `<g class="pz-meter">${P('M46 58V18M42 18h8M42 58h8M43 28h6M43 38h6M43 48h6', 'stroke="var(--mint)"')}</g>`),
+    P('M4 60h56', 'muted', null, 1.4) + P('M22 60V6', 'chalk') +
+    P('M8 10h26l5 5-5 5H8z', 'orange', 'orange') + P('M12 15h16', 'chalk', null, 1.2) +
+    P('M36 26H12l-5 5 5 5h24z', 'sky', 'sky') + P('M16 31h14', 'chalk', null, 1.2) +
+    `<g class="pz-meter">${P('M50 58V16M46 16h8M46 58h8', 'mint')}${P('M47 26h3M47 37h6M47 48h3', 'mint', null, 1.4)}</g>` +
+    P(C(42, 41, 2.6), 'pink', 'pink') + P('M42 44v7M42 51l-2 7M42 51l2 7M39 47h6', 'pink', null, 1.6)),
   trenino: svg(
-    `<g class="pz-train">${P('M6 44V26h14v-8h8v26z')}${P('M30 32h12v12H30zM46 32h12v12H46z', 'stroke="var(--sky)"')}` +
-    `<g class="pz-wheel">${P('M10 48a4 4 0 1 0 8 0a4 4 0 1 0-8 0M14 44v8')}</g><g class="pz-wheel">${P('M20 48a4 4 0 1 0 8 0a4 4 0 1 0-8 0M24 44v8')}</g>` +
-    `${P('M36 48a3 3 0 1 0 0 .1M52 48a3 3 0 1 0 0 .1')}${P('M42 38h4')}</g>` +
-    `<g class="pz-smoke">${P('M10 18a3 3 0 1 0 6 0a3 3 0 1 0-6 0M14 10a4 4 0 1 0 8 0a4 4 0 1 0-8 0', 'stroke="var(--muted)"')}</g>` + P('M4 58h56', 'stroke="var(--muted)"')),
+    P('M2 56h60', 'muted', null, 1.4) + P('M6 59v-3M14 59v-3M22 59v-3M30 59v-3M38 59v-3M46 59v-3M54 59v-3', 'muted', null, 1.2) +
+    `<g class="pz-train">` +
+    P('M4 46V30h10v-8h10v24z', 'coral', 'coral') + P('M16 25h6v8h-6z', 'sky', 'sky', 1.4) + P('M7 26v-6h4v6', 'chalk', null, 1.6) + P('M4 46l-2 4h4', 'coral', null, 1.6) +
+    P('M28 34h14v12H28zM46 34h14v12H46z', 'sky', 'sky') + P('M31 37h3v4h-3zM36 37h3v4h-3zM49 37h3v4h-3zM54 37h3v4h-3z', 'chalk', null, 1.2) + P('M24 44h4M42 44h4', 'chalk', null, 1.6) +
+    `<g class="pz-wheel">${P(C(10, 50, 4) + 'M10 46v8M6 50h8', 'chalk', null, 1.6)}</g><g class="pz-wheel">${P(C(20, 50, 4) + 'M20 46v8M16 50h8', 'chalk', null, 1.6)}</g>` +
+    `<g class="pz-wheel">${P(C(33, 50, 3) + 'M33 47v6', 'chalk', null, 1.4)}</g><g class="pz-wheel">${P(C(55, 50, 3) + 'M55 47v6', 'chalk', null, 1.4)}</g></g>` +
+    `<g class="pz-smoke">${P(C(10, 14, 3) + C(15, 7, 4), 'muted', 'muted', 1.6)}</g>`),
   torre: svg(
-    P('M28 60V6M36 60V6M28 14l8 8M36 22l-8 8M28 30l8 8M36 38l-8 8M24 6h16M18 60h28') +
-    `<g class="pz-drop">${P('M20 10h24v8H20z', 'stroke="var(--coral)"')}</g>`),
+    P('M4 60h56', 'muted', null, 1.4) + P('M26 60V8M38 60V8', 'chalk') + P('M26 14l12 8M38 22l-12 8M26 30l12 8M38 38l-12 8M26 46l12 8', 'chalk', null, 1) +
+    P('M22 8h20l-3-4H25z', 'sun', 'sun') + P('M18 60h28', 'chalk') + P('M32 4V1', 'coral', null, 1.6) +
+    `<g class="pz-drop">${P('M19 10h26v10H19z', 'coral', 'coral')}${P('M23 13v4M28 13v4M33 13v4M38 13v4', 'chalk', null, 1.2)}${P('M14 8v6M50 8v6', 'sky', null, 1.2)}</g>`),
   bersaglio: svg(
-    P('M61 38a9 9 0 1 0-18 0a9 9 0 1 0 18 0M57 38a5 5 0 1 0-10 0a5 5 0 1 0 10 0') + P('M54 38a2 2 0 1 0-4 0a2 2 0 1 0 4 0', 'stroke="var(--coral)"') + P('M52 47v13M46 60h12') +
-    `<path class="pz-arc" pathLength="1" d="M4 56Q20 2 52 38" stroke="var(--orange)" stroke-dasharray=".04 .04"/>` +
-    `<circle class="pz-ball" r="3" fill="var(--orange)" stroke="none"><animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.7;1" calcMode="linear" path="M4 56Q20 2 52 38"/></circle>`),
-  grado: svg(P('M4 24l28-14 28 14-28 14z') + P('M14 30v14c9 6 27 6 36 0V30') + P('M60 24v18', 'stroke="var(--sun)"') + `<g class="pz-tassel">${P('M60 42l-3 8h6z', 'stroke="var(--sun)"')}</g>`),
+    P('M2 60h60', 'muted', null, 1.4) + P(C(52, 34, 10), 'chalk', 'coral') + P(C(52, 34, 6), 'chalk', 'chalk') + P(C(52, 34, 2.5), 'coral', 'coral') + P('M52 44v16M46 60h12', 'chalk') +
+    P('M4 56l9-8 3 3-9 8z', 'orange', 'orange') + P(C(8, 57, 3), 'chalk', null, 1.6) +
+    `<path class="pz-arc" pathLength="1" d="M14 49Q26 4 50 33" stroke="var(--orange)" stroke-width="1.6" stroke-dasharray=".035 .035"/>` +
+    `<circle r="2.8" fill="var(--orange)" stroke="none"><animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.65;1" calcMode="linear" path="M14 49Q26 4 50 33"/></circle>`),
+  grado: svg(
+    P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
+    `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),
 };
 
 export const pieceSVG = (id) => PIECE_SVG[id] || PIECE_SVG.grado;
