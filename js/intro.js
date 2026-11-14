@@ -1,25 +1,33 @@
-// Animazione d'apertura: tutto il cast entra in scena con una reazione a catena di fisica,
-// poi salta su una grande parabola (l'“Arc” di PhisiArc). Ogni fotogramma è una funzione del tempo t,
-// così "Salta" porta subito alla scena finale.
+// Animazione d'apertura (circa 15 s), in cinque atti. Ogni fotogramma è una funzione del tempo t,
+// così "Salta" o un tocco portano subito alla scena finale.
+//  1. Il punto: un punto di gesso, un cerchio, un raggio che gira; la sua ombra disegna un'onda (seno).
+//     Il cerchio diventa Tic, l'onda diventa la coda di Lux, che scappa via.
+//  2. La luce: Lux torna come raggio dritto, entra in Iride ed esce arcobaleno; ogni colore vola
+//     in parabola e dove atterra nasce un personaggio.
+//  3. La gravità: Mela salta su Boing (con ombre a tempi uguali e vettore velocità) e rimbalza;
+//     in cielo le orbite si disegnano e diventano Elettra e Saturnino; arrivano Ampolla e Attimo.
+//  4. In fila: tutti saltano sulla linea del terreno, che si piega e diventa la parabola dell'"Arc".
+//  5. Arrivano i boss, Vetrino dubita, il titolo si scrive da solo.
 import { charSVG } from './cast.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const cl = (u) => Math.max(0, Math.min(1, u));
 const seg = (t, a, b) => cl((t - a) / (b - a));
 const lerp = (a, b, u) => a + (b - a) * u;
-const eOut = (u) => 1 - (1 - u) ** 3;
-const eInOut = (u) => (u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2);
-const eBack = (u) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * (u - 1) ** 3 + c1 * (u - 1) ** 2; };
+const eOut = (u) => 1 - (1 - cl(u)) ** 3;
+const eInOut = (u) => { u = cl(u); return u < 0.5 ? 4 * u * u * u : 1 - (-2 * u + 2) ** 3 / 2; };
+const eBack = (u) => { u = cl(u); const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * (u - 1) ** 3 + c1 * (u - 1) ** 2; };
 
 // Ordine dei mondi: è anche l'ordine sulla parabola finale.
 const ORDER = ['ampolla', 'tic', 'mela', 'goccia', 'boing', 'termo', 'lampo', 'iride', 'saturnino', 'elettra', 'attimo', 'lux', 'carica'];
-const SKY = new Set(['saturnino', 'elettra', 'lux']);
 
-// Tempi (secondi)
 const T = {
-  ground: [0, 0.7], count: 1.2, via: 2.1, fall: [2.1, 2.7], fly: [2.7, 4.3], lux: [2.9, 3.45], ray: [3.2, 3.45], fan: [3.45, 3.8],
-  wire: [3.0, 3.35], lit: 3.7, splash: 4.3, out: [4.6, 4.95], fade: [4.9, 5.4], arch: [5.0, 5.8], jump: 5.5, gap: 0.08, jumpDur: 0.62,
-  boss: [7.0, 7.55], bubble: [7.6, 8.9], title: [8.7, 9.7], tag: [9.5, 10.1], end: 10.2,
+  circle: [0.35, 0.95], spin: 0.95, ticFade: [2.7, 3.2], luxBorn: 2.55, luxGo: [3.05, 3.6], ticDown: [3.35, 3.9],
+  iride: 3.75, beam: [4.15, 4.6], fan: 4.6, fanDur: 0.85, fanGap: 0.09, fanFade: [6.6, 7.2], luxOut: [5.9, 6.35],
+  boing: 6.05, melaJump: [6.5, 7.3], melaBounce: [7.3, 7.95], nucleus: 6.4, orbits: [6.5, 7.2], elettra: [7.15, 7.5],
+  saturn: [6.85, 7.35], ring: [7.2, 7.6], saturnino: [7.5, 7.85], ampolla: 7.85, attimo: 8.05, flip: [8.3, 8.8],
+  regroup: 8.9, gap: 0.075, hop: 0.62, bend: [10.35, 11.6], boss: [11.35, 11.9], bubble: [12.0, 13.25],
+  title: [13.0, 14.15], tag: [13.95, 14.55], end: 15.0,
 };
 
 export function playIntro({ onDone } = {}) {
@@ -27,8 +35,8 @@ export function playIntro({ onDone } = {}) {
   const W = 1000, H = Math.round(Math.min(2400, Math.max(560, (W * vh) / vw)));
   const portrait = H > 900;
   const G = Math.round(H * 0.8);
-  const S = portrait ? 112 : 92, sc = S / 120;
-  const fs = portrait ? 1.8 : 1; // testi più grandi sul telefono
+  const S = portrait ? 112 : 90, sc = S / 120;
+  const fs = portrait ? 1.8 : 1;
 
   // ---------- contenitore ----------
   const ov = document.createElement('div');
@@ -41,8 +49,7 @@ export function playIntro({ onDone } = {}) {
   svg.setAttribute('class', 'intro-svg');
   svg.setAttribute('aria-hidden', 'true');
   svg.innerHTML = `<defs><pattern id="ig" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1.3" fill="var(--edge)"/></pattern>
-    <marker id="ia" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1 L8 5 L1 9" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
-    <rect width="${W}" height="${H}" fill="url(#ig)" opacity=".55"/>`;
+    <radialGradient id="ivig" cx="50%" cy="45%" r="75%"><stop offset="55%" stop-color="#0a0f1c" stop-opacity="0"/><stop offset="100%" stop-color="#05080f" stop-opacity=".85"/></radialGradient></defs>`;
   const skip = Object.assign(document.createElement('button'), { className: 'btn ghost intro-skip', type: 'button', textContent: 'Salta ›' });
   const enter = Object.assign(document.createElement('button'), { className: 'btn primary intro-enter', type: 'button', textContent: 'Entra nel gioco' });
   ov.append(svg, skip, enter);
@@ -57,270 +64,318 @@ export function playIntro({ onDone } = {}) {
   };
   const set = (e, attrs) => { for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); };
   const op = (e, o) => { e.style.opacity = o <= 0.001 ? 0 : o.toFixed(3); };
+  const stroke = (c, w = 2.5, extra = {}) => ({ fill: 'none', stroke: c, 'stroke-width': w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', ...extra });
+  const pts = (arr) => arr.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
 
-  // ---------- scena fissa ----------
-  const gLine = el('path', { d: `M0 ${G} H${W}`, stroke: 'var(--chalk)', 'stroke-width': 2.5, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': 1, fill: 'none' });
-  const hatch = el('path', { d: Array.from({ length: 26 }, (_, i) => `M${20 + i * 38} ${G + 8} l-12 12`).join(' '), stroke: 'var(--edge)', 'stroke-width': 2, 'stroke-linecap': 'round' });
-  const xs = { ampolla: 70, tic: 155, attimo: 240, boing: 345, carica: 450, lampo: 535, termo: 615, goccia: 715, iride: 845 };
-  if (portrait) for (const k in xs) xs[k] = Math.round(48 + (xs[k] - 70) * 1.08);
-  const pool = el('g');
-  el('ellipse', { cx: xs.goccia, cy: G, rx: 62, ry: 10, fill: 'var(--sky)', 'fill-opacity': .14, stroke: 'var(--sky)', 'stroke-width': 2.5 }, pool);
-  el('path', { d: `M${xs.goccia - 40} ${G} q10 -4 20 0 t20 0 t20 0 t20 0`, stroke: 'var(--sky)', 'stroke-opacity': .6, 'stroke-width': 2, fill: 'none', 'stroke-linecap': 'round' }, pool);
+  // la "telecamera": all'inizio è vicinissima al punto, poi si allarga
+  const grid = el('rect', { x: -W, y: -H, width: 3 * W, height: 3 * H, fill: 'url(#ig)', opacity: 0.5 });
+  const world = el('g');
+  el('rect', { width: W, height: H, fill: 'url(#ivig)', 'pointer-events': 'none' });
+  const E = (tag, attrs) => el(tag, attrs, world);
 
-  // arco finale (parabola esatta: Bézier quadratica)
+  // ---------- posti finali: la parabola dell'Arc ----------
   const apexY = Math.max(S * 1.15 + 20, H * (portrait ? 0.32 : 0.22)), A = G - apexY;
   const ax0 = 60, ax1 = 940;
-  const arch = el('path', { d: `M${ax0} ${G} Q500 ${G - 2 * A} ${ax1} ${G}`, stroke: 'var(--sky)', 'stroke-width': 3, fill: 'none', 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': 1 });
-  const archTicks = el('g', { stroke: 'var(--sky)', 'stroke-opacity': .5, 'stroke-width': 2, 'stroke-linecap': 'round' });
-  // posti sulla parabola a uguale distanza lungo la curva
-  const bez = (u) => ({ x: (1 - u) ** 2 * ax0 + 2 * u * (1 - u) * 500 + u * u * ax1, y: (1 - u) ** 2 * G + 2 * u * (1 - u) * (G - 2 * A) + u * u * G });
-  const samples = [{ u: 0, L: 0, ...bez(0) }];
-  for (let i = 1; i <= 400; i++) { const p = bez(i / 400), q = samples[i - 1]; samples.push({ u: i / 400, L: q.L + Math.hypot(p.x - q.x, p.y - q.y), ...p }); }
+  const archY = (x, m) => { const u = (x - ax0) / (ax1 - ax0); return G - 4 * A * m * u * (1 - u); };
+  const samples = [{ x: ax0, L: 0 }];
+  for (let i = 1; i <= 400; i++) {
+    const x = ax0 + ((ax1 - ax0) * i) / 400, p = samples[i - 1];
+    samples.push({ x, L: p.L + Math.hypot(x - p.x, archY(x, 1) - archY(p.x, 1)) });
+  }
   const Ltot = samples[400].L;
-  const spots = ORDER.map((_, i) => { const L = (Ltot * (i + 0.5)) / ORDER.length; const s = samples.find((p) => p.L >= L); return { x: s.x, y: s.y }; });
+  const spotX = ORDER.map((_, i) => samples.find((p) => p.L >= (Ltot * (i + 0.5)) / ORDER.length).x);
   const Sa = Math.min(portrait ? 175 : S, (Ltot / ORDER.length) * 1.02), sa = Sa / 120;
+  let minGap = 1e9;
+  for (let i = 1; i < spotX.length; i++) minGap = Math.min(minGap, spotX[i] - spotX[i - 1]);
+  const sl = Math.min(sc, (minGap * 1.35) / 120);               // grandezza sulla linea piatta
   const Sb = portrait ? 160 : S, sb = Sb / 120;
-  spots.forEach((p) => el('path', { d: `M${p.x} ${p.y + 6} v8`, }, archTicks));
 
-  // effetti
-  const fx = el('g');
-  const trail = el('polyline', { fill: 'none', stroke: 'var(--sky)', 'stroke-width': 2.5, 'stroke-dasharray': '7 9', 'stroke-linecap': 'round' }, fx);
-  const fallGhosts = Array.from({ length: 9 }, () => el('circle', { r: S * 0.27, fill: 'none', stroke: 'var(--coral)', 'stroke-width': 2, 'stroke-dasharray': '5 6' }, fx));
-  const flyDots = Array.from({ length: 15 }, () => el('circle', { r: 4, fill: 'var(--chalk)' }, fx));
-  const gLab = el('text', { class: 'intro-mono', fill: 'var(--coral)', 'font-size': 20 * fs }, fx); gLab.textContent = 'g ↓';
-  const vec = el('line', { stroke: 'var(--orange)', 'stroke-width': 3, 'stroke-linecap': 'round', 'marker-end': 'url(#ia)' }, fx);
-  const vLab = el('text', { class: 'intro-mono', fill: 'var(--orange)', 'font-size': 20 * fs }, fx); vLab.textContent = 'v';
-  const luxLine = el('line', { stroke: 'var(--sun)', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-opacity': .45 }, fx);
-  const wire = el('path', { fill: 'none', stroke: 'var(--chalk)', 'stroke-width': 2.4, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': 1 }, fx);
-  const sparks = Array.from({ length: 3 }, () => el('circle', { r: 4.5, fill: 'var(--sun)' }, fx));
-  const glow = el('circle', { fill: 'var(--sun)', 'fill-opacity': .13 }, fx);
-  const ray = el('path', { fill: 'none', stroke: 'var(--chalk)', 'stroke-width': 3, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': 1 }, fx);
+  // ---------- atto 1: il punto, il cerchio, l'onda ----------
+  const O = { x: portrait ? 330 : 300, y: G - (portrait ? 330 : 200) }, R = portrait ? 78 : 60;
+  const omega = (2 * Math.PI) / 1.15, vw0 = portrait ? 240 : 270, xp = O.x + R + 46;
+  const ground = E('path', stroke('var(--chalk)', 2.5, { d: `M${W / 2} ${G} H${W + 40} M${W / 2} ${G} H-40`, pathLength: 1, 'stroke-dasharray': 1 }));
+  const hatch = E('path', stroke('var(--edge)', 2, { d: Array.from({ length: 28 }, (_, i) => `M${10 + i * 37} ${G + 8} l-12 12`).join(' ') }));
+  const axis = E('path', stroke('var(--edge)', 1.6, { d: `M${O.x - R - 24} ${O.y} H${W + 20}`, 'stroke-dasharray': '4 7' }));
+  const circle = E('circle', stroke('var(--chalk)', 2.6, { cx: O.x, cy: O.y, r: R, pathLength: 1, 'stroke-dasharray': 1 }));
+  const ticks = E('path', stroke('var(--chalk)', 2, { d: Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return `M${O.x + Math.sin(a) * R * 0.78} ${O.y - Math.cos(a) * R * 0.78} L${O.x + Math.sin(a) * R * 0.66} ${O.y - Math.cos(a) * R * 0.66}`; }).join(' ') }));
+  const angArc = E('path', stroke('var(--sun)', 2));
+  const radius = E('line', stroke('var(--chalk)', 2.2));
+  const proj = E('line', stroke('var(--sky)', 1.6, { 'stroke-dasharray': '3 6' }));
+  const wave = E('polyline', stroke('var(--sky)', 3));
+  const dotO = E('circle', { r: 4.5, fill: 'var(--chalk)', cx: O.x, cy: O.y });
+  const dotP = E('circle', { r: 6, fill: 'var(--sky)' });
+  const sinLab = E('text', { class: 'intro-mono', 'font-size': 20 * fs, fill: 'var(--sky)' }); sinLab.textContent = 'y = sin(ωt)';
+
+  // ---------- atto 2: la luce ----------
+  const XI = portrait ? 560 : 600;
+  const ip = (x, y) => [XI + (x - 60) * sc, G + (y - 112) * sc];
+  const B0 = [-60, H * (portrait ? 0.16 : 0.08)], B1 = ip(2, 66);
+  const beam = E('line', stroke('var(--chalk)', 3, { x1: B0[0], y1: B0[1] }));
   const fanCols = ['--coral', '--orange', '--sun', '--green', '--sky'];
-  const fan = fanCols.map((c) => el('path', { fill: 'none', stroke: `var(${c})`, 'stroke-width': 2.6, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': 1 }, fx));
-  const drops = Array.from({ length: 8 }, (_, i) => ({ e: el('circle', { r: 4, fill: 'none', stroke: 'var(--sky)', 'stroke-width': 2 }, fx), a: (-155 + (i * 130) / 7) * Math.PI / 180, v: 300 + (i % 3) * 70 }));
-  const ripples = [0, 0.16].map((d) => ({ d, e: el('ellipse', { cx: xs.goccia, cy: G, fill: 'none', stroke: 'var(--sky)', 'stroke-width': 2 }, fx) }));
-  const speed = ['vetrino', 'bilancia'].map(() => el('path', { fill: 'none', stroke: 'var(--chalk)', 'stroke-opacity': .5, 'stroke-width': 2.4, 'stroke-linecap': 'round' }, fx));
-  const count = el('text', { class: 'intro-mono', 'text-anchor': 'middle', 'font-size': 38 * fs, 'font-weight': 500 }, fx);
+  const fanWho = ['mela', 'termo', 'lampo', 'carica', 'goccia'];
+  const fanX = portrait ? [690, 750, 815, 880, 945] : [700, 760, 820, 880, 940];
+  const fan = fanCols.map((c, i) => {
+    const [x0, y0] = ip(118, 46 + i * 8), h = (portrait ? 170 : 110) + i * (portrait ? 34 : 22);
+    const path = (u) => [lerp(x0, fanX[i], u), lerp(y0, G, u) - 4 * h * u * (1 - u)];
+    return { c, path, line: E('polyline', stroke(`var(${c})`, 2.6)), head: E('circle', { r: 5, fill: `var(${c})` }), ring: E('ellipse', stroke(`var(${c})`, 2, { cx: fanX[i], cy: G })) };
+  });
 
-  // personaggi
-  const layer = el('g');
+  // ---------- atto 3: gravità e orbite ----------
+  const XB = portrait ? 150 : 165, headY = G - 0.81 * S, XM = XB + (portrait ? 92 : 78);
+  const jump = { x0: fanX[0], x1: XB, y0: G, y1: headY, h: portrait ? 330 : 230 };
+  const jumpAt = (u) => [lerp(jump.x0, jump.x1, u), lerp(jump.y0, jump.y1, u) - 4 * jump.h * u * (1 - u)];
+  const melaTrail = E('polyline', stroke('var(--sky)', 2.2, { 'stroke-dasharray': '6 8' }));
+  const strobe = Array.from({ length: 10 }, () => E('circle', { r: 3.4, fill: 'var(--chalk)' }));
+  const vec = E('path', stroke('var(--orange)', 3));
+  const vLab = E('text', { class: 'intro-mono', 'font-size': 20 * fs, fill: 'var(--orange)' }); vLab.textContent = 'v';
+  const EL = portrait ? { x: 640, y: G - 900 } : { x: 840, y: H * 0.2 };
+  const SAT = portrait ? { x: 240, y: G - 980 } : { x: 430, y: H * 0.17 };
+  const nucleus = E('circle', { r: 7, fill: 'var(--sky)', cx: EL.x, cy: EL.y });
+  const orbits = [0, 60, -60].map((r) => E('ellipse', stroke('var(--chalk)', 2, { cx: EL.x, cy: EL.y, rx: 48 * sc, ry: 15 * sc, transform: `rotate(${r} ${EL.x} ${EL.y})`, pathLength: 1, 'stroke-dasharray': 1 })));
+  const satBody = E('circle', stroke('#a9b8ff', 2.6, { cx: SAT.x, cy: SAT.y, r: 28 * sc, pathLength: 1, 'stroke-dasharray': 1 }));
+  const satRing = E('ellipse', stroke('var(--sun)', 3, { cx: SAT.x, cy: SAT.y + 8 * sc, rx: 48 * sc, ry: 12 * sc, transform: `rotate(-12 ${SAT.x} ${SAT.y + 8 * sc})`, pathLength: 1, 'stroke-dasharray': 1 }));
+
+  // ---------- atto 4: la parabola ----------
+  const arch = E('path', stroke('var(--sky)', 3));
+  const archTicks = E('path', stroke('var(--sky)', 2, { 'stroke-opacity': .55 }));
+
+  // ---------- personaggi ----------
+  const layer = el('g', {}, world);
   const actors = {};
-  const mk = (id) => {
+  [...ORDER, 'vetrino', 'bilancia'].forEach((id) => {
     const g = el('g', {}, layer);
     g.innerHTML = charSVG(id);
-    const s = g.firstElementChild;
-    set(s, { x: -60, y: -112, width: 120, height: 120, overflow: 'visible' });
+    set(g.firstElementChild, { x: -60, y: -112, width: 120, height: 120, overflow: 'visible' });
     g.style.display = 'none';
-    return (actors[id] = { id, g, shown: false });
-  };
-  [...ORDER, 'vetrino', 'bilancia'].forEach(mk);
+    actors[id] = { g, shown: false };
+  });
+  function place(id, p) {
+    const a = actors[id];
+    if (!p) { if (a.shown) { a.shown = false; a.g.style.display = 'none'; } return; }
+    if (!a.shown) { a.shown = true; a.g.style.display = ''; }
+    const k = p.s, cy = p.cy ?? 0.45 * 120 * k;
+    a.g.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${(p.rot || 0).toFixed(1)} 0 ${(-cy).toFixed(1)}) scale(${(k * (p.sx || 1)).toFixed(4)} ${(k * (p.sy || 1)).toFixed(4)})`);
+    a.g.style.opacity = p.o == null ? '' : cl(p.o).toFixed(3);
+  }
+  const pop = (t, t0, s) => (t < t0 ? 0 : s * (0.5 + 0.5 * eBack(seg(t, t0, t0 + 0.42))));
 
-  // fumetto e titolo
-  const bubble = el('g');
+  // ---------- fumetto, titolo, motto ----------
+  const bubble = el('g', {}, world);
   const bw = 270 * fs, bh = 86 * fs, bx = Math.max(16, (portrait ? 230 : 250) - 60 * fs), by = G - Sb - bh - 14;
   el('path', { d: `M${bx + 18} ${by} H${bx + bw - 18} q18 0 18 18 V${by + bh - 18} q0 18 -18 18 H${bx + 70} l-26 22 l4 -22 H${bx + 18} q-18 0 -18 -18 V${by + 18} q0 -18 18 -18 Z`, fill: 'var(--surface)', stroke: '#b9a4ff', 'stroke-width': 2.4, 'stroke-linejoin': 'round' }, bubble);
   const b1 = el('text', { x: bx + 22, y: by + 36 * fs, class: 'intro-mono', 'font-size': 21 * fs, fill: 'var(--chalk)' }, bubble); b1.textContent = 'Ne siete sicuri?';
   const b2 = el('text', { x: bx + 22, y: by + 68 * fs, class: 'intro-mono', 'font-size': 21 * fs, fill: '#b9a4ff' }, bubble); b2.textContent = 'Controlliamo!';
+  const speed = [0, 1].map(() => el('path', stroke('var(--chalk)', 2.4, { 'stroke-opacity': .5 }), world));
   const titleY = G - (portrait ? 0.3 : 0.35) * A, tsize = portrait ? 118 : 100;
-  const title = el('text', { x: 500, y: titleY, 'text-anchor': 'middle', class: 'intro-title', 'font-size': tsize, 'stroke-width': 2.2, 'stroke-dasharray': 700, 'stroke-linejoin': 'round' });
+  const title = el('text', { x: 500, y: titleY, 'text-anchor': 'middle', class: 'intro-title', 'font-size': tsize, 'stroke-width': 2.2, 'stroke-dasharray': 700, 'stroke-linejoin': 'round' }, world);
   title.innerHTML = `<tspan fill="var(--chalk)" stroke="var(--chalk)">Phisi</tspan><tspan fill="var(--sky)" stroke="var(--sky)">Arc</tspan>`;
-  const tag = el('text', { x: 500, y: titleY + 56 * fs, 'text-anchor': 'middle', class: 'intro-tag', 'font-size': 28 * fs, fill: 'var(--muted)' });
+  const tag = el('text', { x: 500, y: titleY + 56 * fs, 'text-anchor': 'middle', class: 'intro-tag', 'font-size': 28 * fs, fill: 'var(--muted)' }, world);
   tag.innerHTML = `Prevedi. Prova. <tspan fill="var(--sky)">Scopri.</tspan>`;
 
-  // ---------- fisica della reazione a catena ----------
-  const headY = G - 0.81 * S;            // punto in cui Mela tocca la testa di Boing
-  const fallTop = -70, tf = T.fall[1] - T.fall[0];
-  const g1 = (2 * (headY - fallTop)) / (tf * tf);
-  const fly = { x0: xs.boing, y0: headY, x1: xs.goccia, y1: G + 4, T: T.fly[1] - T.fly[0] };
-  const hap = Math.min(fly.y0 - S * 0.9, fly.y0 * 0.55); // quota del vertice sopra il lancio
-  {
-    const dy = fly.y1 - fly.y0, Tt = fly.T, r = Math.sqrt(2 * hap);
-    const s = (r * Tt + Math.sqrt(2 * hap * Tt * Tt + 2 * Tt * Tt * dy)) / (Tt * Tt);
-    fly.g = s * s; fly.vy = -r * s; fly.vx = (fly.x1 - fly.x0) / Tt;
-  }
-  const flyAt = (tau) => ({ x: fly.x0 + fly.vx * tau, y: fly.y0 + fly.vy * tau + 0.5 * fly.g * tau * tau });
-  const lyY = H * (portrait ? 0.34 : 0.3);
-  const sky = { saturnino: { x: 860, y: H * (portrait ? 0.2 : 0.24) }, elettra: { x: 150, y: H * (portrait ? 0.24 : 0.27) } };
-  const meX = portrait ? xs.goccia - 85 : 640; // dove Mela si siede dopo il tuffo
-
-  // raggio di luce verso Iride e ventaglio di colori in uscita (coordinate prese dal disegno di Iride)
-  const ip = (x, y) => [xs.iride + (x - 60) * sc, G + (y - 112) * sc];
-  const [rx1, ry1] = ip(2, 66);
-  set(ray, { d: `M${xs.iride - 150} ${lyY} L${rx1} ${ry1}` });
-  [46, 54, 62, 70, 78].forEach((y, i) => {
-    const [x0, y0] = ip(118, y), [xa, ya] = ip(80 + i, 60 + i * 3);
-    const k = (W + 20 - x0) / (x0 - xa);
-    set(fan[i], { d: `M${x0} ${y0} L${W + 20} ${y0 + (y0 - ya) * k * 1.3}` });
-  });
-  // filo da Carica a Lampo
-  const [wx0, wy0] = [xs.carica + 27 * sc, G - 60 * sc], [wx1, wy1] = [xs.lampo - 10 * sc, G - 10 * sc];
-  set(wire, { d: `M${wx0} ${wy0} C${wx0 + 40} ${wy0}, ${wx0 + 20} ${G - 3}, ${(wx0 + wx1) / 2} ${G - 3} S${wx1 - 12} ${wy1}, ${wx1} ${wy1}` });
-
-  // posizione "a casa" di ogni personaggio prima del salto sulla parabola
-  const appear = { ampolla: 0.5, tic: 0.65, attimo: 0.8, boing: 1.0, carica: 1.2, lampo: 1.35, iride: 1.5, saturnino: 2.8, elettra: 3.05, termo: 3.85, goccia: 4.45, mela: T.fall[0], lux: T.lux[0] };
+  // ---------- dove sta ogni personaggio prima di mettersi in fila ----------
+  const sky = (p, s) => ({ x: p.x, y: p.y + 52 * s, s, cy: 52 * s });
+  const fanLand = (i) => T.fan + i * T.fanGap + T.fanDur;
   function home(id, t) {
-    const pop = (t0) => (t < t0 ? 0 : 0.55 + 0.45 * eBack(seg(t, t0, t0 + 0.38)));
-    if (id === 'mela') {
-      if (t < T.fall[0]) return null;
-      if (t < T.fall[1]) { const tau = t - T.fall[0]; return { x: xs.boing, y: fallTop + 0.5 * g1 * tau * tau, k: 1 }; }
-      if (t < T.fly[1]) { const p = flyAt(t - T.fly[0]); return { ...p, k: 1, rot: (360 * (t - T.fly[0])) / fly.T }; }
-      if (t < T.out[0]) return null; // sott'acqua
-      const u = seg(t, T.out[0], T.out[1]);
-      return { x: lerp(xs.goccia, meX, u), y: G + 6 - 90 * 4 * u * (1 - u) - 6 * u, k: 1 };
+    switch (id) {
+      case 'tic': {
+        if (t < T.ticFade[0]) return null;
+        const s0 = R / 34, o = seg(t, ...T.ticFade);
+        if (t < T.ticDown[0]) return { x: O.x, y: O.y + 44 * s0, s: s0, o, cy: 44 * s0 };
+        const u = seg(t, ...T.ticDown), s = lerp(s0, sc, eInOut(u));
+        return { x: O.x, y: lerp(O.y + 44 * s0, G, u * u), s, cy: 44 * s }; // cade: accelera
+      }
+      case 'lux': {
+        if (t < T.luxBorn) return null;
+        if (t < T.luxGo[1]) { // in testa all'onda, poi scappa via a destra
+          const head = waveHead(t);
+          return { x: head[0] + 22 * sc, y: head[1] + 52 * sc, s: pop(t, T.luxBorn, sc), cy: 52 * sc };
+        }
+        if (t < T.beam[0]) return null;
+        if (t < T.beam[1]) { // torna come raggio dritto, dall'alto a sinistra fino a Iride
+          const u = seg(t, ...T.beam), x = lerp(B0[0], B1[0], u), y = lerp(B0[1], B1[1], u);
+          const ang = (Math.atan2(B1[1] - B0[1], B1[0] - B0[0]) * 180) / Math.PI;
+          return { x: x - 18 * sc, y: y + 52 * sc, s: sc * (u > 0.85 ? lerp(1, 0.2, seg(u, 0.85, 1)) : 1), rot: ang, cy: 52 * sc };
+        }
+        if (t < T.luxOut[0]) return null;
+        const u = seg(t, ...T.luxOut);
+        return { x: lerp(XI, XI - (portrait ? 95 : 85), u), y: G - (portrait ? 150 : 110) * 4 * u * (1 - u), s: pop(t, T.luxOut[0], sc) };
+      }
+      case 'iride': return t < T.iride ? null : { x: XI, y: G, s: pop(t, T.iride, sc) };
+      case 'mela': {
+        const t0 = fanLand(0) - 0.05;
+        if (t < t0) return null;
+        if (t < T.melaJump[0]) return { x: fanX[0], y: G, s: pop(t, t0, sc) };
+        if (t < T.melaJump[1]) { const u = seg(t, ...T.melaJump), [x, y] = jumpAt(u); return { x, y, s: sc, rot: -200 * u }; }
+        const u = seg(t, ...T.melaBounce); // rimbalzo sulla molla, poi giù a terra accanto
+        return { x: lerp(XB, XM, u), y: lerp(headY, G, u) - 150 * 4 * u * (1 - u), s: sc };
+      }
+      case 'termo': case 'lampo': case 'carica': case 'goccia': {
+        const i = fanWho.indexOf(id), t0 = fanLand(i) - 0.05;
+        return t < t0 ? null : { x: fanX[i], y: G, s: pop(t, t0, sc) };
+      }
+      case 'boing': {
+        if (t < T.boing) return null;
+        const r = { x: XB, y: G, s: pop(t, T.boing, sc) };
+        if (t >= T.melaJump[1]) { const tau = t - T.melaJump[1]; r.sy = 1 - 0.36 * Math.exp(-4.2 * tau) * Math.cos(15 * tau); r.sx = 1 / Math.sqrt(r.sy); }
+        return r;
+      }
+      case 'elettra': return t < T.elettra[0] ? null : { ...sky(EL, sc), o: seg(t, ...T.elettra) };
+      case 'saturnino': return t < T.saturnino[0] ? null : { ...sky(SAT, sc), o: seg(t, ...T.saturnino) };
+      case 'ampolla': return t < T.ampolla ? null : { x: portrait ? 55 : 70, y: G, s: pop(t, T.ampolla, sc) };
+      case 'attimo': {
+        if (t < T.attimo) return null;
+        return { x: portrait ? 430 : 420, y: G, s: pop(t, T.attimo, sc), rot: 360 * eInOut(seg(t, ...T.flip)), cy: 53 * sc }; // una capriola: il tempo si gira
+      }
     }
-    if (id === 'lux') {
-      if (t < T.lux[0]) return null;
-      if (t < T.lux[1]) return { x: lerp(-140, W + 140, seg(t, ...T.lux)), y: lyY + 0.45 * S, k: 1 };
-      return { x: W + 140, y: lyY + 0.45 * S, k: 1, off: true };
-    }
-    if (id === 'goccia') {
-      const k = pop(appear.goccia); if (!k) return null;
-      const u = seg(t, appear.goccia, appear.goccia + 0.45);
-      return { x: xs.goccia, y: G - 70 * 4 * u * (1 - u), k };
-    }
-    if (SKY.has(id)) { const k = pop(appear[id]); if (!k) return null; return { ...sky[id], k }; }
-    const k = pop(appear[id]); if (!k) return null;
-    const r = { x: xs[id], y: G, k };
-    if (id === 'boing' && t >= T.fall[1]) { // la molla si schiaccia e oscilla smorzata
-      const tau = t - T.fall[1];
-      r.sy = 1 - 0.38 * Math.exp(-4.5 * tau) * Math.cos(15 * tau);
-      r.sx = 1 / Math.sqrt(r.sy);
-    }
-    return r;
+    return null;
   }
 
-  function place(a, p, s) {
-    if (!p) { if (a.shown) { a.shown = false; a.g.style.display = 'none'; } return; }
-    if (!a.shown) { a.shown = true; a.g.style.display = ''; }
-    const k = s * (p.k ?? 1);
-    a.g.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${(p.rot || 0).toFixed(1)} 0 ${-0.45 * S}) scale(${(k * (p.sx || 1)).toFixed(4)} ${(k * (p.sy || 1)).toFixed(4)})`);
+  // l'onda: il punto che gira lascia la sua ombra su un foglio che scorre a destra
+  const tSpinEnd = T.luxGo[0];
+  function waveAt(t) {
+    const arr = [], tt = Math.min(t, tSpinEnd), go = t > T.luxGo[0] ? (t - T.luxGo[0]) ** 2 * 2600 : 0;
+    for (let i = 0; i <= 90; i++) {
+      const tau = lerp(T.spin, tt, i / 90);
+      arr.push([xp + (tt - tau) * vw0 + go, O.y - R * Math.sin(omega * (tau - T.spin))]);
+    }
+    return arr;
+  }
+  const waveHead = (t) => { const w = waveAt(t); return w[0][0] > w[90][0] ? w[0] : w[90]; };
+
+  // ---------- telecamera: tappe [tempo, zoom, centro x, centro y] ----------
+  // Sul telefono segue l'azione (luce, arcobaleno, salto di Mela, cielo) e poi si allarga sulla parabola.
+  const CAM = portrait ? [
+    [0.2, 2.6, O.x, O.y], [3.0, 1.75, O.x + 60, O.y], [4.1, 1.6, 560, G - 430], [5.3, 1.6, 720, G - 330],
+    [6.4, 1.5, 420, G - 560], [7.6, 1.5, 380, G - 560], [8.6, 1.45, 330, G - 380], [10.2, 1, W / 2, H / 2],
+  ] : [[0.2, 2.3, O.x, O.y], [3.4, 1, W / 2, H / 2]];
+  function cam(t) {
+    if (t <= CAM[0][0]) return CAM[0].slice(1);
+    for (let i = 1; i < CAM.length; i++) {
+      if (t <= CAM[i][0]) {
+        const a = CAM[i - 1], b = CAM[i], u = eInOut((t - a[0]) / (b[0] - a[0]));
+        return [lerp(a[1], b[1], u), lerp(a[2], b[2], u), lerp(a[3], b[3], u)];
+      }
+    }
+    return CAM[CAM.length - 1].slice(1);
   }
 
   // ---------- fotogramma ----------
   let started = performance.now(), raf = 0, finished = false, closing = false;
   function frame(t) {
-    // terreno e piscina
-    set(gLine, { 'stroke-dashoffset': 1 - eOut(seg(t, ...T.ground)) });
-    op(hatch, seg(t, 0.3, 0.9) * (1 - seg(t, ...T.fade) * 0.4));
-    op(pool, seg(t, 0.35, 0.8) * (1 - seg(t, 5.2, 5.8)));
+    // telecamera: parte vicinissima al punto e si allarga
+    const [k, cx, cy] = cam(t);
+    world.setAttribute('transform', `translate(${W / 2} ${H / 2}) scale(${k.toFixed(4)}) translate(${(-cx).toFixed(1)} ${(-cy).toFixed(1)})`);
+    grid.setAttribute('transform', world.getAttribute('transform'));
 
-    // conto alla rovescia di Tic
-    const ci = t < T.count ? -1 : Math.min(3, Math.floor((t - T.count) / 0.3));
-    const labels = ['3', '2', '1', 'via!'];
-    if (ci >= 0 && t < T.via + 0.55) {
-      const t0 = T.count + ci * 0.3, u = seg(t, t0, t0 + 0.3);
-      count.textContent = labels[ci];
-      set(count, { x: xs.tic, y: G - S - 18, fill: ci === 3 ? 'var(--orange)' : 'var(--chalk)', transform: `translate(${xs.tic} ${G - S - 30}) scale(${0.7 + 0.3 * eBack(cl(u * 2))}) translate(${-xs.tic} ${-(G - S - 30)})` });
-      op(count, ci === 3 ? 1 - seg(t, T.via + 0.3, T.via + 0.55) : 1 - seg(t, t0 + 0.22, t0 + 0.3));
-    } else op(count, 0);
-
-    // caduta: ombre stroboscopiche a intervalli di tempo uguali (si allargano: accelera)
-    fallGhosts.forEach((c, i) => {
-      const tau = (i + 1) * 0.06, tt = T.fall[0] + tau;
-      if (tau >= tf) { op(c, 0); return; }
-      set(c, { cx: xs.boing, cy: fallTop + 0.5 * g1 * tau * tau - 0.45 * S });
-      op(c, t < tt ? 0 : 0.55 * (1 - seg(t, 3.0, 3.6)));
-    });
-    op(gLab, t > T.fall[1] + 0.25 ? 0 : seg(t, T.fall[0] + 0.1, T.fall[0] + 0.2) * (1 - seg(t, T.fall[1], T.fall[1] + 0.25)));
-    set(gLab, { x: xs.boing + S * 0.38, y: Math.max(40, fallTop + 0.5 * g1 * cl((t - T.fall[0]) / tf) ** 2 * tf * tf - 0.4 * S) });
-
-    // volo: scia, punti a tempi uguali (stessa distanza in orizzontale) e vettore velocità
-    const tau = cl((t - T.fly[0]) / fly.T) * fly.T;
-    if (t >= T.fly[0]) {
-      const pts = [];
-      for (let i = 0; i <= 40; i++) { const p = flyAt((tau * i) / 40); pts.push(`${p.x.toFixed(1)},${(p.y - 0.45 * S).toFixed(1)}`); }
-      set(trail, { points: pts.join(' ') });
+    // atto 1
+    set(ground, { 'stroke-dashoffset': 1 - eOut(seg(t, 0.15, 1.4)) });
+    op(hatch, seg(t, 0.9, 1.6));
+    op(dotO, seg(t, 0, 0.25) * (1 - seg(t, ...T.ticFade)));
+    set(circle, { 'stroke-dashoffset': 1 - eInOut(seg(t, ...T.circle)) });
+    op(circle, 1 - seg(t, ...T.ticFade));
+    op(axis, seg(t, 0.8, 1.2) * (1 - seg(t, 3.2, 3.8)));
+    op(ticks, seg(t, 2.25, 2.6) * (1 - seg(t, ...T.ticFade)));
+    const spinning = t >= T.spin && t < T.ticFade[1];
+    const phi = omega * (Math.min(t, tSpinEnd) - T.spin);
+    const P = [O.x + R * Math.cos(phi), O.y - R * Math.sin(phi)];
+    if (spinning) {
+      set(radius, { x1: O.x, y1: O.y, x2: P[0], y2: P[1] });
+      set(dotP, { cx: P[0], cy: P[1] });
+      set(proj, { x1: P[0], y1: P[1], x2: xp, y2: P[1] });
+      const a = phi % (2 * Math.PI), r0 = 20;
+      set(angArc, { d: `M${O.x + r0} ${O.y} A${r0} ${r0} 0 ${a > Math.PI ? 1 : 0} 0 ${O.x + r0 * Math.cos(a)} ${O.y - r0 * Math.sin(a)}` });
     }
-    op(trail, t < T.fly[0] ? 0 : 1 - seg(t, ...T.fade));
-    flyDots.forEach((d, i) => {
-      const td = (i + 1) * (fly.T / 16), p = flyAt(td);
-      set(d, { cx: p.x, cy: p.y - 0.45 * S });
-      op(d, t < T.fly[0] + td ? 0 : 0.8 * (1 - seg(t, ...T.fade)));
+    const fadeSpin = (t < T.spin ? 0 : 1) * (1 - seg(t, ...T.ticFade));
+    [radius, dotP, angArc].forEach((e) => op(e, fadeSpin));
+    op(proj, (t < T.spin ? 0 : 1) * (1 - seg(t, T.luxGo[0], T.luxGo[0] + 0.2)));
+    if (t >= T.spin) set(wave, { points: pts(waveAt(t)) });
+    op(wave, t < T.spin ? 0 : 1 - seg(t, T.luxGo[1] - 0.15, T.luxGo[1]));
+    set(sinLab, { x: O.x - R, y: O.y - R - 22 });
+    op(sinLab, seg(t, 1.6, 2.0) * (1 - seg(t, 2.9, 3.2)));
+
+    // atto 2: raggio di luce, arcobaleno, parabole colorate
+    if (t >= T.beam[0]) {
+      const u = seg(t, ...T.beam);
+      set(beam, { x2: lerp(B0[0], B1[0], u), y2: lerp(B0[1], B1[1], u) });
+    }
+    op(beam, t < T.beam[0] ? 0 : 0.9 * (1 - seg(t, ...T.fanFade)));
+    fan.forEach((F, i) => {
+      const t0 = T.fan + i * T.fanGap, u = seg(t, t0, t0 + T.fanDur);
+      const arr = []; const n = Math.max(2, Math.round(40 * u));
+      for (let j = 0; j <= n; j++) arr.push(F.path((u * j) / n));
+      set(F.line, { points: pts(arr) });
+      op(F.line, t < t0 ? 0 : 1 - seg(t, ...T.fanFade));
+      const hd = F.path(u);
+      set(F.head, { cx: hd[0], cy: hd[1] });
+      op(F.head, t >= t0 && u < 1 ? 1 : 0);
+      const ru = seg(t, t0 + T.fanDur, t0 + T.fanDur + 0.6);
+      set(F.ring, { rx: 6 + 40 * eOut(ru), ry: 2 + 8 * eOut(ru) });
+      op(F.ring, ru > 0 && ru < 1 ? 1 - ru : 0);
     });
-    if (t >= T.fly[0] && t < T.fly[1]) {
-      const p = flyAt(tau), vx = fly.vx, vy = fly.vy + fly.g * tau, kk = 0.16;
-      const cx = p.x, cy = p.y - 0.45 * S;
-      set(vec, { x1: cx, y1: cy, x2: cx + vx * kk, y2: cy + vy * kk });
-      set(vLab, { x: cx + vx * kk + 8, y: cy + vy * kk - 8 });
-      op(vec, 1 - seg(t, T.fly[1] - 0.12, T.fly[1])); op(vLab, 1 - seg(t, T.fly[1] - 0.12, T.fly[1]));
+
+    // atto 3: salto di Mela, orbite in cielo
+    const ju = seg(t, ...T.melaJump);
+    if (t >= T.melaJump[0]) {
+      const arr = []; for (let j = 0; j <= 40; j++) { const [x, y] = jumpAt((ju * j) / 40); arr.push([x, y - 0.45 * S]); }
+      set(melaTrail, { points: pts(arr) });
+    }
+    op(melaTrail, t < T.melaJump[0] ? 0 : 1 - seg(t, 8.4, 8.9));
+    strobe.forEach((d, i) => {
+      const u = (i + 1) / 11, [x, y] = jumpAt(u);
+      set(d, { cx: x, cy: y - 0.45 * S });
+      op(d, t < T.melaJump[0] || ju < u ? 0 : 0.8 * (1 - seg(t, 8.4, 8.9)));
+    });
+    if (t >= T.melaJump[0] && t < T.melaJump[1]) {
+      const [x, y] = jumpAt(ju), [x2, y2] = jumpAt(Math.min(1, ju + 0.02));
+      const vx = (x2 - x) / 0.02, vy = (y2 - y) / 0.02, kk = 0.17;
+      const cx0 = x, cy0 = y - 0.45 * S, ex = cx0 + vx * kk, ey = cy0 + vy * kk, a = Math.atan2(ey - cy0, ex - cx0);
+      set(vec, { d: `M${cx0} ${cy0} L${ex} ${ey} M${ex - 10 * Math.cos(a - 0.45)} ${ey - 10 * Math.sin(a - 0.45)} L${ex} ${ey} L${ex - 10 * Math.cos(a + 0.45)} ${ey - 10 * Math.sin(a + 0.45)}` });
+      set(vLab, { x: ex + 8, y: ey - 6 });
+      op(vec, 1); op(vLab, 1);
     } else { op(vec, 0); op(vLab, 0); }
+    op(nucleus, seg(t, T.nucleus, T.nucleus + 0.2) * (1 - seg(t, ...T.elettra)));
+    orbits.forEach((o, i) => { set(o, { 'stroke-dashoffset': 1 - eInOut(seg(t, T.orbits[0] + i * 0.12, T.orbits[1])) }); op(o, t < T.orbits[0] ? 0 : 1 - seg(t, ...T.elettra)); });
+    set(satBody, { 'stroke-dashoffset': 1 - eInOut(seg(t, ...T.saturn)) });
+    set(satRing, { 'stroke-dashoffset': 1 - eInOut(seg(t, ...T.ring)) });
+    op(satBody, t < T.saturn[0] ? 0 : 1 - seg(t, ...T.saturnino));
+    op(satRing, t < T.ring[0] ? 0 : 1 - seg(t, ...T.saturnino));
 
-    // Lux attraversa il cielo: la luce va dritta
-    const lx = lerp(-140, W + 140, seg(t, ...T.lux));
-    set(luxLine, { x1: -10, y1: lyY, x2: lx - 0.3 * S, y2: lyY });
-    op(luxLine, t < T.lux[0] ? 0 : 1 - seg(t, T.lux[1], T.lux[1] + 0.5));
-    set(ray, { 'stroke-dashoffset': 1 - seg(t, ...T.ray) });
-    op(ray, t < T.ray[0] ? 0 : 0.9 * (1 - seg(t, ...T.fade)));
-    fan.forEach((f, i) => { set(f, { 'stroke-dashoffset': 1 - eOut(seg(t, T.fan[0] + i * 0.03, T.fan[1])) }); op(f, t < T.fan[0] ? 0 : 1 - seg(t, ...T.fade)); });
-
-    // circuito: il filo si disegna, la corrente scorre, Lampo si accende
-    set(wire, { 'stroke-dashoffset': 1 - seg(t, ...T.wire) });
-    op(wire, t < T.wire[0] ? 0 : 1 - seg(t, ...T.fade));
-    const L = wire.getTotalLength();
-    sparks.forEach((s, i) => {
-      const u = ((t - T.wire[1]) / 0.5 + i / 3) % 1;
-      if (t < T.wire[1] + (i * 0.5) / 3) { op(s, 0); return; }
-      const p = wire.getPointAtLength(u * L);
-      set(s, { cx: p.x, cy: p.y });
-      op(s, 1 - seg(t, ...T.fade));
-    });
-    const lit = eOut(seg(t, T.lit, T.lit + 0.4)) * (1 - seg(t, ...T.fade));
-    set(glow, { cx: xs.lampo, cy: G - 64 * sc, r: S * (0.2 + 0.75 * lit) });
-    op(glow, lit);
-
-    // tuffo di Mela: schizzi a parabola e cerchi nell'acqua
-    drops.forEach((d) => {
-      const tt = t - T.splash;
-      if (tt < 0) { op(d.e, 0); return; }
-      const x = xs.goccia + Math.cos(d.a) * d.v * tt, y = G - 4 + Math.sin(d.a) * d.v * tt + 0.5 * 1500 * tt * tt;
-      set(d.e, { cx: x, cy: y });
-      op(d.e, y > G + 2 ? 0 : 1);
-    });
-    ripples.forEach((r) => {
-      const u = seg(t, T.splash + r.d, T.splash + r.d + 0.8);
-      set(r.e, { rx: 10 + 100 * eOut(u), ry: 2 + 16 * eOut(u) });
-      op(r.e, u <= 0 || u >= 1 ? 0 : 1 - u);
-    });
-
-    // la parabola finale si disegna
-    set(arch, { 'stroke-dashoffset': 1 - eInOut(seg(t, ...T.arch)) });
-    op(archTicks, seg(t, T.arch[1] - 0.2, T.arch[1] + 0.3));
-
-    // personaggi: prima a casa, poi un salto sulla parabola
+    // atto 4: tutti sulla linea, poi la linea si piega nella parabola
+    const m = eInOut(seg(t, ...T.bend));
+    const ax = [], an = 60;
+    for (let i = 0; i <= an; i++) { const x = lerp(ax0, ax1, i / an); ax.push([x, archY(x, m)]); }
+    set(arch, { d: 'M' + ax.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L') });
+    op(arch, seg(t, T.bend[0] - 0.4, T.bend[0]));
+    set(archTicks, { d: spotX.map((x) => `M${x} ${archY(x, m) + 6} v8`).join(' ') });
+    op(archTicks, seg(t, T.bend[1] - 0.3, T.bend[1] + 0.2));
     ORDER.forEach((id, i) => {
-      const a = actors[id], tj = T.jump + i * T.gap, spot = spots[i];
-      if (t < tj) { place(a, home(id, t), sc); return; }
-      const from = home(id, tj) || { x: id === 'lux' ? W + 140 : 500, y: id === 'lux' ? lyY : G, k: 1 };
-      const u = seg(t, tj, tj + T.jumpDur);
-      const s = lerp(sc, sa, eInOut(u));
-      if (SKY.has(id)) { // nello spazio niente parabola: si va dritti
-        const e = eInOut(u);
-        place(a, { x: lerp(from.x, spot.x, e), y: lerp(from.y, spot.y, e), k: 1 }, s);
-      } else { // a terra: salto balistico (x uniforme, y parabolica)
-        const hh = 70 + Math.abs(spot.x - from.x) * 0.12;
-        place(a, { x: lerp(from.x, spot.x, u), y: lerp(from.y, spot.y, u) - hh * 4 * u * (1 - u), k: 1, sy: u < 1 ? 1 : 1 - 0.12 * Math.exp(-8 * (t - tj - T.jumpDur)) * Math.cos(20 * (t - tj - T.jumpDur)) }, s);
+      const tj = T.regroup + i * T.gap;
+      if (t < tj) { place(id, home(id, t)); return; }
+      const from = home(id, tj) || { x: 500, y: G, s: sc };
+      const u = seg(t, tj, tj + T.hop), x1 = spotX[i];
+      const s = t < T.bend[0] ? lerp(from.s, sl, eInOut(u)) : lerp(sl, sa, m);
+      const hh = 70 + Math.abs(x1 - from.x) * 0.14;
+      if (u < 1) {
+        place(id, { x: lerp(from.x, x1, u), y: lerp(from.y, G, u) - hh * 4 * u * (1 - u), s, rot: (from.rot || 0) * (1 - u) });
+      } else {
+        const land = t - tj - T.hop, sy = 1 - 0.14 * Math.exp(-9 * land) * Math.cos(22 * land);
+        place(id, { x: x1, y: archY(x1, m), s, sy });
       }
     });
 
-    // arrivano i boss
-    const bossFrom = { vetrino: -160, bilancia: W + 160 }, bossTo = { vetrino: portrait ? 230 : 250, bilancia: portrait ? 770 : 750 };
+    // atto 5: boss, fumetto, titolo
+    const bossTo = { vetrino: portrait ? 230 : 250, bilancia: portrait ? 770 : 750 }, bossFrom = { vetrino: -160, bilancia: W + 160 };
     ['vetrino', 'bilancia'].forEach((id, i) => {
-      const u = eOut(seg(t, T.boss[0] + i * 0.12, T.boss[1] + i * 0.12));
-      if (t < T.boss[0] + i * 0.12) { place(actors[id], null); op(speed[i], 0); return; }
-      const x = lerp(bossFrom[id], bossTo[id], u);
-      place(actors[id], { x, y: G, k: 1 }, sb);
-      const dir = i ? 1 : -1, y0 = G - 0.5 * S;
-      set(speed[i], { d: `M${x + dir * 0.55 * S} ${y0 - 20} h${dir * 60} M${x + dir * 0.6 * S} ${y0} h${dir * 90} M${x + dir * 0.55 * S} ${y0 + 20} h${dir * 50}` });
+      const t0 = T.boss[0] + i * 0.14, u = eOut(seg(t, t0, T.boss[1] + i * 0.14));
+      if (t < t0) { place(id, null); op(speed[i], 0); return; }
+      const x = lerp(bossFrom[id], bossTo[id], u), dir = i ? 1 : -1, y0 = G - 0.5 * Sb;
+      place(id, { x, y: G, s: sb });
+      set(speed[i], { d: `M${x + dir * 0.55 * Sb} ${y0 - 20} h${dir * 60} M${x + dir * 0.6 * Sb} ${y0} h${dir * 90} M${x + dir * 0.55 * Sb} ${y0 + 20} h${dir * 50}` });
       op(speed[i], (1 - u) * 0.9);
     });
     op(bubble, seg(t, T.bubble[0], T.bubble[0] + 0.2) * (1 - seg(t, T.bubble[1] - 0.25, T.bubble[1])));
-    {
-      const u = eBack(seg(t, T.bubble[0], T.bubble[0] + 0.3));
-      const cx = bx + 60, cy = by + bh + 20;
-      set(bubble, { transform: `translate(${cx} ${cy}) scale(${0.6 + 0.4 * u}) translate(${-cx} ${-cy})` });
-    }
-
-    // titolo che si scrive e motto
+    { const u = eBack(seg(t, T.bubble[0], T.bubble[0] + 0.3)), px = bx + 60, py = by + bh + 20;
+      set(bubble, { transform: `translate(${px} ${py}) scale(${(0.6 + 0.4 * u).toFixed(3)}) translate(${-px} ${-py})` }); }
     set(title, { 'stroke-dashoffset': 700 * (1 - eInOut(seg(t, T.title[0], T.title[1] - 0.25))) });
     title.style.fillOpacity = seg(t, T.title[1] - 0.45, T.title[1]).toFixed(3);
     op(title, t < T.title[0] ? 0 : 1);
@@ -332,15 +387,17 @@ export function playIntro({ onDone } = {}) {
 
   function loop(now) {
     const t = (now - started) / 1000;
-    frame(Math.min(t, T.end + 0.6));
-    if (t < T.end + 0.6) raf = requestAnimationFrame(loop);
+    frame(Math.min(t, T.end));
+    if (t < T.end) raf = requestAnimationFrame(loop);
     else finished = true;
   }
-  raf = requestAnimationFrame(loop);
-  frame(0);
+  // per provarla: ?introT=7.5 ferma l'animazione a quel secondo
+  const seek = Number(new URLSearchParams(location.search).get('introT'));
+  if (seek > 0) frame(Math.min(seek, T.end));
+  else { raf = requestAnimationFrame(loop); frame(0); }
 
   // ---------- uscita ----------
-  const toEnd = () => { started = performance.now() - (T.end + 0.6) * 1000; if (finished) frame(T.end + 0.6); };
+  const toEnd = () => { started = performance.now() - T.end * 1000; if (finished) frame(T.end); };
   function close() {
     if (closing) return;
     closing = true;
