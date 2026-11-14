@@ -11,6 +11,13 @@ import {
 } from './content/index.js';
 
 const app = document.getElementById('app');
+
+// Niente zoom della pagina, come in un'app: pizzico, Ctrl + rotella e Ctrl +/− (il doppio tocco lo blocca il CSS).
+const noZoom = (e) => e.preventDefault();
+['gesturestart', 'gesturechange', 'gestureend'].forEach((ev) => document.addEventListener(ev, noZoom, { passive: false }));
+document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+window.addEventListener('wheel', (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+window.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault(); });
 let cleanup = null;
 
 const go = (hash) => { if (location.hash === hash) render(); else location.hash = hash; };

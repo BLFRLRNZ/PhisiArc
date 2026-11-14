@@ -5,6 +5,7 @@ import { SIMS } from './sims/index.js';
 import { sfx, speak, stopSpeaking } from './audio.js';
 import { CAST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
+import { starsSVG, confetti, countUp, CHECK } from './fx.js';
 import { KIND, worldOf, zoneOf, nextLevel, gradeNow } from './content/index.js';
 
 export function runLevel(root, level, nav) {
@@ -40,7 +41,7 @@ export function runLevel(root, level, nav) {
   const ctrls = h('div', { class: 'ctrls' });
   const launch = h('button', { class: 'btn primary', onclick: () => fire() }, h('span', { html: IC.play }), 'Lancia');
   const resetB = h('button', { class: 'btn', title: 'Ricomincia', 'aria-label': 'Ricomincia', onclick: () => { sim.stop(); sim.reset(); }, html: IC.reset });
-  const simPane = SimClass ? h('section', { class: 'pane simpane' }, h('div', { class: 'canvas-wrap' }, canvas), ctrls,
+  const simPane = SimClass ? h('section', { class: 'pane simpane' }, h('div', { class: 'canvas-wrap' + (SimClass.tall ? ' tall' : '') }, canvas), ctrls,
     SimClass.staticSim ? null : h('div', { class: 'launch' }, launch, resetB)) : null;
 
   root.style.setProperty('--c', world.color);
@@ -138,8 +139,15 @@ export function runLevel(root, level, nav) {
 
   function say(html, cls = '') { return h('div', { class: 'say ' + cls, html }); }
 
+  // Risposta giusta: bordo verde, spunta che si traccia e un'onda che parte dal bottone.
+  function markRight(b) {
+    b.classList.add('right');
+    if (!b.querySelector('.tick')) b.insertAdjacentHTML('beforeend', CHECK);
+  }
+
   function renderStep() {
     const st = steps[si];
+    quest.classList.remove('enter'); void quest.offsetWidth; quest.classList.add('enter');
     drawDots();
     onResult = null;
     area.replaceChildren();
@@ -171,7 +179,7 @@ export function runLevel(root, level, nav) {
         btns[i].classList.add('picked');
         after.replaceChildren(say('Previsione fatta. Ora guardiamo l’esperimento…', 'muted'));
         await runSeq(st.predict);
-        btns[st.answer].classList.add('right');
+        markRight(btns[st.answer]);
         if (i !== st.answer) { btns[i].classList.add('wrong'); errors++; sfx.no(); } else sfx.ok();
         const head = i === st.answer ? '<b>Previsione giusta!</b> ' : '<b>La previsione era diversa, ed è normale: gli scienziati imparano proprio così.</b> ';
         after.replaceChildren(say(head + tx(st.explain, lens), i === st.answer ? 'good' : 'warn'), nextBtn());
@@ -181,7 +189,7 @@ export function runLevel(root, level, nav) {
       if (i === st.answer) {
         sfx.ok();
         btns.forEach((b) => (b.disabled = true));
-        btns[i].classList.add('right');
+        markRight(btns[i]);
         after.replaceChildren(say(tx(st.explain, lens), 'good'), nextBtn());
       } else {
         sfx.no();
@@ -360,11 +368,12 @@ export function runLevel(root, level, nav) {
     const after = gradeNow();
     sfx.win();
     const nx = nextLevel(level.id);
+    const joule = h('span', { class: 'num' }, '+0 joule');
     const modal = h('div', { class: 'modal' }, h('div', { class: 'card pop' },
       h('div', { class: 'cele', html: charSVG(who.id, { cls: 'party' }) }),
-      h('div', { class: 'stars big' }, '★'.repeat(stars), h('span', { class: 'off' }, '★'.repeat(3 - stars))),
+      h('div', { class: 'stars big', html: starsSVG(stars), 'aria-label': `${stars} stelle su 3` }),
       h('h2', {}, boss ? 'Mito smontato!' : 'Livello superato!'),
-      h('p', {}, gained ? `+${gained} joule` : 'Nessun joule in più: avevi già fatto così bene.'),
+      gained ? h('p', { class: 'gain' }, h('span', { class: 'sun', html: IC.bolt }), joule) : h('p', {}, 'Nessun joule in più: avevi già fatto così bene.'),
       errors || hints || solution ? h('p', { class: 'muted small' }, stars < 3 ? 'Rigiocalo senza aiuti e senza errori per avere ★★★.' : '') : null,
       newPiece ? h('div', { class: 'piece' }, h('span', { class: 'pi' }, newPiece.icon), h('div', {}, h('b', {}, 'Nuovo pezzo per il tuo parco: ', newPiece.name), h('div', { class: 'small' }, newPiece.desc))) : null,
       after.name !== before.name ? h('div', { class: 'piece' }, h('span', { class: 'pi' }, '🎓'), h('div', {}, h('b', {}, 'Nuovo grado: ', after.name), h('div', { class: 'small' }, after.desc))) : null,
@@ -373,6 +382,10 @@ export function runLevel(root, level, nav) {
         h('button', { class: 'btn', onclick: () => leave() }, 'Mappa'),
         nx ? h('button', { class: 'btn primary', onclick: () => nav('#/livello/' + nx) }, 'Prossimo →') : null)));
     root.append(modal);
+    const card = modal.firstChild;
+    if (gained) setTimeout(() => countUp(joule, gained, { prefix: '+', suffix: ' joule' }), 500);
+    else joule.textContent = '';
+    setTimeout(() => confetti(card, { colors: [getComputedStyle(root).getPropertyValue('--c').trim() || '#7cc8ff', '#7cc8ff', '#ffd166', '#eef4ff'] }), 250);
   }
 
   function leave() {

@@ -1,5 +1,5 @@
 // Caduta libera: oggetti diversi, con o senza aria, sulla Terra o sulla Luna.
-import { Sim, fmt } from './base.js';
+import { Sim, fmt, easeOut } from './base.js';
 
 export const OBJ = {
   piuma: { icon: '🪶', name: 'piuma', vt: 0.6 },
@@ -23,7 +23,10 @@ export class Fall extends Sim {
   defaults() { return { h: 2, air: true, planet: 'terra', objs: ['piuma', 'martello'] }; }
 
   init() {
-    this.state = this.params.objs.map((k) => ({ ...OBJ[k], key: k, y: 0, v: 0, tEnd: null }));
+    this.state = this.params.objs.map((k) => ({ ...OBJ[k], key: k, y: 0, v: 0, tEnd: null, ghosts: [], land: -1 }));
+    // foto stroboscopica: una "ombra" a intervalli di tempo uguali
+    this.dtS = Math.sqrt((2 * this.params.h) / G[this.params.planet]) / 7;
+    this.nextS = this.dtS;
   }
 
   step(dt) {
@@ -35,7 +38,11 @@ export class Fall extends Sim {
       const a = air ? g * (1 - (s.v * s.v) / (s.vt * s.vt)) : g;
       s.v += a * dt;
       s.y += s.v * dt;
-      if (s.y >= p.h) { s.y = p.h; s.tEnd = this.t; }
+      if (s.y >= p.h) { s.y = p.h; s.tEnd = this.t; s.land = this.clock; }
+    }
+    if (this.t >= this.nextS) {
+      this.nextS += this.dtS;
+      for (const s of this.state) if (s.tEnd == null) s.ghosts.push(s.y);
     }
     if (this.state.every((s) => s.tEnd != null)) this.finish({ times: this.state.map((s) => s.tEnd) });
   }
@@ -53,19 +60,47 @@ export class Fall extends Sim {
     for (let i = 0; i <= 4; i++) {
       const y = top + ((ground - top) * i) / 4;
       g.beginPath(); g.moveTo(34, y); g.lineTo(46, y); g.stroke();
-      this.text(`${fmt(p.h * (1 - i / 4), 1)} m`, 50, y + 4, { size: 10, color: this.c('muted') });
+      this.text(`${fmt(p.h * (1 - i / 4), 1)} m`, 50, i === 4 ? y - 6 : y + 4, { size: 10, color: this.c('muted') });
     }
     const n = this.state.length;
+    const emoji = (icon, x, y, alpha = 1) => {
+      g.save(); g.globalAlpha = alpha;
+      g.font = '30px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'bottom';
+      g.fillText(icon, x, y);
+      g.restore();
+    };
+    const vmax = Math.sqrt(2 * G[p.planet] * p.h), kv = ((ground - top) * 0.2) / vmax;
     this.state.forEach((s, i) => {
       const x = W * (0.35 + (0.45 * (i + 0.5)) / n);
-      g.font = '30px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
-      g.textAlign = 'center';
-      g.textBaseline = 'bottom';
-      g.fillText(s.icon, x, sy(s.y));
-      g.textBaseline = 'alphabetic';
+      // ombre a tempi uguali: la distanza fra una e l'altra cresce, perché accelera
+      // al massimo una decina di ombre: se cade piano se ne tiene una ogni tanto (sempre a tempi uguali)
+      const stride = Math.ceil(s.ghosts.length / 10) || 1;
+      const gh = s.ghosts.filter((_, j) => (j + 1) % stride === 0);
+      gh.forEach((y, j) => {
+        const Y = sy(y);
+        emoji(s.icon, x, Y, 0.22);
+        this.line([[x + 22, Y - 15], [x + 32, Y - 15]], { color: this.c('sky'), width: 2, alpha: 0.7 });
+        if (j > 0) {
+          const Yp = sy(gh[j - 1]);
+          this.line([[x + 27, Yp - 15], [x + 27, Y - 15]], { color: this.c('sky'), width: 1, alpha: 0.35, dash: [2, 3] });
+        }
+      });
+      emoji(s.icon, x, sy(s.y));
+      if (this.running && s.tEnd == null && s.v > 0.05) {
+        this.arrow(x - 24, sy(s.y) - 15, x - 24, sy(s.y) - 15 + s.v * kv, { color: this.c('orange'), label: 'v' });
+      }
+      if (s.land >= 0) {
+        const age = this.clock - s.land;
+        this.ripple(x, ground, age, { color: this.c('chalk'), r1: 30 });
+        this.burst(x, ground - 2, age, { color: this.c('muted'), n: 7, r: 26, dur: 0.5 });
+      }
       this.text(s.name, x, ground + 18, { size: 12, align: 'center', color: this.c('ink') });
       if (s.tEnd != null) {
-        this.text(`${fmt(s.tEnd, 2)} s`, x, ground + 34, { size: 13, align: 'center', weight: 700, color: this.c('ink') });
+        const u = easeOut((this.clock - s.land) / 0.4);
+        g.globalAlpha = u;
+        this.text(`${fmt(s.tEnd, 2)} s`, x, ground + 34, { size: 13, align: 'center', weight: 700, color: this.c('accent2'), mono: true });
+        g.globalAlpha = 1;
       }
     });
     const where = luna ? 'Luna (niente aria)' : p.air ? 'Terra, con aria' : 'Terra, senza aria (tubo a vuoto)';

@@ -1,5 +1,5 @@
 // Gara a velocità costante con il grafico spazio-tempo che si disegna in diretta.
-import { Sim, fmt } from './base.js';
+import { Sim, fmt, easeOut, easeInOut } from './base.js';
 
 export class Race extends Sim {
   static controls = {
@@ -21,7 +21,8 @@ export class Race extends Sim {
   }
 
   init() {
-    this.state = this.cars().map((c) => ({ ...c, x: c.x0, tEnd: null, pts: [[0, c.x0]] }));
+    this.state = this.cars().map((c) => ({ ...c, x: c.x0, tEnd: null, pts: [[0, c.x0]], secs: [], land: -1 }));
+    this.nextSec = 1;
     this.lastPt = 0;
   }
 
@@ -30,7 +31,11 @@ export class Race extends Sim {
     for (const s of this.state) {
       if (s.tEnd != null) continue;
       s.x += s.v * dt;
-      if (s.x >= p.D) { s.x = p.D; s.tEnd = this.t; s.pts.push([this.t, p.D]); }
+      if (s.x >= p.D) { s.x = p.D; s.tEnd = this.t; s.land = this.clock; s.pts.push([this.t, p.D]); }
+    }
+    if (this.t >= this.nextSec) { // un segno ogni secondo: a velocità costante sono equidistanti
+      for (const s of this.state) if (s.tEnd == null) s.secs.push([this.nextSec, s.x]);
+      this.nextSec += 1;
     }
     if (this.t - this.lastPt > 0.05) {
       this.lastPt = this.t;
@@ -66,15 +71,36 @@ export class Race extends Sim {
     st.forEach((s, i) => {
       const y = 16 + lane * i + lane / 2;
       const x = sx(s.x);
-      g.fillStyle = s.col;
-      g.beginPath();
-      g.roundRect(x - 26, y - 9, 26, 14, 4);
-      g.fill();
-      g.fillStyle = this.c('ink');
-      g.beginPath(); g.arc(x - 20, y + 6, 3.5, 0, 7); g.arc(x - 6, y + 6, 3.5, 0, 7); g.fill();
-      this.text(`${fmt(s.v, 1)} m/s`, x - 30, y + 2, { size: 11, align: 'right', color: this.c('muted') });
+      // segni dei secondi sulla corsia
+      s.secs.forEach(([t, xs]) => {
+        this.line([[sx(xs), y + 8], [sx(xs), y + 14]], { color: s.col, width: 2, alpha: 0.6 });
+      });
+      // linee di velocità dietro l'auto
+      if (this.running && s.tEnd == null) {
+        const k = Math.min(1, s.v / 20);
+        for (let j = 0; j < 3; j++) {
+          const len = 10 + 26 * k, off = ((this.clock * 90 + j * 13) % 18);
+          this.line([[x - 34 - off - len, y - 6 + j * 5], [x - 34 - off, y - 6 + j * 5]], { color: s.col, width: 1.6, alpha: 0.5 });
+        }
+      }
+      // l'auto a linee: carrozzeria, abitacolo e ruote che girano
+      g.save();
+      g.strokeStyle = s.col; g.lineWidth = 2.2; g.lineJoin = 'round'; g.lineCap = 'round';
+      g.fillStyle = s.col; g.globalAlpha = 0.18;
+      g.beginPath(); g.roundRect(x - 30, y - 6, 30, 11, 4); g.fill();
+      g.globalAlpha = 1;
+      g.beginPath(); g.roundRect(x - 30, y - 6, 30, 11, 4); g.stroke();
+      g.beginPath(); g.moveTo(x - 22, y - 6); g.lineTo(x - 18, y - 12); g.lineTo(x - 9, y - 12); g.lineTo(x - 5, y - 6); g.stroke();
+      const rot = (s.x / 0.35);
+      for (const wx of [x - 23, x - 7]) {
+        g.fillStyle = this.c('sim-bg');
+        g.beginPath(); g.arc(wx, y + 6, 4.2, 0, 7); g.fill(); g.stroke();
+        g.beginPath(); g.moveTo(wx + Math.cos(rot) * 3.6, y + 6 + Math.sin(rot) * 3.6); g.lineTo(wx - Math.cos(rot) * 3.6, y + 6 - Math.sin(rot) * 3.6); g.stroke();
+      }
+      g.restore();
+      if (s.land >= 0) this.burst(sx(p.D), y, this.clock - s.land, { color: s.col, n: 8, r: 22 });
+      this.text(`${fmt(s.v, 1)} m/s`, x - 15, y - 16, { size: 10, align: 'center', color: s.col });
     });
-    // grafico spazio-tempo (in basso)
     const gx = 46, gy = trackH + 30, gw = W - gx - 20, gh = H - gy - 30;
     const tEst = Math.max(...st.map((s) => (p.D - s.x0) / s.v));
     const tG = Math.max(5, Math.ceil(Math.min(p.tmax, tEst) / 5) * 5);
@@ -91,16 +117,30 @@ export class Race extends Sim {
     }
     this.text('tempo (s)', gx + gw, gy + gh - 6, { size: 11, align: 'right', color: this.c('muted') });
     this.text('posizione (m)', gx + 4, gy + 10, { size: 11, color: this.c('muted') });
-    g.lineWidth = 3;
+    const GX = (t) => gx + (gw * Math.min(t, tG)) / tG, GY = (x) => gy + gh - (gh * x) / p.D;
     for (const s of st) {
-      g.strokeStyle = s.col;
-      g.beginPath();
-      s.pts.forEach(([t, x], i) => {
-        const X = gx + (gw * Math.min(t, tG)) / tG, Y = gy + gh - (gh * x) / p.D;
-        i ? g.lineTo(X, Y) : g.moveTo(X, Y);
-      });
-      if (this.running) g.lineTo(gx + (gw * Math.min(this.t, tG)) / tG, gy + gh - (gh * s.x) / p.D);
-      g.stroke();
+      const pts = s.pts.map(([t, x]) => [GX(t), GY(x)]);
+      if (this.running && s.tEnd == null) pts.push([GX(this.t), GY(s.x)]);
+      this.line(pts, { color: s.col, width: 3 });
+      s.secs.forEach(([t, x]) => this.ball(GX(t), GY(x), 2.6, { color: s.col, fill: 1, shine: false }));
+      if (this.running && s.tEnd == null) {
+        const [hx, hy] = pts[pts.length - 1];
+        this.line([[gx, hy], [hx, hy]], { color: s.col, width: 1, dash: [2, 5], alpha: 0.5 });
+        this.ball(hx, hy, 5, { color: s.col, fill: 0.35, shine: false });
+      }
+      // a gara finita: il triangolo della pendenza. La velocità è quanto sale la retta in un secondo.
+      if (this.result && s.secs.length >= 3) {
+        const u = easeInOut((this.age - 0.2) / 0.8);
+        if (u > 0) {
+          const t1 = Math.floor(s.secs.length / 2), [ta, xa] = [t1, s.x0 + s.v * t1], tb = ta + 2, xb = s.x0 + s.v * tb;
+          const A = [GX(ta), GY(xa)], B = [GX(tb), GY(xa)], C = [GX(tb), GY(xb)];
+          this.line([A, B, C], { color: this.c('chalk'), width: 1.6, upto: u, alpha: 0.8 });
+          g.globalAlpha = easeOut((this.age - 0.9) / 0.4);
+          this.text('2 s', (A[0] + B[0]) / 2, A[1] + 13, { size: 10, align: 'center', color: this.c('muted'), mono: true });
+          this.text(`${fmt(2 * s.v, 0)} m`, C[0] + 5, (B[1] + C[1]) / 2 + 4, { size: 10, color: s.col, mono: true });
+          g.globalAlpha = 1;
+        }
+      }
     }
     g.lineWidth = 1;
     this.text(`Tempo: ${fmt(this.t, 1)} s`, W - 20, gy + 10, { size: 13, align: 'right', weight: 600 });

@@ -81,8 +81,11 @@ export class Scale extends Sim {
     }
     // barra di scala
     const r = Math.round(e * 10) / 10;
-    g.fillStyle = this.c('accent');
-    g.fillRect(W - 14 - base, 22, base, 5);
+    const bx0 = W - 14 - base, bx1 = W - 14;
+    this.line([[bx0, 18], [bx0, 30]], { color: this.c('sky'), width: 2 });
+    this.line([[bx1, 18], [bx1, 30]], { color: this.c('sky'), width: 2 });
+    this.arrow(bx0 + base / 2, 24, bx1, 24, { color: this.c('sky'), width: 2, head: 6 });
+    this.arrow(bx0 + base / 2, 24, bx0, 24, { color: this.c('sky'), width: 2, head: 6 });
     this.text(`questa barra = 10${sup(Math.round(r))} m`, W - 14, 44, { size: 12, align: 'right', weight: 600 });
     this.text(`10${sup(Math.round(r))} m`, 14, 30, { size: 22, weight: 700, color: this.c('accent2') });
     const w = words(r);
