@@ -8,6 +8,7 @@ import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { starsSVG, confetti, countUp, CHECK } from './fx.js';
 import { enroll, grade } from './review.js';
+import { newTools, toolCard } from './tools.js';
 import { t as tr, LOCALE } from './i18n.js';
 import { KIND, worldOf, zoneOf, nextLevel, gradeNow, worldDone, nextWorld, worldReady, worldOpen, EXAM_MAX_ERRORS } from './content/index.js';
 
@@ -531,6 +532,12 @@ export function runLevel(root, level, nav) {
     nav('#/mondo/' + world.id);
   }
 
+  // Attrezzi di matematica nuovi (radice, π, seno…): prima di cominciare, la loro scheda da giocare.
+  const toolsNew = level.exam || level.review ? [] : newTools(level, lens);
+  if (toolsNew.length) {
+    quest.hidden = area.hidden = true;
+    textPane.insertBefore(toolCard(toolsNew, () => { quest.hidden = area.hidden = false; quest.focus?.(); }, { inLevel: true }), hintBox);
+  }
   renderStep();
 
   return () => { stopSpeaking(); if (sim) sim.destroy(); };

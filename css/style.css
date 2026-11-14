@@ -536,3 +536,88 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 
 /* scelta della lingua nella schermata di benvenuto */
 .welcome .lang-chips { justify-content: center; margin: 4px 0 8px; }
+
+/* ---------- la cassetta degli attrezzi ---------- */
+.toolcard { margin: 12px 0; padding: 14px 16px; background: var(--surface2); border: 1.5px solid var(--sky); border-radius: var(--r); animation: rise-in .45s cubic-bezier(.2, .7, .2, 1) backwards; }
+.toolcard h3 { margin: .2em 0 .3em; font-size: 1.2rem; color: var(--sky); }
+.toolcard .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; margin-top: 10px; }
+.tool-tag { display: inline-block; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--night); background: var(--sun); border-radius: 99px; padding: 2px 10px; font-weight: 600; }
+.tool-show { text-align: center; }
+.tool-svg { width: 100%; max-width: 220px; max-height: 220px; display: block; margin: 6px auto; }
+.tool-svg .cell { fill: rgba(124, 200, 255, .35); }
+.tool-svg .edge, .tool-svg .area { fill: none; stroke: var(--sky); stroke-width: 2; }
+.tool-svg .area { fill: rgba(124, 200, 255, .25); }
+.tool-svg .side { stroke: var(--orange); stroke-width: 4; stroke-linecap: round; }
+.tool-svg .tri { fill: rgba(238, 244, 255, .08); stroke: var(--chalk); stroke-width: 2; stroke-linejoin: round; }
+.tool-svg .sqa { fill: rgba(255, 155, 84, .3); stroke: var(--orange); stroke-width: 1.5; }
+.tool-svg .sqb { fill: rgba(79, 227, 181, .3); stroke: var(--mint); stroke-width: 1.5; }
+.tool-svg .sqc { fill: rgba(124, 200, 255, .22); stroke: var(--sky); stroke-width: 1.5; }
+.tool-svg .circ { fill: none; stroke: var(--sky); stroke-width: 2.5; }
+.tool-svg .dia { stroke: var(--orange); stroke-width: 2.5; }
+.tool-svg .unroll { stroke: var(--sky); stroke-width: 4; stroke-linecap: round; }
+.tool-svg .mk { stroke: var(--orange); stroke-width: 2; }
+.tool-svg .ground { stroke: var(--edge); stroke-width: 2; }
+.tool-svg .arrow { stroke: var(--chalk); stroke-width: 3; stroke-linecap: round; }
+.tool-svg .tipdot { fill: var(--chalk); }
+.tool-svg .shx { stroke: var(--orange); stroke-width: 5; stroke-linecap: round; }
+.tool-svg .shy { stroke: var(--mint); stroke-width: 3; stroke-dasharray: 4 4; }
+.tool-svg .ang { fill: none; stroke: var(--sun); stroke-width: 1.5; }
+.tool-svg .lb { fill: var(--muted); font: 11px var(--f-ui); }
+.tool-f { font: 600 1.1rem/1.4 var(--f-num); margin: 4px 0; }
+.c1 { color: var(--sky); fill: var(--sky); } .c2 { color: var(--orange); fill: var(--orange); } .c3 { color: var(--mint); fill: var(--mint); }
+.tool-ok { color: var(--mint); font: 600 .85rem var(--f-ui); }
+.tool-sl { display: flex; flex-direction: column; gap: 2px; margin: 8px 0; font-size: .9rem; }
+.tool-sl output { font-family: var(--f-num); color: var(--sky); }
+.tool-sl input { width: 100%; }
+.tool-tip { color: var(--muted); border-left: 3px solid var(--sun); padding-left: 10px; }
+.tool-check { margin-top: 10px; }
+.tool-check .opts { display: grid; gap: 6px; }
+.tool-fb { margin: 8px 0 0; color: var(--coral); }
+.tool-fb.good { color: var(--mint); }
+.tool-list { display: grid; gap: 8px; margin-bottom: 14px; }
+.tool-item { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; width: 100%; cursor: pointer; color: var(--chalk); font: inherit; }
+.tool-item:not(.seen) { opacity: .75; }
+.toolbox-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; text-decoration: none; color: inherit; }
+.toolbox-link h3 { margin: 0 0 .2em; }
+.toolbox-link:hover { border-color: var(--sky); }
+
+/* le animazioni: l'omino di gesso */
+.ta-wrap { position: relative; margin: 6px 0 10px; background: var(--sim-bg); border: 1.5px solid var(--edge); border-radius: 14px; overflow: hidden; }
+.ta-svg { display: block; width: 100%; height: auto; }
+.ta-replay { position: absolute; right: 8px; bottom: 8px; }
+.ta-svg .fig path { fill: none; stroke: var(--chalk); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.ta-svg .fig circle { fill: var(--sim-bg); stroke: var(--chalk); stroke-width: 3.2; }
+.ta-svg .ta-t { font-family: var(--f-ui); font-weight: 700; fill: var(--chalk); paint-order: stroke; stroke: var(--sim-bg); stroke-width: 4px; }
+.ta-svg .ta-t.mono { font-family: var(--f-num); }
+.ta-svg .ta-t.c1 { fill: var(--sky); } .ta-svg .ta-t.c2 { fill: var(--orange); } .ta-svg .ta-t.c3 { fill: var(--mint); } .ta-svg .ta-t.muted { fill: var(--muted); font-weight: 400; }
+.ta-ground { stroke: var(--edge); stroke-width: 2.5; }
+.ta-shadow { fill: rgba(0, 0, 0, .45); }
+.ta-speed { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+.ta-dust { fill: var(--muted); }
+.ta-burst { stroke: var(--sun); stroke-width: 2.5; stroke-linecap: round; }
+.ta-flag, .ta-hand { stroke: var(--chalk); stroke-width: 2; }
+.ta-flagc { fill: var(--mint); }
+.ta-check { fill: var(--chalk); stroke: var(--chalk); stroke-dasharray: 4 4; }
+.ta-d { stroke: var(--orange); stroke-width: 3; stroke-linecap: round; }
+.ta-watch { fill: var(--surface); stroke: var(--chalk); stroke-width: 2.5; }
+.ta-watchtop { fill: var(--chalk); }
+.ta-stick { stroke-width: 5; stroke-linecap: round; }
+.ta-stick.c1 { stroke: var(--sky); } .ta-stick.c2 { stroke: var(--orange); }
+.ta-sq { fill: none; stroke: var(--sky); stroke-width: 2.5; stroke-linejoin: round; }
+.ta-cell.c1f { fill: var(--sky); } .ta-cell.c2f { fill: var(--orange); } .ta-cell.c3f { fill: var(--mint); }
+.ta-tri { fill: rgba(238, 244, 255, .06); stroke: var(--chalk); stroke-width: 2.5; stroke-linejoin: round; }
+.ta-rt { fill: none; stroke: var(--chalk); stroke-width: 1.5; }
+.ta-wheel { fill: rgba(124, 200, 255, .1); stroke: var(--sky); stroke-width: 3; }
+.ta-dia { stroke: var(--orange); stroke-width: 2.5; }
+.ta-paint { stroke: var(--pink); stroke-width: 5; stroke-linecap: round; }
+.ta-paintdot { fill: var(--pink); }
+.ta-bit { fill: var(--mint); }
+.ta-wall { stroke: var(--edge); stroke-width: 3; }
+.ta-sun { fill: var(--sun); } .ta-sunray { stroke: var(--sun); stroke-width: 2; stroke-linecap: round; }
+.ta-lamp { fill: var(--sun); }
+.ta-ray { stroke: rgba(255, 209, 102, .35); stroke-width: 1.5; stroke-dasharray: 3 5; }
+.ta-shx { stroke: var(--orange); stroke-width: 5; stroke-linecap: round; }
+.ta-shy { stroke: var(--mint); stroke-width: 5; stroke-linecap: round; }
+.ta-arrow { stroke: var(--chalk); stroke-width: 3.5; stroke-linecap: round; fill: none; }
+.ta-ang { fill: none; stroke: var(--sun); stroke-width: 1.5; }
+.tool-holder, .toolcard { scroll-margin-top: 80px; }

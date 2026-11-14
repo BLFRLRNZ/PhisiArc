@@ -7,6 +7,7 @@ import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { playIntro } from './intro.js';
 import { runLevel } from './level.js';
+import { toolboxPage, toolsOn, toolCount, TOOL_IDS } from './tools.js';
 import { enrollDone, dueKeys, nextDueIn, reviewLevel, REVIEW_MAX } from './review.js';
 import {
   WORLDS, ZONES, KIND, LENSES, GRADES, ALL_PIECES,
@@ -100,6 +101,7 @@ function home() {
       h('h1', {}, tr('Il percorso')),
       h('p', { class: 'muted' }, tr('Stai giocando come {lens}. Dodici mondi in fila, dal più semplice al più difficile: ognuno è un campo della fisica e si apre quando finisci quello prima. Mondi completati: {n} di {tot}.', { lens: LENSES[S.lens].name, n: doneN, tot: WORLDS.length })),
       reviewCard(),
+      toolboxCard(),
       h('div', { class: 'worlds path' }, list)));
   if (here && here.n > 2) requestAnimationFrame(() => page.querySelector('.pstep.here')?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
   return page;
@@ -118,6 +120,22 @@ function reviewCard() {
     h('h3', {}, tr('Ripasso del giorno')),
     h('p', { class: 'muted small' }, k === 1 ? tr('1 domanda dai livelli che hai già finito. Ripassare dopo qualche giorno aiuta a ricordare a lungo.') : tr('{k} domande dai livelli che hai già finito. Ripassare dopo qualche giorno aiuta a ricordare a lungo.', { k })),
     h('a', { class: 'btn primary', href: '#/ripasso' }, tr('Ripassa')));
+}
+
+// la cassetta degli attrezzi di matematica (solo nelle lenti con le formule)
+function toolboxCard() {
+  if (!toolsOn(S.lens)) return null;
+  return h('a', { class: 'zone toolbox-link', href: '#/attrezzi' },
+    h('div', {}, h('h3', {}, tr('La cassetta degli attrezzi')),
+      h('p', { class: 'muted small' }, tr('Radice, Pitagora, π, seno e coseno: gli strumenti di matematica delle formule, da guardare e provare. Ne hai trovati {n} di {tot}.', { n: toolCount(), tot: TOOL_IDS.length }))),
+    h('span', { class: 'btn' }, tr('Apri')));
+}
+function toolbox() {
+  return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in narrow' },
+    h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), tr('I mondi')),
+    h('h1', {}, tr('La cassetta degli attrezzi')),
+    h('p', { class: 'muted' }, tr('Le formule della fisica usano pochi attrezzi di matematica. Ognuno si apre da solo la prima volta che un livello ne ha bisogno, e qui puoi riguardarlo quando vuoi.')),
+    toolboxPage()));
 }
 
 // ---------- un mondo: zone e livelli ----------
@@ -279,6 +297,7 @@ function render() {
     }
     case 'parco': app.replaceChildren(park()); break;
     case 'gradi': app.replaceChildren(grades()); break;
+    case 'attrezzi': app.replaceChildren(toolbox()); break;
     case 'impostazioni': app.replaceChildren(settings()); break;
     default: app.replaceChildren(home());
   }

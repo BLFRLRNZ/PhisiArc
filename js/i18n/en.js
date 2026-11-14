@@ -11,5 +11,6 @@ import m02 from './en-m02.js';
 import m03 from './en-m03.js';
 import m04 from './en-m04.js';
 import m05 from './en-m05.js';
+import tools from './en-tools.js';
 
-export default { ...ui, ...meta, ...extra, ...f01, ...f02, ...f03, ...m01, ...m02, ...m03, ...m04, ...m05 };
+export default { ...ui, ...meta, ...extra, ...f01, ...f02, ...f03, ...m01, ...m02, ...m03, ...m04, ...m05, ...tools };

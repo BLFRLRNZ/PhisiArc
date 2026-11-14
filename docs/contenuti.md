@@ -82,3 +82,15 @@ la frase italiana esatta. Se cambi una frase italiana, la sua traduzione non val
 Nelle frasi scritte dentro una funzione (per esempio i messaggi di un `check`) si usa `t('frase con {x}', { x })` da `js/i18n.js`:
 così la frase finisce nell’elenco e i numeri si scrivono all’inglese (3.5 invece di 3,5).
 Per provare: `?lang=en` in fondo all’indirizzo, oppure Impostazioni → Lingua. `LINGUA=en node tests/play-all.mjs …` gioca tutto in inglese.
+
+## La cassetta degli attrezzi
+
+Le formule non si nascondono: si insegnano. Gli strumenti di matematica che usano (leggere una formula, il quadrato, la
+radice, Pitagora, π, seno e coseno) sono in `js/tools.js`, ognuno con una scheda da giocare: un’animazione con l’omino
+di gesso (`js/toolanim.js`), una spiegazione, un disegno con i cursori e una domanda.
+
+- La scheda si apre da sola, prima di cominciare, nel primo livello che usa lo strumento (lenti Studente e Curioso).
+  Non serve segnarlo a mano: `toolsIn()` cerca nei testi del livello i segni dello strumento (√, π, ², sin…).
+- Chi lo sa già preme «Li so già». Tutte le schede restano nella pagina `#/attrezzi`, raggiungibile dalla mappa.
+- Un nuovo strumento: si aggiunge a `TOOLS` (titolo, test, spiegazione, disegno, domanda) e a `SCENES` per l’animazione,
+  con le frasi inglesi in `js/i18n/en-tools.js`. `tests/tools.mjs` controlla che le schede compaiano e si superino.
