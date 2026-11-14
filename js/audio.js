@@ -1,6 +1,7 @@
 // Suoni morbidi e voce che legge (accesa da sola per l'Esploratore).
 import { SPEECH, LANG } from './i18n.js';
 import { S, save } from './state.js';
+import { NEURAL_VOICES, synth, play } from './neural.js';
 
 let ctx;
 function tone(freq, dur, when = 0, type = 'sine', vol = 0.12) {
@@ -101,16 +102,56 @@ export function chunks(s) {
   return out;
 }
 
-let gen = 0, timer = 0;
+// ---------- le impostazioni della voce ----------
+// engine: 'neural' (Piper, dentro il gioco) o 'device' (le voci del dispositivo).
+// pitch in semitoni, speed (1 = normale), treble e bass in dB (solo voce neurale), expr = espressività 0..1.
+export const VOICE_DEFAULTS = { engine: 'device', neural: null, pitch: 0, speed: 1, treble: 0, bass: 0, expr: 0.5 };
+export const voiceCfg = () => ({ ...VOICE_DEFAULTS, ...(S.settings.voce || {}) });
+export const setVoiceCfg = (patch) => { S.settings.voce = { ...voiceCfg(), ...patch }; save(); };
+const neuralVoice = () => { const c = voiceCfg(); return c.engine === 'neural' ? NEURAL_VOICES.find((v) => v.id === c.neural) || null : null; };
+
+let gen = 0, timer = 0, playing = null;
 export function speak(text) {
-  if (!HAS) return;
   stopSpeaking();
-  const my = gen;
-  if (!voices.length) loadVoices();
-  const v = bestVoice();
-  // un po' più piano del normale: si capisce meglio e suona meno meccanico; l'Esploratore ancora più calmo
-  const rate = S.lens === 'e' ? 0.88 : 0.95;
   const list = chunks(speechText(text));
+  if (!list.length) return;
+  const nv = neuralVoice();
+  if (nv) speakNeural(nv, list, gen); else speakDevice(list, gen);
+}
+
+// La voce neurale: mentre suona un pezzo si prepara già il successivo, così fra i due resta solo la pausa voluta.
+async function speakNeural(nv, list, my) {
+  const c = voiceCfg();
+  const base = S.lens === 'e' ? 0.9 : 0.97;
+  const opts = { speed: base * c.speed, pitch: c.pitch, expr: c.expr };
+  const make = (i) => (i < list.length ? synth(nv, list[i].text, { ...opts, pitch: opts.pitch + (/\?$/.test(list[i].text) ? 0.3 : 0) }) : null);
+  try {
+    let next = make(0);
+    for (let i = 0; i < list.length; i++) {
+      const cur = await next;
+      if (my !== gen) return;
+      next = make(i + 1);
+      playing = play(cur, { treble: c.treble, bass: c.bass });
+      await playing.done;
+      playing = null;
+      if (my !== gen) return;
+      await new Promise((ok) => { timer = setTimeout(ok, list[i].pause); });
+      if (my !== gen) return;
+    }
+  } catch (e) {
+    // se la voce neurale non parte (rete, memoria…), legge la voce del dispositivo
+    console.warn('voce neurale non disponibile:', e);
+    if (my === gen) speakDevice(list, my);
+  }
+}
+
+function speakDevice(list, my) {
+  if (!HAS) return;
+  if (!voices.length) loadVoices();
+  const v = bestVoice(), c = voiceCfg();
+  // un po' più piano del normale: si capisce meglio e suona meno meccanico; l'Esploratore ancora più calmo
+  const rate = (S.lens === 'e' ? 0.88 : 0.95) * c.speed;
+  const pitch = Math.min(2, Math.max(0, 1 + c.pitch / 12));
   const say = (i) => {
     if (my !== gen || i >= list.length) return;
     const { text: t, pause } = list[i];
@@ -118,7 +159,7 @@ export function speak(text) {
     u.lang = v ? v.lang : SPEECH;
     if (v) u.voice = v;
     u.rate = rate;
-    u.pitch = /\?$/.test(t) ? 1.04 : 1.0; // le domande salgono appena
+    u.pitch = /\?$/.test(t) ? pitch * 1.04 : pitch; // le domande salgono appena
     let done = false;
     const next = () => { if (done) return; done = true; clearTimeout(timer); timer = setTimeout(() => say(i + 1), pause); };
     u.onend = next;
@@ -135,5 +176,6 @@ export function speak(text) {
 export function stopSpeaking() {
   gen++;
   clearTimeout(timer);
+  if (playing) { playing.stop(); playing = null; }
   if (HAS) speechSynthesis.cancel();
 }

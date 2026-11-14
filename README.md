@@ -63,3 +63,12 @@ node tests/play-all.mjs URL      # un Chrome gioca tutti i livelli nelle tre len
 ```
 
 Girano anche su GitHub a ogni push (`.github/workflows/test.yml`).
+
+## La voce neurale
+
+La voce che legge può essere quella del dispositivo o una voce neurale [Piper](https://github.com/rhasspy/piper) che gira
+dentro il browser (`js/neural.js`, impostazioni in `js/voicepanel.js`). Al primo uso si scaricano, e poi restano nella
+cache: il modello della voce da Hugging Face (`rhasspy/piper-voices`, circa 60 MB), onnxruntime-web ed espeak-ng
+compilato in WebAssembly da jsDelivr. Il caricatore di espeak in `js/vendor/` viene da `@mintplex-labs/piper-tts-web`
+(MIT); espeak-ng è GPL-3 e ogni voce ha la sua licenza, indicata nella scheda del modello su Hugging Face.
+Tono, velocità, alti, bassi ed espressività si regolano nelle impostazioni.

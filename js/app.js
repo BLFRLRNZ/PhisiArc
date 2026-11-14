@@ -6,7 +6,7 @@ import { CAST, CAST_LIST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { playIntro } from './intro.js';
-import { speak, voiceList, bestVoice, setVoice, voiceLabel } from './audio.js';
+import { voicePanel } from './voicepanel.js';
 import { runLevel } from './level.js';
 import { toolboxPage, toolsOn, toolCount, TOOL_IDS } from './tools.js';
 import { enrollDone, dueKeys, nextDueIn, reviewLevel, REVIEW_MAX } from './review.js';
@@ -224,24 +224,6 @@ function players() {
     h('p', { class: 'small muted' }, tr('Ogni giocatore ha le sue stelle, il suo parco e la sua lente.')));
 }
 
-// la voce che legge: le migliori del dispositivo, con una frase di prova
-function voicePicker() {
-  const list = voiceList();
-  const sample = () => speak(tr('Ciao! Sono la voce di PhisiArc. Ti leggo le domande e le risposte: tu prevedi, provi e scopri.'));
-  const box = h('div', { class: 'voice-pick' });
-  const fill = () => {
-    const l = voiceList().slice(0, 6), c = bestVoice();
-    box.replaceChildren(...[
-      l.length > 1 ? h('div', { class: 'chips' }, l.map((v) => h('button', { class: 'chip' + (c && v.name === c.name ? ' on' : ''), 'aria-pressed': String(!!c && v.name === c.name), onclick: () => { setVoice(v.name); fill(); sample(); } }, voiceLabel(v)))) : null,
-      h('button', { class: 'chip', onclick: sample }, h('span', { html: IC.sound }), tr('Prova la voce')),
-      l.length > 1 ? h('p', { class: 'small muted' }, tr('Le voci con ✦ sono quelle più naturali del tuo dispositivo.')) : null].filter(Boolean));
-  };
-  fill();
-  // le voci a volte arrivano dopo: si aggiorna l'elenco quando ci sono
-  if (!list.length && 'speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', fill, { once: true });
-  return box;
-}
-
 // ---------- impostazioni ----------
 function settings() {
   const st = S.settings;
@@ -258,7 +240,7 @@ function settings() {
     h('h3', {}, 'Lingua · Language'), langChips(),
     h('h3', {}, tr('Suoni e voce')), h('div', { class: 'chips' }, tog('sound', tr('Suoni')), h('button', { class: 'chip' + (voiceOn() ? ' on' : ''), onclick: () => { st.voice = !voiceOn(); st.voiceChosen = true; save(); render(); } }, `${tr('Leggi ad alta voce domande e risposte')}: ${voiceOn() ? tr('sì') : tr('no')}`)),
     h('p', { class: 'small muted' }, tr('Per l’Esploratore la voce è accesa da sola, finché non la spegni.')),
-    voicePicker(),
+    voicePanel(),
     h('h3', {}, tr('Animazione d’apertura')),
     h('div', { class: 'chips' }, tog('intro', tr('Mostrala all’avvio')),
       h('button', { class: 'chip', onclick: () => playIntro() }, h('span', { html: IC.film }), tr('Guardala ora'))),
