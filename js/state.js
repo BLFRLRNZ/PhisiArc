@@ -25,6 +25,7 @@ const fresh = () => ({
   seen: {},            // scene d'apertura già viste
   aperti: {},          // mondi e zone già sbloccati: restano aperti anche se si aggiungono zone
   skip: {},            // mondi superati con la prova d'ingresso
+  rev: {},             // ripasso a distanza di giorni: domanda -> { scatola, giorno in cui torna } (vedi review.js)
   introSeen: false,    // l'animazione d'apertura parte da sola solo la prima volta
   settings: { sound: true, voice: null, intro: false }, // voice null = automatica: accesa per l'Esploratore
 });
@@ -65,7 +66,7 @@ function load(key = keyOf(PLAYERS.active)) {
     if (!o) return fresh();
     o = migrate(o);
     const f = fresh();
-    return { ...f, ...o, settings: { ...f.settings, ...(o.settings || {}) }, aperti: o.aperti || {}, skip: o.skip || {} };
+    return { ...f, ...o, settings: { ...f.settings, ...(o.settings || {}) }, aperti: o.aperti || {}, skip: o.skip || {}, rev: o.rev && typeof o.rev === 'object' ? o.rev : {} };
   } catch {
     return fresh();
   }

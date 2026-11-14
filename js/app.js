@@ -6,6 +6,7 @@ import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { playIntro } from './intro.js';
 import { runLevel } from './level.js';
+import { enrollDone, dueKeys, nextDueIn, reviewLevel, REVIEW_MAX } from './review.js';
 import {
   WORLDS, ZONES, KIND, LENSES, GRADES, ALL_PIECES,
   worldById, worldOpen, worldDone, worldReady, zoneOpen, zoneDone, levelOpen, levelById, gradeNow, examFor, EXAM_MAX_ERRORS,
@@ -91,9 +92,25 @@ function home() {
     h('div', { class: 'page-in' },
       h('h1', {}, 'Il percorso'),
       h('p', { class: 'muted' }, `Stai giocando come ${LENSES[S.lens].name}. Dodici mondi in fila, dal più semplice al più difficile: ognuno è un campo della fisica e si apre quando finisci quello prima. Mondi completati: ${doneN} di ${WORLDS.length}.`),
+      reviewCard(),
       h('div', { class: 'worlds path' }, list)));
   if (here && here.n > 2) requestAnimationFrame(() => page.querySelector('.pstep.here')?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
   return page;
+}
+
+// il ripasso del giorno: compare quando qualche domanda dei livelli già fatti è pronta per tornare
+function reviewCard() {
+  enrollDone();
+  const due = dueKeys().length;
+  if (!due) {
+    const n = nextDueIn();
+    return n == null ? null : h('p', { class: 'muted small' }, `Prossimo ripasso: ${n <= 1 ? 'domani' : `fra ${n} giorni`}.`);
+  }
+  const k = Math.min(due, REVIEW_MAX);
+  return h('section', { class: 'zone review-card' },
+    h('h3', {}, 'Ripasso del giorno'),
+    h('p', { class: 'muted small' }, `${k} ${k === 1 ? 'domanda' : 'domande'} dai livelli che hai già finito. Ripassare dopo qualche giorno aiuta a ricordare a lungo.`),
+    h('a', { class: 'btn primary', href: '#/ripasso' }, 'Ripassa'));
 }
 
 // ---------- un mondo: zone e livelli ----------
@@ -242,6 +259,14 @@ function render() {
       const root = h('div', { class: 'level-page' });
       app.replaceChildren(root);
       cleanup = runLevel(root, examFor(w), go);
+      break;
+    }
+    case 'ripasso': {
+      const l = reviewLevel();
+      if (!l) { app.replaceChildren(home()); break; }
+      const root = h('div', { class: 'level-page' });
+      app.replaceChildren(root);
+      cleanup = runLevel(root, l, go);
       break;
     }
     case 'parco': app.replaceChildren(park()); break;

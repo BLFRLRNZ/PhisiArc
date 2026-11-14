@@ -66,3 +66,6 @@ per il laboratorio `y`; per la giostra `v`; vedi il `finish(...)` di ogni simula
 
 Se rinomini un livello o una zona già pubblicati, aggiungi la coppia `'vecchio-id': 'nuovo-id'` a `RENAMED` in `js/state.js`:
 le stelle e gli sblocchi dei giocatori seguono il nome nuovo. Se cambi la forma dei dati salvati, alza `VERSION` e aggiungi il passo in `MIGRATIONS`.
+
+Il ripasso del giorno (`js/review.js`) ricorda le domande per livello e posizione del passo (`m03-3#1`): se riordini i passi di un livello già pubblicato
+non si rompe niente, ma qualche domanda tornerà prima o dopo del previsto. Entrano nel ripasso le domande `q` senza esperimento e le `num`.

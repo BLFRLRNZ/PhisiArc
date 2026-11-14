@@ -7,6 +7,7 @@ import { CAST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { starsSVG, confetti, countUp, CHECK } from './fx.js';
+import { enroll, grade } from './review.js';
 import { KIND, worldOf, zoneOf, nextLevel, gradeNow, worldDone, nextWorld, worldReady, worldOpen, EXAM_MAX_ERRORS } from './content/index.js';
 
 export function runLevel(root, level, nav) {
@@ -17,6 +18,8 @@ export function runLevel(root, level, nav) {
   const SimClass = level.sim ? SIMS[level.sim] : null;
 
   let si = 0, errors = 0, hints = 0, solution = false;
+  let firstMiss = 0, slipsAt = 0; // errori e aiuti all'inizio del passo: servono al ripasso per sapere se la risposta è venuta al primo colpo
+  const slips = () => errors + hints + (solution ? 1 : 0);
   // Solo per il test automatico che gioca tutti i livelli: window.__phisiarcTest.solve() fa la mossa giusta del passo.
   const TEST = typeof window !== 'undefined' && window.__phisiarcTest;
   let testSolve = null;
@@ -25,7 +28,7 @@ export function runLevel(root, level, nav) {
   let sim = null, pending = null, onResult = null, busy = false;
 
   // ---------- struttura della pagina ----------
-  const back = h('button', { class: 'btn ghost', onclick: () => leave() }, h('span', { html: IC.back }), h('span', { class: 'back-t' }, level.exam ? world.name : zone.title));
+  const back = h('button', { class: 'btn ghost', onclick: () => leave() }, h('span', { html: IC.back }), h('span', { class: 'back-t' }, level.exam ? world.name : level.review ? 'Il percorso' : zone.title));
   const hintBtn = h('button', { class: 'btn ghost hint-btn', onclick: () => showHint() }, h('span', { html: IC.hint }), 'Aiuto');
   const dots = h('div', { class: 'dots' });
   const head = h('header', { class: 'lvl-head' }, back, h('div', { class: 'lvl-title' },
@@ -164,7 +167,7 @@ export function runLevel(root, level, nav) {
   }
 
   function nextBtn(label = 'Avanti →') {
-    const b = h('button', { class: 'btn primary', onclick: () => { si++; si < steps.length ? renderStep() : complete(); } }, label);
+    const b = h('button', { class: 'btn primary', onclick: () => { if (steps[si].rk) { const ok = slips() === slipsAt; if (!ok) firstMiss++; grade(steps[si].rk, ok); } si++; si < steps.length ? renderStep() : complete(); } }, label);
     return b;
   }
 
@@ -179,6 +182,7 @@ export function runLevel(root, level, nav) {
   function renderStep() {
     const st = steps[si];
     resetHints();
+    slipsAt = slips();
     autoSol = null;
     quest.classList.remove('enter'); void quest.offsetWidth; quest.classList.add('enter');
     drawDots();
@@ -450,12 +454,14 @@ export function runLevel(root, level, nav) {
   function complete() {
     stopSpeaking();
     if (level.exam) return examDone();
+    if (level.review) return reviewDone();
     const cap = solution ? 1 : hints ? 2 : 3;
     const stars = Math.max(1, cap - errors);
     const prev = S.done[level.id] || 0;
     const before = gradeNow();
     let gained = 0;
     if (stars > prev) { gained = (stars - prev) * 10; S.done[level.id] = stars; S.joule += gained; }
+    enroll(level.id); // le domande del livello tornano nel ripasso a distanza di giorni
     let newPiece = null;
     if (level.piece && !S.park.includes(level.piece.id)) { S.park.push(level.piece.id); newPiece = level.piece; }
     save();
@@ -505,8 +511,22 @@ export function runLevel(root, level, nav) {
     if (ok) setTimeout(() => confetti(modal.firstChild, {}), 250);
   }
 
+  // fine del ripasso del giorno
+  function reviewDone() {
+    sfx.win();
+    const n = steps.length, first = Math.max(0, n - firstMiss);
+    const modal = h('div', { class: 'modal' }, h('div', { class: 'card pop' },
+      h('div', { class: 'cele', html: charSVG(who.id, { cls: 'party' }) }),
+      h('h2', {}, 'Ripasso fatto!'),
+      h('p', {}, `${first} ${first === 1 ? 'domanda' : 'domande'} su ${n} al primo colpo. Quelle sicure tornano fra qualche giorno, le altre già domani.`),
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: () => nav('#/') }, 'Il percorso'))));
+    root.append(asDialog(modal));
+    setTimeout(() => confetti(modal.firstChild, {}), 250);
+  }
+
   function leave() {
     stopSpeaking();
+    if (level.review) return nav('#/');
     nav('#/mondo/' + world.id);
   }
 
