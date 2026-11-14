@@ -16,6 +16,7 @@ export const PLAYERS = loadPlayers();
 const savePlayers = () => { try { localStorage.setItem(PKEY, JSON.stringify(PLAYERS)); } catch { /* modalità privata */ } };
 
 const fresh = () => ({
+  v: VERSION,          // versione del salvataggio (vedi più sotto)
   lens: null,          // 'e' Esploratore, 's' Studente, 'c' Curioso
   name: '',
   done: {},            // id livello -> stelle migliori (1-3)
@@ -28,17 +29,43 @@ const fresh = () => ({
   settings: { sound: true, voice: null, intro: false }, // voice null = automatica: accesa per l'Esploratore
 });
 
+// ---------- versioni del salvataggio ----------
+// Ogni salvataggio porta il numero di versione (v). Quando cambia la forma dei dati, o si rinomina una zona
+// o un livello, si alza VERSION e si aggiunge qui il passo che porta i vecchi salvataggi alla forma nuova.
+export const VERSION = 2;
+// Livelli o zone rinominati: 'vecchio-id': 'nuovo-id'. Le stelle e gli sblocchi seguono il nuovo nome.
+export const RENAMED = {};
+const MIGRATIONS = {
+  // 1 → 2: animazione d'apertura solo a richiesta per chi aveva già giocato; voce automatica se nessuno l'ha scelta.
+  1: (o) => {
+    if (o.introSeen === undefined) { o.introSeen = true; o.settings = { ...(o.settings || {}), intro: false }; }
+    if (o.settings && !o.settings.voiceChosen) o.settings.voice = null;
+    return o;
+  },
+};
+const rename = (obj, pre = '') => Object.fromEntries(Object.entries(obj || {}).map(([k, v]) => {
+  const id = k.slice(pre.length);
+  return [k.startsWith(pre) && RENAMED[id] ? pre + RENAMED[id] : k, v];
+}));
+// porta un salvataggio (anche quello di un codice di ripristino) all'ultima versione
+export function migrate(o) {
+  let v = Number(o.v) || 1;
+  while (v < VERSION) { if (MIGRATIONS[v]) o = MIGRATIONS[v](o); v++; }
+  o.v = VERSION;
+  if (Object.keys(RENAMED).length) {
+    o.done = rename(o.done);
+    o.aperti = rename(rename(o.aperti, 'z:'), 'w:');
+  }
+  return o;
+}
+
 function load(key = keyOf(PLAYERS.active)) {
   try {
-    const o = JSON.parse(localStorage.getItem(key));
+    let o = JSON.parse(localStorage.getItem(key));
     if (!o) return fresh();
+    o = migrate(o);
     const f = fresh();
-    const st = { ...f, ...o, settings: { ...f.settings, ...(o.settings || {}) }, aperti: o.aperti || {}, skip: o.skip || {} };
-    // Chi giocava prima di questa versione ha già visto l'animazione: d'ora in poi parte solo se la si chiede.
-    if (o.introSeen === undefined) { st.introSeen = true; st.settings.intro = false; }
-    // La voce era spenta per tutti senza che nessuno l'avesse scelto: torna automatica finché non la si cambia.
-    if (!st.settings.voiceChosen) st.settings.voice = null;
-    return st;
+    return { ...f, ...o, settings: { ...f.settings, ...(o.settings || {}) }, aperti: o.aperti || {}, skip: o.skip || {} };
   } catch {
     return fresh();
   }
@@ -100,6 +127,7 @@ export function importCode(code, known) {
   let o;
   try { o = JSON.parse(decodeURIComponent(escape(atob(txt.replace(/\s+/g, ''))))); } catch { throw new Error('Il codice è incompleto o rovinato: copialo di nuovo per intero.'); }
   if (!o || typeof o !== 'object' || Array.isArray(o)) throw new Error('Questo non sembra un codice di PhisiArc.');
+  o = migrate(o);
   const obj = (x) => (x && typeof x === 'object' && !Array.isArray(x) ? x : {});
   const has = (set, k) => !set || set.has(k);
   const done = {};

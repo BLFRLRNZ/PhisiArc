@@ -1,7 +1,7 @@
 /* PhisiArc: funziona offline dopo la prima visita.
    Ogni file si chiede alla rete, così le novità arrivano subito. Ma se la rete è lenta (oltre 2,5 secondi)
    o assente, si usa subito la copia salvata, e intanto la risposta della rete, quando arriva, aggiorna la copia. */
-const CACHE = 'phisiarc-v13';
+const CACHE = 'phisiarc-v14';
 const WAIT = 2500;
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './css/style.css',
@@ -9,7 +9,8 @@ const SHELL = [
   './fonts/plexmono-400-latin.woff2', './fonts/plexmono-400-latin-ext.woff2', './fonts/plexmono-500-latin.woff2', './fonts/plexmono-500-latin-ext.woff2',
   './js/app.js', './js/util.js', './js/state.js', './js/audio.js', './js/cast.js', './js/icons.js', './js/intro.js', './js/fx.js', './js/pieces.js', './js/level.js',
   './js/sims/index.js', './js/sims/base.js', './js/sims/pendulum.js', './js/sims/scale.js', './js/sims/race.js', './js/sims/fall.js', './js/sims/cannon.js', './js/sims/lab.js', './js/sims/river.js', './js/sims/circle.js',
-  './js/content/index.js', './js/content/f01.js', './js/content/f02.js', './js/content/f03.js', './js/content/m01.js', './js/content/m02.js', './js/content/m03.js', './js/content/m04.js', './js/content/m05.js',
+  './js/sims/art/scale-shapes.js', './js/sims/art/fall-objects.js', './js/sims/art/car.js',
+  './js/content/index.js', './js/content/declarative.js', './js/content/f01.js', './js/content/f02.js', './js/content/f03.js', './js/content/m01.js', './js/content/m02.js', './js/content/m03.js', './js/content/m04.js', './js/content/m05.js',
 ];
 
 self.addEventListener('install', (e) => {

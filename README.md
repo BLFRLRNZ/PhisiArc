@@ -39,12 +39,25 @@ css/style.css         grafica (tema scuro, stile vetro)
 js/app.js             schermate: benvenuto, mondi, zone, parco, gradi, impostazioni
 js/level.js           il motore dei livelli (domande, previsioni, regolazioni, stelle)
 js/sims/              le simulazioni, una per file, su canvas
+js/sims/art/          i disegni degli oggetti delle simulazioni (zoom, cadute, macchinine)
 js/cast.js, pieces.js personaggi e pezzi del parco, disegnati a linee (SVG)
 js/content/index.js   i 12 mondi, i gradi e le regole di sblocco
 js/content/f01.js …   i testi e i livelli di ogni zona, nelle tre lenti
 js/content/prereq.js  la mappa dei prerequisiti: che idee usa e introduce ogni zona
 tools/check-prereq.mjs  controlla che nessuna idea sia usata prima di essere spiegata
+tools/check-content.mjs controlla i contenuti; tests/play-all.mjs gioca tutti i livelli
+js/content/declarative.js  i passi scritti solo a testo (num, tune) diventano giocabili
 sw.js, manifest       app installabile e offline
 ```
 
-Per aggiungere una zona basta un nuovo file in `js/content/` (stessa forma degli altri), una riga in `js/content/index.js` e una in `js/content/prereq.js`; poi `node tools/check-prereq.mjs` deve rispondere che è tutto in ordine.
+Per aggiungere una zona basta un nuovo file in `js/content/` (stessa forma degli altri), una riga in `js/content/index.js` e una in `js/content/prereq.js`. Come si scrive, solo con testi e numeri, è spiegato in [docs/contenuti.md](docs/contenuti.md).
+
+## Controlli
+
+```
+node tools/check-content.mjs     # risposte, testi nelle tre lenti, aiuti, soluzioni, file offline
+node tools/check-prereq.mjs      # nessuna idea usata prima di essere spiegata
+node tests/play-all.mjs URL      # un Chrome gioca tutti i livelli nelle tre lenti (serve playwright)
+```
+
+Girano anche su GitHub a ogni push (`.github/workflows/test.yml`).

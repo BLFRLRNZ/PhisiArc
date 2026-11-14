@@ -112,6 +112,8 @@ export default {
             const T0 = pick(r === 0 ? [1.4, 1.6, 2.0, 2.2] : [1.2, 1.8, 2.4, 2.8]);
             return { T: T0, text: `Un’oscillazione deve durare <b>${num(T0, 1)} secondi</b>.` };
           },
+          // valori che risolvono la prova: servono al test automatico che gioca tutti i livelli
+          solve: (tg) => ({ L: (9.81 * tg.T * tg.T) / (4 * Math.PI * Math.PI) }),
           check: swingCheck,
         },
       ],

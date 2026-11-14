@@ -119,20 +119,13 @@ export default {
         {
           kind: 'tune', rounds: 2,
           text: T('Scegli quanto dura un giro e falla partire.', 'Regola la durata del giro e lancia. La seconda prova chiederà un’altra velocità.'),
-          gen: (lens, r) => {
-            const v = pick(r === 0 ? [3, 4, 5] : [6, 7.5]);
-            return { v, text: `I seggiolini devono andare a <b>${num(v, 1)} m/s</b>.` };
-          },
-          check: (res, tg, lens) => {
-            const tol = lens === 'e' ? 0.35 : 0.2;
-            if (Math.abs(res.v - tg.v) <= tol) return { ok: true, msg: `${num(res.v, 2)} m/s: si vola!` };
-            return {
-              ok: false,
-              msg: res.v > tg.v
-                ? `${num(res.v, 2)} m/s: troppo veloce. ${lens === 'e' ? 'Fai durare di più il giro.' : 'Il periodo va allungato.'}`
-                : `${num(res.v, 2)} m/s: troppo lento. ${lens === 'e' ? 'Fai durare di meno il giro.' : 'Il periodo va accorciato.'}`,
-            };
-          },
+          vals: { v: [[3, 4, 5], [6, 7.5]] },
+          ask: T('I seggiolini devono andare a <b>{v:1} m/s</b>.'),
+          measure: 'v', goal: 'v', tol: { e: 0.35, s: 0.2 },
+          ok: T('{got} m/s: si vola!'),
+          high: T('{got} m/s: troppo veloce. Fai durare di più il giro.', '{got} m/s: troppo veloce. Il periodo va allungato.'),
+          low: T('{got} m/s: troppo lento. Fai durare di meno il giro.', '{got} m/s: troppo lento. Il periodo va accorciato.'),
+          solve: { T: '2 * Math.PI * 6 / v' },
         },
       ],
       hints: [

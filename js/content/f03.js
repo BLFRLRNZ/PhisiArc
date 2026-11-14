@@ -153,19 +153,13 @@ export default {
         {
           kind: 'tune', rounds: 2,
           text: T('Scegli il tempo e apri il rubinetto.', 'Regola il tempo di apertura e lancia. La seconda prova chiederà un volume diverso.'),
-          gen: (lens, r) => {
-            const L = pick(r === 0 ? [1.5, 2, 2.5, 3] : [1.75, 3.5, 4, 4.5]);
-            return { L, text: `La vasca deve ricevere <b>${num(L, 2)} litri</b>.` };
-          },
-          check: (res, tg, lens) => {
-            if (Math.abs(res.y - tg.L) < 0.13) return { ok: true, msg: `${num(res.y, 2)} litri: la fontana è perfetta!` };
-            return {
-              ok: false,
-              msg: res.y > tg.L
-                ? `${num(res.y, 2)} litri: troppa acqua, la vasca trabocca. ${lens === 'e' ? 'Chiudi prima il rubinetto.' : 'Il tempo va ridotto: di quanto?'}`
-                : `${num(res.y, 2)} litri: troppo poca. ${lens === 'e' ? 'Lascia aperto più a lungo.' : 'Il tempo va aumentato: di quanto?'}`,
-            };
-          },
+          vals: { L: [[1.5, 2, 2.5, 3], [1.75, 3.5, 4, 4.5]] },
+          ask: T('La vasca deve ricevere <b>{L} litri</b>.'),
+          measure: 'y', goal: 'L', tol: 0.12,
+          ok: T('{got} litri: la fontana è perfetta!'),
+          high: T('{got} litri: troppa acqua, la vasca trabocca. Chiudi prima il rubinetto.', '{got} litri: troppa acqua, la vasca trabocca. Il tempo va ridotto: di quanto?'),
+          low: T('{got} litri: troppo poca. Lascia aperto più a lungo.', '{got} litri: troppo poca. Il tempo va aumentato: di quanto?'),
+          solve: { x: '2 * L' },
         },
       ],
       hints: [

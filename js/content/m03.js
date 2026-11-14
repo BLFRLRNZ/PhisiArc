@@ -61,6 +61,7 @@ export default {
           kind: 'tune', rounds: 1, set: { vc: 2 },
           text: T('Ora tocca a te: gira la <b>prua controcorrente</b> e porta la barca dritta al pontile.', 'Inclina la prua controcorrente quanto basta per arrivare dritto al pontile.'),
           gen: () => ({ text: 'Arriva al pontile (al massimo 1,5 m di scarto).' }),
+          solve: () => ({ ang: 30 }),
           check: (res, tg, lens) => {
             if (Math.abs(res.drift) <= 1.5) return { ok: true, msg: `Al pontile! Ci hai messo ${num(res.t, 1)} s: un po’ di più, perché parte della spinta va contro la corrente.` };
             return { ok: false, msg: res.drift > 0 ? `Sei finito ${num(res.drift, 1)} m a valle. ${lens === 'e' ? 'Gira di più la prua.' : 'Serve un angolo maggiore.'}` : `Sei finito ${num(-res.drift, 1)} m a monte. ${lens === 'e' ? 'Gira un po’ meno.' : 'Angolo troppo grande.'}` };
@@ -187,6 +188,7 @@ export default {
             const tw = lens === 'e' ? 5 : 3;
             return { d, set: { target: d, tw }, text: `Il bersaglio è a <b>${d} metri</b>.` };
           },
+          solve: (tg) => ({ ang: 45, v: Math.sqrt(tg.d * 9.81) }),
           check: (res, tg, lens) => {
             if (res.hit) return { ok: true, msg: `Atterrata a ${num(res.x, 1)} m. Centro!` };
             const d = res.x - tg.d;

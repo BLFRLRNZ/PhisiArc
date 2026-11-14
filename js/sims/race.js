@@ -1,6 +1,7 @@
 // Gara fra due auto, a velocità costante o in accelerazione, con il grafico che si disegna in diretta:
 // posizione–tempo oppure velocità–tempo.
 import { Sim, fmt, easeOut, easeInOut } from './base.js';
+import { drawCar } from './art/car.js';
 
 export class Race extends Sim {
   static controls = {
@@ -99,21 +100,7 @@ export class Race extends Sim {
           this.line([[x - 34 - off - len, y - 6 + j * 5], [x - 34 - off, y - 6 + j * 5]], { color: s.col, width: 1.6, alpha: 0.5 });
         }
       }
-      // l'auto a linee: carrozzeria, abitacolo e ruote che girano
-      g.save();
-      g.strokeStyle = s.col; g.lineWidth = 2.2; g.lineJoin = 'round'; g.lineCap = 'round';
-      g.fillStyle = s.col; g.globalAlpha = 0.18;
-      g.beginPath(); g.roundRect(x - 30, y - 6, 30, 11, 4); g.fill();
-      g.globalAlpha = 1;
-      g.beginPath(); g.roundRect(x - 30, y - 6, 30, 11, 4); g.stroke();
-      g.beginPath(); g.moveTo(x - 22, y - 6); g.lineTo(x - 18, y - 12); g.lineTo(x - 9, y - 12); g.lineTo(x - 5, y - 6); g.stroke();
-      const rot = (s.x / 0.35);
-      for (const wx of [x - 23, x - 7]) {
-        g.fillStyle = this.c('sim-bg');
-        g.beginPath(); g.arc(wx, y + 6, 4.2, 0, 7); g.fill(); g.stroke();
-        g.beginPath(); g.moveTo(wx + Math.cos(rot) * 3.6, y + 6 + Math.sin(rot) * 3.6); g.lineTo(wx - Math.cos(rot) * 3.6, y + 6 - Math.sin(rot) * 3.6); g.stroke();
-      }
-      g.restore();
+      drawCar(this, x, y, s.col, s.x / 0.35);
       if (s.land >= 0) this.burst(sx(p.D), y, this.clock - s.land, { color: s.col, n: 8, r: 22 });
       this.text(`${fmt(s.v, 1)} m/s`, x - 15, y - 16, { size: 10, align: 'center', color: s.col });
     });

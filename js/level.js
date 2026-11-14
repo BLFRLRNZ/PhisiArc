@@ -17,6 +17,11 @@ export function runLevel(root, level, nav) {
   const SimClass = level.sim ? SIMS[level.sim] : null;
 
   let si = 0, errors = 0, hints = 0, solution = false;
+  // Solo per il test automatico che gioca tutti i livelli: window.__phisiarcTest.solve() fa la mossa giusta del passo.
+  const TEST = typeof window !== 'undefined' && window.__phisiarcTest;
+  let testSolve = null;
+  if (TEST) TEST.solve = () => (testSolve ? testSolve() : false);
+  if (TEST) { TEST.busy = () => busy || !!(sim && sim.running); TEST.fast = (m) => { if (sim) sim.mul = m; }; }
   let sim = null, pending = null, onResult = null, busy = false;
 
   // ---------- struttura della pagina ----------
@@ -191,6 +196,7 @@ export function runLevel(root, level, nav) {
     const keys = st.controls ?? level.controls ?? [];
     renderControls(locked ? keys : keys, locked);
     setLaunch(!locked);
+    testSolve = null;
     ({ q: stepQ, free: stepFree, run: stepRun, tune: stepTune, num: stepNum, order: stepOrder, vars: stepVars })[st.kind](st);
     if (voiceOn()) speak(readOut(si === 0));
   }
@@ -205,6 +211,7 @@ export function runLevel(root, level, nav) {
     opts.forEach(({ o, i }) => { btns[i] = h('button', { class: 'opt', onclick: () => choose(i) }, h('span', { html: tx(o, lens) })); });
     box.append(...opts.map(({ i }) => btns[i]));
     area.append(box, after);
+    testSolve = () => choose(st.answer);
     async function choose(i) {
       if (busy) return;
       if (st.predict) {
@@ -246,6 +253,7 @@ export function runLevel(root, level, nav) {
     };
     onResult = (r) => { n++; upd(); if (st.onRun) { const m = st.onRun(r, lens); if (m) area.querySelector('.fb').innerHTML = m; } };
     area.append(info, h('div', { class: 'fb say muted' }), nb);
+    testSolve = () => fire();
     if (!st.onRun) area.querySelector('.fb').remove();
     upd();
   }
@@ -253,6 +261,7 @@ export function runLevel(root, level, nav) {
   async function stepRun(st) {
     const go = h('button', { class: 'btn primary' }, h('span', { html: IC.play }), 'Guarda l’esperimento');
     area.append(go);
+    testSolve = () => go.onclick();
     go.onclick = async () => {
       go.remove();
       await runSeq(st.seq);
@@ -291,6 +300,7 @@ export function runLevel(root, level, nav) {
         fb.innerHTML = out.msg;
       }
     };
+    testSolve = () => { if (st.solve) { sim.set(st.solve(target, lens)); ctrlEls.forEach((u) => u()); } fire(); };
     newTarget();
   }
 
@@ -332,6 +342,7 @@ export function runLevel(root, level, nav) {
         fb.innerHTML = cur.wrong || 'Non torna. Ricontrolla il calcolo.';
       }
     }
+    testSolve = () => { inp.value = String(cur.ans).replace('.', ','); check(); };
     next();
   }
 
@@ -364,6 +375,7 @@ export function runLevel(root, level, nav) {
       }
     }
     area.append(h('div', { class: 'vars' }, ...rows), ok, fb);
+    testSolve = () => { st.vars.forEach((v) => (pick[v.k] = v.k === st.change ? 'Cambia' : 'Uguale')); check(); };
   }
 
   function stepOrder(st) {
@@ -400,6 +412,7 @@ export function runLevel(root, level, nav) {
     }
     draw();
     area.append(list, ok, fb);
+    testSolve = () => { items = st.items.slice().sort((a, b) => a.v - b.v); draw(); check(); };
   }
 
   // ---------- aiuti a gradini ----------

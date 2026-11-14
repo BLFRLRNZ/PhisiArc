@@ -99,6 +99,7 @@ export default {
           kind: 'tune', rounds: 2,
           text: T('Scegli la velocità e lancia il trenino.', 'Imposta la velocità e lancia. La seconda prova avrà un tempo diverso.'),
           gen: (lens, r) => { const t = pick(r === 0 ? [6, 10, 12] : [8, 15, 20]); return { t, text: `Il viaggio di 60 m deve durare <b>${t} secondi</b>.` }; },
+          solve: (tg) => ({ v1: 60 / tg.t }),
           check: (res, tg, lens) => {
             const t = res.times[0];
             const tol = lens === 'e' ? 0.6 : 0.3;

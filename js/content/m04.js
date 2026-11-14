@@ -1,5 +1,5 @@
 // M04 · L'accelerazione. Simulazione: la gara, con le auto che accelerano e il grafico velocità–tempo.
-import { T, pick, num } from '../util.js';
+import { T } from '../util.js';
 
 const A1 = { label: 'Accelerazione', min: 0.25, max: 5, step: 0.25, unit: 'm/s²' };
 
@@ -61,13 +61,10 @@ export default {
             'Giusto: v = v₀ + a·t, una retta con pendenza a. Il triangolino bianco misura proprio l’aumento in 1 s.'),
         },
         {
-          kind: 'num', rounds: 2, text: T('Calcola la velocità.', 'Calcola la velocità.'),
-          gen: (lens) => {
-            const a = pick([2, 3, 4]), t = pick([3, 4, 5]);
-            return lens === 'e'
-              ? { text: `Una macchinina parte ferma e ogni secondo va <b>${a} m/s</b> più veloce. Quanto va veloce dopo <b>${t} secondi</b>?`, ans: a * t, tol: 0, unit: 'm/s', explain: `Giusto: ${t} volte ${a} fa ${a * t} m/s.` }
-              : { text: `Parte da ferma con accelerazione <b>${a} m/s²</b>. Che velocità ha dopo <b>${t} s</b>?`, ans: a * t, tol: 0.01, unit: 'm/s', explain: `Esatto: v = a·t = ${a} × ${t} = ${a * t} m/s.` };
-          },
+          kind: 'num', rounds: 2, text: T('Calcola la velocità.'),
+          vals: { a: [2, 3, 4], t: [3, 4, 5] }, calc: 'a * t', unit: 'm/s', tol: { e: 0, s: 0.01 },
+          ask: T('Una macchinina parte ferma e ogni secondo va <b>{a} m/s</b> più veloce. Quanto va veloce dopo <b>{t} secondi</b>?', 'Parte da ferma con accelerazione <b>{a} m/s²</b>. Che velocità ha dopo <b>{t} s</b>?'),
+          explain: T('Giusto: {t} volte {a} fa {ans} m/s.', 'Esatto: v = a·t = {a} × {t} = {ans} m/s.'),
         },
       ],
       hints: [T('Ogni secondo la velocità aumenta sempre dello stesso numero.', 'v = a · t, se parte da ferma.')],
@@ -117,20 +114,13 @@ export default {
         {
           kind: 'tune', rounds: 2,
           text: T('Scegli l’accelerazione e lancia il treno.', 'Regola l’accelerazione e lancia. La seconda prova chiederà un’altra velocità.'),
-          gen: (lens, r) => {
-            const v = pick(r === 0 ? [10, 15, 20] : [12, 18]);
-            return { v, text: `In fondo al rettilineo il treno deve andare a <b>${v} m/s</b>.` };
-          },
-          check: (res, tg, lens) => {
-            const v = res.vEnd[0], tol = lens === 'e' ? 1 : 0.6;
-            if (Math.abs(v - tg.v) <= tol) return { ok: true, msg: `${num(v, 1)} m/s: lancio perfetto!` };
-            return {
-              ok: false,
-              msg: v > tg.v
-                ? `${num(v, 1)} m/s: troppo veloce. ${lens === 'e' ? 'Abbassa l’accelerazione.' : 'L’accelerazione va ridotta: di quanto?'}`
-                : `${num(v, 1)} m/s: troppo lento. ${lens === 'e' ? 'Alza l’accelerazione.' : 'L’accelerazione va aumentata: di quanto?'}`,
-            };
-          },
+          vals: { v: [[10, 15, 20], [12, 18]] },
+          ask: T('In fondo al rettilineo il treno deve andare a <b>{v} m/s</b>.'),
+          measure: 'vEnd[0]', goal: 'v', tol: { e: 1, s: 0.6 },
+          ok: T('{got:1} m/s: lancio perfetto!'),
+          high: T('{got:1} m/s: troppo veloce. Abbassa l’accelerazione.', '{got:1} m/s: troppo veloce. L’accelerazione va ridotta: di quanto?'),
+          low: T('{got:1} m/s: troppo lento. Alza l’accelerazione.', '{got:1} m/s: troppo lento. L’accelerazione va aumentata: di quanto?'),
+          solve: { a1: 'v * v / 100' },
         },
       ],
       hints: [
@@ -157,13 +147,10 @@ export default {
           explain: T('Giusto: in fisica anche rallentare è un’accelerazione, ma verso dietro.', 'Giusto: ogni variazione di velocità è un’accelerazione. Frenando è negativa.'),
         },
         {
-          kind: 'num', rounds: 1, text: T('Un calcolo veloce.', 'Un calcolo veloce.'),
-          gen: (lens) => {
-            const a = pick([2, 3, 5]), t = pick([4, 6]), v = a * t;
-            return lens === 'e'
-              ? { text: `Un monopattino passa da fermo a <b>${v} m/s</b> in <b>${t} secondi</b>. Di quanto aumenta la velocità ogni secondo?`, ans: a, tol: 0, unit: 'm/s', explain: `Giusto: ${v} diviso ${t} fa ${a}.` }
-              : { text: `Un monopattino passa da 0 a <b>${v} m/s</b> in <b>${t} s</b>. Qual è la sua accelerazione?`, ans: a, tol: 0.01, unit: 'm/s²', explain: `Esatto: a = Δv/Δt = ${v} / ${t} = ${a} m/s².` };
-          },
+          kind: 'num', rounds: 1, text: T('Un calcolo veloce.'),
+          vals: { a: [2, 3, 5], t: [4, 6] }, derive: { v: 'a * t' }, calc: 'a', unit: T('m/s', 'm/s²'), tol: { e: 0, s: 0.01 },
+          ask: T('Un monopattino passa da fermo a <b>{v} m/s</b> in <b>{t} secondi</b>. Di quanto aumenta la velocità ogni secondo?', 'Un monopattino passa da 0 a <b>{v} m/s</b> in <b>{t} s</b>. Qual è la sua accelerazione?'),
+          explain: T('Giusto: {v} diviso {t} fa {ans}.', 'Esatto: a = Δv/Δt = {v} / {t} = {ans} m/s².'),
         },
         {
           kind: 'q',

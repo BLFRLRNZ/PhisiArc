@@ -1,0 +1,14 @@
+{
+  "name": "phisiarc",
+  "private": true,
+  "type": "module",
+  "description": "La fisica a livelli. Il gioco non ha bisogno di build: questi comandi servono solo ai controlli.",
+  "scripts": {
+    "serve": "python3 -m http.server 8765",
+    "check": "node tools/check-content.mjs && node tools/check-prereq.mjs",
+    "test": "node tests/play-all.mjs http://localhost:8765"
+  },
+  "devDependencies": {
+    "playwright": "1.48.2"
+  }
+}

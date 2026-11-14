@@ -2,6 +2,7 @@
 // Tre esperimenti, tre leggi: il rubinetto (proporzionalità diretta), il viaggio (inversa), la frenata (quadratica).
 // Con "errore di misura" acceso, ogni misura esce un po' diversa, come con un cronometro a mano.
 import { Sim, fmt, clamp01, easeOut, easeInOut } from './base.js';
+import { drawCar } from './art/car.js';
 
 const MODES = {
   rubinetto: { xl: 'tempo aperto (s)', yl: 'acqua (litri)', xmax: 10, f: (x) => 0.5 * x, law: 'diretta', speed: 2 },
@@ -66,20 +67,7 @@ export class Lab extends Sim {
     this.finish({ x, y: meas, truth, n: this.points.length });
   }
 
-  // auto a linee (stessa famiglia della gara)
-  car(x, y, col, rot = 0) {
-    const g = this.ctx;
-    g.save();
-    g.strokeStyle = col; g.lineWidth = 2.2; g.lineJoin = 'round'; g.lineCap = 'round';
-    g.fillStyle = col; g.globalAlpha = 0.18; g.beginPath(); g.roundRect(x - 30, y - 6, 30, 11, 4); g.fill();
-    g.globalAlpha = 1; g.beginPath(); g.roundRect(x - 30, y - 6, 30, 11, 4); g.stroke();
-    g.beginPath(); g.moveTo(x - 22, y - 6); g.lineTo(x - 18, y - 12); g.lineTo(x - 9, y - 12); g.lineTo(x - 5, y - 6); g.stroke();
-    for (const wx of [x - 23, x - 7]) {
-      g.fillStyle = this.c('sim-bg'); g.beginPath(); g.arc(wx, y + 6, 4.2, 0, 7); g.fill(); g.stroke();
-      g.beginPath(); g.moveTo(wx + Math.cos(rot) * 3.6, y + 6 + Math.sin(rot) * 3.6); g.lineTo(wx - Math.cos(rot) * 3.6, y + 6 - Math.sin(rot) * 3.6); g.stroke();
-    }
-    g.restore();
-  }
+  car(x, y, col, rot = 0) { drawCar(this, x, y, col, rot); }
 
   drawExperiment(W, top) {
     const p = this.params, g = this.ctx, sky = this.c('sky'), muted = this.c('muted'), chalk = this.c('chalk'), t = this.calm ? 0 : this.clock;

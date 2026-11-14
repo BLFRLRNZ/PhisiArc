@@ -121,6 +121,7 @@ export default {
             const t = pick(r === 0 ? [1.5, 2, 2.5] : [1.8, 2.2, 2.8, 3]);
             return { t, text: `La caduta deve durare <b>${num(t, 1)} secondi</b>.` };
           },
+          solve: (tg) => ({ h: 0.5 * 9.81 * tg.t * tg.t }),
           check: (res, tg, lens) => {
             const t = res.times[0];
             const tol = lens === 'e' ? 0.3 : 0.15;

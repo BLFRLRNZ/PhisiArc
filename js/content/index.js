@@ -2,6 +2,7 @@
 import { S, save } from '../state.js';
 import { IC } from '../icons.js';
 import { T } from '../util.js';
+import { compileZone } from './declarative.js';
 import F01 from './f01.js';
 import F02 from './f02.js';
 import F03 from './f03.js';
@@ -26,6 +27,7 @@ export const LENSES = {
 };
 
 export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05 };
+for (const z of Object.values(ZONES)) compileZone(z); // i passi scritti solo a testo diventano giocabili
 
 export const WORLDS = [
   {
