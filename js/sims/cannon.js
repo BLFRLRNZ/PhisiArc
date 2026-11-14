@@ -7,7 +7,7 @@ export class Cannon extends Sim {
     v: { label: 'Velocità di lancio', min: 5, max: 35, step: 0.5, unit: 'm/s' },
   };
 
-  defaults() { return { ang: 45, v: 20, target: null, tw: 3, xmax: 100, g: 9.81 }; }
+  defaults() { return { ang: 45, v: 20, target: null, tw: 3, xmax: 100, g: 9.81, h0: 0, drop: false }; }
 
   constructor(cv, p) {
     super(cv, p);
@@ -17,14 +17,16 @@ export class Cannon extends Sim {
 
   init() {
     const p = this.params, a = (p.ang * Math.PI) / 180;
-    this.x = 0; this.y = 0;
+    this.x = 0; this.y = p.h0 || 0;
+    // palla lasciata cadere dallo stesso punto nello stesso istante (per confrontare i due moti)
+    this.dy = p.h0 || 0; this.dvy = 0; this.dland = null; this.dstrobe = [];
     this.vx = p.v * Math.cos(a);
     this.vy = p.v * Math.sin(a);
-    this.path = [[0, 0]];
+    this.path = [[0, this.y]];
     this.lastPt = 0;
     this.strobe = [];
     this.nextS = 0.25;
-    this.top = [0, 0];
+    this.top = [0, this.y];
   }
 
   start() {
@@ -44,7 +46,11 @@ export class Cannon extends Sim {
     this.x += this.vx * dt;
     this.y += this.vy * dt;
     if (this.t - this.lastPt > 0.02) { this.lastPt = this.t; this.path.push([this.x, this.y]); }
-    if (this.t >= this.nextS) { this.nextS += 0.25; this.strobe.push([this.x, this.y]); } // punti a tempi uguali: in orizzontale sono equidistanti
+    if (p.drop && this.dland == null) {
+      this.dvy -= p.g * dt; this.dy += this.dvy * dt;
+      if (this.dy <= 0) { this.dy = 0; this.dland = this.t; }
+    }
+    if (this.t >= this.nextS) { this.nextS += 0.25; this.strobe.push([this.x, this.y]); if (p.drop) this.dstrobe.push(this.dy); } // punti a tempi uguali: in orizzontale sono equidistanti
     if (this.y > this.top[1]) this.top = [this.x, this.y];
     if (this.y < 0) {
       const k = py / (py - this.y);
@@ -52,7 +58,7 @@ export class Cannon extends Sim {
       this.y = 0;
       this.path.push([this.x, 0]);
       const hit = p.target != null && Math.abs(this.x - p.target) <= p.tw;
-      this.finish({ x: this.x, hit, t: this.t });
+      this.finish({ x: this.x, hit, t: this.t, tDrop: this.dland ?? this.t });
     }
   }
 
@@ -60,10 +66,11 @@ export class Cannon extends Sim {
     const g = this.ctx, p = this.params, W = this.W, H = this.H;
     this.clear();
     const sky = this.c('sky'), chalk = this.c('chalk'), muted = this.c('muted'), sun = this.c('sun'), coral = this.c('coral');
-    const ox = 34, oy = H - 40;
+    const ox = p.h0 ? 66 : 34, oy = H - 40;
     // La scala si adatta al lancio: la palla resta sempre dentro lo schermo (gittata e altezza previste).
     const a0 = (p.ang * Math.PI) / 180, R = (p.v * p.v * Math.sin(2 * a0)) / p.g, Hm = (p.v * Math.sin(a0)) ** 2 / (2 * p.g);
-    const xm = this.sm('xm', Math.max(p.xmax, R * 1.08, (p.target ?? 0) + 2 * p.tw), 6), hm = this.sm('hm', Math.max(xm * 0.5, Hm * 1.12), 6);
+    const h0 = p.h0 || 0, vy0 = p.v * Math.sin(a0), tf = (vy0 + Math.sqrt(vy0 * vy0 + 2 * p.g * h0)) / p.g, Rh = p.v * Math.cos(a0) * tf;
+    const xm = this.sm('xm', Math.max(p.xmax, Rh * 1.08, (p.target ?? 0) + 2 * p.tw), 6), hm = this.sm('hm', Math.max(xm * 0.5, (Hm + h0) * 1.12), 6);
     const s = Math.min((W - 56) / xm, (H - 90) / hm);
     const X = (x) => ox + x * s, Y = (y) => oy - y * s;
     this.ground(oy, { x0: 10 });
@@ -89,26 +96,45 @@ export class Cannon extends Sim {
     // lanci precedenti, tratteggiati
     for (const h of this.history || []) this.line(h.map(([x, y]) => [X(x), Y(y)]), { color: muted, width: 1.6, dash: [5, 6], alpha: 0.45 });
 
+    // torre da cui si lancia (se c'è un'altezza di partenza), con la sua quota
+    if (h0 > 0) {
+      const tx0 = X(0) - 14, tx1 = X(0) + 14;
+      g.save(); g.globalAlpha = 0.12; g.fillStyle = muted; g.fillRect(tx0, Y(h0), tx1 - tx0, oy - Y(h0)); g.restore();
+      this.line([[tx0, oy], [tx0, Y(h0)], [tx1, Y(h0)], [tx1, oy]], { color: muted, width: 2 });
+      for (let yy = Y(h0) + 14; yy < oy - 6; yy += 16) this.line([[tx0, yy], [tx1, yy + 8]], { color: muted, width: 1, alpha: 0.5 });
+      this.text(`${fmt(h0, 0)} m`, tx0 - 6, (Y(h0) + oy) / 2, { size: 11, align: 'right', color: muted, mono: true });
+    }
+    // palla lasciata cadere: scende in verticale accanto alla torre, con i suoi punti a tempi uguali
+    if (p.drop) {
+      const dx = X(0) + 22;
+      this.dstrobe.forEach((y, i) => {
+        this.ball(dx, Y(y), 3, { color: this.c('pink'), fill: 1, shine: false, alpha: 0.75 });
+        const sp = this.strobe[i];
+        if (sp) this.line([[dx, Y(y)], [X(sp[0]), Y(sp[1])]], { color: muted, width: 1, dash: [2, 5], alpha: 0.5 });
+      });
+      this.ball(dx, Y(this.dy), 6.5, { color: this.c('pink'), fill: 0.45 });
+    }
+
     // cannone: ruota e canna a linee, l'angolo si muove con morbidezza
     const ang = this.sm('ang', p.ang, 12), a = (ang * Math.PI) / 180, vS = this.sm('v', p.v, 12);
     g.save();
-    g.translate(X(0), Y(0) - 4); g.rotate(-a);
+    g.translate(X(0), Y(h0) - 4); g.rotate(-a);
     g.strokeStyle = chalk; g.lineWidth = 2.4; g.lineJoin = 'round';
     g.fillStyle = chalk; g.globalAlpha = 0.12; g.beginPath(); g.roundRect(-4, -6, 36, 12, 4); g.fill();
     g.globalAlpha = 1; g.beginPath(); g.roundRect(-4, -6, 36, 12, 4); g.stroke();
     g.restore();
-    this.ball(X(0), Y(0) - 4, 9, { color: chalk, fill: 0.15, shine: false });
+    this.ball(X(0), Y(h0) - 4, 9, { color: chalk, fill: 0.15, shine: false });
     g.save(); g.strokeStyle = chalk; g.lineWidth = 1.6;
-    for (let k = 0; k < 3; k++) { const r = (k * Math.PI) / 3; g.beginPath(); g.moveTo(X(0) + Math.cos(r) * 8, Y(0) - 4 + Math.sin(r) * 8); g.lineTo(X(0) - Math.cos(r) * 8, Y(0) - 4 - Math.sin(r) * 8); g.stroke(); }
+    for (let k = 0; k < 3; k++) { const r = (k * Math.PI) / 3; g.beginPath(); g.moveTo(X(0) + Math.cos(r) * 8, Y(h0) - 4 + Math.sin(r) * 8); g.lineTo(X(0) - Math.cos(r) * 8, Y(h0) - 4 - Math.sin(r) * 8); g.stroke(); }
     g.restore();
 
     // a riposo: mira (vettore della velocità di partenza) e arco dell'angolo
     if (!this.running && !this.result) {
       const L = vS * s * 0.55 + 30;
-      this.arrow(X(0), Y(0) - 4, X(0) + Math.cos(a) * L, Y(0) - 4 - Math.sin(a) * L, { color: this.c('orange'), dash: [6, 6], label: `${fmt(vS, 1)} m/s` });
+      this.arrow(X(0), Y(h0) - 4, X(0) + Math.cos(a) * L, Y(h0) - 4 - Math.sin(a) * L, { color: this.c('orange'), dash: [6, 6], label: `${fmt(vS, 1)} m/s` });
       g.save(); g.strokeStyle = sun; g.lineWidth = 2;
-      g.beginPath(); g.arc(X(0), Y(0) - 4, 48, -a, 0); g.stroke(); g.restore();
-      this.text(`${fmt(ang, 0)}°`, X(0) + 54 * Math.cos(a / 2) + 6, Y(0) - 4 - 54 * Math.sin(a / 2) + 4, { size: 12, color: sun, mono: true });
+      g.beginPath(); g.arc(X(0), Y(h0) - 4, 48, -a, 0); g.stroke(); g.restore();
+      this.text(`${fmt(ang, 0)}°`, X(0) + 54 * Math.cos(a / 2) + 6, Y(h0) - 4 - 54 * Math.sin(a / 2) + 4, { size: 12, color: sun, mono: true });
     }
 
     // traiettoria e punti a tempi uguali
@@ -134,7 +160,7 @@ export class Cannon extends Sim {
         this.ripple(lx, oy - 10, age - 0.1, { color: sun, r1: 70, dur: 1 });
       }
       const u1 = easeInOut((age - 0.25) / 0.6);
-      if (u1 > 0 && this.top[1] > 0.5) {
+      if (u1 > 0 && this.top[1] > h0 + 0.5) {
         const [tx, ty] = this.top;
         this.line([[X(tx), Y(ty)], [X(tx), oy]], { color: sun, width: 1.6, dash: [3, 5], upto: u1 });
         g.globalAlpha = u1;
@@ -154,6 +180,7 @@ export class Cannon extends Sim {
       const msg = `Atterra a ${fmt(this.result.x, 1)} m` + (p.target != null && this.result.hit ? ' · Centro!' : '');
       g.globalAlpha = easeOut(this.age / 0.4);
       this.text(msg, W - 14, 24, { size: 14, align: 'right', weight: 700, color: this.result.hit ? sun : this.c('accent2') });
+      if (p.drop) this.text(`in volo ${fmt(this.result.t, 2)} s · lasciata cadere ${fmt(this.result.tDrop, 2)} s`, W - 14, 44, { size: 12, align: 'right', color: muted });
       g.globalAlpha = 1;
     }
   }

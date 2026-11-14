@@ -21,6 +21,18 @@ export default {
           answer: 2,
           explain: T('Esatto: più è veloce, prima arriva.', 'tempo = spazio / velocità = 100 / 10 = 10 s.', '100 m ÷ 10 m/s = 10 s. Il suo record è 9,58 s.'),
         },
+        {
+          // km/h e m/s: si spiega qui, così il Ripasso può chiederlo.
+          kind: 'q',
+          text: T(
+            'Le auto vere usano i <b>km/h</b>, chilometri all’ora. Un trucco: per passare ai metri al secondo si divide per <b>3,6</b>. Così 36 km/h fanno 10 m/s. Quanto fa <b>18 km/h</b>?',
+            'In un’ora ci sono 3600 s e in un km 1000 m, quindi 1 m/s = 3,6 km/h: da km/h a m/s si <b>divide per 3,6</b>. Quanto fa <b>18 km/h</b> in m/s?',
+            'Il tachimetro segna km/h, la fisica usa m/s. Un’ora ha 3600 s e un km 1000 m: 1 m/s = 3,6 km/h. Una bici a <b>18 km/h</b> va a…'),
+          options: [T('5 m/s', '5 m/s', '5 m/s'), T('18 m/s', '18 m/s', '18 m/s'), T('65 m/s', '64,8 m/s', 'circa 65 m/s')],
+          answer: 0,
+          wrong: T('Dividi per 3,6, non moltiplicare.', 'Da km/h a m/s si divide per 3,6.'),
+          explain: T('Giusto: 18 ÷ 3,6 = 5. La bici fa 5 metri ogni secondo.', '18 / 3,6 = 5 m/s. Al contrario, da m/s a km/h si moltiplica per 3,6.', '18 ÷ 3,6 = 5 m/s: cinque metri ogni secondo.'),
+        },
       ],
       hints: [T('Fai la gara con 5 e 10 e guarda chi tocca la bandiera prima.', 'Dividi lo spazio per la velocità.')],
       solution: T('Quella a 10.', '10 s, perché t = 100 m / 10 m/s.'),
@@ -36,7 +48,7 @@ export default {
         { kind: 'run', text: T('Guarda la gara e la sua linea.', 'Osserva come si disegnano le due linee.'), seq: [{ v1: 4, v2: 8 }], explain: T('Due linee, una per macchinina.', 'Velocità costante = linea dritta.') },
         {
           kind: 'q', text: T('La macchinina più veloce ha la linea…', 'Nel grafico spazio-tempo, la macchina più veloce ha la retta…'),
-          options: [T('più in piedi (ripida)', 'più ripida (pendenza maggiore)'), T('più sdraiata', 'meno ripida'), T('dritta in orizzontale', 'orizzontale')], answer: 0,
+          options: [T('più in piedi (ripida)', 'più ripida'), T('più sdraiata', 'meno ripida'), T('dritta in orizzontale', 'orizzontale')], answer: 0,
           explain: T('Giusto: va più su in meno tempo, quindi la linea è più ripida.', 'Esatto: la <b>pendenza</b> del grafico spazio-tempo è la velocità. Una linea orizzontale vuol dire fermo.'),
         },
         {
@@ -88,10 +100,11 @@ export default {
       id: 'm01-5', kind: 'ripasso', title: 'Ripasso del moto',
       intro: T('Ripassiamo velocità, grafici e misure!', 'Ripasso: velocità, grafici, unità.'),
       steps: [
-        { kind: 'q', text: T('Cosa dice la velocità?', 'Che cosa misura la velocità?'), options: [T('Quanto sei pesante', 'La massa'), T('Quanta strada fai in un secondo', 'Lo spazio percorso in ogni unità di tempo'), T('Quanto sei lontano da casa', 'La posizione')], answer: 1, explain: T('Esatto!', 'Esatto: v = Δs / Δt.') },
+        { kind: 'q', text: T('Cosa dice la velocità?', 'Che cosa misura la velocità?'), options: [T('Quanto sei pesante', 'La massa'), T('Quanta strada fai in un secondo', 'Lo spazio fatto in un secondo'), T('Quanto sei lontano da casa', 'La distanza da casa')], answer: 1, explain: T('Esatto!', 'Esatto: v = Δs / Δt.') },
         { kind: 'q', text: T('Una macchinina è ferma. La sua linea nel disegno è…', 'Un oggetto fermo nel grafico spazio-tempo è…'), options: [T('ripida', 'una retta ripida'), T('orizzontale', 'una retta orizzontale'), T('in discesa', 'una retta in discesa')], answer: 1, explain: T('Giusto: il tempo passa, lei resta lì.', 'Giusto: la posizione non cambia.') },
-        { kind: 'q', only: ['s', 'c'], text: '36 km/h quanti m/s sono?', options: ['10 m/s', '36 m/s', '3,6 m/s'], answer: 0, explain: '36 km/h = 36.000 m / 3600 s = 10 m/s. Basta dividere per 3,6.' },
-        { kind: 'q', text: T('Per sapere chi è più veloce, cosa misuri?', 'Per confrontare due velocità, cosa misuri?'), options: [T('Spazio e tempo', 'Spazio e tempo'), T('Solo il colore', 'Solo la massa'), T('Solo il tempo', 'Solo la forma')], answer: 0, explain: T('Proprio così: due misure insieme.', 'Esatto: la velocità è un rapporto tra due misure.') },
+        // Valori nuovi a ogni partita: si ripassa la regola, non la risposta.
+        { kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da km/h a m/s.', gen: () => { const k = pick([18, 36, 54, 72, 90, 108]); return { text: `<b>${k} km/h</b> quanti m/s sono?`, ans: k / 3.6, tol: 0.01, unit: 'm/s', explain: `Giusto: ${k} ÷ 3,6 = ${Math.round(k / 3.6)} m/s.` }; } },
+        { kind: 'q', text: T('Per sapere chi è più veloce, cosa misuri?', 'Per confrontare due velocità, cosa misuri?'), options: [T('Spazio e tempo', 'Spazio e tempo'), T('Solo la strada', 'Solo la massa'), T('Solo il tempo', 'Solo la forma')], answer: 0, explain: T('Proprio così: due misure insieme.', 'Esatto: la velocità è un rapporto tra due misure.') },
       ],
       hints: [T('Ripensa alla gara e al suo grafico.')],
     },
@@ -111,7 +124,7 @@ export default {
         },
         {
           kind: 'q', text: T('Allora chi arriva prima dipende…', 'Il tempo di arrivo dipende da…'),
-          options: [T('solo dalla velocità', 'solo dalla velocità'), T('dalla velocità e da quanta strada c’è da fare', 'dalla velocità e dalla distanza da percorrere'), T('dal colore della macchina', 'dalla massa della macchina')], answer: 1,
+          options: [T('solo dalla velocità', 'solo dalla velocità'), T('dalla velocità e dalla strada da fare', 'da velocità e distanza'), T('da quanto è grande la macchina', 'dalla massa e dal motore')], answer: 1,
           explain: T('Mito smontato! Conta anche da dove parti.', 'Mito smontato: t = distanza / velocità. Conta anche la distanza.'),
         },
       ],

@@ -14,10 +14,12 @@ Si gioca nel browser, si installa come app e funziona anche offline.
   - **Studente** (12-19 anni): formule, unità, grafici e calcoli.
   - **Curioso** (adulti): le idee della fisica e dove si incontrano ogni giorno.
 - **Cinque simulazioni**, disegnate a linee in stile lavagna animata: il pendolo, lo zoom delle grandezze (dal protone all'universo osservabile, 30 tappe), la gara con il grafico spazio-tempo, la caduta libera (con o senza aria, sulla Terra o sulla Luna) e il cannone.
-- **Verifiche a prova di memoria**: nei livelli Costruisci il compito torna con valori nuovi, così passa chi ha capito la regola e non chi ha indovinato il numero.
+- **Verifiche a prova di memoria**: nei Costruisci e nei Ripassi i calcoli tornano con valori nuovi, e le opzioni delle domande si mescolano a ogni partita: passa chi ha capito la regola, non chi ricorda la posizione.
+- **Prepara l'esperimento**: in alcuni passi scegli tu, variabile per variabile, cosa cambiare e cosa tenere uguale.
+- **Velocità 1×, 2×, 4×** accanto al tasto Lancia, per non aspettare le gare lente.
 - **Il tuo parco divertimenti**: ogni livello Costruisci aggiunge un gioco (l'altalena, i cartelli, il trenino, la torre a caduta libera, il tiro al bersaglio).
 - **I boss di Vetrino e Bilancia**: ogni zona finisce con un mito da smontare con un esperimento. Vetrino, il microscopio investigatore, risponde con domande, non con soluzioni.
-- **Aiuti a gradini**: uno o due suggerimenti (dipende dal livello), poi la soluzione. **Stelle**: si parte da ★★★ senza aiuti, ★★ se usi un suggerimento, ★ se guardi la soluzione; ogni errore toglie una stella, ma un livello superato vale sempre almeno ★.
+- **Aiuti a gradini**: uno o due suggerimenti (dipende dal livello), poi la soluzione. **Stelle**: si parte da ★★★ senza aiuti, ★★ se usi un suggerimento, ★ se guardi la soluzione; una sola regola sugli errori: **sbagliare una risposta costa una stella, sperimentare no** (le previsioni sbagliate e i lanci di prova con i cursori sono gratis); un livello superato vale sempre almeno ★. Gli aiuti seguono il passo in cui sei, e ogni passo ha la sua soluzione.
 - **Joule e gradi**: ogni stella vale 10 joule; ogni mondo finito dà il nome di uno scienziato (Sperimentatore, Galileo, … fino a Curie).
 - **Salvataggio** sul dispositivo, con un codice da copiare per portare i progressi altrove. Tema scuro, suoni e voce disattivabili; l'animazione d'apertura parte da sola solo al primo avvio (si può rivedere dalle impostazioni).
 

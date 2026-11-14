@@ -18,7 +18,7 @@ export default {
           kind: 'q',
           text: T('La piuma arriva molto dopo. Perché?', 'Perché la piuma impiega molto più tempo del martello?', 'Che cosa rallenta davvero la piuma?'),
           options: [
-            T('Perché la Terra non la vuole', 'Perché la gravità non agisce sulle cose leggere', 'La gravità sulla piuma è quasi zero'),
+            T('Perché è troppo leggera per la gravità', 'Perché la gravità non agisce sulle cose leggere', 'La gravità sulla piuma è quasi zero'),
             T('Perché le cose leggere cadono sempre piano, anche senz’aria', 'Perché la piuma cade sempre a velocità costante', 'Gli oggetti leggeri hanno una gravità tutta loro'),
             T('Perché l’aria la frena', 'Perché la resistenza dell’aria la frena molto', 'La resistenza dell’aria, enorme rispetto al suo peso'),
           ],
@@ -47,7 +47,7 @@ export default {
           text: T('Senza aria, cosa succede?', 'Senza aria, come cadono piuma e martello?'),
           options: [
             T('Il martello arriva prima', 'Il martello arriva prima'),
-            T('Arrivano insieme', 'Arrivano insieme: stesso tempo di caduta'),
+            T('Arrivano insieme', 'Arrivano insieme'),
             T('La piuma arriva prima', 'La piuma arriva prima'),
           ],
           answer: 1,
@@ -91,8 +91,8 @@ export default {
           text: T('Sulla Luna, chi tocca il suolo per primo?', 'Sulla Luna, da 1,6 m: chi tocca il suolo per primo?'),
           options: [
             T('Arrivano insieme', 'Arrivano insieme'),
-            T('Il martello', 'Il martello'),
-            T('La piuma', 'La piuma'),
+            T('Prima il martello, che è pesante', 'Prima il martello, più pesante'),
+            T('Prima la piuma, che è leggera', 'Prima la piuma, più leggera'),
           ],
           answer: 0,
           predict: [{ planet: 'luna', h: 1.6, air: false, objs: ['piuma', 'martello'] }],
@@ -157,13 +157,17 @@ export default {
           answer: 0, explain: T('Giusto: più cade, più corre.', 'Giusto: a = g = 9,81 m/s² vuol dire +9,81 m/s ogni secondo.'),
         },
         {
-          kind: 'q', text: T('Un trenino fa 60 metri in 10 secondi. Quanti metri fa ogni secondo?', 'Un trenino percorre 60 m in 10 s. Qual è la sua velocità?'),
-          options: [T('600', '600 m/s'), T('6', '6 m/s'), T('50', '50 m/s')],
-          answer: 1, explain: T('Esatto: 60 diviso 10 fa 6.', 'Esatto: v = 60 m / 10 s = 6 m/s.'),
+          kind: 'num', rounds: 1, text: T('Un calcolo veloce.', 'Un calcolo veloce.'),
+          gen: (lens) => {
+            const t = pick([5, 8, 10, 12]), v = pick([3, 4, 5, 6]), d = v * t;
+            return lens === 'e'
+              ? { text: `Un trenino fa <b>${d} metri</b> in <b>${t} secondi</b>. Quanti metri fa ogni secondo?`, ans: v, tol: 0, unit: 'metri', explain: `Esatto: ${d} diviso ${t} fa ${v}.` }
+              : { text: `Un trenino percorre <b>${d} m</b> in <b>${t} s</b>. Qual è la sua velocità?`, ans: v, tol: 0.01, unit: 'm/s', explain: `Esatto: v = ${d} m / ${t} s = ${v} m/s.` };
+          },
         },
         {
           kind: 'q', text: T('Vuoi sapere se il peso cambia la caduta. Cosa fai?', 'Per capire se la massa influisce sulla caduta, che esperimento fai?'),
-          options: [T('Faccio cadere una piuma e un sasso', 'Confronti una piuma e un sasso'), T('Chiedo a un amico', 'Cerchi l’opinione di un esperto'), T('Due palle uguali di forma, una leggera e una pesante', 'Due oggetti di uguale forma e massa diversa, dalla stessa altezza')],
+          options: [T('Faccio cadere una piuma e un sasso', 'Confronti una piuma e un sasso'), T('Lancio due sassi grandi uguali', 'Due oggetti di massa uguale'), T('Due palle uguali, una leggera e una pesante', 'Stessa forma e altezza, massa diversa')],
           answer: 2, explain: T('Giusto: cambi solo il peso, tutto il resto uguale.', 'Giusto: si cambia una sola variabile, la massa. Piuma e sasso differiscono anche per forma, e l’aria li tratta in modo diverso.'),
         },
       ],
@@ -181,7 +185,7 @@ export default {
           kind: 'q', text: T('Quale esperimento ci serve per controllare?', 'Quale esperimento mette alla prova il mito?'),
           options: [
             T('Una piuma e una boccia di ferro', 'Una piuma e una boccia di ferro, dalla stessa altezza'),
-            T('Una pallina leggera e una boccia pesante, tutte e due rotonde', 'Una pallina da ping pong e una boccia di ferro: stessa forma, massa molto diversa, stessa altezza'),
+            T('Pallina leggera e boccia, tutte e due tonde', 'Pallina da ping pong e boccia di ferro, stessa altezza'),
             T('Una boccia sola, lanciata tante volte', 'Una sola boccia, da altezze diverse'),
           ],
           answer: 1,
@@ -207,8 +211,8 @@ export default {
           kind: 'q', text: T('Allora, Aristotele aveva ragione?', 'Conclusione?'),
           options: [
             T('Sì, il pesante cade molto prima', 'Il mito è vero: massa doppia, tempo dimezzato'),
-            T('No: senza l’aria, pesante e leggero cadono insieme', 'Il mito è falso: nel vuoto tutti i corpi cadono con la stessa accelerazione g'),
-            T('Non si può sapere', 'Non si può concludere nulla'),
+            T('No: senz’aria cadono insieme', 'Il mito è falso: nel vuoto tutti cadono con la stessa g'),
+            T('Dipende da quanto è alto il palazzo', 'Vale solo da altezze molto grandi'),
           ],
           answer: 1,
           explain: T('Mito smontato! Anche le idee di un grande sapiente vanno controllate.', 'Mito smontato: a parte l’aria, il tempo di caduta non dipende dalla massa. Anche l’autorità di Aristotele cede davanti all’esperimento.'),

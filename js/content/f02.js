@@ -55,7 +55,7 @@ export default {
       steps: [
         {
           kind: 'q', only: ['e'], text: 'Con cosa misuri quanto sei alto?',
-          options: ['Con i secondi', 'Con i metri e i centimetri', 'Con i chili'], answer: 1, explain: 'Esatto: l’altezza è una lunghezza, e si misura in metri.',
+          options: ['Con i secondi', 'Con i metri', 'Con i chili'], answer: 1, explain: 'Esatto: l’altezza è una lunghezza, e si misura in metri.',
         },
         {
           kind: 'q', only: ['e'], text: 'Quanto dura una canzone? Scegli l’unità giusta.',
@@ -112,11 +112,12 @@ export default {
         },
         {
           kind: 'q', text: T('Prima di un esperimento, cosa fai?', 'Il metodo scientifico: cosa viene prima dell’esperimento?'),
-          options: [T('Una previsione', 'L’ipotesi'), T('Niente', 'La conclusione'), T('Una foto', 'La pubblicazione')], answer: 0,
+          options: [T('Una previsione', 'L’ipotesi'), T('Si scrive il risultato', 'La conclusione'), T('Si chiede a un esperto', 'La pubblicazione')], answer: 0,
           explain: T('Esatto: prima indovini, poi controlli!', 'Esatto: ipotesi, poi esperimento, poi conclusione.'), wrong: 'Ripensa al Laboratorio: prima indovini, poi…',
         },
         {
-          kind: 'q', only: ['s', 'c'], text: '0,25 kg sono…', options: ['25 g', '250 g', '2500 g'], answer: 1, explain: '0,25 × 1000 = 250 g.',
+          kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da kg a grammi.',
+          gen: () => { const k = pick([0.15, 0.25, 0.4, 0.75, 1.2]), g = Math.round(k * 1000); return { text: `<b>${String(k).replace('.', ',')} kg</b> quanti grammi sono?`, ans: g, tol: 0, unit: 'g', explain: `Giusto: ${String(k).replace('.', ',')} × 1000 = ${g} g.` }; },
         },
       ],
       hints: [T('Confronta due cose vicine alla volta: quale è più grande?')],
@@ -137,7 +138,7 @@ export default {
         },
         {
           kind: 'q', text: T('Allora il bambino aveva ragione?', 'Il mito è vero?'),
-          options: [T('Sì', 'Sì, la differenza è piccola'), T('No: l’atomo è piccolissimo, molto più del granello', 'No: ci sono 7 ordini di grandezza di differenza')], answer: 1,
+          options: [T('Sì: sono tutti e due piccolissimi', 'Sì, la differenza è piccola'), T('No: l’atomo è molto, molto più piccolo', 'No: 7 ordini di grandezza di differenza'), T('Quasi: l’atomo è la metà', 'Quasi: al massimo un fattore 10 o 20')], answer: 1,
           explain: T('Mito smontato! Gli atomi sono così piccoli che non si vedono nemmeno col microscopio normale.', 'Mito smontato: 7 ordini di grandezza. Se un atomo fosse grande come un granello, il granello sarebbe lungo 10 km!'),
         },
       ],

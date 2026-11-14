@@ -1,5 +1,5 @@
 // Il motore di un livello: testo, simulazione, passi (domande, prove, regolazioni) e stelle.
-import { h, tx, shuffle, plain, wait } from './util.js';
+import { h, tx, shuffle, plain, wait, T } from './util.js';
 import { S, save } from './state.js';
 import { SIMS } from './sims/index.js';
 import { sfx, speak, stopSpeaking } from './audio.js';
@@ -42,10 +42,18 @@ export function runLevel(root, level, nav) {
   const ctrls = h('div', { class: 'ctrls' });
   const launch = h('button', { class: 'btn primary', onclick: () => fire() }, h('span', { html: IC.play }), 'Lancia');
   const resetB = h('button', { class: 'btn', title: 'Ricomincia', 'aria-label': 'Ricomincia', onclick: () => { sim.stop(); sim.reset(); }, html: IC.reset });
+  // Velocità della simulazione: 1×, 2×, 4× (le gare lente non fanno più aspettare).
+  const MULS = [1, 2, 4];
+  const speedB = h('button', { class: 'btn speed', title: 'Velocità della simulazione', 'aria-label': 'Velocità della simulazione: 1 volta' }, '1×');
+  speedB.onclick = () => {
+    const k = (MULS.indexOf(sim.mul || 1) + 1) % MULS.length;
+    sim.mul = MULS[k]; speedB.textContent = `${MULS[k]}×`; speedB.setAttribute('aria-label', `Velocità della simulazione: ${MULS[k]} volte`);
+    speedB.classList.toggle('on', MULS[k] > 1);
+  };
   // La simulazione, il tasto Lancia e i cursori stanno insieme in un'unica scheda: si lancia senza scorrere la pagina.
   const canvasWrap = h('div', { class: 'canvas-wrap' + (SimClass && SimClass.tall ? ' tall' : '') }, canvas);
   const simPane = SimClass ? h('section', { class: 'pane simpane' }, h('div', { class: 'simcard' },
-    canvasWrap, SimClass.staticSim ? null : h('div', { class: 'launch' }, launch, resetB), ctrls)) : null;
+    canvasWrap, SimClass.staticSim ? null : h('div', { class: 'launch' }, launch, resetB, speedB), ctrls)) : null;
   // Se la simulazione non si vede tutta (telefono), la si porta in vista prima di partire.
   const showSim = () => {
     // La barra Lancia è appiccicata in fondo alla scheda: conta come spazio occupato sotto la simulazione.
@@ -158,6 +166,8 @@ export function runLevel(root, level, nav) {
 
   function renderStep() {
     const st = steps[si];
+    resetHints();
+    autoSol = null;
     quest.classList.remove('enter'); void quest.offsetWidth; quest.classList.add('enter');
     drawDots();
     onResult = null;
@@ -172,16 +182,19 @@ export function runLevel(root, level, nav) {
     const keys = st.controls ?? level.controls ?? [];
     renderControls(locked ? keys : keys, locked);
     setLaunch(!locked);
-    ({ q: stepQ, free: stepFree, run: stepRun, tune: stepTune, num: stepNum, order: stepOrder })[st.kind](st);
+    ({ q: stepQ, free: stepFree, run: stepRun, tune: stepTune, num: stepNum, order: stepOrder, vars: stepVars })[st.kind](st);
     if (S.settings.voice) speak(plain(quest.innerHTML));
   }
 
   function stepQ(st) {
-    const opts = st.options.map((o, i) => ({ o, i }));
+    // Le opzioni si mescolano a ogni partita: chi rigioca deve ricordare l'idea, non la posizione.
+    const opts = st.keepOrder ? st.options.map((o, i) => ({ o, i })) : shuffle(st.options.map((o, i) => ({ o, i })));
+    if (!st.predict) autoSol = () => `La risposta giusta è: <b>${tx(st.options[st.answer], lens)}</b>.`;
     const box = h('div', { class: 'opts' });
     const after = h('div');
-    const btns = opts.map(({ o, i }) => h('button', { class: 'opt', onclick: () => choose(i) }, h('span', { html: tx(o, lens) })));
-    box.append(...btns);
+    const btns = [];
+    opts.forEach(({ o, i }) => { btns[i] = h('button', { class: 'opt', onclick: () => choose(i) }, h('span', { html: tx(o, lens) })); });
+    box.append(...opts.map(({ i }) => btns[i]));
     area.append(box, after);
     async function choose(i) {
       if (busy) return;
@@ -191,7 +204,8 @@ export function runLevel(root, level, nav) {
         after.replaceChildren(say('Previsione fatta. Ora guardiamo l’esperimento…', 'muted'));
         await runSeq(st.predict);
         markRight(btns[st.answer]);
-        if (i !== st.answer) { btns[i].classList.add('wrong'); errors++; sfx.no(); } else sfx.ok();
+        // Una previsione sbagliata non costa stelle: sbagliare la previsione fa parte del gioco.
+        if (i !== st.answer) { btns[i].classList.add('wrong'); sfx.no(); } else sfx.ok();
         const head = i === st.answer ? '<b>Previsione giusta!</b> ' : '<b>La previsione era diversa, ed è normale: gli scienziati imparano proprio così.</b> ';
         after.replaceChildren(say(head + tx(st.explain, lens), i === st.answer ? 'good' : 'warn'), nextBtn());
         setLaunch(true);
@@ -283,6 +297,7 @@ export function runLevel(root, level, nav) {
     area.append(qn, h('div', { class: 'numrow' }, inp, unit, ok), fb);
     const next = () => {
       cur = st.gen(lens, r);
+      autoSol = () => (cur.explain ? String(cur.explain).replace(/^(Giusto|Esatto|Perfetto)[:!.]?\s*/i, '') : `Il risultato è ${String(cur.ans).replace('.', ',')} ${cur.unit || ''}.`);
       qn.innerHTML = `<span class="round">Domanda ${r + 1} di ${rounds}</span> ${cur.text}`;
       unit.textContent = cur.unit || '';
       inp.value = '';
@@ -311,9 +326,41 @@ export function runLevel(root, level, nav) {
     next();
   }
 
+  // Prepara l'esperimento: per ogni variabile scegli "Cambia" o "Uguale". Giusto quando cambia solo quella da studiare.
+  function stepVars(st) {
+    const pick = {};
+    const rows = st.vars.map((v) => {
+      const bs = ['Uguale', 'Cambia'].map((lab) => h('button', { class: 'chip', onclick: () => { pick[v.k] = lab; bs.forEach((b) => b.classList.toggle('on', b.textContent === lab)); ok.disabled = st.vars.some((x) => !pick[x.k]); } }, lab));
+      return h('div', { class: 'varrow' }, h('span', { html: tx(v.t, lens) }), h('span', { class: 'chips' }, ...bs));
+    });
+    const fb = h('div', { class: 'say muted', hidden: true });
+    const ok = h('button', { class: 'btn primary', disabled: true, onclick: () => check() }, 'Controlla');
+    autoSol = () => 'Cambia solo ' + tx(st.vars.find((v) => v.k === st.change).t, lens) + '; tutto il resto resta uguale.';
+    function check() {
+      const good = st.vars.every((v) => (pick[v.k] === 'Cambia') === (v.k === st.change));
+      fb.hidden = false;
+      if (good) {
+        sfx.ok();
+        rows.forEach((r) => r.querySelectorAll('button').forEach((b) => (b.disabled = true)));
+        ok.remove();
+        fb.className = 'say good';
+        fb.innerHTML = tx(st.explain, lens);
+        area.append(nextBtn());
+      } else {
+        sfx.no();
+        errors++;
+        fb.className = 'say warn';
+        const many = st.vars.filter((v) => pick[v.k] === 'Cambia').length;
+        fb.innerHTML = many === 0 ? 'Se non cambi niente, l’esperimento non può dirti niente!' : st.wrong ? tx(st.wrong, lens) : 'Se cambi due cose insieme, poi non sai quale ha fatto la differenza.';
+      }
+    }
+    area.append(h('div', { class: 'vars' }, ...rows), ok, fb);
+  }
+
   function stepOrder(st) {
     let items = shuffle(st.items);
     while (items.every((it, i) => i === 0 || items[i - 1].v <= it.v)) items = shuffle(st.items);
+    autoSol = () => 'L’ordine giusto è: ' + st.items.slice().sort((a, b) => a.v - b.v).map((it) => tx(it.t, lens)).join(' → ') + '.';
     const list = h('ol', { class: 'order' });
     const fb = h('div', { class: 'say muted', hidden: true });
     const ok = h('button', { class: 'btn primary', onclick: () => check() }, 'Controlla l’ordine');
@@ -347,21 +394,34 @@ export function runLevel(root, level, nav) {
   }
 
   // ---------- aiuti a gradini ----------
+  // Gli aiuti seguono il passo in cui sei: se il passo ha i suoi suggerimenti si usano quelli, altrimenti quelli del livello.
+  // Le stelle massime scendono una volta sola: ★★ dal primo suggerimento, ★ dalla prima soluzione vista.
+  let stepHints = 0, stepSol = false;
+  // I suggerimenti del livello valgono per il compito principale; le domande a scelta di un livello con più domande
+  // usano i propri (o il loro "riprova" come unico indizio), così l'aiuto parla sempre del passo che hai davanti.
+  const nQ = steps.filter((x) => x.kind === 'q' && !x.predict).length;
+  const hintsHere = () => {
+    const st = steps[si];
+    if (st.hints) return st.hints;
+    if (st.kind === 'q' && !st.predict && nQ > 1) return st.wrong ? [st.wrong] : [];
+    if (st.kind === 'vars') return [st.wrong || T('Una cosa alla volta: cambia solo quello che vuoi studiare.')];
+    return level.hints || [];
+  };
+  // Soluzione: quella del passo, poi quella ricavata dal passo stesso (domanda, calcolo, ordine), poi quella del livello.
+  let autoSol = null;
+  const solHere = () => steps[si].solution || (autoSol && autoSol()) || level.solution;
+  function resetHints() { stepHints = 0; stepSol = false; hintBox.hidden = true; hintBox.replaceChildren(); }
   function showHint() {
-    const hs = level.hints || [];
+    const hs = hintsHere(), sol = solHere();
     hintBox.hidden = false;
-    if (hints < hs.length) {
-      hints++;
-    } else if (!solution && level.solution) {
-      solution = true;
-    }
-    const parts = hs.slice(0, hints).map((x, i) => `<p><b>Suggerimento ${i + 1}.</b> ${tx(x, lens)}</p>`);
-    if (solution) parts.push(`<p><b>Soluzione.</b> ${tx(level.solution, lens)}</p>`);
+    if (stepHints < hs.length) { stepHints++; hints++; } else if (!stepSol && sol) { stepSol = true; solution = true; }
+    const parts = hs.slice(0, stepHints).map((x, i) => `<p><b>Suggerimento ${i + 1}.</b> ${tx(x, lens)}</p>`);
+    if (stepSol) parts.push(`<p><b>Soluzione.</b> ${tx(sol, lens)}</p>`);
     let more = '';
-    if (hints < hs.length) more = '<p class="muted small">Premi di nuovo Aiuto per un altro suggerimento (le stelle massime scendono a ★★).</p>';
-    else if (!solution && level.solution) more = '<p class="muted small">Premi ancora Aiuto per vedere la soluzione (stella massima ★).</p>';
+    if (stepHints < hs.length) more = '<p class="muted small">Premi di nuovo Aiuto per un altro suggerimento (le stelle massime scendono a ★★).</p>';
+    else if (!stepSol && sol) more = '<p class="muted small">Premi ancora Aiuto per vedere la soluzione (stella massima ★).</p>';
     hintBox.innerHTML = parts.join('') + more;
-    if (!hs.length && !level.solution) hintBox.innerHTML = '<p>Rileggi la domanda con calma e prova l’esperimento: la risposta si vede.</p>';
+    if (!hs.length && !sol) hintBox.innerHTML = '<p>Rileggi la domanda con calma e prova l’esperimento: la risposta si vede.</p>';
   }
 
   // ---------- fine livello ----------

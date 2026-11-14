@@ -31,7 +31,7 @@ export class Sim {
       this.fdt = real;
       this.clock += real;
       if (this.running) {
-        const dt = real * this.speed, sub = 20;
+        const dt = real * this.speed * (this.mul || 1), sub = 20 * (this.mul || 1);
         for (let i = 0; i < sub && this.running; i++) { this.t += dt / sub; this.step(dt / sub); }
       }
       if (this.cv.isConnected) this.draw();

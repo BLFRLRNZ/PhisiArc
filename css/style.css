@@ -519,3 +519,9 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .world.soon-w h3 { font-size: 1rem; }
 .world.soon-w .wdiff { display: none; }
 @media (min-width: 561px) { .pstep:has(.soon-w) .pnode { width: 30px; height: 30px; left: 5px; font-size: .8rem; } }
+.launch .speed { font: 600 .92rem var(--f-num); min-width: 3.2em; justify-content: center; }
+.launch .speed.on { color: var(--sun); }
+/* passo "prepara l'esperimento": una riga per variabile */
+.vars { display: grid; gap: 8px; margin-bottom: 10px; }
+.varrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: .5em .75em; border-radius: 12px; background: var(--glass); }
+.varrow .chips { display: flex; gap: 6px; flex: none; }
