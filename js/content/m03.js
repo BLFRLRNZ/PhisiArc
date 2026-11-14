@@ -145,7 +145,7 @@ export default {
       id: 'm03-3', kind: 'prevedi', title: 'L’angolo migliore',
       sim: 'cannon', params: { ang: 45, v: 25, xmax: 100 }, controls: ['ang', 'v'],
       intro: T(
-        'La forza del lancio resta sempre la stessa. Cambiamo solo <b>l’inclinazione</b> del cannone. Quale va più lontano?',
+        'Una gara di cannoni: vince chi manda la palla più lontano. Indovina prima di sparare!',
         'Velocità fissa: 25 m/s. Cambia solo l’<b>angolo</b>. Prima la previsione, poi l’esperimento.',
         'Stessa velocità di lancio, 25 m/s, angoli diversi. Quale angolo dà la <b>gittata</b> massima?'),
       steps: [

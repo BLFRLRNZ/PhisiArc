@@ -53,7 +53,7 @@ export default {
  "Più ripida.": "Steeper.",
  "Più ripida: la pendenza è la velocità.": "Steeper: the slope is the velocity.",
  "Dov’è la lenta?": "Where’s the slow one?",
- "La blu va a 4, l’arancione a 8: il doppio. Fai la tua previsione!": "Blue goes at 4, orange at 8: twice as fast. Make your prediction!",
+  "Due macchine, una veloce il doppio dell’altra. Fai la tua previsione!": "Two cars, one twice as fast as the other. Make your prediction!",
  "Blu a 4 m/s, arancione a 8 m/s. Prevedi prima di guardare.": "Blue at 4 m/s, orange at 8 m/s. Predict before you watch.",
  "All’inizio, a 25 m": "At the start, at 25 m",
  "A metà, a 50 m": "Halfway, at 50 m",

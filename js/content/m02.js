@@ -83,8 +83,8 @@ export default {
       id: 'm02-3', kind: 'prevedi', title: 'Sulla Luna',
       sim: 'fall', params: { h: 1.6, air: false, planet: 'luna', objs: ['piuma', 'martello'] }, controls: [],
       intro: T(
-        'Andiamo sulla <b>Luna</b>! Lì non c’è aria. Un astronauta lascia cadere una piuma e un martello.',
-        'Sulla <b>Luna</b> non c’è atmosfera e g vale solo 1,62 m/s². Un astronauta lascia cadere piuma e martello da circa 1,6 m.',
+        'Andiamo sulla <b>Luna</b>! Lassù un astronauta ha fatto davvero un esperimento famoso.',
+        'Sulla <b>Luna</b>, nel 1971, un astronauta ha fatto davvero un esperimento famoso. Prima prevedi, poi guardalo.',
         'Sulla <b>Luna</b> non c’è aria e la gravità è circa un sesto di quella terrestre. Ecco un esperimento che qualcuno ha fatto davvero.'),
       steps: [
         {

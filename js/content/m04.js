@@ -74,8 +74,8 @@ export default {
       id: 'm04-3', kind: 'prevedi', title: 'La lepre e la tartaruga',
       sim: 'race', params: { v1: 10, a1: 0, v2: 0, a2: 2.5, cars: 2, D: 100, graph: 'xt', names: ['blu', 'arancione'] }, controls: [],
       intro: T(
-        'Sfida! L’auto <b>blu</b> parte subito a 10 m/s e non cambia mai. L’auto <b>arancione</b> parte ferma, ma accelera sempre. Chi vince?',
-        'L’auto blu va a velocità costante, 10 m/s. L’arancione parte da ferma con accelerazione 2,5 m/s². Prevedi chi vince.',
+        'Sfida! Una partenza veloce contro una macchina che non smette mai di <b>accelerare</b>.',
+        'Velocità costante contro accelerazione costante: una gara classica. Prevedi chi vince.',
         'Blu: moto uniforme a 10 m/s. Arancione: parte da ferma con a = 2,5 m/s². Chi vince, e conta la lunghezza della pista?'),
       steps: [
         {

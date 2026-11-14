@@ -63,7 +63,7 @@ export default {
     {
       id: 'm01-3', kind: 'prevedi', title: 'Dov’è la lenta?',
       sim: 'race', params: { v1: 4, v2: 8, cars: 2, D: 100 }, controls: ['v1', 'v2'],
-      intro: T('La blu va a 4, l’arancione a 8: il doppio. Fai la tua previsione!', 'Blu a 4 m/s, arancione a 8 m/s. Prevedi prima di guardare.'),
+      intro: T('Due macchine, una veloce il doppio dell’altra. Fai la tua previsione!', 'Blu a 4 m/s, arancione a 8 m/s. Prevedi prima di guardare.'),
       steps: [
         {
           kind: 'q',

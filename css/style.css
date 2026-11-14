@@ -261,6 +261,7 @@ a.lvl-item:hover { border-color: var(--c); }
 .numrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .numin { font: 500 1.1rem var(--f-num); padding: .5em .8em; border-radius: 12px; border: 1.5px solid var(--edge); background: var(--night); color: var(--chalk); width: 9em; }
 .numin:focus { outline: none; border-color: var(--sky); }
+.numin::placeholder { font: 400 .85rem var(--f-ui); }
 .unit { font-weight: 500; color: var(--muted); font-family: var(--f-num); }
 .order { list-style: decimal inside; padding: 0; margin: 0; display: grid; gap: 6px; }
 .order li { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: var(--surface); border: 1.5px solid var(--edge); border-radius: 12px; padding: .4em .5em .4em .9em; }

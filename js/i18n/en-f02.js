@@ -40,7 +40,7 @@ export default {
  "Nel SI: metro, secondo, chilogrammo.": "In SI: metre, second, kilogram.",
  "Lunghezze in metri, tempi in secondi, masse in chilogrammi.": "Lengths in metres, times in seconds, masses in kilograms.",
  "Quanto è alta la Torre Eiffel?": "How tall is the Eiffel Tower?",
- "Stima! Non serve sapere il numero esatto, basta avvicinarsi.": "Estimate! You don’t need the exact number, just get close.",
+  "Una sfida di stima, come fanno gli scienziati quando non possono misurare tutto.": "An estimation challenge, the way scientists do it when they can’t measure everything.",
  "Una <b>stima</b> è una risposta approssimata: basta indovinare l’<b>ordine di grandezza</b>, cioè la potenza di 10.": "An <b>estimate</b> is an approximate answer: you only need to get the <b>order of magnitude</b> right, that is the power of 10.",
  "Circa 20": "About 20",
  "10¹ m (decine di metri)": "10¹ m (tens of metres)",

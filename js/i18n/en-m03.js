@@ -94,7 +94,7 @@ export default {
  "Più forte lanci, più lontano arriva.": "The harder you throw, the further it goes.",
  "In orizzontale velocità costante (vₓ = v·cos θ); in verticale moto accelerato con g, come la caduta libera.": "Horizontally constant speed (vₓ = v·cos θ); vertically accelerated motion with g, like free fall.",
  "L’angolo migliore": "The best angle",
- "La forza del lancio resta sempre la stessa. Cambiamo solo <b>l’inclinazione</b> del cannone. Quale va più lontano?": "The launch strength always stays the same. We only change the cannon’s <b>tilt</b>. Which goes furthest?",
+  "Una gara di cannoni: vince chi manda la palla più lontano. Indovina prima di sparare!": "A cannon contest: whoever sends the ball furthest wins. Guess before you fire!",
  "Velocità fissa: 25 m/s. Cambia solo l’<b>angolo</b>. Prima la previsione, poi l’esperimento.": "Fixed speed: 25 m/s. Only the <b>angle</b> changes. First the prediction, then the experiment.",
  "Stessa velocità di lancio, 25 m/s, angoli diversi. Quale angolo dà la <b>gittata</b> massima?": "Same launch speed, 25 m/s, different angles. Which angle gives the maximum <b>range</b>?",
  "A <b>45°</b>, a metà strada tra piatto e dritto in su, la palla va più lontano!": "At <b>45°</b>, halfway between flat and straight up, the ball goes furthest!",

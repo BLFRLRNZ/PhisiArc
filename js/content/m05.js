@@ -86,8 +86,8 @@ export default {
       id: 'm05-3', kind: 'prevedi', title: 'Lascia la presa',
       sim: 'circle', params: { r: 6, T: 5, release: true }, controls: [],
       intro: T(
-        'Immagina che il seggiolino si sganci proprio mentre è in cima al giro. Dove andrà? Indovina prima di guardare!',
-        'Il seggiolino si stacca in cima al giro: da quel momento nessuno lo tira più verso il centro. Che traiettoria segue?',
+        'Un piccolo guasto sulla giostra: un seggiolino si sgancia! Indovina prima di guardare.',
+        'Che cosa succede quando la forza centripeta sparisce all’improvviso? Prevedi, poi guarda.',
         'All’istante in cima il vincolo si rompe: nessuna forza centripeta. Che traiettoria segue il seggiolino (vista dall’alto)?'),
       steps: [
         {

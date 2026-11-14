@@ -77,7 +77,7 @@ export default {
     {
       id: 'f02-3', kind: 'prevedi', title: 'Quanto è alta la Torre Eiffel?',
       sim: 'scale', params: { exp: 0 }, controls: ['exp'],
-      intro: T('Stima! Non serve sapere il numero esatto, basta avvicinarsi.', 'Una <b>stima</b> è una risposta approssimata: basta indovinare l’<b>ordine di grandezza</b>, cioè la potenza di 10.'),
+      intro: T('Una sfida di stima, come fanno gli scienziati quando non possono misurare tutto.', 'Una <b>stima</b> è una risposta approssimata: basta indovinare l’<b>ordine di grandezza</b>, cioè la potenza di 10.'),
       steps: [
         {
           kind: 'q',
