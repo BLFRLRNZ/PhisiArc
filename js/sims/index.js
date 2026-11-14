@@ -3,5 +3,6 @@ import { Scale } from './scale.js';
 import { Race } from './race.js';
 import { Fall } from './fall.js';
 import { Cannon } from './cannon.js';
+import { Lab } from './lab.js';
 
-export const SIMS = { pendulum: Pendulum, scale: Scale, race: Race, fall: Fall, cannon: Cannon };
+export const SIMS = { pendulum: Pendulum, scale: Scale, race: Race, fall: Fall, cannon: Cannon, lab: Lab };

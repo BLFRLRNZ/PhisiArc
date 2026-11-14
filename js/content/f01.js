@@ -89,7 +89,7 @@ export default {
           answer: 2,
           predict: [{ L: 0.5 }, { L: 2 }],
           explain: T('Con il filo lungo il pendolo è più lento. Le altalene con le catene lunghe vanno piano!',
-            'Il periodo raddoppia (da circa 1,43 s a 2,86 s) quando il filo diventa 4 volte più lungo: dipende dalla <b>radice quadrata</b> della lunghezza. T = 2π·√(L/g).',
+            'Il periodo raddoppia (da circa 1,43 s a 2,86 s) quando il filo diventa 4 volte più lungo: dipende dalla <b>radice quadrata</b> della lunghezza. T = 2π·√(L/g), dove g = 9,81 m/s² misura quanto tira la gravità (la studierai nella Pista).',
             'Il filo lungo rende il pendolo più lento: 4 volte più lungo, il doppio del tempo. Per questo gli orologi a pendolo si regolano spostando il peso su o giù.'),
         },
       ],

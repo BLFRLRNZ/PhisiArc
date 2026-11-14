@@ -33,6 +33,11 @@ export const PIECE_SVG = {
     P('M4 56l9-8 3 3-9 8z', 'orange', 'orange') + P(C(8, 57, 3), 'chalk', null, 1.6) +
     `<path class="pz-arc" pathLength="1" d="M14 49Q26 4 50 33" stroke="var(--orange)" stroke-width="1.6" stroke-dasharray=".035 .035"/>` +
     `<circle r="2.8" fill="var(--orange)" stroke="none"><animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.65;1" calcMode="linear" path="M14 49Q26 4 50 33"/></circle>`),
+  fontana: svg(
+    P('M4 60h56', 'muted', null, 1.4) + P('M10 50h44l-4 10H14z', 'chalk', 'sky') + P('M29 50V30h6v20', 'chalk') + P('M18 30h28l-4 6H22z', 'chalk', 'sky') +
+    P('M32 30v-8', 'sky', null, 1.6) +
+    `<path class="pz-flow" pathLength="1" d="M32 22Q24 8 16 30M32 22Q40 8 48 30M20 36Q14 40 13 50M44 36Q50 40 51 50" stroke="var(--sky)" stroke-width="1.8"/>` +
+    `<g class="pz-meter">${P('M58 54V30M56 30h4M56 42h3', 'mint', null, 1.4)}</g>` + P('M14 54q4 2 8 0t8 0 8 0 8 0 8 0', 'sky', null, 1.2)),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),

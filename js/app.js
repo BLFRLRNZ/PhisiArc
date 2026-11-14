@@ -66,7 +66,7 @@ function home() {
     if (ready) for (const z of w.zones) for (const l of ZONES[z].levels) { total++; if (S.done[l.id]) got++; }
     const prev = w.requires.map((r) => worldById(r).name).join(' e ');
     const status = done ? 'Completato' : open ? `${got} di ${total} livelli` : !ready ? `In costruzione · ${w.soon.length} zone in arrivo` : `Si apre quando finisci ${prev}`;
-    const diff = Math.ceil((w.n / WORLDS.length) * 5);
+    const diff = w.diff ?? Math.ceil((w.n / WORLDS.length) * 5); // difficoltà decisa sul contenuto, non sul numero
     const body = h('div', { class: 'wbody', title: ready ? '' : w.soon.join(' · ') },
       h('div', { class: 'wnum' }, `Mondo ${String(w.n).padStart(2, '0')} · ${w.field}`),
       h('h3', {}, w.name),

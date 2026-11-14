@@ -41,7 +41,7 @@ export function runLevel(root, level, nav) {
   const canvas = h('canvas', { class: 'sim' });
   const ctrls = h('div', { class: 'ctrls' });
   const launch = h('button', { class: 'btn primary', onclick: () => fire() }, h('span', { html: IC.play }), 'Lancia');
-  const resetB = h('button', { class: 'btn', title: 'Ricomincia', 'aria-label': 'Ricomincia', onclick: () => { sim.stop(); sim.reset(); }, html: IC.reset });
+  const resetB = h('button', { class: 'btn', title: 'Ricomincia', 'aria-label': 'Ricomincia', onclick: () => { sim.stop(); sim.clearHistory?.(); sim.reset(); }, html: IC.reset });
   // Velocità della simulazione: 1×, 2×, 4× (le gare lente non fanno più aspettare).
   const MULS = [1, 2, 4];
   const speedB = h('button', { class: 'btn speed', title: 'Velocità della simulazione', 'aria-label': 'Velocità della simulazione: 1 volta' }, '1×');
@@ -79,7 +79,9 @@ export function runLevel(root, level, nav) {
     ctrlEls = [];
     if (!SimClass) return;
     for (const k of keys) {
-      const def = { ...SimClass.controls[k], ...((level.labels || {})[k] ? { label: level.labels[k] } : {}) };
+      // labels può cambiare solo il nome del controllo (stringa) o anche min, max, passo e unità (oggetto).
+      const ov = (level.labels || {})[k];
+      const def = { ...SimClass.controls[k], ...(typeof ov === 'string' ? { label: ov } : ov || {}) };
       let el, update;
       if (def.type === 'toggle') {
         const b = h('button', { class: 'chip', onclick: () => { sim.set({ [k]: !sim.params[k] }); update(); } });
