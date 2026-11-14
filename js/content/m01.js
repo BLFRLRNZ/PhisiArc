@@ -139,7 +139,7 @@ export default {
           explain: T('Vince l’arancione! Aveva meno strada da fare.', 'Arancione: 50 / 5 = 10 s. Blu: 100 / 8 = 12,5 s. Vince l’arancione.'),
         },
         {
-          kind: 'q', text: T('Il tifoso diceva che vince sempre la macchina più veloce, ma hai appena visto vincere quella più lenta. Allora, chi arriva prima dipende…', 'Il mito diceva che vince sempre il più veloce. Ma il tempo per arrivare è la strada da fare divisa per la velocità. Allora il tempo di arrivo dipende da…'),
+          kind: 'q', text: T('Il tifoso diceva che vince sempre la macchina più veloce. Ma l’arancione, più lenta, ha vinto perché partiva a metà pista. Allora, chi arriva prima dipende…', 'Il mito diceva che vince sempre il più veloce. Ma il tempo per arrivare è la strada da fare divisa per la velocità. Allora il tempo di arrivo dipende da…'),
           options: [T('solo dalla velocità', 'solo dalla velocità'), T('dalla velocità e dalla strada da fare', 'da velocità e distanza'), T('da quanto è grande la macchina', 'dalla massa e dal motore')], answer: 1,
           explain: T('Mito smontato! Conta anche da dove parti.', 'Mito smontato: t = distanza / velocità. Conta anche la distanza.'),
         },

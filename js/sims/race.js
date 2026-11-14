@@ -103,7 +103,11 @@ export class Race extends Sim {
       }
       drawCar(this, x, y, s.col, s.x / 0.35);
       if (s.land >= 0) this.burst(sx(p.D), y, this.clock - s.land, { color: s.col, n: 8, r: 22 });
-      this.text(`${fmt(s.v, 1)} m/s`, x - 15, y - 16, { size: 10, align: 'center', color: s.col });
+      // la velocità accanto all'auto, alla sua altezza: sopra finiva sull'auto dell'altra corsia
+      if (!this.running || s.tEnd != null) {
+        const left = x - L > 70;
+        this.text(`${fmt(s.v, 1)} m/s`, left ? x - 36 : x + 8, y + 2, { size: 10, align: left ? 'right' : 'left', color: s.col });
+      }
     });
     const gx = 46, gy = trackH + 30, gw = W - gx - 20, gh = H - gy - 30, VT = p.graph === 'vt';
     const tOf = (s) => (s.a ? (-s.v0 + Math.sqrt(s.v0 * s.v0 + 2 * s.a * (p.D - s.x0))) / s.a : (p.D - s.x0) / Math.max(1e-6, s.v0));
@@ -156,8 +160,12 @@ export class Race extends Sim {
     g.lineWidth = 1;
     this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), W - 20, gy + 10, { size: 13, align: 'right', weight: 600 });
     if (this.result) {
-      const parts = st.map((s, i) => s.tEnd != null ? `${i18n(p.names[i])}: ${fmt(s.tEnd, 1)} s` : `${i18n(p.names[i])}: ${i18n('non arriva')}`);
-      this.text(parts.join('   '), W - 20, gy + 28, { size: 13, align: 'right', weight: 700, color: this.c('accent2') });
+      // un tempo per riga, ognuno del colore della sua auto, su un fondo che lo stacca dalle linee del grafico
+      const rows = st.map((s, i) => [s.tEnd != null ? `${i18n(p.names[i])}: ${fmt(s.tEnd, 1)} s` : `${i18n(p.names[i])}: ${i18n('non arriva')}`, s.col]);
+      g.font = '700 13px Lexend, system-ui, sans-serif';
+      const bw = Math.max(...rows.map(([r]) => g.measureText(r).width)) + 14;
+      g.save(); g.globalAlpha = 0.85; g.fillStyle = this.c('sim-bg'); g.fillRect(W - 20 - bw + 7, gy + 16, bw, rows.length * 17 + 4); g.restore();
+      rows.forEach(([r, col], i) => this.text(r, W - 20, gy + 30 + i * 17, { size: 13, align: 'right', weight: 700, color: col }));
     }
   }
 }

@@ -30,7 +30,7 @@ export default {
         { kind: 'free', runs: 1, text: T('Premi ▶ Lancia e guarda il pendolo.', 'Lancia il pendolo: il cronometro misura 5 oscillazioni e calcola quanto dura una sola.') },
         {
           kind: 'q',
-          text: T('Immagina di avere un’idea, per esempio: «se spingo forte il pendolo, va più veloce». Non sai ancora se è vera. Come fa uno scienziato a scoprirlo?', 'Hai appena osservato il pendolo. Il <b>metodo scientifico</b> è la strada che porta da quello che vedi a una conoscenza di cui ti puoi fidare, e l’osservazione è solo il primo passo. Che cosa viene subito dopo?', 'Tutti hanno idee su come funziona il mondo, ma non tutte sono scientifiche. Pensa a che cosa si può fare con un’idea scientifica che con una semplice opinione non si può fare. Che cosa le distingue?'),
+          text: T('Immagina di avere un’idea, per esempio: «se spingo forte il pendolo, va più veloce». Non sai ancora se è vera. Come fa uno scienziato a scoprirlo?', 'Il <b>metodo scientifico</b> è la strada che porta da quello che vedi a una conoscenza di cui ti puoi fidare. Il primo passo è osservare, come hai fatto con il pendolo. Che cosa viene subito dopo l’osservazione?', 'Tutti hanno idee su come funziona il mondo, ma non tutte sono scientifiche. Pensa a che cosa si può fare con un’idea scientifica che con una semplice opinione non si può fare. Che cosa le distingue?'),
           options: [
             T('Chiede all’amico più grande e fa come dice lui', 'Cercare la risposta su internet o sul libro', 'Che la sostiene un esperto famoso e stimato'),
             T('Prova a indovinare, poi controlla con una prova', 'Un’ipotesi da controllare con un esperimento', 'Che un esperimento potrebbe smentirla'),

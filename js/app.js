@@ -1,7 +1,7 @@
 // PhysiArc: schermate, navigazione e impostazioni.
 import { h, tx, asDialog } from './util.js';
 import { t as tr, LANG, LANGS, setLang } from './i18n.js';
-import { S, save, exportCode, importCode, resetAll, voiceOn, PLAYERS, switchPlayer, addPlayer, renamePlayer, removePlayer, playerName } from './state.js';
+import { S, save, exportCode, importCode, resetAll, voiceOn, PLAYERS, switchPlayer, addPlayer, renamePlayer, removePlayer, playerName, shownName } from './state.js';
 import { CAST, CAST_LIST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
@@ -60,7 +60,10 @@ function welcome() {
     langChips(),
     h('h2', {}, tr('Come vuoi giocare?')),
     h('p', { class: 'muted' }, tr('Il percorso è lo stesso per tutti; cambia come si spiega. Puoi cambiare quando vuoi dalle impostazioni.')),
-    h('div', { class: 'lens-grid' }, cards));
+    h('div', { class: 'lens-grid' }, cards),
+    // un giocatore nuovo creato per sbaglio: si torna agli altri senza dover prima scegliere la lente
+    PLAYERS.list.length > 1 ? h('div', { class: 'chips who-else' }, h('span', { class: 'small muted' }, tr('Non sei {p}?', { p: playerName() })),
+      PLAYERS.list.filter((p) => p.id !== PLAYERS.active).map((p) => h('button', { class: 'chip', onclick: () => { switchPlayer(p.id); render(); } }, shownName(p.name)))) : null);
 }
 
 // scelta della lingua (la pagina si ricarica nella lingua nuova)
@@ -210,16 +213,16 @@ function grades() {
 // ---------- giocatori: ognuno con i suoi progressi, sullo stesso dispositivo ----------
 function players() {
   const name = h('input', { class: 'numin', type: 'text', maxlength: 20, placeholder: tr('Nome'), 'aria-label': tr('Nome del giocatore') });
-  const chips = PLAYERS.list.map((p) => h('button', { class: 'chip' + (p.id === PLAYERS.active ? ' on' : ''), 'aria-pressed': String(p.id === PLAYERS.active), onclick: () => { switchPlayer(p.id); render(); } }, p.name));
+  const chips = PLAYERS.list.map((p) => h('button', { class: 'chip' + (p.id === PLAYERS.active ? ' on' : ''), 'aria-pressed': String(p.id === PLAYERS.active), onclick: () => { switchPlayer(p.id); render(); } }, shownName(p.name)));
   const del = PLAYERS.list.length > 1 ? h('button', { class: 'btn ghost', onclick: (e) => {
     if (e.currentTarget.dataset.sure) { removePlayer(PLAYERS.active); render(); return; }
     e.currentTarget.dataset.sure = '1'; e.currentTarget.textContent = tr('Sicuro? Si cancellano i progressi di {p}', { p: playerName() });
   } }, tr('Togli {p}', { p: playerName() })) : null;
   return h('div', {},
     h('div', { class: 'chips' }, chips),
-    h('div', { class: 'row' }, name,
+    h('div', { class: 'row left' }, name,
       h('button', { class: 'btn', onclick: () => { addPlayer(name.value); go('#/'); } }, tr('Nuovo giocatore')),
-      h('button', { class: 'btn ghost', onclick: () => { if (name.value.trim()) { renamePlayer(PLAYERS.active, name.value); render(); } } }, tr('Rinomina')),
+      h('button', { class: 'btn', onclick: () => { if (name.value.trim()) { renamePlayer(PLAYERS.active, name.value); render(); } } }, tr('Rinomina')),
       del),
     h('p', { class: 'small muted' }, tr('Ogni giocatore ha le sue stelle, il suo parco e la sua lente.')));
 }
@@ -246,8 +249,9 @@ function settings() {
       h('button', { class: 'chip', onclick: () => playIntro() }, h('span', { html: IC.film }), tr('Guardala ora'))),
     h('h3', {}, tr('Salvataggio')),
     h('p', { class: 'small muted' }, tr('I progressi restano su questo dispositivo. Copia il codice per portarli su un altro: il ripristino unisce i progressi, non li sovrascrive.')),
-    h('div', { class: 'row' },
-      h('button', { class: 'btn', onclick: () => { code.value = exportCode(); code.select(); msg.textContent = tr('Codice pronto: copialo e conservalo.'); } }, tr('Crea codice')),
+    h('div', { class: 'row left' },
+      h('button', { class: 'btn', onclick: () => { code.value = exportCode(); code.select(); msg.textContent = tr('Codice pronto: copialo e conservalo.');
+        navigator.clipboard?.writeText(code.value).then(() => { msg.textContent = tr('Codice copiato: incollalo dove vuoi conservarlo.'); }, () => {}); } }, tr('Crea codice')),
       h('button', { class: 'btn', onclick: () => {
         try {
           const known = { levels: new Set(Object.values(ZONES).flatMap((z) => z.levels.map((l) => l.id))), pieces: new Set(ALL_PIECES.map((p) => p.id)), worlds: new Set(WORLDS.map((w) => w.id)), zones: new Set(Object.keys(ZONES)) };

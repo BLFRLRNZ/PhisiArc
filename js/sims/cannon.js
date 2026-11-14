@@ -148,7 +148,9 @@ export class Cannon extends Sim {
     // a riposo: mira (vettore della velocità di partenza) e arco dell'angolo
     if (!this.running && !this.result) {
       const L = vS * s * 0.55 + 30;
-      this.arrow(X(0), Y(h0) - 4, X(0) + Math.cos(a) * L, Y(h0) - 4 - Math.sin(a) * L, { color: this.c('orange'), dash: [6, 6], label: `${fmt(vS, 1)} m/s` });
+      // se il bersaglio è vicino, la scritta della velocità finirebbe sulla bandierina: tanto è già scritta in alto
+      const tipX = X(0) + Math.cos(a) * L, near = p.target != null && Math.abs(X(p.target) - tipX) < 110;
+      this.arrow(X(0), Y(h0) - 4, tipX, Y(h0) - 4 - Math.sin(a) * L, { color: this.c('orange'), dash: [6, 6], label: near ? undefined : `${fmt(vS, 1)} m/s` });
       g.save(); g.strokeStyle = sun; g.lineWidth = 2;
       g.beginPath(); g.arc(X(0), Y(h0) - 4, 48, -a, 0); g.stroke(); g.restore();
       this.text(`${fmt(ang, 0)}°`, X(0) + 54 * Math.cos(a / 2) + 6, Y(h0) - 4 - 54 * Math.sin(a / 2) + 4, { size: 12, color: sun, mono: true });

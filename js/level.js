@@ -34,7 +34,7 @@ export function runLevel(root, level, nav) {
   const hintBtn = h('button', { class: 'btn ghost hint-btn', onclick: () => showHint() }, h('span', { html: IC.hint }), tr('Aiuto'));
   const dots = h('div', { class: 'dots' });
   const head = h('header', { class: 'lvl-head' }, back, h('div', { class: 'lvl-title' },
-    h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', KIND[level.kind].name), h('strong', {}, level.title)), dots, hintBtn);
+    h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', (level.exam ? tr('Prova') : KIND[level.kind].name)), h('strong', {}, level.title)), dots, hintBtn);
 
   const boss = level.kind === 'boss';
   const who = CAST[boss ? 'vetrino' : world.mascot];

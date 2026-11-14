@@ -117,7 +117,9 @@ export function removePlayer(id) {
   savePlayers();
 }
 
-export const playerName = () => (PLAYERS.list.find((p) => p.id === PLAYERS.active) || {}).name || '';
+// i nomi di partenza ("Giocatore 2") si mostrano nella lingua scelta; quelli scritti dal giocatore restano come sono
+export const shownName = (n) => String(n || '').replace(/^Giocatore (\d+)$/, (_, k) => tr('Giocatore {n}', { n: k }));
+export const playerName = () => shownName((PLAYERS.list.find((p) => p.id === PLAYERS.active) || {}).name);
 
 export function recomputeJoule() {
   S.joule = Object.values(S.done).reduce((a, b) => a + b * 10, 0);

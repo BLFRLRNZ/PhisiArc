@@ -341,4 +341,8 @@ export default {
   "media": "medium",
   "donna": "woman",
   "uomo": "man",
+  'Giocatore {n}': 'Player {n}',
+  'Prova': 'Test',
+  'Non sei {p}?': 'Not {p}?',
+  'Codice copiato: incollalo dove vuoi conservarlo.': 'Code copied: paste it wherever you want to keep it.',
 };

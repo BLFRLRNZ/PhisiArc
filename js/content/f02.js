@@ -138,7 +138,7 @@ export default {
           explain: T('Dieci milioni! Il granello è un gigante per un atomo.', '10⁻³ / 10⁻¹⁰ = 10⁷: dieci milioni di volte.'),
         },
         {
-          kind: 'q', text: T('Il bambino del mito diceva che un atomo è appena un po’ più piccolo di un granello di sabbia, quasi abbastanza grande da vederlo. Dopo quello che hai scoperto, aveva ragione?', 'Il mito dice che un atomo è «quasi visibile», appena più piccolo di un granello. Hai appena confrontato i due ordini di grandezza. Il mito è vero?'),
+          kind: 'q', text: T('Il bambino del mito diceva che un atomo è appena un po’ più piccolo di un granello di sabbia, quasi abbastanza grande da vederlo. Dopo quello che hai scoperto, aveva ragione?', 'Il mito dice che un atomo è «quasi visibile», appena più piccolo di un granello di sabbia. Un granello misura circa 10⁻⁴ m, un atomo circa 10⁻¹⁰ m: confronta i due ordini di grandezza. Il mito è vero?'),
           options: [T('Sì: sono tutti e due piccolissimi', 'Sì, la differenza è piccola'), T('No: l’atomo è molto, molto più piccolo', 'No: 7 ordini di grandezza di differenza'), T('Quasi: l’atomo è la metà', 'Quasi: al massimo un fattore 10 o 20')], answer: 1,
           explain: T('Mito smontato! Gli atomi sono così piccoli che non si vedono nemmeno col microscopio normale.', 'Mito smontato: 7 ordini di grandezza. Se un atomo fosse grande come un granello, il granello sarebbe lungo 10 km!'),
         },

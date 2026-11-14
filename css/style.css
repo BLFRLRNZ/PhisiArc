@@ -114,6 +114,7 @@ h3 { margin: 1.2em 0 .4em; font-size: 1rem; }
 .chip:disabled { opacity: .45; cursor: default; }
 .chips { display: flex; flex-wrap: wrap; gap: .45em; }
 .row { display: flex; gap: .5em; flex-wrap: wrap; justify-content: center; margin-top: .9em; }
+.row.left { justify-content: flex-start; }
 
 /* ---------- barra in alto ---------- */
 .top {
@@ -632,3 +633,4 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .voice-sl output { margin-left: 4px; }
 .voice-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn.sm { padding: .3em .8em; font-size: .85rem; min-height: 0; }
+.who-else { justify-content: center; align-items: center; margin-top: 1.4em; }

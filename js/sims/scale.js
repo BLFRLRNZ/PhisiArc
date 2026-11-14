@@ -138,6 +138,18 @@ export class Scale extends Sim {
     }
   }
 
+  // "10 alla n" con l'esponente scritto piccolo e in alto: il carattere ⁰ in molti caratteri sembra un ° (gradi)
+  pow10(pre, n, x, y, { size, weight, color, align = 'left' }) {
+    const g = this.ctx, fnt = (sz, w) => `${w} ${sz}px Lexend, system-ui, sans-serif`;
+    const es = Math.round(size * 0.62), ex = String(n).replace('-', '−');
+    g.font = fnt(size, weight); const a = g.measureText(pre + '10').width, c = g.measureText(' m').width;
+    g.font = fnt(es, weight); const b = g.measureText(ex).width;
+    const x0 = align === 'right' ? x - (a + b + 1 + c) : x;
+    this.text(pre + '10', x0, y, { size, weight, color, mono: false });
+    this.text(ex, x0 + a + 1, y - size * 0.42, { size: es, weight, color, mono: false });
+    this.text(' m', x0 + a + b + 1, y, { size, weight, color, mono: false });
+  }
+
   draw() {
     const g = this.ctx, W = this.W, H = this.H, t = this.calm ? 0 : this.clock;
     const e = this.sm('e', this.params.exp, 9);
@@ -213,8 +225,8 @@ export class Scale extends Sim {
     this.arrow(bx0 + sb / 2, 24, bx1, 24, { color: this.c('sky'), width: 2, head: 6 });
     this.arrow(bx0 + sb / 2, 24, bx0, 24, { color: this.c('sky'), width: 2, head: 6 });
     const be = Math.round(r + Math.log10(sb / base));
-    this.text(W < 520 ? `≈ 10${sup(be)} m` : `${i18n('questa barra')} ≈ 10${sup(be)} m`, W - 14, 44, { size: 12, align: 'right', weight: 600 });
-    this.text(`10${sup(Math.round(r))} m`, 14, 30, { size: 22, weight: 700, color: this.c('accent2') });
+    this.pow10(W < 520 ? '≈ ' : `${i18n('questa barra')} ≈ `, be, W - 14, 44, { size: 12, align: 'right', weight: 600 });
+    this.pow10('', Math.round(r), 14, 30, { size: 22, weight: 700, color: this.c('accent2') });
     const w = words(r);
     if (w && Math.abs(r - Math.round(r)) < 0.15) this.text(w, 14, 50, { size: W < 520 ? 11.5 : 13, color: this.c('muted') });
   }
