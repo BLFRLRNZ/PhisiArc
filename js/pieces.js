@@ -38,6 +38,12 @@ export const PIECE_SVG = {
     P('M32 30v-8', 'sky', null, 1.6) +
     `<path class="pz-flow" pathLength="1" d="M32 22Q24 8 16 30M32 22Q40 8 48 30M20 36Q14 40 13 50M44 36Q50 40 51 50" stroke="var(--sky)" stroke-width="1.8"/>` +
     `<g class="pz-meter">${P('M58 54V30M56 30h4M56 42h3', 'mint', null, 1.4)}</g>` + P('M14 54q4 2 8 0t8 0 8 0 8 0 8 0', 'sky', null, 1.2)),
+  razzo: svg(
+    P('M2 58h60', 'muted', null, 1.4) + P('M4 50h34q14 0 20-14l4-10', 'chalk') + P('M4 54h34q16 0 24-17', 'chalk', null, 1.2) +
+    P('M10 50v8M20 50v8M30 50v8M44 48l2 9', 'muted', null, 1.2) +
+    `<g class="pz-launch">${P('M8 38h22l5 6v6H8z', 'coral', 'coral')}${P('M12 41h5v4h-5zM21 41h5v4h-5z', 'sky', 'sky', 1.2)}` +
+    `${P('M35 44l5 2-5 2', 'sun', 'sun', 1.4)}${P(C(13, 50, 2.6) + C(29, 50, 2.6), 'chalk', null, 1.4)}` +
+    `${P('M2 40h4M0 44h5M2 48h4', 'sun', null, 1.4)}</g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),

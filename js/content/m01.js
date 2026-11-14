@@ -71,8 +71,22 @@ export default {
           predict: [{ v1: 4, v2: 8 }],
           explain: T('A metà! Va a metà velocità, quindi nello stesso tempo fa metà strada.', 'L’arancione arriva in 100/8 = 12,5 s. In 12,5 s la blu fa 4 × 12,5 = 50 m. Metà velocità, metà strada.'),
         },
+        {
+          // velocità relativa: chi insegue recupera ogni secondo la differenza delle velocità
+          kind: 'q',
+          text: T(
+            'Ora un inseguimento! La blu va a <b>10 m/s</b>, l’arancione a <b>6 m/s</b> ma parte <b>20 metri più avanti</b>. Dopo quanti secondi la blu la raggiunge?',
+            'Inseguimento: blu a 10 m/s da 0 m, arancione a 6 m/s da 20 m. Dopo quanto tempo la blu la raggiunge?',
+            'Blu a 10 m/s da 0 m, arancione a 6 m/s da 20 m. Quando avviene il sorpasso?'),
+          options: [T('Dopo 2 secondi', 'Dopo 2 s', 'Dopo 2 s'), T('Dopo 5 secondi', 'Dopo 5 s', 'Dopo 5 s'), T('Dopo 10 secondi', 'Dopo 10 s', 'Dopo 10 s')], answer: 1,
+          predict: [{ v1: 10, v2: 6, x2: 20 }],
+          explain: T(
+            'Dopo 5 secondi: ogni secondo la blu recupera 4 metri (10 meno 6), e 20 metri si recuperano in 5 secondi. Sul grafico è dove le linee si incrociano.',
+            'Dopo 5 s. Vista dall’arancione, la blu si avvicina a 10 − 6 = 4 m/s: è la <b>velocità relativa</b>. 20 m / 4 m/s = 5 s. Sul grafico, le rette si incrociano lì.',
+            'Dopo 5 s: la <b>velocità relativa</b> è 10 − 6 = 4 m/s, e 20 m / 4 m/s = 5 s, a 50 m dalla partenza. Le rette x(t) si incrociano proprio lì.'),
+        },
       ],
-      hints: [T('Una va il doppio dell’altra.', 'Calcola prima il tempo dell’arancione.')],
+      hints: [T('Una va il doppio dell’altra. Nell’inseguimento: quanti metri recupera la blu ogni secondo?', 'Calcola prima il tempo dell’arancione. Nell’inseguimento usa la differenza delle velocità.')],
       solution: T('A metà, 50 m.'),
     },
     {

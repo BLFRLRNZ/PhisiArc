@@ -1,9 +1,9 @@
-// M02 · Accelerazione e caduta libera. Simulazione: la caduta (piuma, martello, aria, Luna).
+// M02 · La caduta libera (dopo M04, l'accelerazione). Simulazione: la caduta (piuma, martello, aria, Luna).
 import { T, pick, num } from '../util.js';
 
 export default {
   id: 'M02',
-  title: 'Accelerazione e caduta libera',
+  title: 'La caduta libera',
   levels: [
     {
       id: 'm02-1', kind: 'lezione', title: 'La piuma e il martello',

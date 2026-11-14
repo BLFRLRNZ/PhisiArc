@@ -7,6 +7,7 @@ import F03 from './f03.js';
 import M01 from './m01.js';
 import M02 from './m02.js';
 import M03 from './m03.js';
+import M04 from './m04.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -22,7 +23,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04 };
 
 export const WORLDS = [
   {
@@ -38,7 +39,7 @@ export const WORLDS = [
   {
     id: 'pista', n: 2, diff: 2, name: 'La Pista', field: 'Cinematica: il moto', place: 'Il circuito delle gare',
     color: 'var(--orange)', mascot: 'tic',
-    zones: ['M01', 'M02', 'M03'], soon: [], requires: ['laboratorio'],
+    zones: ['M01', 'M04', 'M02', 'M03'], soon: [], requires: ['laboratorio'],
     intro: {
       e: 'Tre, due, uno… via! Sono Tic, il cronometro della Pista. Qui le cose corrono, cadono e volano: io conto metri e secondi. Vediamo chi arriva prima?',
       s: 'Sono Tic, il cronometro della Pista. Qui si studia il moto: velocità, accelerazione e traiettorie. Ogni gara diventa un grafico.',
