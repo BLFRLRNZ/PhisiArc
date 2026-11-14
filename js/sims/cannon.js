@@ -5,9 +5,11 @@ export class Cannon extends Sim {
   static controls = {
     ang: { label: 'Angolo', min: 5, max: 85, step: 1, unit: '°' },
     v: { label: 'Velocità di lancio', min: 5, max: 35, step: 0.5, unit: 'm/s' },
+    air: { label: 'Aria', type: 'toggle' },
   };
 
-  defaults() { return { ang: 45, v: 20, target: null, tw: 3, xmax: 100, g: 9.81, h0: 0, drop: false }; }
+  // air: resistenza dell'aria (proporzionale al quadrato della velocità); k = quanto frena (0,03 ≈ un pallone leggero)
+  defaults() { return { ang: 45, v: 20, target: null, tw: 3, xmax: 100, g: 9.81, h0: 0, drop: false, air: false, k: 0.03 }; }
 
   constructor(cv, p) {
     super(cv, p);
@@ -42,6 +44,11 @@ export class Cannon extends Sim {
   step(dt) {
     const p = this.params;
     const px = this.x, py = this.y;
+    if (p.air) { // l'aria frena in direzione opposta al moto, tanto più quanto più si va veloci
+      const sp = Math.hypot(this.vx, this.vy);
+      this.vx -= p.k * sp * this.vx * dt;
+      this.vy -= p.k * sp * this.vy * dt;
+    }
     this.vy -= p.g * dt;
     this.x += this.vx * dt;
     this.y += this.vy * dt;
@@ -91,6 +98,15 @@ export class Cannon extends Sim {
       g.beginPath(); g.moveTo(fx, oy - 38); g.lineTo(fx + 18, oy - 32 + wav); g.lineTo(fx, oy - 25); g.closePath();
       g.globalAlpha = 0.25; g.fill(); g.globalAlpha = 1; g.stroke(); g.restore();
       this.text(`${fmt(p.target, 0)} m`, fx, oy - 46, { size: 12, align: 'center', weight: 600, mono: true });
+    }
+
+    // con l'aria: la parabola che si avrebbe senza aria, per confronto
+    if (p.air) {
+      const vx0 = p.v * Math.cos(a0), pts = [];
+      for (let i = 0; i <= 60; i++) { const tt = (tf * i) / 60; pts.push([X(vx0 * tt), Y(h0 + vy0 * tt - 0.5 * p.g * tt * tt)]); }
+      this.line(pts, { color: this.c('sky'), width: 1.4, dash: [3, 6], alpha: 0.5 });
+      const [lx, ly] = pts[Math.round(pts.length * 0.62)];
+      this.text('senza aria', lx + 8, ly - 6, { size: 11, color: this.c('sky') });
     }
 
     // lanci precedenti, tratteggiati
@@ -175,7 +191,7 @@ export class Cannon extends Sim {
       }
     }
 
-    this.text(`${fmt(p.ang, 0)}°  ·  ${fmt(p.v, 1)} m/s`, 14, 24, { size: 14, weight: 600 });
+    this.text(`${fmt(p.ang, 0)}°  ·  ${fmt(p.v, 1)} m/s${p.air ? '  ·  con l’aria' : ''}`, 14, 24, { size: 14, weight: 600 });
     if (this.result) {
       const msg = `Atterra a ${fmt(this.result.x, 1)} m` + (p.target != null && this.result.hit ? ' · Centro!' : '');
       g.globalAlpha = easeOut(this.age / 0.4);

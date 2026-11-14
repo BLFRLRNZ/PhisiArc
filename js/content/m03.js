@@ -210,6 +210,52 @@ export default {
         'R = v²·sin(2θ)/g. A 45°: v = √(R·g). Per 50 m → v ≈ 22 m/s; per 70 m → 26 m/s; per 90 m → 29,7 m/s.'),
     },
     {
+      // Resistenza dell'aria: le regole "senza aria" (45°, angoli complementari) smettono di valere.
+      id: 'm03-aria', kind: 'prevedi', title: 'Il mito dei 45 gradi',
+      sim: 'cannon', params: { ang: 45, v: 35, xmax: 60, air: true }, controls: ['ang', 'air'],
+      intro: T(
+        'Finora la palla volava come se l’aria non ci fosse. Ma l’aria c’è, e <b>frena</b>! Accendiamola e vediamo che cosa cambia.',
+        'Finora abbiamo trascurato l’aria. Ora la accendiamo: frena la palla, tanto più quanto più va veloce. La linea tratteggiata azzurra è il volo <b>senza aria</b>, per confronto.',
+        'Tutto quello che abbiamo visto vale nel vuoto. Con l’<b>attrito dell’aria</b>, che cresce con il quadrato della velocità, le regole cambiano. Il 45° resta il migliore?'),
+      steps: [
+        {
+          kind: 'q', clear: true,
+          text: T('Stesso lancio, prima senza aria e poi con l’aria. Che cosa succede?', '45°, 35 m/s: prima nel vuoto, poi con l’aria. Che cosa prevedi?'),
+          options: [T('Con l’aria va più lontano', 'Con l’aria la gittata aumenta'), T('Va lontano uguale', 'La gittata non cambia'), T('Con l’aria va meno lontano', 'Con l’aria la gittata diminuisce')],
+          answer: 2,
+          predict: [{ ang: 45, v: 35, air: false }, { ang: 45, v: 35, air: true }],
+          explain: T(
+            'Molto meno lontano: da circa 125 m a circa 38 m! L’aria frena la palla per tutto il viaggio.',
+            'Da circa 125 m a circa 38 m: la nostra palla è leggera, come un pallone da spiaggia, e l’aria la frena molto. La traiettoria non è più una parabola: la discesa è più ripida della salita.'),
+        },
+        {
+          kind: 'q', only: ['s', 'c'], clear: true,
+          text: T(null, 'Senza aria, 30° e 60° atterravano nello stesso punto. E con l’aria?'),
+          options: ['30° va più lontano', 'Atterrano ancora nello stesso punto', '60° va più lontano'],
+          answer: 0,
+          predict: [{ ang: 30, v: 35, air: true }, { ang: 60, v: 35, air: true }],
+          explain: T(null,
+            'A 30° circa 39 m, a 60° solo 31 m. Il lancio alto resta in aria più a lungo, e più tempo in volo vuol dire più tempo per essere frenato. La regola degli angoli complementari vale solo nel vuoto.',
+            '30° ≈ 39 m, 60° ≈ 31 m: la simmetria sin(2θ) si rompe. Il lancio alto passa più tempo in aria e perde più velocità orizzontale.'),
+        },
+        {
+          kind: 'tune', rounds: 1,
+          text: T('Con l’aria accesa, scegli l’angolo e spara.', 'Velocità fissa, 35 m/s, aria accesa: scegli l’angolo.'),
+          ask: T('Batti il record del parco: almeno <b>38,5 m</b>! A 45° non ci arrivi…', 'Record da battere: <b>38,5 m</b> (a 45° si fanno 38,2 m).'),
+          measure: 'x', goal: '39', tol: 0.6,
+          ok: T('{got:1} m: record battuto! Con l’aria conviene un angolo un po’ più basso di 45°.', '{got:1} m: record! Con l’aria l’angolo migliore è più basso di 45°, qui circa 37°.'),
+          low: T('{got:1} m: non basta. Prova un altro angolo, più basso o più alto.', '{got:1} m: non basta. In che direzione ti conviene spostare l’angolo, rispetto a 45°?'),
+          high: T('{got:1} m: così è facile, l’aria è spenta! Riaccendila e riprova.', '{got:1} m: è il volo nel vuoto. Riaccendi l’aria.'),
+          solve: { ang: '37', air: 'true' },
+        },
+      ],
+      hints: [
+        T('L’aria frena di più quando la palla resta in volo a lungo. Quali lanci restano in aria di più?', 'Il lancio alto passa più tempo in volo: che effetto ha l’aria su di lui?'),
+        T('Prova 35° o 40°.', 'Prova tra 35° e 40°.'),
+      ],
+      solution: T('Con l’aria la palla va meno lontano, e l’angolo migliore è più basso di 45°: circa 37°.', 'Con l’aria: gittata molto minore, angoli complementari non più equivalenti, angolo ottimale sotto i 45° (qui circa 37°).'),
+    },
+    {
       id: 'm03-5', kind: 'ripasso', title: 'Ripasso della Pista',
       intro: T('Ripassiamo tutta la Pista: velocità, cadute e lanci!', 'Ripasso della Pista: moto, caduta libera, proiettili.'),
       steps: [

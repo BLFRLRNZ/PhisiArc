@@ -7,7 +7,7 @@ export const PREREQ = {
   M01: { usa: ['grafici', 'proporzionalità', 'conversioni'], introduce: ['velocità', 'grafico-st', 'kmh', 'velocità-relativa'] },
   M04: { usa: ['velocità', 'grafici'], introduce: ['accelerazione', 'grafico-vt'] },
   M02: { usa: ['accelerazione', 'proporzionalità'], introduce: ['caduta-libera', 'g'] },
-  M03: { usa: ['velocità', 'caduta-libera'], introduce: ['vettori', 'seno-coseno', 'proiettili'] },
+  M03: { usa: ['velocità', 'caduta-libera'], introduce: ['vettori', 'seno-coseno', 'proiettili', 'resistenza-aria'] },
   M05: { usa: ['velocità', 'vettori', 'accelerazione', 'periodo'], introduce: ['moto-circolare', 'centripeta'] },
   D01: { usa: ['accelerazione', 'vettori'], introduce: ['forze', 'newton'] },
   D02: { usa: ['forze', 'vettori', 'seno-coseno'], introduce: ['attrito', 'piano-inclinato'] },
