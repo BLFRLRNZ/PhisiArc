@@ -28,14 +28,14 @@ const fresh = () => ({
   aperti: {},          // mondi e zone già sbloccati: restano aperti anche se si aggiungono zone
   skip: {},            // mondi superati con la prova d'ingresso
   rev: {},             // ripasso a distanza di giorni: domanda -> { scatola, giorno in cui torna } (vedi review.js)
-  introSeen: false,    // l'animazione d'apertura parte da sola solo la prima volta
-  settings: { sound: true, voice: null, intro: false }, // voice null = automatica: accesa per l'Esploratore
+  introSeen: false,
+  settings: { sound: true, voice: null, intro: true }, // intro: animazione a ogni avvio (si spegne dalle impostazioni); voice null = automatica
 });
 
 // ---------- versioni del salvataggio ----------
 // Ogni salvataggio porta il numero di versione (v). Quando cambia la forma dei dati, o si rinomina una zona
 // o un livello, si alza VERSION e si aggiunge qui il passo che porta i vecchi salvataggi alla forma nuova.
-export const VERSION = 2;
+export const VERSION = 3;
 // Livelli o zone rinominati: 'vecchio-id': 'nuovo-id'. Le stelle e gli sblocchi seguono il nuovo nome.
 export const RENAMED = {};
 const MIGRATIONS = {
@@ -43,6 +43,12 @@ const MIGRATIONS = {
   1: (o) => {
     if (o.introSeen === undefined) { o.introSeen = true; o.settings = { ...(o.settings || {}), intro: false }; }
     if (o.settings && !o.settings.voiceChosen) o.settings.voice = null;
+    return o;
+  },
+  // 2 → 3: l'animazione d'apertura torna a partire a ogni avvio, salvo per chi l'ha spenta apposta.
+  2: (o) => {
+    o.settings = o.settings || {};
+    if (!o.settings.introChosen) o.settings.intro = true;
     return o;
   },
 };

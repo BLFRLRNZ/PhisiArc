@@ -209,7 +209,7 @@ function players() {
 function settings() {
   const st = S.settings;
   const lensBtns = Object.entries(LENSES).map(([k, l]) => h('button', { class: 'chip' + (S.lens === k ? ' on' : ''), onclick: () => { S.lens = k; save(); render(); } }, l.name));
-  const tog = (key, label) => h('button', { class: 'chip' + (st[key] !== false ? ' on' : ''), onclick: () => { st[key] = st[key] === false; save(); render(); } }, `${label}: ${st[key] !== false ? tr('sì') : tr('no')}`);
+  const tog = (key, label) => h('button', { class: 'chip' + (st[key] !== false ? ' on' : ''), onclick: () => { st[key] = st[key] === false; st[key + 'Chosen'] = true; save(); render(); } }, `${label}: ${st[key] !== false ? tr('sì') : tr('no')}`);
   const code = h('textarea', { class: 'code', rows: 3, placeholder: tr('Incolla qui un codice di salvataggio') });
   const msg = h('div', { class: 'small muted' });
   return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in narrow' },
