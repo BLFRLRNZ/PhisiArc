@@ -513,6 +513,8 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 @keyframes pz-drop { 0%, 15% { transform: translateY(0); } 55% { transform: translateY(36px); } 65% { transform: translateY(33px); } 100% { transform: translateY(0); } }
 .pz-launch { animation: pz-launch 2.4s cubic-bezier(.6, 0, .9, .6) infinite; }
 @keyframes pz-launch { 0%, 20% { transform: translateX(0); opacity: 1; } 75% { transform: translateX(26px); opacity: 1; } 76% { opacity: 0; } 85% { transform: translateX(0); opacity: 0; } 100% { opacity: 1; } }
+.pz-spin2 { transform-origin: 32px 16px; animation: pz-sway 2.6s ease-in-out infinite; }
+@keyframes pz-sway { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(-1); } }
 .pz-tassel { transform-origin: 52px 44px; animation: pz-tassel 2.2s ease-in-out infinite; }
 @keyframes pz-tassel { 50% { transform: rotate(14deg); } }
 .piece-card.locked .pz, .piece-card.locked .pz * { animation: none; }
