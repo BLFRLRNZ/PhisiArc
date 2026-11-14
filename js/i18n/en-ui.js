@@ -321,5 +321,10 @@ export default {
  "novanta miliardi di anni luce": "ninety billion light years",
  "Zoom (potenza di 10)": "Zoom (power of 10)",
  "Roma": "Rome",
- "4,2 anni luce": "4.2 light years"
+ "4,2 anni luce": "4.2 light years",
+  'Ciao! Sono la voce di PhisiArc. Ti leggo le domande e le risposte: tu prevedi, provi e scopri.': 'Hi! I’m the voice of PhisiArc. I’ll read you the questions and the answers: you predict, try and discover.',
+  'Prova la voce': 'Try the voice',
+  'Le voci con ✦ sono quelle più naturali del tuo dispositivo.': 'The voices marked ✦ are the most natural ones on your device.',
+  'oppure': 'or',
+  'Puoi scegliere:': 'You can choose:',
 };

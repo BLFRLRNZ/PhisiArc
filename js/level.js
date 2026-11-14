@@ -49,8 +49,10 @@ export function runLevel(root, level, nav) {
   const textPane = h('section', { class: 'pane text' }, intro, hintBox, quest, area);
   // testo da leggere ad alta voce: (introduzione,) domanda e, se ci sono, le risposte da scegliere
   const readOut = (withIntro) => {
-    const opts = [...area.querySelectorAll('.opt')].map((b, i) => `${i + 1}: ${b.textContent.trim()}`);
-    return plain((withIntro ? introText + ' ' : '') + quest.innerHTML) + (opts.length ? '. ' + tr('Le risposte.') + ' ' + opts.join('. ') + '.' : '');
+    // le risposte lette come le direbbe una persona: «Puoi scegliere: …; oppure …»
+    const opts = [...area.querySelectorAll('.opt')].map((b) => b.textContent.trim().replace(/[.!]+$/, ''));
+    const list = opts.length > 1 ? opts.slice(0, -1).join('; ') + '; ' + tr('oppure') + ' ' + opts[opts.length - 1] : opts[0];
+    return plain((withIntro ? introText + ' ' : '') + quest.innerHTML) + (opts.length ? ' ' + tr('Puoi scegliere:') + ' ' + list + '.' : '');
   };
 
   const canvas = h('canvas', { class: 'sim' });
