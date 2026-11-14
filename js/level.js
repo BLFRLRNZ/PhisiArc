@@ -200,7 +200,9 @@ export function runLevel(root, level, nav) {
       if (st.set) sim.set(st.set);
       if (sim.clearHistory && st.clear) sim.clearHistory();
     }
-    const locked = !!st.lock || (st.kind === 'q' && st.predict) || st.kind === 'run';
+    // Nel passo "Prepara l'esperimento" si sceglie con i bottoni Uguale/Cambia: cursori e Lancia restano fermi,
+    // così nessuno pensa che la risposta sia spostare il cursore e lanciare.
+    const locked = !!st.lock || (st.kind === 'q' && st.predict) || st.kind === 'run' || st.kind === 'vars';
     const keys = st.controls ?? level.controls ?? [];
     renderControls(locked ? keys : keys, locked);
     setLaunch(!locked);
@@ -358,15 +360,29 @@ export function runLevel(root, level, nav) {
   function stepVars(st) {
     const pick = {};
     const rows = st.vars.map((v) => {
-      const bs = ['Uguale', 'Cambia'].map((lab) => h('button', { class: 'chip', onclick: () => { pick[v.k] = lab; bs.forEach((b) => b.classList.toggle('on', b.textContent === tr(lab))); ok.disabled = st.vars.some((x) => !pick[x.k]); } }, tr(lab)));
-      return h('div', { class: 'varrow' }, h('span', { html: tx(v.t, lens) }), h('span', { class: 'chips' }, ...bs));
+      const row = h('div', { class: 'varrow' });
+      const bs = ['Uguale', 'Cambia'].map((lab) => h('button', { class: 'chip', 'aria-pressed': 'false', onclick: () => {
+        pick[v.k] = lab;
+        bs.forEach((b, i) => { const on = ['Uguale', 'Cambia'][i] === lab; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+        row.classList.remove('missing');
+      } }, tr(lab)));
+      row.append(h('span', { html: tx(v.t, lens) }), h('span', { class: 'chips' }, ...bs));
+      return row;
     });
     const fb = h('div', { class: 'say muted', hidden: true });
-    const ok = h('button', { class: 'btn primary', disabled: true, onclick: () => check() }, tr('Controlla'));
+    // Controlla è sempre premibile: se manca una scelta lo dice e indica la riga, invece di restare grigio senza spiegazioni.
+    const ok = h('button', { class: 'btn primary', onclick: () => check() }, tr('Controlla'));
     autoSol = () => tr('Cambia solo {v}; tutto il resto resta uguale.', { v: tx(st.vars.find((v) => v.k === st.change).t, lens) });
     function check() {
-      const good = st.vars.every((v) => (pick[v.k] === 'Cambia') === (v.k === st.change));
       fb.hidden = false;
+      const miss = st.vars.filter((v) => !pick[v.k]);
+      if (miss.length) {
+        st.vars.forEach((v, i) => rows[i].classList.toggle('missing', !pick[v.k]));
+        fb.className = 'say warn';
+        fb.innerHTML = tr('Per ogni riga scegli <b>Uguale</b> o <b>Cambia</b>. Manca ancora: {v}.', { v: miss.map((v) => tx(v.t, lens)).join(', ') });
+        return;
+      }
+      const good = st.vars.every((v) => (pick[v.k] === 'Cambia') === (v.k === st.change));
       if (good) {
         sfx.ok();
         rows.forEach((r) => r.querySelectorAll('button').forEach((b) => (b.disabled = true)));
@@ -379,7 +395,13 @@ export function runLevel(root, level, nav) {
         errors++;
         fb.className = 'say warn';
         const many = st.vars.filter((v) => pick[v.k] === 'Cambia').length;
-        fb.innerHTML = many === 0 ? tr('Se non cambi niente, l’esperimento non può dirti niente!') : st.wrong ? tx(st.wrong, lens) : tr('Se cambi due cose insieme, poi non sai quale ha fatto la differenza.');
+        const target = st.vars.find((v) => v.k === st.change);
+        // le righe sbagliate si illuminano, così si vede dove correggere
+        st.vars.forEach((v, i) => rows[i].classList.toggle('missing', (pick[v.k] === 'Cambia') !== (v.k === st.change)));
+        fb.innerHTML = many === 0 ? tr('Se non cambi niente, l’esperimento non può dirti niente!')
+          // la cosa da studiare è rimasta ferma: il messaggio lo dice chiaro, invece di parlare di "due cose insieme"
+          : pick[st.change] !== 'Cambia' ? tr('Vuoi studiare <b>{v}</b>: è proprio quella che deve <b>cambiare</b>. Tutto il resto resta <b>uguale</b>.', { v: tx(target.t, lens) })
+          : st.wrong ? tx(st.wrong, lens) : tr('Se cambi due cose insieme, poi non sai quale ha fatto la differenza.');
       }
     }
     area.append(h('div', { class: 'vars' }, ...rows), ok, fb);
