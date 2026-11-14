@@ -148,9 +148,9 @@ export default {
       id: 'f01-6', kind: 'boss', title: 'Il mito del pendolo pesante',
       sim: 'pendulum', params: { L: 1, m: 0.5, a: 20, n: 3 }, controls: ['L', 'm', 'a'],
       intro: T(
-        'Ciao, sono Dubbia. Un signore al parco dice: <i>“Il pendolo pesante va più piano, è ovvio!”</i>. È davvero ovvio? Scopriamolo con un esperimento.',
-        'Sono Dubbia. Un cartello al parco dice: <i>“Più è pesante, più il pendolo è lento”</i>. Sembra sensato. Ma lo hai controllato?',
-        'Sono Dubbia. Molti pensano: <i>“Un pendolo più pesante oscilla più lentamente”</i>. Non ti dico se è vero: chiedi all’esperimento.'),
+        'Ciao, sono Vetrino. Un signore al parco dice: <i>“Il pendolo pesante va più piano, è ovvio!”</i>. È davvero ovvio? Scopriamolo con un esperimento.',
+        'Sono Vetrino. Un cartello al parco dice: <i>“Più è pesante, più il pendolo è lento”</i>. Sembra sensato. Ma lo hai controllato?',
+        'Sono Vetrino. Molti pensano: <i>“Un pendolo più pesante oscilla più lentamente”</i>. Non ti dico se è vero: chiedi all’esperimento.'),
       steps: [
         {
           kind: 'q', text: T('Quale esperimento ci serve?', 'Quale esperimento mette alla prova il mito?'),
@@ -170,7 +170,7 @@ export default {
           explain: T('Mito smontato! Ricorda: anche le cose “ovvie” vanno controllate.', 'Mito smontato: il periodo dipende da L e g, non dalla massa. Le cose “ovvie” si controllano.'),
         },
       ],
-      hints: [T('Dubbia chiede: se cambi due cose insieme, a chi dai la colpa?'), T('Dubbia chiede: i due tempi che hai visto sono davvero diversi?')],
+      hints: [T('Vetrino chiede: se cambi due cose insieme, a chi dai la colpa?'), T('Vetrino chiede: i due tempi che hai visto sono davvero diversi?')],
       solution: T('Stesso filo, pesi diversi: i tempi sono uguali, quindi il mito è falso.'),
     },
   ],

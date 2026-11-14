@@ -99,9 +99,9 @@ export default {
       id: 'm01-6', kind: 'boss', title: 'Il mito del più veloce',
       sim: 'race', params: { v1: 8, v2: 5, x1: 0, x2: 50, cars: 2, D: 100 }, controls: [],
       intro: T(
-        'Sono Dubbia. Al bar del parco dicono: <i>“Chi va più veloce arriva sempre primo!”</i>. Sempre sempre?',
-        'Sono Dubbia. Un tifoso giura: <i>“Vince sempre la macchina più veloce”</i>. Sempre?',
-        'Sono Dubbia. <i>“Il più veloce arriva sempre prima”</i>: sembra logica pura. Ma è tutta la storia?'),
+        'Sono Vetrino. Al bar del parco dicono: <i>“Chi va più veloce arriva sempre primo!”</i>. Sempre sempre?',
+        'Sono Vetrino. Un tifoso giura: <i>“Vince sempre la macchina più veloce”</i>. Sempre?',
+        'Sono Vetrino. <i>“Il più veloce arriva sempre prima”</i>: sembra logica pura. Ma è tutta la storia?'),
       steps: [
         {
           kind: 'q', text: T('La blu va a 8, l’arancione a 5. Ma l’arancione parte <b>a metà pista</b>. Chi arriva prima?', 'Blu a 8 m/s da 0 m; arancione a 5 m/s ma parte da <b>50 m</b>. Chi arriva prima ai 100 m?'),
@@ -115,7 +115,7 @@ export default {
           explain: T('Mito smontato! Conta anche da dove parti.', 'Mito smontato: t = distanza / velocità. Conta anche la distanza.'),
         },
       ],
-      hints: [T('Dubbia chiede: quanta strada deve fare ognuna?'), T('Dubbia chiede: quanto tempo ci mette ognuna a fare la sua strada?')],
+      hints: [T('Vetrino chiede: quanta strada deve fare ognuna?'), T('Vetrino chiede: quanto tempo ci mette ognuna a fare la sua strada?')],
       solution: T('L’arancione arriva prima (10 s contro 12,5 s): conta anche la distanza.'),
     },
   ],

@@ -178,9 +178,9 @@ export default {
       id: 'm03-6', kind: 'boss', title: 'Il mito del tiro alto',
       sim: 'cannon', params: { ang: 45, v: 25, xmax: 100 }, controls: ['ang', 'v'],
       intro: T(
-        'Sono Dubbia. Un ragazzo al parco dice: <i>“Per tirare lontanissimo devi tirare il più in alto possibile!”</i>. Sarà vero?',
-        'Sono Dubbia. Un giocatore giura: <i>“Per tirare più lontano bisogna tirare il più in alto possibile”</i>. Sembra sensato: più sta in aria, più va lontano. O no?',
-        'Sono Dubbia. <i>“Per tirare più lontano bisogna tirare il più in alto possibile”</i>: lo dicono in tanti. Io non ti dico niente: chiedi all’esperimento.'),
+        'Sono Vetrino. Un ragazzo al parco dice: <i>“Per tirare lontanissimo devi tirare il più in alto possibile!”</i>. Sarà vero?',
+        'Sono Vetrino. Un giocatore giura: <i>“Per tirare più lontano bisogna tirare il più in alto possibile”</i>. Sembra sensato: più sta in aria, più va lontano. O no?',
+        'Sono Vetrino. <i>“Per tirare più lontano bisogna tirare il più in alto possibile”</i>: lo dicono in tanti. Io non ti dico niente: chiedi all’esperimento.'),
       steps: [
         {
           kind: 'q', text: T('Quale esperimento ci serve?', 'Quale esperimento mette alla prova il mito?'),
@@ -215,7 +215,7 @@ export default {
           explain: T('Mito smontato! Il tiro migliore è a metà strada, a 45°.', 'Mito smontato: R = v²·sin(2θ)/g. A 90° la gittata è zero; il massimo è a 45°.'),
         },
       ],
-      hints: [T('Dubbia chiede: se cambi angolo e forza insieme, a chi dai il merito?'), T('Dubbia chiede: che succede se spari dritto in su, a 90°?', 'Dubbia chiede: quanto avanza in orizzontale una palla sparata quasi in verticale?')],
+      hints: [T('Vetrino chiede: se cambi angolo e forza insieme, a chi dai il merito?'), T('Vetrino chiede: che succede se spari dritto in su, a 90°?', 'Vetrino chiede: quanto avanza in orizzontale una palla sparata quasi in verticale?')],
       solution: T('Stessa forza, 80° contro 45°: vince 45° (64 m contro 22 m). Il mito è falso.', 'A 25 m/s: 80° → 22 m, 45° → 64 m. La gittata è massima a 45°: il mito è falso.'),
     },
   ],

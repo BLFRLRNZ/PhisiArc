@@ -1,9 +1,9 @@
 /* PhisiArc: funziona offline dopo la prima visita.
    I file dell'app si chiedono prima alla rete (così le novità arrivano subito) e, se manca, si usa la copia salvata. */
-const CACHE = 'phisiarc-v1';
+const CACHE = 'phisiarc-v2';
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './css/style.css',
-  './js/app.js', './js/util.js', './js/state.js', './js/audio.js', './js/mascot.js', './js/level.js',
+  './js/app.js', './js/util.js', './js/state.js', './js/audio.js', './js/cast.js', './js/icons.js', './js/intro.js', './js/level.js',
   './js/sims/index.js', './js/sims/base.js', './js/sims/pendulum.js', './js/sims/scale.js', './js/sims/race.js', './js/sims/fall.js', './js/sims/cannon.js',
   './js/content/index.js', './js/content/f01.js', './js/content/f02.js', './js/content/m01.js', './js/content/m02.js', './js/content/m03.js',
 ];

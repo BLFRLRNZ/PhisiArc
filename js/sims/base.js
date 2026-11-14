@@ -88,13 +88,28 @@ export class Sim {
     return getComputedStyle(document.documentElement).getPropertyValue('--' + name).trim() || '#888';
   }
 
-  text(str, x, y, { size = 14, color, align = 'left', weight = 500, base = 'alphabetic' } = {}) {
+  // Testo: Lexend per le parole, IBM Plex Mono per i numeri (mono: true).
+  text(str, x, y, { size = 14, color, align = 'left', weight = 500, base = 'alphabetic', mono } = {}) {
     const g = this.ctx;
-    g.font = `${weight} ${size}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+    if (mono == null) mono = /^[\s\d.,:+−\-°%/=]*[\d][\s\d.,:+−\-°%/=a-zA-Z²]*$/.test(String(str)) && String(str).length < 14;
+    g.font = mono ? `${Math.min(weight, 500)} ${size}px "IBM Plex Mono", ui-monospace, monospace` : `${weight} ${size}px Lexend, system-ui, -apple-system, "Segoe UI", sans-serif`;
     g.fillStyle = color || this.c('ink');
     g.textAlign = align;
     g.textBaseline = base;
     g.fillText(str, x, y);
+  }
+
+  // Il terreno come in una lavagna: una linea di gesso con un tratteggio sotto.
+  ground(y, { color, x0 = 0, x1 = this.W } = {}) {
+    const g = this.ctx;
+    g.save();
+    g.strokeStyle = this.c('edge'); g.lineWidth = 1.5; g.lineCap = 'round';
+    g.beginPath();
+    for (let x = x0 + 10; x < x1 + 10; x += 16) { g.moveTo(x, y + 4); g.lineTo(x - 8, y + 12); }
+    g.stroke();
+    g.strokeStyle = color || this.c('ink'); g.lineWidth = 2.5;
+    g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke();
+    g.restore();
   }
 
   clear() {

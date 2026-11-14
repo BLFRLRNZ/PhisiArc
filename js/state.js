@@ -9,7 +9,7 @@ const fresh = () => ({
   joule: 0,
   park: [],            // pezzi del parco costruiti
   seen: {},            // scene d'apertura già viste
-  settings: { sound: true, voice: false, theme: 'auto' },
+  settings: { sound: true, voice: false, intro: true },
 });
 
 function load() {
