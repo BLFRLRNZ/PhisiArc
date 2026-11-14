@@ -41,8 +41,15 @@ export function runLevel(root, level, nav) {
   const ctrls = h('div', { class: 'ctrls' });
   const launch = h('button', { class: 'btn primary', onclick: () => fire() }, h('span', { html: IC.play }), 'Lancia');
   const resetB = h('button', { class: 'btn', title: 'Ricomincia', 'aria-label': 'Ricomincia', onclick: () => { sim.stop(); sim.reset(); }, html: IC.reset });
-  const simPane = SimClass ? h('section', { class: 'pane simpane' }, h('div', { class: 'canvas-wrap' + (SimClass.tall ? ' tall' : '') }, canvas), ctrls,
-    SimClass.staticSim ? null : h('div', { class: 'launch' }, launch, resetB)) : null;
+  // La simulazione, il tasto Lancia e i cursori stanno insieme in un'unica scheda: si lancia senza scorrere la pagina.
+  const canvasWrap = h('div', { class: 'canvas-wrap' + (SimClass && SimClass.tall ? ' tall' : '') }, canvas);
+  const simPane = SimClass ? h('section', { class: 'pane simpane' }, h('div', { class: 'simcard' },
+    canvasWrap, SimClass.staticSim ? null : h('div', { class: 'launch' }, launch, resetB), ctrls)) : null;
+  // Se la simulazione non si vede tutta (telefono), la si porta in vista prima di partire.
+  const showSim = () => {
+    const r = canvasWrap.getBoundingClientRect(), top = 70;
+    if (r.top < top || r.bottom > window.innerHeight) window.scrollBy({ top: r.top - top, behavior: 'smooth' });
+  };
 
   root.style.setProperty('--c', world.color);
   root.replaceChildren(head, h('main', { class: 'lvl' + (SimClass ? '' : ' nosim') }, textPane, simPane));
@@ -106,12 +113,14 @@ export function runLevel(root, level, nav) {
 
   function fire() {
     if (busy || !sim) return;
+    showSim();
     sim.start();
   }
 
   async function runSeq(seq) {
     busy = true;
     setLaunch(false);
+    showSim();
     for (const p of seq) {
       sim.stop();
       if (SimClass.staticSim) {
