@@ -3,6 +3,7 @@ import { h, tx } from './util.js';
 import { S, save, exportCode, importCode, resetAll } from './state.js';
 import { CAST, CAST_LIST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
+import { pieceSVG } from './pieces.js';
 import { playIntro } from './intro.js';
 import { runLevel } from './level.js';
 import {
@@ -133,7 +134,7 @@ function park() {
   const items = ALL_PIECES.map((p) => {
     const has = S.park.includes(p.id);
     return h('div', { class: 'piece-card' + (has ? '' : ' locked') },
-      h('div', { class: 'pi big' }, has ? p.icon : '?'), h('h3', {}, has ? p.name : 'Da costruire'), h('p', { class: 'small muted' }, has ? p.desc : 'Lo costruisci in un livello Costruisci.'));
+      has ? h('div', { class: 'pi big', html: pieceSVG(p.id) }) : h('div', { class: 'pi big' }, '?'), h('h3', {}, has ? p.name : 'Da costruire'), h('p', { class: 'small muted' }, has ? p.desc : 'Lo costruisci in un livello Costruisci.'));
   });
   return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in' },
     h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), 'I mondi'),

@@ -102,7 +102,7 @@ export default {
         'Cominciamo a costruire il tuo <b>parco divertimenti</b>! Il primo gioco è un’altalena. Il custode vuole che ogni andata e ritorno duri un tempo preciso.',
         'Primo pezzo del tuo <b>parco divertimenti</b>: un’altalena (un pendolo) con un periodo preciso. Usa quello che hai scoperto sulle variabili.',
         'Primo pezzo del tuo <b>parco divertimenti</b>: un’altalena con un ritmo preciso. Scegli la variabile giusta.'),
-      piece: { id: 'altalena', icon: '🎠', name: 'L’altalena', desc: 'Oscilla con il ritmo che hai scelto tu, regolando la lunghezza.' },
+      piece: { id: 'altalena', name: 'L’altalena', desc: 'Oscilla con il ritmo che hai scelto tu, regolando la lunghezza.' },
       steps: [
         {
           kind: 'tune', rounds: 2,

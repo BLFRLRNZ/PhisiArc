@@ -112,7 +112,7 @@ export default {
         'Nuovo gioco per il parco: il <b>tiro al bersaglio</b>! Colpisci la bandierina con il cannone.',
         'Nuovo pezzo del parco: il <b>tiro al bersaglio</b>. Scegli angolo e velocità per centrare la bandierina (devi atterrare entro 3 m dal centro).',
         'Nuovo pezzo del parco: il <b>tiro al bersaglio</b>. Usa quello che sai sulla gittata per fare centro.'),
-      piece: { id: 'bersaglio', icon: '🎯', name: 'Il tiro al bersaglio', desc: 'Un cannone che fa centro alla distanza che vuoi, grazie alla regola della gittata.' },
+      piece: { id: 'bersaglio', name: 'Il tiro al bersaglio', desc: 'Un cannone che fa centro alla distanza che vuoi, grazie alla regola della gittata.' },
       steps: [
         {
           kind: 'tune', rounds: 2,
@@ -123,7 +123,7 @@ export default {
             return { d, set: { target: d, tw }, text: `Il bersaglio è a <b>${d} metri</b>.` };
           },
           check: (res, tg, lens) => {
-            if (res.hit) return { ok: true, msg: `Atterrata a ${num(res.x, 1)} m. Centro! 🎯` };
+            if (res.hit) return { ok: true, msg: `Atterrata a ${num(res.x, 1)} m. Centro!` };
             const d = res.x - tg.d;
             return {
               ok: false,

@@ -65,7 +65,13 @@ export class Race extends Sim {
     g.setLineDash([6, 4]);
     g.beginPath(); g.moveTo(R, 10); g.lineTo(R, trackH); g.stroke();
     g.setLineDash([]);
-    this.text('🏁', R + 2, 26, { size: 14 });
+    { // bandiera a scacchi disegnata a linee, che sventola
+      const wv = this.calm ? 0 : this.clock * 5, fx = R + 3;
+      this.line([[fx, 30], [fx, 8]], { color: this.c('ink'), width: 2 });
+      const P = (u, v) => [fx + u * 16, 8 + v * 10 + Math.sin(wv + u * 3) * 1.6 * u];
+      this.line([P(0, 0), P(0.5, 0), P(1, 0), P(1, 1), P(0.5, 1), P(0, 1)], { color: this.c('ink'), width: 1.6 });
+      for (const [a, b] of [[0, 0], [0.5, 0.5]]) { const q = [P(a, b), P(a + 0.5, b), P(a + 0.5, b + 0.5), P(a, b + 0.5)]; g.save(); g.fillStyle = this.c('ink'); g.beginPath(); q.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.fill(); g.restore(); }
+    }
     this.text(`${p.D} m`, R, trackH + 14, { size: 11, align: 'center', color: this.c('muted') });
     this.text('0', L, trackH + 14, { size: 11, align: 'center', color: this.c('muted') });
     st.forEach((s, i) => {

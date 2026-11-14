@@ -112,7 +112,7 @@ export default {
         'Nuovo gioco per il parco: la <b>torre a caduta libera</b>! La cabina sale e poi si lascia cadere. Il custode vuole che la caduta duri un tempo preciso.',
         'Nuovo pezzo del parco: la <b>torre a caduta libera</b>. Scegli da che altezza far cadere la cabina perché la caduta duri il tempo richiesto (i freni sono alla base, l’aria qui la trascuriamo).',
         'Nuovo pezzo del parco: la <b>torre a caduta libera</b>, come quelle dei grandi parchi. Trova l’altezza giusta per la durata richiesta.'),
-      piece: { id: 'torre', icon: '🗼', name: 'La torre a caduta libera', desc: 'La cabina precipita per il tempo esatto che hai calcolato, poi frena alla base.' },
+      piece: { id: 'torre', name: 'La torre a caduta libera', desc: 'La cabina precipita per il tempo esatto che hai calcolato, poi frena alla base.' },
       steps: [
         {
           kind: 'tune', rounds: 2,

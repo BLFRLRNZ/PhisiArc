@@ -67,7 +67,7 @@ export default {
       id: 'm01-4', kind: 'costruisci', title: 'Il trenino del parco',
       sim: 'race', params: { v1: 5, cars: 1, D: 60, names: ['trenino'] }, controls: ['v1'], labels: { v1: 'Velocità del trenino' },
       intro: T('Il parco ha un <b>trenino</b> lungo un binario di 60 metri. Il custode vuole che il viaggio duri un tempo preciso.', 'Nuovo pezzo del parco: un trenino su un binario di <b>60 m</b>. Scegli la velocità per un viaggio della durata richiesta.'),
-      piece: { id: 'trenino', icon: '🚂', name: 'Il trenino', desc: 'Percorre i suoi 60 metri nel tempo che hai calcolato.' },
+      piece: { id: 'trenino', name: 'Il trenino', desc: 'Percorre i suoi 60 metri nel tempo che hai calcolato.' },
       steps: [
         {
           kind: 'tune', rounds: 2,

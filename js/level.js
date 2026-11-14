@@ -5,6 +5,7 @@ import { SIMS } from './sims/index.js';
 import { sfx, speak, stopSpeaking } from './audio.js';
 import { CAST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
+import { pieceSVG } from './pieces.js';
 import { starsSVG, confetti, countUp, CHECK } from './fx.js';
 import { KIND, worldOf, zoneOf, nextLevel, gradeNow } from './content/index.js';
 
@@ -384,8 +385,8 @@ export function runLevel(root, level, nav) {
       h('h2', {}, boss ? 'Mito smontato!' : 'Livello superato!'),
       gained ? h('p', { class: 'gain' }, h('span', { class: 'sun', html: IC.bolt }), joule) : h('p', {}, 'Nessun joule in più: avevi già fatto così bene.'),
       errors || hints || solution ? h('p', { class: 'muted small' }, stars < 3 ? 'Rigiocalo senza aiuti e senza errori per avere ★★★.' : '') : null,
-      newPiece ? h('div', { class: 'piece' }, h('span', { class: 'pi' }, newPiece.icon), h('div', {}, h('b', {}, 'Nuovo pezzo per il tuo parco: ', newPiece.name), h('div', { class: 'small' }, newPiece.desc))) : null,
-      after.name !== before.name ? h('div', { class: 'piece' }, h('span', { class: 'pi' }, '🎓'), h('div', {}, h('b', {}, 'Nuovo grado: ', after.name), h('div', { class: 'small' }, after.desc))) : null,
+      newPiece ? h('div', { class: 'piece' }, h('span', { class: 'pi', html: pieceSVG(newPiece.id) }), h('div', {}, h('b', {}, 'Nuovo pezzo per il tuo parco: ', newPiece.name), h('div', { class: 'small' }, newPiece.desc))) : null,
+      after.name !== before.name ? h('div', { class: 'piece' }, h('span', { class: 'pi', html: pieceSVG('grado') }), h('div', {}, h('b', {}, 'Nuovo grado: ', after.name), h('div', { class: 'small' }, after.desc))) : null,
       h('div', { class: 'row' },
         h('button', { class: 'btn', onclick: () => nav('#/livello/' + level.id) }, h('span', { html: IC.reset }), 'Rigioca'),
         h('button', { class: 'btn', onclick: () => leave() }, 'Mappa'),

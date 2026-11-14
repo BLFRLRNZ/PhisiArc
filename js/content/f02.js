@@ -93,7 +93,7 @@ export default {
     {
       id: 'f02-4', kind: 'costruisci', title: 'I cartelli del parco',
       intro: T('Il parco ha bisogno di cartelli con le misure giuste. Aiuta il custode con i conti!', 'Il parco ha bisogno di cartelli con le misure nel SI. Converti le unità.'),
-      piece: { id: 'cartelli', icon: '🪧', name: 'I cartelli', desc: 'Altezze minime e durate dei giri scritte nelle unità giuste.' },
+      piece: { id: 'cartelli', name: 'I cartelli', desc: 'Altezze minime e durate dei giri scritte nelle unità giuste.' },
       steps: [{ kind: 'num', rounds: 3, text: T('Calcola e scrivi il numero.', 'Converti e scrivi solo il numero (la virgola va bene).'), gen: conv }],
       hints: [T('Fai una moltiplicazione.', 'Kilo = 1000, centi = 1/100, milli = 1/1000. Un minuto = 60 s.'), T('Scrivi solo il numero, senza unità.', 'Per passare da km a m moltiplichi per 1000; da cm a m dividi per 100; da g a kg dividi per 1000.')],
       solution: T('Moltiplica il numero dei pezzi per quanto è lungo (o dura) ognuno.', 'km→m ×1000 · cm→m ÷100 · g→kg ÷1000 · minuti→s ×60.'),
@@ -105,8 +105,8 @@ export default {
         {
           kind: 'order', text: T('Metti in ordine, dal più <b>piccolo</b> al più <b>grande</b>.', 'Ordina dal più piccolo al più grande.'),
           items: [
-            { t: T('🐜 formica'), v: 4e-3 }, { t: T('🧍 persona'), v: 1.7 }, { t: T('🐋 balena'), v: 25 },
-            { t: T('🗼 Torre Eiffel'), v: 330 }, { t: T('🏔️ Everest'), v: 8848 }, { t: T('🦠 virus', '🦠 virus (10⁻⁷ m)'), v: 1e-7 },
+            { t: T('formica'), v: 4e-3 }, { t: T('persona'), v: 1.7 }, { t: T('balena'), v: 25 },
+            { t: T('Torre Eiffel'), v: 330 }, { t: T('Everest'), v: 8848 }, { t: T('virus', 'virus (10⁻⁷ m)'), v: 1e-7 },
           ],
           explain: T('Perfetto! Dal virus all’Everest.', 'Perfetto: 10⁻⁷, 10⁻³, 10⁰, 10¹, 10², 10⁴ m.'),
         },

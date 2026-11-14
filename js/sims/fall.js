@@ -2,13 +2,13 @@
 import { Sim, fmt, easeOut } from './base.js';
 
 export const OBJ = {
-  piuma: { icon: '🪶', name: 'piuma', vt: 0.6 },
-  martello: { icon: '🔨', name: 'martello', vt: 45 },
-  pallina: { icon: '🏓', name: 'pallina da ping pong', vt: 9 },
-  boccia: { icon: '⚫', name: 'boccia di ferro', vt: 70 },
-  foglio: { icon: '📄', name: 'foglio aperto', vt: 1.2 },
-  sasso: { icon: '🪨', name: 'sasso', vt: 40 },
-  carrello: { icon: '🛗', name: 'cabina della torre', vt: 200 },
+  piuma: { col: 'chalk', name: 'piuma', vt: 0.6 },
+  martello: { col: 'orange', name: 'martello', vt: 45 },
+  pallina: { col: 'sun', name: 'pallina da ping pong', vt: 9 },
+  boccia: { col: 'muted', name: 'boccia di ferro', vt: 70 },
+  foglio: { col: 'chalk', name: 'foglio aperto', vt: 1.2 },
+  sasso: { col: 'muted', name: 'sasso', vt: 40 },
+  carrello: { col: 'coral', name: 'cabina della torre', vt: 200 },
 };
 
 export const G = { terra: 9.81, luna: 1.62 };
@@ -63,12 +63,32 @@ export class Fall extends Sim {
       this.text(`${fmt(p.h * (1 - i / 4), 1)} m`, 50, i === 4 ? y - 6 : y + 4, { size: 10, color: this.c('muted') });
     }
     const n = this.state.length;
-    const emoji = (icon, x, y, alpha = 1) => {
-      g.save(); g.globalAlpha = alpha;
-      g.font = '30px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
-      g.textAlign = 'center'; g.textBaseline = 'bottom';
-      g.fillText(icon, x, y);
-      g.restore();
+    // Gli oggetti disegnati a linee, alti circa 30 px, appoggiati sulla y data (la base).
+    const draw = (o, x, y, alpha = 1) => {
+      const col = this.c(o.col), w = 2.2, cy = y - 15, t = this.calm ? 0 : this.clock;
+      const L = (pts, a = 1) => this.line(pts.map(([px, py]) => [x + px, cy + py]), { color: col, width: w, alpha: alpha * a });
+      if (o.key === 'piuma') {
+        const sw = o.v > 0.05 && o.tEnd == null ? Math.sin(t * 6) * 0.35 : 0, c = Math.cos(sw), s = Math.sin(sw);
+        const R = (pts) => pts.map(([px, py]) => [px * c - py * s, px * s + py * c]);
+        L(R([[0, 14], [0, -14]]));
+        for (let i = -10; i <= 8; i += 3) { const k = 1 - Math.abs(i + 1) / 13; L(R([[0, i], [-9 * k, i - 5]]), 0.8); L(R([[0, i], [9 * k, i - 5]]), 0.8); }
+      } else if (o.key === 'martello') {
+        L([[0, -14], [0, 6]]); L([[-12, 6], [12, 6], [12, 14], [-8, 14], [-12, 10], [-12, 6]]);
+      } else if (o.key === 'pallina') {
+        this.ball(x, cy + 6, 8, { color: col, alpha });
+      } else if (o.key === 'boccia') {
+        this.ball(x, cy + 2, 12, { color: this.c('chalk'), fill: 0.35, alpha });
+      } else if (o.key === 'foglio') {
+        const fl = o.v > 0.05 && o.tEnd == null ? Math.sin(t * 5) * 4 : 0;
+        L([[-13, -4 + fl], [13, -4 - fl], [13, 8 - fl], [-13, 8 + fl], [-13, -4 + fl]]);
+        L([[-8, 0 + fl * 0.6], [8, 0 - fl * 0.6]], 0.5); L([[-8, 4 + fl * 0.6], [5, 4 - fl * 0.4]], 0.5);
+      } else if (o.key === 'sasso') {
+        L([[-13, 12], [-12, 2], [-5, -6], [5, -5], [12, 2], [13, 12], [-13, 12]]); L([[-5, -6], [-1, 4], [5, -5]], 0.45);
+      } else {
+        L([[-12, -14], [12, -14], [12, 14], [-12, 14], [-12, -14]]); L([[-12, 2], [12, 2]], 0.6);
+        for (const sx of [-6, 0, 6]) L([[sx, 2], [sx, 14]], 0.4);
+        L([[-6, -14], [-6, -20]], 0.7); L([[6, -14], [6, -20]], 0.7);
+      }
     };
     const vmax = Math.sqrt(2 * G[p.planet] * p.h), kv = ((ground - top) * 0.2) / vmax;
     this.state.forEach((s, i) => {
@@ -79,14 +99,14 @@ export class Fall extends Sim {
       const gh = s.ghosts.filter((_, j) => (j + 1) % stride === 0);
       gh.forEach((y, j) => {
         const Y = sy(y);
-        emoji(s.icon, x, Y, 0.22);
+        draw(s, x, Y, 0.22);
         this.line([[x + 22, Y - 15], [x + 32, Y - 15]], { color: this.c('sky'), width: 2, alpha: 0.7 });
         if (j > 0) {
           const Yp = sy(gh[j - 1]);
           this.line([[x + 27, Yp - 15], [x + 27, Y - 15]], { color: this.c('sky'), width: 1, alpha: 0.35, dash: [2, 3] });
         }
       });
-      emoji(s.icon, x, sy(s.y));
+      draw(s, x, sy(s.y));
       if (this.running && s.tEnd == null && s.v > 0.05) {
         this.arrow(x - 24, sy(s.y) - 15, x - 24, sy(s.y) - 15 + s.v * kv, { color: this.c('orange'), label: 'v' });
       }
