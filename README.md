@@ -6,8 +6,8 @@ Si gioca nel browser, si installa come app e funziona anche offline.
 
 ## Cosa c'è in questa prima versione
 
-- **Due mondi giocabili** su dodici: **Il Laboratorio** (F01 Il metodo scientifico, F02 Grandezze e misure) e **La Pista** (M01 Posizione e velocità, M02 Accelerazione e caduta libera, M03 Proiettili). Gli altri dieci mondi sono già sulla mappa, con gli argomenti che arriveranno.
-- **Un percorso solo**: i dodici mondi sono in fila dal più semplice al più difficile, uno per campo della fisica, e ognuno si apre quando finisci il precedente. Quello che hai già aperto resta aperto anche quando arrivano zone nuove. Il piano completo è in [docs/percorso.md](docs/percorso.md).
+- **Due mondi giocabili** su dodici: **Il Laboratorio** (F01 Il metodo scientifico, F02 Grandezze e misure, F03 Grafici e proporzionalità) e **La Pista** (M01 Posizione e velocità, M04 L'accelerazione, M02 La caduta libera, M03 Vettori e proiettili, M05 Il moto circolare). Gli altri dieci mondi sono già sulla mappa, con gli argomenti che arriveranno.
+- **Un percorso solo**: i dodici mondi sono in fila dal più semplice al più difficile, uno per campo della fisica, e ognuno si apre quando finisci il precedente. Quello che hai già aperto resta aperto anche quando arrivano zone nuove. Chi conosce già un mondo può saltarlo con la **prova d'ingresso**. Il piano completo è in [docs/percorso.md](docs/percorso.md).
 - **Il ritmo delle zone**: per ora ogni zona ha due **Lezioni**, un **Prevedi** (scegli cosa succederà, poi guardi l'esperimento), un **Costruisci**, un **Ripasso** e il **Boss**; dai prossimi mondi il ritmo cambierà da zona a zona.
 - **Tre lenti per età** sullo stesso percorso, scelte all'inizio e cambiabili quando vuoi:
   - **Esploratore** (6-11 anni): niente formule, poche parole, una voce che legge (🔊).
@@ -41,7 +41,9 @@ js/sims/              le simulazioni, una per file, su canvas
 js/cast.js, pieces.js personaggi e pezzi del parco, disegnati a linee (SVG)
 js/content/index.js   i 12 mondi, i gradi e le regole di sblocco
 js/content/f01.js …   i testi e i livelli di ogni zona, nelle tre lenti
+js/content/prereq.js  la mappa dei prerequisiti: che idee usa e introduce ogni zona
+tools/check-prereq.mjs  controlla che nessuna idea sia usata prima di essere spiegata
 sw.js, manifest       app installabile e offline
 ```
 
-Per aggiungere una zona basta un nuovo file in `js/content/` (stessa forma degli altri) e una riga in `js/content/index.js`.
+Per aggiungere una zona basta un nuovo file in `js/content/` (stessa forma degli altri), una riga in `js/content/index.js` e una in `js/content/prereq.js`; poi `node tools/check-prereq.mjs` deve rispondere che è tutto in ordine.

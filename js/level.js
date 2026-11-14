@@ -7,11 +7,11 @@ import { CAST, charSVG, hop } from './cast.js';
 import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { starsSVG, confetti, countUp, CHECK } from './fx.js';
-import { KIND, worldOf, zoneOf, nextLevel, gradeNow, worldDone, nextWorld, worldReady, worldOpen } from './content/index.js';
+import { KIND, worldOf, zoneOf, nextLevel, gradeNow, worldDone, nextWorld, worldReady, worldOpen, EXAM_MAX_ERRORS } from './content/index.js';
 
 export function runLevel(root, level, nav) {
   const lens = S.lens || 's';
-  const zone = zoneOf(level.id);
+  const zone = level.zoneRef || zoneOf(level.id);
   const world = worldOf(zone.id);
   const steps = level.steps.filter((s) => !s.only || s.only.includes(lens));
   const SimClass = level.sim ? SIMS[level.sim] : null;
@@ -20,7 +20,7 @@ export function runLevel(root, level, nav) {
   let sim = null, pending = null, onResult = null, busy = false;
 
   // ---------- struttura della pagina ----------
-  const back = h('button', { class: 'btn ghost', onclick: () => leave() }, h('span', { html: IC.back }), h('span', { class: 'back-t' }, zone.title));
+  const back = h('button', { class: 'btn ghost', onclick: () => leave() }, h('span', { html: IC.back }), h('span', { class: 'back-t' }, level.exam ? world.name : zone.title));
   const hintBtn = h('button', { class: 'btn ghost hint-btn', onclick: () => showHint() }, h('span', { html: IC.hint }), 'Aiuto');
   const dots = h('div', { class: 'dots' });
   const head = h('header', { class: 'lvl-head' }, back, h('div', { class: 'lvl-title' },
@@ -429,6 +429,7 @@ export function runLevel(root, level, nav) {
   // ---------- fine livello ----------
   function complete() {
     stopSpeaking();
+    if (level.exam) return examDone();
     const cap = solution ? 1 : hints ? 2 : 3;
     const stars = Math.max(1, cap - errors);
     const prev = S.done[level.id] || 0;
@@ -464,6 +465,24 @@ export function runLevel(root, level, nav) {
     if (gained) setTimeout(() => countUp(joule, gained, { prefix: '+', suffix: ' joule' }), 500);
     else joule.textContent = '';
     setTimeout(() => confetti(card, { colors: [getComputedStyle(root).getPropertyValue('--c').trim() || '#7cc8ff', '#7cc8ff', '#ffd166', '#eef4ff'] }), 250);
+  }
+
+  // fine della prova d'ingresso: o si apre il mondo dopo, o si consiglia di giocare i livelli
+  function examDone() {
+    const ok = !solution && !hints && errors <= EXAM_MAX_ERRORS;
+    if (ok) { S.skip = S.skip || {}; S.skip[world.id] = 1; save(); sfx.win(); } else sfx.no();
+    const nw = nextWorld(world), nwOpen = ok && nw && worldReady(nw) && worldOpen(nw);
+    const modal = h('div', { class: 'modal' }, h('div', { class: 'card pop' },
+      h('div', { class: 'cele', html: charSVG(who.id, { cls: ok ? 'party' : '' }) }),
+      h('h2', {}, ok ? 'Prova superata!' : 'Non ancora'),
+      h('p', {}, ok
+        ? (nw ? (nwOpen ? `${world.name} è superato. Si apre ${nw.name}.` : `${world.name} è superato. ${nw.name} è in costruzione, arriva presto.`) : `${world.name} è superato.`)
+        : `${errors} ${errors === 1 ? 'errore' : 'errori'}${hints || solution ? ' e qualche aiuto' : ''}: ne servono al massimo ${EXAM_MAX_ERRORS}, senza aiuti. Gioca i livelli di ${world.name}: poi potrai riprovare.`),
+      h('div', { class: 'row' },
+        h('button', { class: 'btn', onclick: () => leave() }, world.name),
+        nwOpen ? h('button', { class: 'btn primary', onclick: () => nav('#/mondo/' + nw.id) }, `${nw.name} →`) : null)));
+    root.append(modal);
+    if (ok) setTimeout(() => confetti(modal.firstChild, {}), 250);
   }
 
   function leave() {

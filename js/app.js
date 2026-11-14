@@ -8,7 +8,7 @@ import { playIntro } from './intro.js';
 import { runLevel } from './level.js';
 import {
   WORLDS, ZONES, KIND, LENSES, GRADES, ALL_PIECES,
-  worldById, worldOpen, worldDone, worldReady, zoneOpen, zoneDone, levelOpen, levelById, gradeNow,
+  worldById, worldOpen, worldDone, worldReady, zoneOpen, zoneDone, levelOpen, levelById, gradeNow, examFor, EXAM_MAX_ERRORS,
 } from './content/index.js';
 
 const app = document.getElementById('app');
@@ -65,7 +65,7 @@ function home() {
     let total = 0, got = 0;
     if (ready) for (const z of w.zones) for (const l of ZONES[z].levels) { total++; if (S.done[l.id]) got++; }
     const prev = w.requires.map((r) => worldById(r).name).join(' e ');
-    const status = done ? 'Completato' : open ? `${got} di ${total} livelli` : !ready ? `In costruzione · ${w.soon.length} zone in arrivo` : `Si apre quando finisci ${prev}`;
+    const status = done ? (got < total ? `Superato con la prova · ${got} di ${total} livelli` : 'Completato') : open ? `${got} di ${total} livelli` : !ready ? `In costruzione · ${w.soon.length} zone in arrivo` : `Si apre quando finisci ${prev}`;
     const diff = w.diff ?? Math.ceil((w.n / WORLDS.length) * 5); // difficoltà decisa sul contenuto, non sul numero
     const body = h('div', { class: 'wbody', title: ready ? '' : w.soon.join(' · ') },
       h('div', { class: 'wnum' }, `Mondo ${String(w.n).padStart(2, '0')} · ${w.field}`),
@@ -117,7 +117,12 @@ function world(id) {
       h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), 'I mondi'),
       h('div', { class: 'world-head' }, hopOnTap(h('div', { class: 'wh-who', html: charSVG(w.mascot) })),
         h('div', {}, h('div', { class: 'wnum' }, `Mondo ${String(w.n).padStart(2, '0')} · ${w.place}`), h('h1', {}, w.name))),
-      zones, soon));
+      zones, soon,
+      // chi conosce già questo mondo può saltarlo con la prova d'ingresso
+      !worldDone(w) && examFor(w).steps.length >= 4 ? h('section', { class: 'zone exam' },
+        h('div', { class: 'zone-head' }, h('h2', {}, 'Lo conosci già?')),
+        h('p', { class: 'muted small' }, `Fai la prova d’ingresso: ${examFor(w).steps.filter((st) => !st.only || st.only.includes(S.lens)).length} domande dai ripassi. Con al massimo ${EXAM_MAX_ERRORS} errori, senza aiuti, si apre il mondo dopo.`),
+        h('a', { class: 'btn', href: `#/esame/${w.id}` }, 'Fai la prova d’ingresso')) : null));
   if (!S.seen[w.id]) {
     const modal = h('div', { class: 'modal' }, h('div', { class: 'card pop scene', style: `--c:${w.color}` },
       hopOnTap(h('div', { class: 'scene-who', html: charSVG(w.mascot) })),
@@ -203,6 +208,14 @@ function render() {
       const root = h('div', { class: 'level-page' });
       app.replaceChildren(root);
       cleanup = runLevel(root, l, go);
+      break;
+    }
+    case 'esame': {
+      const w = worldById(parts[1]);
+      if (!w || !worldReady(w) || !worldOpen(w) || worldDone(w)) { app.replaceChildren(home()); break; }
+      const root = h('div', { class: 'level-page' });
+      app.replaceChildren(root);
+      cleanup = runLevel(root, examFor(w), go);
       break;
     }
     case 'parco': app.replaceChildren(park()); break;

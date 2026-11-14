@@ -1,6 +1,7 @@
 // Mondi, zone e regole di sblocco. I testi dei livelli stanno nei file delle zone.
 import { S, save } from '../state.js';
 import { IC } from '../icons.js';
+import { T } from '../util.js';
 import F01 from './f01.js';
 import F02 from './f02.js';
 import F03 from './f03.js';
@@ -99,7 +100,20 @@ export const levelById = (id) => LEVEL_ZONE[id]?.levels.find((l) => l.id === id)
 
 export const zoneDone = (z) => ZONES[z].levels.every((l) => S.done[l.id]);
 export const worldReady = (w) => !!(w.zones && w.zones.length);
-export const worldDone = (w) => worldReady(w) && w.zones.every(zoneDone);
+export const worldDone = (w) => worldReady(w) && (!!(S.skip && S.skip[w.id]) || w.zones.every(zoneDone));
+
+// Prova d'ingresso: chi conosce già un mondo può superarlo rispondendo alle domande dei suoi ripassi.
+export const EXAM_MAX_ERRORS = 2;
+export const examFor = (w) => ({
+  id: 'esame-' + w.id, exam: w.id, kind: 'ripasso', title: 'Prova d’ingresso',
+  zoneRef: ZONES[w.zones[0]],
+  intro: T(
+    `Conosci già ${w.name}? Rispondi a queste domande: con al massimo ${EXAM_MAX_ERRORS} errori il mondo dopo si apre subito. I livelli restano lì, da giocare quando vuoi.`,
+    `Prova d’ingresso: le domande dei ripassi di ${w.name}. Con al massimo ${EXAM_MAX_ERRORS} errori, e senza aiuti, il mondo successivo si apre. I livelli restano giocabili.`),
+  steps: w.zones.flatMap((z) => ZONES[z].levels.filter((l) => l.kind === 'ripasso')
+    .flatMap((l) => l.steps.filter((st) => (st.kind === 'q' && !st.predict) || st.kind === 'num').map((st) => (st.kind === 'num' ? { ...st, rounds: 1 } : st)))),
+  hints: [T('Questa è una prova: gli aiuti ci sono, ma se li usi la prova non vale. Puoi sempre giocare i livelli.')],
+});
 // Quello che si è aperto resta aperto: se più avanti si aggiunge una zona (per esempio F03),
 // chi aveva già sbloccato un mondo, una zona o un livello non se lo ritrova chiuso.
 function remember(key, open) {
