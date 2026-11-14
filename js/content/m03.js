@@ -17,7 +17,7 @@ export default {
         { kind: 'free', runs: 2, text: T('Fai una traversata <b>senza corrente</b>, poi una <b>con la corrente</b>.', 'Attraversa una volta con corrente 0 e una volta con la corrente accesa.') },
         {
           kind: 'q',
-          text: T('Con la corrente, dove arriva la barca?', 'Con la corrente, in che direzione si muove davvero la barca?', 'Qual è la velocità effettiva della barca rispetto alla riva?'),
+          text: T('La prua della barca punta dritta verso il pontile di fronte. Ma ora l’acqua del fiume scorre e spinge la barca di lato mentre attraversa. Guarda le frecce: dove arriva la barca?', 'La barca spinge dritta verso l’altra riva (freccia arancione), la corrente la trascina di lato (freccia azzurra). Le due spinte agiscono insieme. In che direzione si muove davvero la barca?', 'Un osservatore sulla riva vede insieme due velocità: quella della barca rispetto all’acqua e quella dell’acqua rispetto alla riva. Qual è la velocità effettiva della barca rispetto alla riva?'),
           options: [
             T('Più in là del pontile, spinta dall’acqua', 'In diagonale: lungo la freccia bianca, somma delle altre due', 'La somma vettoriale di velocità della barca e della corrente'),
             T('Dritta al pontile', 'Dritta verso il pontile, come punta la prua', 'Quella della barca: la corrente non conta'),
@@ -33,7 +33,7 @@ export default {
           kind: 'num', only: ['s', 'c'], rounds: 2, text: T('Somma due frecce perpendicolari.'),
           gen: () => {
             const [b, c, v] = pick([[4, 3, 5], [3, 4, 5], [8, 6, 10], [6, 8, 10], [5, 12, 13]]);
-            return { text: tr('La barca va a <b>{b} m/s</b> verso la riva opposta, la corrente a <b>{c} m/s</b> di lato. Quanto vale la velocità totale?', { b, c }), ans: v, tol: 0.05, unit: 'm/s', explain: tr('Esatto: le frecce sono perpendicolari, quindi √({b}² + {c}²) = √{q} = {v} m/s. Non {s}: le frecce non sono nella stessa direzione.', { b, c, q: b * b + c * c, v, s: b + c }) };
+            return { text: tr('La barca va a <b>{b} m/s</b> verso la riva opposta, mentre la corrente la spinge di lato a <b>{c} m/s</b>. Le due frecce formano un angolo retto, e la velocità vera è la diagonale. Quanto vale?', { b, c }), ans: v, tol: 0.05, unit: 'm/s', explain: tr('Esatto: le frecce sono perpendicolari, quindi √({b}² + {c}²) = √{q} = {v} m/s. Non {s}: le frecce non sono nella stessa direzione.', { b, c, q: b * b + c * c, v, s: b + c }) };
           },
         },
       ],
@@ -50,7 +50,7 @@ export default {
       steps: [
         {
           kind: 'q', predict: [{ vc: 0, ang: 0 }, { vc: 3, ang: 0 }],
-          text: T('Prima senza corrente, poi con una corrente forte. Quanto tempo ci mette la seconda volta?', 'Traversata senza corrente, poi con corrente 3 m/s. Il tempo della seconda traversata…'),
+          text: T('Prima la barca attraversa il fiume senza corrente, poi con una corrente forte che la spinge di lato. In tutte e due le traversate la barca spinge verso l’altra riva allo stesso modo. Con la corrente, quanto tempo ci mette ad arrivare dall’altra parte?', 'Prima una traversata senza corrente, poi una con corrente di 3 m/s, perpendicolare alla direzione della barca. La velocità della barca verso l’altra riva resta la stessa. Il tempo della seconda traversata…'),
           options: [T('Lo stesso tempo', 'è uguale'), T('Di più', 'è maggiore'), T('Di meno', 'è minore')],
           answer: 0,
           explain: T(
@@ -83,7 +83,7 @@ export default {
         { kind: 'free', runs: 2, text: T('Fai almeno due lanci, cambiando qualcosa.', 'Fai almeno due lanci con valori diversi. Le traiettorie precedenti restano in grigio.') },
         {
           kind: 'q',
-          text: T('Che forma disegna la palla in volo?', 'Che forma ha la traiettoria della palla?', 'Che forma ha la traiettoria (trascurando l’aria)?'),
+          text: T('Hai sparato qualche palla e ognuna ha lasciato una scia nel cielo: sale, arriva in cima e scende. Guarda la scia dalla partenza all’arrivo. Che forma disegna?', 'La <b>traiettoria</b> è la linea che la palla disegna nell’aria durante il volo. Guarda le scie dei tuoi lanci, anche quelle grigie dei lanci di prima. Che forma ha la traiettoria?', 'Trascurando l’aria, la palla si muove a velocità costante in orizzontale e con accelerazione g in verticale. Che curva viene fuori combinando i due moti?'),
           options: [
             T('Una linea dritta in diagonale', 'Una retta'),
             T('Un pezzo di cerchio', 'Un arco di circonferenza'),
@@ -110,7 +110,7 @@ export default {
       steps: [
         {
           kind: 'q', only: ['e'],
-          text: 'Stesso angolo, ma la seconda volta spari <b>più forte</b>. Dove arriva la palla?',
+          text: 'Il cannone resta inclinato allo stesso modo, ma la seconda volta spari la palla <b>più forte</b>, cioè più veloce. Prima di provare, prevedi: dove arriva la palla rispetto a prima?',
           options: ['Più vicino', 'Più lontano', 'Nello stesso punto'],
           answer: 1,
           predict: [{ ang: 45, v: 15 }, { ang: 45, v: 30 }],
@@ -119,14 +119,14 @@ export default {
         { kind: 'free', runs: 1, only: ['e'], text: 'Ora prova tu: trova un lancio che arriva vicino ai 100 metri.' },
         {
           kind: 'q', only: ['s', 'c'],
-          text: T(null, 'Durante il volo (senza aria), la componente <b>orizzontale</b> della velocità…', 'Mentre la palla vola, la sua velocità <b>orizzontale</b>…'),
+          text: T(null, 'La velocità della palla si può dividere in due parti, dette <b>componenti</b>: una orizzontale, in avanti, e una verticale, su e giù. Senza aria, in orizzontale nessuna forza spinge o frena la palla. Durante il volo, la componente orizzontale della velocità…', 'La velocità della palla si divide in due componenti: orizzontale e verticale. In orizzontale, senza aria, non agisce nessuna forza. Mentre la palla vola, la sua velocità orizzontale…'),
           options: ['aumenta', 'resta costante', 'diminuisce fino a zero'],
           answer: 1,
           explain: T(null, 'Esatto: in orizzontale non agisce nessuna forza, quindi vₓ = v·cos θ resta costante. Si muove di moto rettilineo uniforme, come le macchinine della gara.', 'Esatto: in orizzontale nessuna forza la spinge o la frena, quindi va sempre alla stessa velocità.'),
         },
         {
           kind: 'q', only: ['s', 'c'],
-          text: T(null, 'E la componente <b>verticale</b> della velocità?', 'E la velocità <b>verticale</b>?'),
+          text: T(null, 'Ora guarda la parte su e giù del moto. In verticale agisce la gravità, che tira sempre verso il basso: la palla parte verso l’alto, sale e poi ricade. Come si comporta la componente <b>verticale</b> della velocità durante il volo?', 'In verticale agisce la gravità, che la frena mentre sale e la accelera mentre scende. Come cambia la velocità <b>verticale</b> durante il volo?'),
           options: ['resta costante per tutto il volo', 'cresce sempre, dall’inizio alla fine', 'cala in salita, è zero in cima, poi cresce'],
           answer: 2,
           explain: T(null, 'Esatto: in verticale c’è l’accelerazione g = 9,81 m/s² verso il basso, come nella caduta libera. Nel punto più alto vᵧ = 0, ma vₓ no: la palla non è mai ferma.', 'Esatto: in verticale comanda la gravità, come nella caduta libera. In cima la palla per un istante non sale né scende, ma continua ad avanzare.'),
@@ -151,7 +151,7 @@ export default {
       steps: [
         {
           kind: 'q', clear: true,
-          text: T('Quale angolo manda la palla più lontano?', 'A 25 m/s, quale angolo dà la gittata maggiore?'),
+          text: T('Ora la velocità del cannone è sempre la stessa: cambia solo quanto lo inclini. Se lo tieni quasi piatto la palla cade subito, se lo punti quasi dritto in su sale tanto ma va poco avanti. Quale angolo manda la palla più lontano?', 'La <b>gittata</b> è la distanza dal cannone al punto in cui la palla tocca terra. Con la velocità fissa a 25 m/s, l’angolo decide come la velocità si divide fra avanti e in alto. Quale angolo dà la gittata maggiore?'),
           options: [T('30°', '30°'), T('80°', '80°'), T('60°', '60°'), T('45°', '45°')],
           answer: 3,
           predict: [{ ang: 30, v: 25 }, { ang: 45, v: 25 }, { ang: 60, v: 25 }, { ang: 80, v: 25 }],
@@ -162,7 +162,7 @@ export default {
         },
         {
           kind: 'q', only: ['s', 'c'], clear: true,
-          text: T(null, 'Ora 30° e poi 60°, sempre a 25 m/s. Dove atterrano?', 'Ora 30° e 60°, stessa velocità. Dove atterrano?'),
+          text: T(null, 'Ora due lanci alla stessa velocità, 25 m/s: uno a 30°, più basso, e uno a 60°, più alto. Nota che 30 e 60 sommati fanno 90. Prevedi: dove atterrano le due palle?', 'Due lanci alla stessa velocità, a 30° e a 60°: angoli complementari, che sommati fanno 90°. Pensa alla formula della gittata. Dove atterrano?'),
           options: ['30° va più lontano', 'Atterrano nello stesso punto', '60° va più lontano'],
           answer: 1,
           predict: [{ ang: 30, v: 25 }, { ang: 60, v: 25 }],
@@ -221,7 +221,7 @@ export default {
       steps: [
         {
           kind: 'q', clear: true,
-          text: T('Stesso lancio, prima senza aria e poi con l’aria. Che cosa succede?', '45°, 35 m/s: prima nel vuoto, poi con l’aria. Che cosa prevedi?'),
+          text: T('Lo stesso identico lancio, stesso angolo e stessa forza, prima senza aria e poi con l’aria che frena la palla mentre vola. La linea tratteggiata mostra il volo senza aria. Che cosa succede con l’aria?', 'Lancio a 45° e 35 m/s, prima nel vuoto e poi con l’aria. L’aria frena la palla tanto più quanto più va veloce, e la frena per tutto il volo. Che cosa prevedi per la gittata?'),
           options: [T('Con l’aria va più lontano', 'Con l’aria la gittata aumenta'), T('Va lontano uguale', 'La gittata non cambia'), T('Con l’aria va meno lontano', 'Con l’aria la gittata diminuisce')],
           answer: 2,
           predict: [{ ang: 45, v: 35, air: false }, { ang: 45, v: 35, air: true }],
@@ -231,7 +231,7 @@ export default {
         },
         {
           kind: 'q', only: ['s', 'c'], clear: true,
-          text: T(null, 'Senza aria, 30° e 60° atterravano nello stesso punto. E con l’aria?'),
+          text: T(null, 'Senza aria, i lanci a 30° e a 60° atterravano nello stesso punto. Ma il lancio a 60° sale più in alto e resta in volo più a lungo, quindi l’aria ha più tempo per frenarlo. Con l’aria, che cosa succede?'),
           options: ['30° va più lontano', 'Atterrano ancora nello stesso punto', '60° va più lontano'],
           answer: 0,
           predict: [{ ang: 30, v: 35, air: true }, { ang: 60, v: 35, air: true }],
@@ -261,27 +261,27 @@ export default {
       intro: T('Ripassiamo tutta la Pista: velocità, cadute e lanci!', 'Ripasso della Pista: moto, caduta libera, proiettili.'),
       steps: [
         {
-          kind: 'q', text: T('Nel disegno della gara, la macchinina più veloce ha la linea…', 'Nel grafico spazio-tempo, la pendenza della retta rappresenta…'),
+          kind: 'q', text: T('Ricordi il disegno sotto la pista delle macchinine? Ogni macchinina disegna una linea che sale mentre va avanti. Quella più veloce ha la linea…', 'Nel grafico spazio-tempo, la pendenza della retta dice di quanti metri cresce la posizione in ogni secondo. Quindi la pendenza rappresenta…'),
           options: [T('più sdraiata', 'l’accelerazione'), T('più ripida', 'la velocità'), T('orizzontale', 'la posizione di partenza')],
           answer: 1, explain: T('Esatto: più ripida.', 'Esatto: pendenza = Δs/Δt = velocità.'),
         },
         {
-          kind: 'q', text: T('Sulla Luna lasci cadere una piuma e un martello. Chi arriva prima?', 'Sulla Luna (niente aria) una piuma e un martello cadono…'),
+          kind: 'q', text: T('Sulla Luna non c’è aria che frena. Un astronauta lascia cadere insieme una piuma e un martello dalla stessa altezza. Chi arriva prima a terra?', 'Sulla Luna non c’è aria e l’accelerazione di gravità vale 1,62 m/s². Una piuma e un martello, lasciati insieme dalla stessa altezza, cadono…'),
           options: [T('Arrivano insieme', 'con la stessa accelerazione, 1,62 m/s²'), T('Prima il martello, che è pesante', 'il martello con accelerazione maggiore'), T('Prima la piuma, che è leggera', 'la piuma con accelerazione maggiore')],
           answer: 0, explain: T('Insieme: lì non c’è aria che frena.', 'Esatto: senza aria l’accelerazione è g per tutti. Apollo 15, 1971.'),
         },
         {
-          kind: 'q', text: T('Per mandare una palla il più lontano possibile, come inclini il cannone?', 'A parità di velocità, quale angolo dà la gittata massima (senza aria)?'),
+          kind: 'q', text: T('Hai un cannone che spara sempre alla stessa velocità e vuoi mandare la palla il più lontano possibile, senza aria. Puoi solo scegliere quanto inclinarlo. Come lo inclini?', 'Con la stessa velocità di lancio e senza aria, l’angolo decide quanta velocità va in avanti e quanta in alto. Quale angolo dà la gittata massima?'),
           options: [T('Quasi piatto', '15°'), T('Quasi dritto in su', '75°'), T('A metà', '45°')],
           answer: 2, explain: T('Giusto: a metà, a 45°.', 'Giusto: R = v²·sin(2θ)/g è massima a 45°.'),
         },
         {
-          kind: 'q', only: ['s', 'c'], text: 'Nel punto più alto della traiettoria, la velocità della palla è…',
+          kind: 'q', only: ['s', 'c'], text: 'La palla sale, arriva in cima e poi riscende. Ricorda le due componenti della velocità: quella orizzontale resta costante, quella verticale cambia. Nel punto più alto della traiettoria, la velocità della palla è…',
           options: ['zero', 'solo orizzontale', 'solo verticale'],
           answer: 1, explain: 'Esatto: vᵧ = 0, ma vₓ resta. La palla in cima non è mai ferma.',
         },
         {
-          kind: 'q', text: T('Una palla cade da una torre. Mentre scende va…', 'In caduta libera, dopo 2 s, la velocità è circa…'),
+          kind: 'q', text: T('Una palla viene lasciata cadere dalla cima di una torre: parte ferma e scende fino a terra. Mentre scende, va…', 'In caduta libera la velocità cresce di circa 9,8 m/s ogni secondo. Una palla parte ferma: dopo 2 s la sua velocità è circa…'),
           options: [T('sempre più piano', '9,8 m/s'), T('sempre più veloce', '19,6 m/s'), T('sempre uguale', '39,2 m/s')],
           answer: 1, explain: T('Esatto: sempre più veloce.', 'Esatto: v = g·t = 9,81 × 2 ≈ 19,6 m/s.'),
         },
@@ -298,7 +298,7 @@ export default {
         'Sono Vetrino. <i>“Un proiettile sparato in orizzontale cade più tardi di uno lasciato cadere”</i>: lo pensano in tanti. Io non ti dico niente: chiedi all’esperimento.'),
       steps: [
         {
-          kind: 'q', text: T('Quale esperimento ci serve?', 'Quale esperimento mette alla prova il mito?'),
+          kind: 'q', text: T('Il mito dice che una palla lanciata in avanti da una torre resta in aria più a lungo di una lasciata cadere. Per controllarlo, le due palle devono partire dalla stessa altezza nello stesso momento, e deve cambiare solo come partono. Quale esperimento ci serve?', 'Il mito: «lanciata in orizzontale, la palla resta in volo più a lungo». Per un confronto onesto, altezza e istante di partenza devono essere uguali, e cambiare solo la velocità orizzontale. Quale esperimento mette alla prova il mito?'),
           options: [
             T('Dalla stessa altezza, insieme: una lanciata in avanti e una lasciata cadere', 'Stessa altezza e stesso istante: una lanciata in orizzontale, una lasciata cadere'),
             T('Una lanciata dalla torre e una lasciata cadere da terra', 'Una lanciata da 20 m e una lasciata cadere da 5 m'),
@@ -310,7 +310,7 @@ export default {
         },
         {
           kind: 'q', clear: true,
-          text: T('Torre alta 20 metri. Quale palla tocca terra per prima?', 'Da 20 m: lancio orizzontale a 15 m/s e caduta libera, nello stesso istante. Che cosa prevedi?'),
+          text: T('Dalla cima di una torre alta 20 metri, nello stesso istante, una palla viene lanciata in avanti e l’altra viene solo lasciata cadere. Quella lanciata fa molta più strada. Prima di guardare: quale tocca terra per prima?', 'Da 20 m, nello stesso istante: una palla lanciata in orizzontale a 15 m/s, l’altra lasciata cadere. Ripensa ai due moti indipendenti, avanti e su-giù. Che cosa prevedi sui tempi di arrivo?'),
           options: [T('Quella lasciata cadere', 'Prima quella lasciata cadere'), T('Quella lanciata in avanti', 'Prima quella lanciata'), T('Arrivano insieme', 'Arrivano insieme')],
           answer: 2,
           predict: [{ ang: 0, v: 15, h0: 20, drop: true }],
@@ -321,14 +321,14 @@ export default {
         },
         {
           kind: 'q', clear: true,
-          text: T('E se la lanci molto più forte?', 'E con 30 m/s invece di 15?'),
+          text: T('Ora lanci la palla in avanti molto più forte, al doppio della velocità, mentre l’altra viene ancora solo lasciata cadere. Che cosa succede ai tempi di arrivo?', 'Stessa torre, ma ora il lancio orizzontale è a 30 m/s invece di 15. La palla andrà molto più lontano. E il tempo di volo, rispetto alla palla lasciata cadere?'),
           options: [T('Allora resta in aria di più', 'Resta in aria il doppio'), T('Arrivano ancora insieme', 'Arrivano ancora insieme'), T('Allora cade prima', 'Cade in metà tempo')],
           answer: 1,
           predict: [{ ang: 0, v: 30, h0: 20, drop: true }],
           explain: T('Ancora insieme! Va più lontano, ma ci mette lo stesso tempo.', 'Stesso tempo, 2,02 s: raddoppia la gittata (da 30 a 61 m), non il tempo di volo.', 'Stesso tempo: va il doppio più lontano, ma la caduta è sempre quella.'),
         },
         {
-          kind: 'q', text: T('Allora, il ragazzo aveva ragione?', 'Conclusione?'),
+          kind: 'q', text: T('Il ragazzo del mito diceva che la palla lanciata in avanti resta in aria più a lungo, perché fa più strada. Hai visto le due palle arrivare a terra. Aveva ragione?', 'Hai visto che, lanciando in orizzontale piano o forte, la palla tocca terra insieme a quella lasciata cadere. Che cosa concludi sul tempo di volo?'),
           options: [
             T('Sì: lanciata in avanti resta in aria di più', 'Il mito è vero: più veloce, più tempo in volo'),
             T('Dipende da quanto pesa la palla', 'Dipende dalla massa del proiettile'),

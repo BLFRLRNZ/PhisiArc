@@ -18,7 +18,7 @@ export default {
         { kind: 'free', runs: 1, text: T('Fai partire la macchinina.', 'Lancia e osserva i segni dei secondi.') },
         {
           kind: 'q',
-          text: T('I segnetti dei secondi sulla corsia sono…', 'La distanza fra un segno e il successivo…', 'Gli spazi percorsi in secondi successivi…'),
+          text: T('Mentre la macchinina corre, ogni secondo lascia un segnetto sulla corsia. Nella gara di prima, a velocità costante, i segnetti erano tutti alla stessa distanza. Guarda bene questi: come sono?', 'Sulla corsia c’è un segno per ogni secondo: la distanza fra due segni è la strada fatta in quel secondo. Guarda dal primo all’ultimo. La distanza fra un segno e il successivo…', 'I segni sulla corsia sono a un secondo l’uno dall’altro, quindi la distanza fra due segni è lo spazio percorso in quel secondo. Gli spazi percorsi in secondi successivi…'),
           options: [T('sempre più lontani fra loro', 'aumenta', 'crescono (1, 3, 5, 7… volte il primo)'), T('tutti alla stessa distanza', 'resta uguale', 'restano uguali'), T('sempre più vicini', 'diminuisce', 'diminuiscono')],
           answer: 0,
           explain: T(
@@ -29,7 +29,7 @@ export default {
         },
         {
           kind: 'q',
-          text: T('E la linea sul grafico?', 'Che forma ha il grafico posizione–tempo?', 'Che forma ha x(t)?'),
+          text: T('Ora guarda la linea sul grafico sotto la pista: sale più in fretta quando la macchinina fa più strada ogni secondo. Che forma ha?', 'Nel grafico posizione–tempo la pendenza della linea dice quanto si va veloci: più è ripida, più la velocità è alta. Questa macchinina va sempre più forte. Che forma ha il grafico?', 'La pendenza di x(t) è la velocità, e qui la velocità cresce in modo costante. Che forma ha x(t)?'),
           options: [T('Una curva che sale sempre più ripida', 'Una curva sempre più ripida', 'Una parabola'), T('Una linea dritta', 'Una retta', 'Una retta'), T('Una linea piatta', 'Una retta orizzontale', 'Un’iperbole')],
           answer: 0,
           explain: T(
@@ -52,7 +52,7 @@ export default {
         { kind: 'free', runs: 2, text: T('Fai almeno <b>due corse</b> con accelerazioni diverse.', 'Fai almeno due corse con accelerazioni diverse e confronta le linee.') },
         {
           kind: 'q',
-          text: T('Che forma ha la linea della velocità?', 'Con accelerazione costante, il grafico velocità–tempo è…', 'Con a costante, v(t) è…'),
+          text: T('Ora il grafico mostra la velocità della macchinina a ogni istante. La macchinina accelera sempre allo stesso modo: ogni secondo guadagna la stessa velocità. Che forma ha la linea?', 'Accelerazione costante vuol dire che la velocità aumenta della stessa quantità ogni secondo, per esempio 2 m/s in più ogni secondo. Allora il grafico velocità–tempo è…', 'Con a costante la velocità cresce di a ogni secondo: v = v₀ + a·t. Il grafico v(t) è…'),
           options: [T('Una linea dritta che sale', 'una retta che sale', 'una retta con pendenza a'), T('Una curva sempre più ripida', 'una parabola', 'una parabola'), T('Una linea piatta', 'una retta orizzontale', 'costante')],
           answer: 0,
           explain: T(
@@ -63,7 +63,7 @@ export default {
         {
           kind: 'num', rounds: 2, text: T('Calcola la velocità.'),
           vals: { a: [2, 3, 4], t: [3, 4, 5] }, calc: 'a * t', unit: 'm/s', tol: { e: 0, s: 0.01 },
-          ask: T('Una macchinina parte ferma e ogni secondo va <b>{a} m/s</b> più veloce. Quanto va veloce dopo <b>{t} secondi</b>?', 'Parte da ferma con accelerazione <b>{a} m/s²</b>. Che velocità ha dopo <b>{t} s</b>?'),
+          ask: T('Una macchinina parte da ferma. Ogni secondo che passa va <b>{a} m/s</b> più veloce di prima: dopo 1 secondo va a {a}, dopo 2 secondi al doppio, e così via. Quanto va veloce dopo <b>{t} secondi</b>?', 'Un’auto parte da ferma con accelerazione <b>{a} m/s²</b>: vuol dire che la sua velocità cresce di {a} m/s ogni secondo. Che velocità ha dopo <b>{t} s</b>?'),
           explain: T('Giusto: {t} volte {a} fa {ans} m/s.', 'Esatto: v = a·t = {a} × {t} = {ans} m/s.'),
         },
       ],
@@ -80,7 +80,7 @@ export default {
       steps: [
         {
           kind: 'q', predict: [{ D: 100 }],
-          text: T('Gara di 100 metri. Chi arriva prima?', 'Sui 100 m, chi arriva prima?'),
+          text: T('La blu parte subito veloce, a 10 m/s, ma non cambia mai velocità. L’arancione parte da ferma, quindi all’inizio resta indietro, però va sempre più forte. La gara è lunga 100 metri. Chi arriva prima?', 'La blu va sempre a 10 m/s; l’arancione parte da ferma con 2,5 m/s² e quindi all’inizio è indietro, ma la sua velocità continua a crescere. Su una pista di 100 m, chi arriva prima?'),
           options: [T('La blu, che parte veloce', 'La blu'), T('L’arancione, che accelera', 'L’arancione'), T('Arrivano insieme', 'Arrivano insieme')],
           answer: 1,
           explain: T(
@@ -90,7 +90,7 @@ export default {
         },
         {
           kind: 'q', predict: [{ D: 50 }],
-          text: T('E se la pista è lunga solo <b>50 metri</b>?', 'Pista corta: 50 m. Chi vince ora?'),
+          text: T('Stesse due macchine, ma ora la pista è lunga solo <b>50 metri</b>, la metà. L’arancione ha meno tempo per prendere velocità. Chi arriva prima adesso?', 'Pista corta: 50 m invece di 100. La blu va sempre a 10 m/s; l’arancione deve ancora prendere velocità. Il sorpasso arriva prima o dopo il traguardo? Chi vince ora?'),
           options: [T('Sempre l’arancione', 'L’arancione'), T('La blu', 'La blu'), T('Arrivano insieme', 'Arrivano insieme')],
           answer: 1,
           explain: T(
@@ -135,13 +135,13 @@ export default {
       steps: [
         {
           kind: 'q',
-          text: T('Un’auto va sempre a 10 m/s. La sua linea nel grafico velocità–tempo è…', 'Moto a velocità costante: il grafico velocità–tempo è…'),
+          text: T('Nel grafico velocità–tempo la linea mostra quanto va veloce l’auto in ogni istante. Un’auto va sempre a 10 m/s, senza mai accelerare né frenare. Com’è la sua linea?', 'Nel grafico velocità–tempo l’altezza della linea è la velocità. Se la velocità non cambia mai, il grafico velocità–tempo è…'),
           options: [T('piatta', 'una retta orizzontale'), T('dritta che sale', 'una retta che sale'), T('una curva', 'una parabola')],
           answer: 0, explain: T('Giusto: la velocità non cambia, quindi la linea resta alla stessa altezza.', 'Giusto: accelerazione zero, pendenza zero.'),
         },
         {
           kind: 'q',
-          text: T('Un’auto frena. Sta accelerando?', 'Un’auto frena da 20 a 0 m/s. Ha un’accelerazione?'),
+          text: T('Nella vita di tutti i giorni «accelerare» vuol dire andare più forte. In fisica, invece, l’accelerazione è ogni cambiamento di velocità. Un’auto frena e rallenta: per la fisica, sta accelerando?', 'In fisica l’accelerazione misura quanto cambia la velocità ogni secondo, in qualunque verso. Un’auto frena e passa da 20 a 0 m/s. Ha un’accelerazione?'),
           options: [T('Sì, ma all’indietro: rallenta', 'Sì, negativa: la velocità diminuisce'), T('No, perché rallenta', 'No, accelerare vuol dire solo aumentare la velocità'), T('Solo se va veloce', 'Solo se supera i 10 m/s')],
           answer: 0,
           explain: T('Giusto: in fisica anche rallentare è un’accelerazione, ma verso dietro.', 'Giusto: ogni variazione di velocità è un’accelerazione. Frenando è negativa.'),
@@ -149,12 +149,12 @@ export default {
         {
           kind: 'num', rounds: 1, text: T('Un calcolo veloce.'),
           vals: { a: [2, 3, 5], t: [4, 6] }, derive: { v: 'a * t' }, calc: 'a', unit: T('m/s', 'm/s²'), tol: { e: 0, s: 0.01 },
-          ask: T('Un monopattino passa da fermo a <b>{v} m/s</b> in <b>{t} secondi</b>. Di quanto aumenta la velocità ogni secondo?', 'Un monopattino passa da 0 a <b>{v} m/s</b> in <b>{t} s</b>. Qual è la sua accelerazione?'),
+          ask: T('Un monopattino parte da fermo e, sempre allo stesso ritmo, arriva a <b>{v} m/s</b> in <b>{t} secondi</b>. Quella velocità l’ha guadagnata un pezzetto alla volta, uguale ogni secondo. Di quanto aumenta la velocità ogni secondo?', 'Un monopattino passa da 0 a <b>{v} m/s</b> in <b>{t} s</b>, accelerando in modo costante. L’accelerazione è la variazione di velocità divisa per il tempo impiegato. Qual è la sua accelerazione?'),
           explain: T('Giusto: {v} diviso {t} fa {ans}.', 'Esatto: a = Δv/Δt = {v} / {t} = {ans} m/s².'),
         },
         {
           kind: 'q',
-          text: T('Nel grafico velocità–tempo, una linea più ripida vuol dire…', 'Nel grafico velocità–tempo, la pendenza della retta è…'),
+          text: T('Nel grafico velocità–tempo due auto disegnano due linee che salgono, ma una sale più ripida dell’altra: in ogni secondo guadagna più velocità. Una linea più ripida vuol dire…', 'La pendenza di una retta dice quanto sale per ogni passo in orizzontale. Nel grafico velocità–tempo, quanto sale la velocità per ogni secondo. Quindi la pendenza della retta è…'),
           options: [T('accelera di più', 'l’accelerazione'), T('è più lontana', 'la posizione'), T('va più piano', 'il tempo')],
           answer: 0, explain: T('Esatto: la velocità cresce più in fretta.', 'Esatto: a = Δv/Δt, la pendenza della retta v–t.'),
         },
@@ -172,14 +172,14 @@ export default {
         { kind: 'free', runs: 1, text: T('Fai partire la gara e guarda le due linee.', 'Lancia e confronta le due linee nel grafico velocità–tempo.') },
         {
           kind: 'q',
-          text: T('All’inizio, chi va più veloce?', 'All’istante della partenza, chi ha la velocità maggiore?'),
+          text: T('Guarda le due macchine nel momento in cui parte la gara. La blu va già a 15 m/s, l’arancione solo a 2 m/s. In quell’istante, chi va più veloce?', 'Nel grafico velocità–tempo leggi la velocità come l’altezza della linea. Guarda le due linee proprio all’inizio, a tempo zero. Chi ha la velocità maggiore?'),
           options: [T('La blu'), T('L’arancione'), T('Vanno uguali')],
           answer: 0, keepOrder: true,
           explain: T('Giusto: la blu parte a 15, l’arancione solo a 2.', 'Giusto: 15 m/s contro 2 m/s.'),
         },
         {
           kind: 'q',
-          text: T('E chi ha più accelerazione, cioè chi cambia velocità?', 'Chi ha l’accelerazione maggiore?'),
+          text: T('Ora la domanda è diversa: non chi va più forte, ma chi <b>cambia</b> velocità, cioè chi accelera. Guarda le due linee: una resta sempre alla stessa altezza, l’altra sale. Chi ha più accelerazione?', 'L’accelerazione è quanto cambia la velocità ogni secondo, e nel grafico velocità–tempo è la pendenza della linea. Confronta le due linee. Chi ha l’accelerazione maggiore?'),
           options: [T('La blu'), T('L’arancione'), T('Hanno la stessa')],
           answer: 1, keepOrder: true,
           explain: T('Giusto: la blu non cambia mai velocità, quindi la sua accelerazione è zero! L’arancione invece va sempre più forte.', 'Giusto: la blu ha a = 0 (retta orizzontale), l’arancione 3 m/s² (retta che sale).'),
@@ -187,7 +187,7 @@ export default {
         },
         {
           kind: 'q',
-          text: T('Allora il mito è vero?', 'Conclusione sul mito?'),
+          text: T('Il mito diceva che chi va più veloce ha anche più accelerazione, come se fossero la stessa cosa. Ma la blu era più veloce e l’arancione accelerava di più. Allora il mito è vero?', 'Hai visto un’auto veloce con accelerazione zero e un’auto lenta con accelerazione grande. Che cosa concludi sul mito, secondo cui velocità e accelerazione vanno sempre insieme?'),
           options: [
             T('No: la velocità dice quanto vai forte, l’accelerazione quanto cambi', 'Falso: la velocità è quanto vai veloce, l’accelerazione quanto in fretta cambia la velocità', 'Falso: v è l’altezza della retta v–t, a è la sua pendenza'),
             T('Sì: chi è più veloce accelera di più', 'Vero: sono la stessa grandezza', 'Vero: v e a coincidono'),

@@ -30,7 +30,7 @@ export default {
         { kind: 'free', runs: 1, text: T('Premi ▶ Lancia e guarda il pendolo.', 'Lancia il pendolo: il cronometro misura 5 oscillazioni e calcola quanto dura una sola.') },
         {
           kind: 'q',
-          text: T('Vuoi sapere se una cosa è vera. Cosa fa uno scienziato?', 'Qual è il primo passo del metodo scientifico dopo l’osservazione?', 'Cosa distingue un’idea scientifica da un’opinione?'),
+          text: T('Immagina di avere un’idea, per esempio: «se spingo forte il pendolo, va più veloce». Non sai ancora se è vera. Come fa uno scienziato a scoprirlo?', 'Hai appena osservato il pendolo. Il <b>metodo scientifico</b> è la strada che porta da quello che vedi a una conoscenza di cui ti puoi fidare, e l’osservazione è solo il primo passo. Che cosa viene subito dopo?', 'Tutti hanno idee su come funziona il mondo, ma non tutte sono scientifiche. Pensa a che cosa si può fare con un’idea scientifica che con una semplice opinione non si può fare. Che cosa le distingue?'),
           options: [
             T('Chiede all’amico più grande e fa come dice lui', 'Cercare la risposta su internet o sul libro', 'Che la sostiene un esperto famoso e stimato'),
             T('Prova a indovinare, poi controlla con una prova', 'Un’ipotesi da controllare con un esperimento', 'Che un esperimento potrebbe smentirla'),
@@ -69,7 +69,7 @@ export default {
         },
         {
           kind: 'q',
-          text: T('Il peso ha cambiato il tempo del pendolo?', 'Cosa mostrano i tuoi due esperimenti?'),
+          text: T('Hai fatto due lanci con lo stesso filo: uno con la pallina leggera e uno con quella pesante. Guarda i due tempi sul cronometro. Il peso ha cambiato il tempo che il pendolo ci mette ad andare e tornare?', 'Nei due esperimenti hai cambiato solo la massa, lasciando uguali il filo e l’angolo. Confronta i due periodi misurati: il periodo è il tempo di un’oscillazione completa, andata e ritorno. Che cosa mostrano?'),
           options: [T('Sì, molto', 'Più massa, periodo molto più lungo'), T('No, quasi per niente', 'Il periodo non dipende dalla massa'), T('Sì, è più veloce', 'Più massa, periodo molto più breve')],
           answer: 1,
           explain: T('Proprio così: pesante o leggero, il pendolo va allo stesso ritmo. Sorprendente, vero?', 'Esatto: il periodo non dipende dalla massa. Lo scoprì Galileo, e lo spiegò Newton.'),
@@ -85,7 +85,7 @@ export default {
       steps: [
         {
           kind: 'q',
-          text: T('Allunghi il filo da 0,5 m a 2 m. Il pendolo andrà…', 'Il filo passa da 0,5 m a 2 m (4 volte più lungo). Il periodo…'),
+          text: T('Ora cambiamo il filo: da corto (mezzo metro) diventa lungo (2 metri, quattro volte tanto). La pallina resta la stessa. Prima di provare, prevedi: con il filo lungo, il pendolo andrà avanti e indietro…', 'Ora la variabile che cambi è la lunghezza del filo: passa da 0,5 m a 2 m, cioè diventa 4 volte più lunga. Massa e angolo restano uguali. Prima di lanciare, prevedi: il periodo, cioè il tempo di un’oscillazione completa…'),
           options: [T('più veloce', 'diventa più breve'), T('uguale', 'resta uguale'), T('più lento', 'diventa più lungo')],
           answer: 2,
           predict: [{ L: 0.5 }, { L: 2 }],
@@ -126,17 +126,17 @@ export default {
       intro: T('Ripassiamo! Quattro domande sul metodo degli scienziati.', 'Ripasso: quattro domande sul metodo scientifico.'),
       steps: [
         {
-          kind: 'q', text: T('Hai previsto una cosa, ma l’esperimento dice il contrario. Cosa fai?', 'L’esperimento smentisce la tua ipotesi. Cosa fai?'),
+          kind: 'q', text: T('Avevi previsto una cosa, ma l’esperimento, fatto con cura, mostra il contrario. Per esempio pensavi che la pallina pesante andasse più piano, e invece no. Che cosa fa a questo punto uno scienziato?', 'Hai fatto un’ipotesi e l’hai messa alla prova, ma il risultato dell’esperimento la smentisce: dice il contrario di quello che ti aspettavi. Che cosa fai con la tua ipotesi?'),
           options: [T('Faccio finta di niente', 'Ignori il risultato'), T('Cambio idea: l’esperimento ha ragione', 'Cambi o correggi l’ipotesi'), T('Rifaccio finché viene come dico io', 'Ripeti finché il risultato ti dà ragione')],
           answer: 1, explain: T('Bravo! Anche i grandi scienziati cambiano idea quando l’esperimento lo dice.', 'Esatto: un’ipotesi smentita va corretta. È così che la scienza migliora.'),
         },
         {
-          kind: 'q', text: T('Perché il cronometro conta 5 oscillazioni e non una sola?', 'Perché si misura il tempo di 5 oscillazioni e poi si divide per 5?'),
+          kind: 'q', text: T('Quando misuri il pendolo, il cronometro non si ferma dopo una sola oscillazione: ne conta 5 e poi divide il tempo per 5. Perché si fa così, invece di misurarne una sola?', 'Una sola oscillazione dura poco più di un secondo, e premere il cronometro proprio al momento giusto non riesce mai perfetto. Per questo si misura il tempo di 5 oscillazioni e poi lo si divide per 5. Perché questo aiuta?'),
           options: [T('Per fare prima e finire presto', 'Per risparmiare tempo nei calcoli'), T('Perché una sola dura troppo poco per misurarla', 'Per ridurre l’errore di misura'), T('Perché all’inizio il pendolo va più piano', 'Perché il pendolo all’inizio è lento')],
           answer: 1, explain: T('Giusto: un tempo più lungo si misura meglio.', 'Giusto: l’errore del cronometro (la reazione del dito, per esempio) si divide per 5.'),
         },
         {
-          kind: 'q', text: T('Cosa cambia il ritmo di un pendolo?', 'Da quale variabile dipende davvero il periodo del pendolo?'),
+          kind: 'q', text: T('Ripensa alle prove che hai fatto: hai cambiato il peso della pallina, la lunghezza del filo e quanto lo spostavi all’inizio. Quale di queste cose cambia davvero il ritmo del pendolo, cioè quanto ci mette ad andare e tornare?', 'Nel Laboratorio hai cambiato una variabile alla volta: la massa, la lunghezza del filo e l’angolo di partenza. Da quale di queste dipende davvero il periodo, cioè il tempo di un’oscillazione completa?'),
           options: [T('Il peso della pallina', 'La massa'), T('La lunghezza del filo', 'La lunghezza'), T('Quanto lo sposti all’inizio', 'L’angolo')],
           answer: 1, explain: T('Esatto: conta il filo!', 'Esatto: per angoli piccoli conta solo la lunghezza (e la gravità del pianeta).'),
         },
@@ -160,7 +160,7 @@ export default {
         'Sono Vetrino. Molti pensano: <i>“Un pendolo che oscilla largo impiega molto più tempo”</i>. Non ti dico se è vero: chiedi all’esperimento.'),
       steps: [
         {
-          kind: 'q', text: T('Quale esperimento ci serve?', 'Quale esperimento mette alla prova il mito?'),
+          kind: 'q', text: T('Il mito dice che, se sposti di più il pendolo, ci mette molto più tempo a tornare indietro. Per controllarlo dobbiamo cambiare <b>soltanto</b> quanto lo spostiamo e lasciare tutto il resto uguale. Quale esperimento ci serve?', 'Il mito sostiene che il periodo cresce molto se aumenti l’angolo di partenza. Un esperimento onesto cambia solo la variabile che vuoi studiare e tiene ferme tutte le altre. Quale esperimento mette davvero alla prova il mito?'),
           options: [
             T('Stesso filo e stesso peso: prima spostato poco, poi tanto', 'Stessi L e m, angolo 5° e poi 60°'),
             T('Un filo corto spostato poco e uno lungo spostato tanto', 'Angolo 5° con filo corto, 60° con filo lungo'),
@@ -170,7 +170,7 @@ export default {
           wrong: T('Mmh, così cambiano due cose insieme… o non confronti niente. Come capiresti chi ha ragione?', 'Così non isoli l’angolo: che cosa causerebbe la differenza?'),
         },
         {
-          kind: 'q', text: T('Spostato tanto (60°), il pendolo ci metterà…', 'A 60° invece che a 5°, il periodo sarà…'),
+          kind: 'q', text: T('Prima lo lanci spostandolo poco (5°), poi tantissimo (60°). Il filo e la pallina restano gli stessi. Spostato così tanto, quanto tempo ci metterà ad andare e tornare, rispetto a prima?', 'Stesso filo e stessa massa: cambia solo l’angolo di partenza, da 5° a 60°, cioè 12 volte di più. Se il mito avesse ragione, anche il periodo crescerebbe di tanto. Che cosa prevedi? Rispetto al lancio a 5°, il periodo sarà…'),
           options: [T('il doppio del tempo', 'circa il doppio'), T('quasi lo stesso tempo', 'quasi uguale, appena più lungo'), T('la metà del tempo', 'circa la metà')],
           answer: 1,
           predict: [{ L: 1, m: 0.5, a: 5 }, { L: 1, m: 0.5, a: 60 }],
@@ -179,7 +179,7 @@ export default {
             'Circa 2,01 s contro 2,15 s: solo il 7% in più. Per questo un orologio a pendolo resta preciso anche se l’oscillazione si smorza piano piano.'),
         },
         {
-          kind: 'q', text: T('Allora, il bambino aveva ragione?', 'Conclusione?'),
+          kind: 'q', text: T('Hai visto i due tempi: quello del lancio piccolo e quello del lancio grande. Il bambino del mito diceva che, spostandolo tanto, il pendolo ci mette moltissimo di più. Aveva ragione?', 'Confronta i due periodi misurati, a 5° e a 60°. Il mito diceva che il periodo cresce tanto quanto l’angolo. Che cosa puoi concludere?'),
           options: [T('Sì: spinto in alto ci mette molto di più', 'Il mito è vero: angolo triplo, periodo triplo'), T('No: il tempo cambia pochissimo', 'Il mito è falso: il periodo cresce appena'), T('Dipende da quanto pesa chi è sopra', 'Dipende dalla massa appesa')],
           answer: 1,
           explain: T('Mito smontato! Spingere di più fa andare più in alto, non più lenti.', 'Mito smontato: il periodo dipende quasi solo da L e g; l’angolo conta poco, e solo quando è grande.'),

@@ -36,7 +36,7 @@ export default {
         { kind: 'free', text: T('Esplora: trova la formica, la Terra e il Sole. Poi premi Avanti.', 'Esplora tutta la scala, dal protone all’universo osservabile. Poi premi Avanti.') },
         {
           kind: 'q',
-          text: T('Chi è più grande?', 'Il diametro del Sole è circa quante volte quello della Terra?', 'Quante Terre servono, in fila, per coprire il diametro del Sole?'),
+          text: T('Sulla scala delle grandezze hai incontrato la Terra e il Sole. Da lontano, nel cielo, sembrano grandi più o meno uguali. Ma se li mettessi uno accanto all’altro, chi sarebbe più grande?', 'Sulla scala hai visto la Terra e il Sole. Il <b>diametro</b> è la larghezza di una sfera, da un bordo all’altro passando per il centro. Il diametro del Sole è circa quante volte quello della Terra?', 'Mettiamo tante Terre in fila, una accanto all’altra, da un bordo all’altro del Sole passando per il centro. Quante ne servono per coprire il suo diametro?'),
           options: [T('La Terra', 'Circa 10'), T('Il Sole', 'Circa 100'), T('Sono uguali', 'Circa 10.000')],
           answer: 1,
           set: { exp: 8 },
@@ -55,19 +55,19 @@ export default {
         'Dal 1960 quasi tutto il mondo usa il <b>Sistema Internazionale</b>: metro, secondo, chilogrammo. Nel 1999 una sonda della NASA andò persa perché due squadre usavano unità diverse.'),
       steps: [
         {
-          kind: 'q', only: ['e'], text: 'Con cosa misuri quanto sei alto?',
+          kind: 'q', only: ['e'], text: 'Ogni cosa si misura con la sua <b>unità di misura</b>: è il «pezzetto» che usi per contare. Per il tempo usi i secondi, per il peso i chili. E se vuoi sapere quanto sei alto, quale unità usi?',
           options: ['Con i secondi', 'Con i metri', 'Con i chili'], answer: 1, explain: 'Esatto: l’altezza è una lunghezza, e si misura in metri.',
         },
         {
-          kind: 'q', only: ['e'], text: 'Quanto dura una canzone? Scegli l’unità giusta.',
+          kind: 'q', only: ['e'], text: 'Il tempo si misura in secondi, minuti e ore; le lunghezze in metri; il peso in chili. Pensa alla tua canzone preferita: quanto dura? Scegli la risposta con l’unità giusta.',
           options: ['Pochi minuti', 'Pochi metri', 'Pochi chili'], answer: 0, explain: 'Giusto: il tempo si misura in secondi e minuti.',
         },
         {
-          kind: 'q', only: ['s', 'c'], text: T('', 'Quale di queste è un’unità fondamentale del SI?', 'Quale di queste è un’unità del Sistema Internazionale?'),
+          kind: 'q', only: ['s', 'c'], text: T('', 'Gli scienziati di tutto il mondo usano le stesse unità, quelle del <b>Sistema Internazionale</b> (SI): così una misura si capisce ovunque. Le unità fondamentali sono poche, come il metro per le lunghezze e il secondo per il tempo. Quale di queste è un’unità fondamentale del SI?', 'Il <b>Sistema Internazionale</b> (SI) è l’insieme di unità che usano gli scienziati di tutto il mondo, come il metro e il secondo. Alcune unità di tutti i giorni invece non ne fanno parte. Quale di queste è un’unità del SI?'),
           options: ['Il pollice', 'Il chilogrammo', 'L’ora'], answer: 1, explain: T('', 'Il kg è l’unità SI della massa. L’ora si usa, ma l’unità SI del tempo è il secondo.'),
         },
         {
-          kind: 'q', only: ['s', 'c'], text: '1 km è uguale a…', options: ['10 m', '100 m', '1000 m'], answer: 2,
+          kind: 'q', only: ['s', 'c'], text: 'Il prefisso <b>chilo</b> vuol dire «mille»: lo trovi in chilometro e in chilogrammo. Allora 1 km è uguale a…', options: ['10 m', '100 m', '1000 m'], answer: 2,
           explain: T('', '“Kilo” vuol dire mille: 1 km = 10³ m. “Milli” vuol dire un millesimo: 1 mm = 10⁻³ m.'),
         },
       ],
@@ -81,7 +81,7 @@ export default {
       steps: [
         {
           kind: 'q',
-          text: T('Quante persone, una sopra l’altra, servono per arrivare in cima alla Torre Eiffel?', 'Qual è l’ordine di grandezza dell’altezza della Torre Eiffel?', 'Quanto è alta, più o meno, la Torre Eiffel?'),
+          text: T('La Torre Eiffel, a Parigi, è una torre di ferro altissima. Immagina tante persone, ognuna in piedi sulle spalle di quella sotto. Non serve il numero esatto, basta una stima: quante persone servono per arrivare fino in cima?', 'L’<b>ordine di grandezza</b> è la potenza di 10 più vicina a una misura: non il numero esatto, ma se si tratta di decine, centinaia o migliaia. Un palazzo di 10 piani è alto circa 30 m, e la Torre Eiffel è molto più alta. Qual è l’ordine di grandezza della sua altezza?', 'Non serve il numero esatto: basta l’ordine di grandezza, cioè capire se sono decine, centinaia o migliaia di metri. Per confronto, un palazzo di 10 piani è alto circa 30 m. Quanto è alta, più o meno, la Torre Eiffel?'),
           options: [T('Circa 20', '10¹ m (decine di metri)', 'Come un palazzo di 5 piani'), T('Circa 200', '10² m (centinaia di metri)', 'Come un palazzo di 100 piani'), T('Circa 20.000', '10⁴ m (decine di km)', 'Come una montagna di 10 km')],
           answer: 1,
           predict: [{ exp: 0.2 }, { exp: 2.5 }],
@@ -112,13 +112,13 @@ export default {
           explain: T('Perfetto! Dal virus all’Everest.', 'Perfetto: 10⁻⁷, 10⁻³, 10⁰, 10¹, 10², 10⁴ m.'),
         },
         {
-          kind: 'q', text: T('Prima di un esperimento, cosa fai?', 'Il metodo scientifico: cosa viene prima dell’esperimento?'),
+          kind: 'q', text: T('Ripensa al pendolo: prima di lanciarlo dicevi che cosa, secondo te, sarebbe successo. Poi l’esperimento ti diceva se avevi ragione. Come si chiama quello che fai prima di un esperimento?', 'Nel metodo scientifico i passi hanno un ordine: si osserva, si fa una previsione che si possa controllare, si prova, si conclude. Che cosa viene subito prima dell’esperimento?'),
           options: [T('Una previsione', 'L’ipotesi'), T('Si scrive il risultato', 'La conclusione'), T('Si chiede a un esperto', 'La pubblicazione')], answer: 0,
           explain: T('Esatto: prima indovini, poi controlli!', 'Esatto: ipotesi, poi esperimento, poi conclusione.'), wrong: 'Ripensa al Laboratorio: prima indovini, poi…',
         },
         {
           kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da kg a grammi.',
-          gen: () => { const k = pick([0.15, 0.25, 0.4, 0.75, 1.2]), g = Math.round(k * 1000); return { text: t('<b>{k} kg</b> quanti grammi sono?', { k }), ans: g, tol: 0, unit: 'g', explain: t('Giusto: {k} × 1000 = {g} g.', { k, g }) }; },
+          gen: () => { const k = pick([0.15, 0.25, 0.4, 0.75, 1.2]), g = Math.round(k * 1000); return { text: t('Sulla bilancia del parco c’è un pacco da <b>{k} kg</b>. Ricorda che «chilo» vuol dire mille: 1 kg = 1000 g. Quanti grammi pesa il pacco?', { k }), ans: g, tol: 0, unit: 'g', explain: t('Giusto: {k} × 1000 = {g} g.', { k, g }) }; },
         },
       ],
       hints: [T('Confronta due cose vicine alla volta: quale è più grande?')],
@@ -132,13 +132,13 @@ export default {
         'Sono Vetrino. Si sente dire che un atomo è “appena più piccolo di un granello di sabbia”. Vediamo i numeri.'),
       steps: [
         {
-          kind: 'q', text: T('Secondo te, quanti atomi in fila servono per fare un granello di sabbia?', 'Granello: 10⁻³ m. Atomo: 10⁻¹⁰ m. Quante volte è più piccolo l’atomo?'),
+          kind: 'q', text: T('Tutto è fatto di <b>atomi</b>, pezzettini piccolissimi. Un granello di sabbia è già piccolo, ma un atomo lo è molto, molto di più. Secondo te, quanti atomi messi in fila servono per coprire la larghezza di un granello?', 'Un granello di sabbia è largo circa 10⁻³ m (un millimetro), un atomo circa 10⁻¹⁰ m. Per sapere quante volte uno sta nell’altro si dividono le due misure: con le potenze di 10 basta sottrarre gli esponenti. Quante volte è più piccolo l’atomo?'),
           options: [T('Circa 10', '10 volte (10¹)'), T('Circa 1000', '1000 volte (10³)'), T('Circa 10 milioni', '10 milioni di volte (10⁷)')], answer: 2,
           predict: [{ exp: -3 }, { exp: -10 }],
           explain: T('Dieci milioni! Il granello è un gigante per un atomo.', '10⁻³ / 10⁻¹⁰ = 10⁷: dieci milioni di volte.'),
         },
         {
-          kind: 'q', text: T('Allora il bambino aveva ragione?', 'Il mito è vero?'),
+          kind: 'q', text: T('Il bambino del mito diceva che un atomo è appena un po’ più piccolo di un granello di sabbia, quasi abbastanza grande da vederlo. Dopo quello che hai scoperto, aveva ragione?', 'Il mito dice che un atomo è «quasi visibile», appena più piccolo di un granello. Hai appena confrontato i due ordini di grandezza. Il mito è vero?'),
           options: [T('Sì: sono tutti e due piccolissimi', 'Sì, la differenza è piccola'), T('No: l’atomo è molto, molto più piccolo', 'No: 7 ordini di grandezza di differenza'), T('Quasi: l’atomo è la metà', 'Quasi: al massimo un fattore 10 o 20')], answer: 1,
           explain: T('Mito smontato! Gli atomi sono così piccoli che non si vedono nemmeno col microscopio normale.', 'Mito smontato: 7 ordini di grandezza. Se un atomo fosse grande come un granello, il granello sarebbe lungo 10 km!'),
         },
