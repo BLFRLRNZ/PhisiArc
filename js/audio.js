@@ -76,34 +76,64 @@ const WORDS = LANG === 'en' ? [
 export function speechText(text) {
   let s = String(text || '').replace(/\s+/g, ' ');
   for (const [re, w] of WORDS) s = s.replace(re, w);
-  return s.replace(/[«»“”"]/g, '').replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').replace(/\s+([,.;:!?])/g, '$1').replace(/ {2,}/g, ' ').trim();
+  return s.replace(/[«»“”"]/g, '').replace(/([!?…])\.+/g, '$1').replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').replace(/\s+([,.;:!?])/g, '$1').replace(/ {2,}/g, ' ').trim();
 }
-// Una frase alla volta: le pause fra le frasi vengono naturali, e Chrome non taglia i testi lunghi.
-const sentences = (s) => s.match(/[^.!?…:]+[.!?…:]*\s*/g)?.map((x) => x.trim()).filter((x) => /\w/.test(x)) || [];
+// Il testo si legge a pezzi, come farebbe una persona: una frase alla volta, e le frasi lunghe spezzate alle virgole.
+// Fra un pezzo e l'altro c'è una pausa vera, lunga quanto la punteggiatura chiede: la voce del browser da sola
+// tende a leggere tutto d'un fiato.
+const PAUSE = { '¶': 750, '.': 480, '!': 480, '?': 560, '…': 560, ':': 340, ';': 300, ',': 170 };
+export function chunks(s) {
+  const out = [];
+  for (const para of s.split('¶')) {
+    const sents = para.match(/[^.!?…]+(?:[.!?…]+|$)/g) || [];
+    for (let sent of sents) {
+      sent = sent.trim();
+      if (!/[\p{L}\d]/u.test(sent)) continue;
+      // le frasi lunghe si spezzano a «:» e «;», e alle virgole solo se il pezzo resta abbastanza lungo
+      const raw = sent.length > 70 ? sent.split(/(?<=[:;,])\s+/u) : [sent];
+      // niente pezzetti corti: si riuniscono con il successivo (o con il precedente, se sono in fondo)
+      const parts = [];
+      for (const r of raw) { if (parts.length && (parts[parts.length - 1].length < 28 || r.length < 18)) parts[parts.length - 1] += ' ' + r; else parts.push(r); }
+      for (const p of parts) if (/[\p{L}\d]/u.test(p)) out.push({ text: p.trim(), pause: PAUSE[p.trim().slice(-1)] ?? 300 });
+    }
+    if (out.length) out[out.length - 1].pause = Math.max(out[out.length - 1].pause, PAUSE['¶']);
+  }
+  return out;
+}
 
-let gen = 0;
+let gen = 0, timer = 0;
 export function speak(text) {
   if (!HAS) return;
-  speechSynthesis.cancel();
-  const my = ++gen;
+  stopSpeaking();
+  const my = gen;
   if (!voices.length) loadVoices();
   const v = bestVoice();
-  // l'Esploratore ascolta un po' più piano; gli altri a un ritmo normale
-  const rate = S.lens === 'e' ? 0.92 : 1.0;
-  const parts = sentences(speechText(text));
-  parts.forEach((p, i) => {
-    const u = new SpeechSynthesisUtterance(p);
+  // un po' più piano del normale: si capisce meglio e suona meno meccanico; l'Esploratore ancora più calmo
+  const rate = S.lens === 'e' ? 0.88 : 0.95;
+  const list = chunks(speechText(text));
+  const say = (i) => {
+    if (my !== gen || i >= list.length) return;
+    const { text: t, pause } = list[i];
+    const u = new SpeechSynthesisUtterance(t);
     u.lang = v ? v.lang : SPEECH;
     if (v) u.voice = v;
     u.rate = rate;
-    // le domande salgono appena di tono, come quando si parla
-    u.pitch = /\?$/.test(p) ? 1.08 : 1.0;
-    if (i === 0) u.onstart = () => { if (my !== gen) speechSynthesis.cancel(); };
+    u.pitch = /\?$/.test(t) ? 1.04 : 1.0; // le domande salgono appena
+    let done = false;
+    const next = () => { if (done) return; done = true; clearTimeout(timer); timer = setTimeout(() => say(i + 1), pause); };
+    u.onend = next;
+    u.onerror = next;
+    // alcuni browser a volte non avvisano quando hanno finito: si va avanti lo stesso dopo un tempo ragionevole
+    clearTimeout(timer);
+    timer = setTimeout(() => { if (!speechSynthesis.speaking) next(); else timer = setTimeout(function wait() { if (!speechSynthesis.speaking) next(); else timer = setTimeout(wait, 250); }, 250); }, 600 + t.length * 75 / rate);
     speechSynthesis.speak(u);
-  });
+  };
+  // dopo cancel() Chrome a volte perde la prima frase: si aspetta un attimo
+  timer = setTimeout(() => say(0), 60);
 }
 
 export function stopSpeaking() {
   gen++;
+  clearTimeout(timer);
   if (HAS) speechSynthesis.cancel();
 }

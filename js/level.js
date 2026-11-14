@@ -52,7 +52,7 @@ export function runLevel(root, level, nav) {
     // le risposte lette come le direbbe una persona: «Puoi scegliere: …; oppure …»
     const opts = [...area.querySelectorAll('.opt')].map((b) => b.textContent.trim().replace(/[.!]+$/, ''));
     const list = opts.length > 1 ? opts.slice(0, -1).join('; ') + '; ' + tr('oppure') + ' ' + opts[opts.length - 1] : opts[0];
-    return plain((withIntro ? introText + ' ' : '') + quest.innerHTML) + (opts.length ? ' ' + tr('Puoi scegliere:') + ' ' + list + '.' : '');
+    return plain(withIntro ? introText : '') + (withIntro ? ' ¶ ' : '') + plain(quest.innerHTML) + (opts.length ? ' ¶ ' + tr('Puoi scegliere:') + ' ' + list + '.' : '');
   };
 
   const canvas = h('canvas', { class: 'sim' });
