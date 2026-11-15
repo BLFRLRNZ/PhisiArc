@@ -17,7 +17,8 @@ export const today = () => Math.floor((Date.now() - new Date().getTimezoneOffset
 // le domande che si possono ripassare fuori dal livello: a scelta senza esperimento, e di calcolo.
 // Quelle che chiedono di guardare la simulazione («guarda le due linee…») si escludono con review: false.
 const reviewable = (st) => st.review !== false && ((st.kind === 'q' && !st.predict) || st.kind === 'num');
-const lensOk = (st) => !st.only || st.only.includes(S.lens || 's');
+// al Curioso i calcoli non tornano nel ripasso: nei livelli sono facoltativi («Salta il calcolo»)
+const lensOk = (st) => (!st.only || st.only.includes(S.lens || 's')) && !(st.kind === 'num' && S.lens === 'c');
 const parse = (key) => { const i = key.lastIndexOf('#'); return [key.slice(0, i), +key.slice(i + 1)]; };
 
 function stepOf(key) {

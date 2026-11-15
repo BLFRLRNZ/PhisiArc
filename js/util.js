@@ -1,5 +1,5 @@
 // Piccoli aiuti condivisi.
-import { LOCALE } from './i18n.js';
+import { LOCALE, t as tr } from './i18n.js';
 
 export const $ = (sel, root = document) => root.querySelector(sel);
 
@@ -25,10 +25,18 @@ export function h(tag, attrs = {}, ...kids) {
 // Se manca una lente si usa quella prima.
 export const T = (e, s, c) => ({ e, s: s ?? e, c: c ?? s ?? e });
 
+// Dentro un testo, [[…]] racchiude una formula facoltativa: sulla pagina diventa un riquadro chiuso, «Per chi vuole la formula»,
+// che si apre con un tocco. Lo usa la lente Curioso, che promette «le formule solo se le vuoi».
+const FBOX = /\[\[([\s\S]+?)\]\]/g;
+export const rich = (s) => (typeof s === 'string' && s.includes('[[')
+  ? s.replace(FBOX, (m, x) => `<details class="fbox"><summary>${tr('Per chi vuole la formula')}</summary><div>${x.trim()}</div></details>`) : s);
+// lo stesso testo senza i riquadri (per decidere quali attrezzi servono davvero, e per la lettura ad alta voce)
+export const noBox = (s) => String(s ?? '').replace(/<details class="fbox">[\s\S]*?<\/details>/g, ' ').replace(FBOX, ' ');
+
 export const tx = (o, lens) => {
   if (o == null) return '';
-  if (typeof o === 'string') return o;
-  return o[lens] ?? o.s ?? o.e ?? '';
+  if (typeof o === 'string') return rich(o);
+  return rich(o[lens] ?? o.s ?? o.e ?? '');
 };
 
 export const pick = (a) => a[Math.floor(Math.random() * a.length)];
@@ -45,9 +53,11 @@ export function shuffle(a) {
 export const num = (x, d = 1) =>
   Number(x).toLocaleString(LOCALE, { maximumFractionDigits: d, minimumFractionDigits: 0 });
 
+// il testo senza i segni dell'HTML (per la voce): i riquadri facoltativi delle formule non si leggono
 export const plain = (html) => {
   const d = document.createElement('div');
-  d.innerHTML = html;
+  d.innerHTML = noBox(html);
+  d.querySelectorAll('.tool-offer').forEach((x) => x.remove()); // i bottoni «Attrezzo …» non fanno parte del testo
   return d.textContent || '';
 };
 

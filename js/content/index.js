@@ -117,7 +117,9 @@ export const examFor = (w) => ({
     tr('Conosci già {w}? Rispondi a queste domande: con al massimo {n} errori, e senza aiuti, il mondo dopo si apre subito. I livelli restano lì, da giocare quando vuoi.', { w: w.name, n: EXAM_MAX_ERRORS }),
     tr('Prova d’ingresso: le domande dei ripassi di {w}. Con al massimo {n} errori, e senza aiuti, il mondo successivo si apre. I livelli restano giocabili.', { w: w.name, n: EXAM_MAX_ERRORS })),
   steps: w.zones.flatMap((z) => ZONES[z].levels.filter((l) => l.kind === 'ripasso')
-    .flatMap((l) => l.steps.filter((st) => (st.kind === 'q' && !st.predict) || st.kind === 'num').map((st) => (st.kind === 'num' ? { ...st, rounds: 1 } : st)))),
+    // i calcoli valgono per Esploratore e Studente: al Curioso («le formule solo se le vuoi») la prova chiede solo le idee
+    .flatMap((l) => l.steps.filter((st) => (st.kind === 'q' && !st.predict) || st.kind === 'num')
+      .map((st) => (st.kind === 'num' ? { ...st, rounds: 1, only: (st.only || ['e', 's', 'c']).filter((x) => x !== 'c') } : st)))),
   hints: [], // l'avviso «se usi un aiuto la prova non vale» lo dà il tasto Aiuto, al primo tocco di ogni passo (level.js)
 });
 // Quello che si è aperto resta aperto: se più avanti si aggiunge una zona (per esempio F03),

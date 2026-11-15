@@ -373,4 +373,8 @@ export default {
  "tempo aperto (s)": "time open (s)",
  "acqua (litri)": "water (litres)",
  "frenata (m)": "braking (m)",
+ "Per chi vuole la formula": "For those who want the formula",
+ "Calcolo saltato.": "Calculation skipped.",
+ "Si fa così:": "This is how it goes:",
+ "Salta il calcolo": "Skip the calculation",
 };

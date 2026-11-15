@@ -30,11 +30,11 @@ export default {
         { kind: 'free', runs: 1, text: T('Premi ▶ Lancia e guarda il pendolo. Il cronometro conta 5 andate e ritorni: un tempo lungo si misura meglio di uno corto.', 'Lancia il pendolo: il cronometro misura 5 oscillazioni e divide per 5. Chi preme il cronometro sbaglia sempre di un soffio: su un tempo più lungo, quell’errore pesa meno.') },
         {
           kind: 'q',
-          text: T('Immagina di avere un’idea, per esempio: «se spingo forte il pendolo, va più veloce». Non sai ancora se è vera. Come fa uno scienziato a scoprirlo?', 'Il <b>metodo scientifico</b> è la strada che porta da quello che vedi a una conoscenza di cui ti puoi fidare. Il primo passo è osservare, come hai fatto con il pendolo. Che cosa viene subito dopo l’osservazione?', 'Tutti hanno idee su come funziona il mondo, ma non tutte sono scientifiche. Pensa a che cosa si può fare con un’idea scientifica che con una semplice opinione non si può fare. Che cosa le distingue?'),
+          text: T('Hai un’idea: «se spingo forte, il pendolo va più veloce». Come scopri se è vera?', 'Il <b>metodo scientifico</b> è la strada che porta da quello che vedi a una conoscenza di cui ti puoi fidare. Il primo passo è osservare, come hai fatto con il pendolo. Che cosa viene subito dopo l’osservazione?', 'Tutti hanno idee su come funziona il mondo, ma non tutte sono scientifiche. Pensa a che cosa si può fare con un’idea scientifica che con una semplice opinione non si può fare. Che cosa le distingue?'),
           options: [
-            T('Chiede all’amico più grande e fa come dice lui', 'Cercare la risposta su internet o sul libro', 'Che la sostiene un esperto famoso e stimato'),
-            T('Prova a indovinare, poi controlla con una prova', 'Un’ipotesi da controllare con un esperimento', 'Che un esperimento potrebbe smentirla'),
-            T('Sceglie la risposta che gli piace di più', 'Scegliere la spiegazione più semplice', 'Che piace alla maggior parte delle persone'),
+            T('Lo chiedo a un amico più grande', 'Cercare la risposta su internet o sul libro', 'Che la sostiene un esperto famoso e stimato'),
+            T('Faccio una prova e guardo', 'Un’ipotesi da controllare con un esperimento', 'Che un esperimento potrebbe smentirla'),
+            T('Scelgo la risposta che mi piace', 'Scegliere la spiegazione più semplice', 'Che piace alla maggior parte delle persone'),
           ],
           answer: 1,
           explain: T('Esatto! <b>Prima indovini, poi controlli.</b> È il trucco di tutti gli scienziati.',
@@ -42,8 +42,8 @@ export default {
             'Esatto: un’idea è scientifica se un esperimento potrebbe smentirla. È ciò che la rende affidabile.'),
         },
       ],
-      hints: [T('Pensa a quello che hai appena fatto: hai guardato e poi…?', 'Un’ipotesi deve poter essere controllata.', 'Un’opinione si può solo condividere o no. E un’idea scientifica?'), T('La risposta giusta ha due parti: una previsione e una prova.', null, 'Pensa a che cosa può succedere a un’idea quando la metti alla prova.')],
-      solution: T('Si fa una previsione e poi la si controlla con una prova.', 'Si fa un’ipotesi e poi la si controlla con un esperimento.', 'Un’idea è scientifica se un esperimento potrebbe smentirla.'),
+      hints: [T('Pensa a quello che hai appena fatto: hai guardato e poi…?', 'Un’ipotesi deve poter essere controllata.', 'Un’opinione si può solo condividere o no. E un’idea scientifica?'), T('La risposta giusta parla di una prova.', 'La risposta giusta ha due parti: una previsione e una prova.', 'Pensa a che cosa può succedere a un’idea quando la metti alla prova.')],
+      solution: T('Si fa una prova e si guarda che cosa succede.', 'Si fa un’ipotesi e poi la si controlla con un esperimento.', 'Un’idea è scientifica se un esperimento potrebbe smentirla.'),
     },
     {
       id: 'f01-2', kind: 'lezione', title: 'Una cosa alla volta',
@@ -57,8 +57,7 @@ export default {
         {
           // Il passo è una scoperta: la domanda non dice quale cosa non conta, lo trova chi gioca cambiando una cosa alla volta.
           kind: 'free', runs: 3, distinct: true, controls: ['L', 'm'],
-          text: T('Una di queste due cose <b>non cambia</b> il ritmo del pendolo: anche se la cambi, va avanti e indietro sempre con lo stesso tempo. <b>Scopri quale!</b> Lancia, poi cambia <b>una cosa sola</b> e rilancia. Guarda quanto dura un’oscillazione.',
-            'Una delle due variabili <b>non influisce</b> sul periodo, cioè sul tempo di un’andata e ritorno. <b>Scopri quale.</b> Fai un lancio, poi cambia <b>una sola variabile</b> e rilancia: se ne cambi due insieme, non sai quale ha fatto la differenza.'),
+          text: T('Una delle due <b>non cambia</b> il tempo del pendolo. <b>Scopri quale!</b> Lancia, poi cambia <b>una cosa sola</b> e rilancia.', 'Una delle due variabili <b>non influisce</b> sul periodo, cioè sul tempo di un’andata e ritorno. <b>Scopri quale.</b> Fai un lancio, poi cambia <b>una sola variabile</b> e rilancia: se ne cambi due insieme, non sai quale ha fatto la differenza.'),
           onRun: (r) => t('Un’oscillazione dura <b>{T} s</b>. Ora cambia una cosa sola e rilancia.', { T: r.T }),
         },
         {
@@ -81,7 +80,7 @@ export default {
       steps: [
         {
           kind: 'q',
-          text: T('Ora cambiamo il filo: da corto (mezzo metro) diventa lungo (2 metri, quattro volte tanto). La pallina resta la stessa. Prima di provare, prevedi: con il filo lungo, il pendolo andrà avanti e indietro…', 'Ora la variabile che cambi è la lunghezza del filo: passa da 0,5 m a 2 m, cioè diventa 4 volte più lunga. Massa e angolo restano uguali. Prima di lanciare, prevedi: il periodo, cioè il tempo di un’oscillazione completa…'),
+          text: T('Il filo diventa quattro volte più lungo. Con il filo lungo, il pendolo va avanti e indietro…', 'Ora la variabile che cambi è la lunghezza del filo: passa da 0,5 m a 2 m, cioè diventa 4 volte più lunga. Massa e angolo restano uguali. Prima di lanciare, prevedi: il periodo, cioè il tempo di un’oscillazione completa…'),
           options: [T('più veloce', 'diventa più breve'), T('uguale', 'resta uguale'), T('più lento', 'diventa più lungo')],
           answer: 2,
           predict: [{ L: 0.5 }, { L: 2 }],
@@ -106,7 +105,8 @@ export default {
           kind: 'tune', rounds: 2,
           text: T('Regola l’altalena e lanciala.', 'Regola il pendolo per ottenere il periodo richiesto. La verifica cambierà valore: serve la regola, non la fortuna.'),
           gen: (lens, r) => {
-            const T0 = pick(r === 0 ? [1.4, 1.6, 2.0, 2.2] : [1.2, 1.8, 2.4, 2.8]);
+            // all'Esploratore solo tempi interi: 2 secondi (filo di 1 metro), poi 3 (poco più di 2 metri)
+            const T0 = lens === 'e' ? (r === 0 ? 2 : 3) : pick(r === 0 ? [1.4, 1.6, 2.0, 2.2] : [1.2, 1.8, 2.4, 2.8]);
             return { T: T0, text: t('Un’oscillazione deve durare <b>{T:1} secondi</b>.', { T: T0 }) };
           },
           // valori che risolvono la prova: servono al test automatico che gioca tutti i livelli
@@ -115,29 +115,29 @@ export default {
         },
       ],
       hints: [T('Il peso non cambia il ritmo, ricordi? Allora cosa resta da cambiare?', 'Delle due variabili, una non conta. Quale resta?'), T('Filo più lungo, altalena più lenta. Filo più corto, più veloce.', 'Il periodo cresce con la radice della lunghezza: per raddoppiare il periodo serve un filo 4 volte più lungo.')],
-      solution: T('Cambia solo il filo: circa 1 metro per 2 secondi, mezzo metro per 1,4 secondi, 2 metri per 2,8 secondi.', 'L = g·T²/(4π²): per T = 2 s, L ≈ 0,99 m; per T = 1,4 s, L ≈ 0,49 m.'),
+      solution: T('Cambia solo il filo: circa 1 metro per 2 secondi, poco più di 2 metri per 3 secondi.', 'L = g·T²/(4π²): per T = 2 s, L ≈ 0,99 m; per T = 1,4 s, L ≈ 0,49 m.'),
     },
     {
       id: 'f01-5', kind: 'ripasso', title: 'Ripasso del metodo',
       intro: T('Ripassiamo! Quattro domande sul metodo degli scienziati.', 'Ripasso: quattro domande sul metodo scientifico.'),
       steps: [
         {
-          kind: 'q', text: T('Avevi previsto una cosa, ma l’esperimento, fatto con cura, mostra il contrario. Per esempio pensavi che la pallina pesante andasse più piano, e invece no. Che cosa fa a questo punto uno scienziato?', 'Hai fatto un’ipotesi e l’hai messa alla prova, ma il risultato dell’esperimento la smentisce: dice il contrario di quello che ti aspettavi. Che cosa fai con la tua ipotesi?'),
+          kind: 'q', text: T('Avevi previsto una cosa, ma l’esperimento mostra il contrario. Che cosa fai?', 'Hai fatto un’ipotesi e l’hai messa alla prova, ma il risultato dell’esperimento la smentisce: dice il contrario di quello che ti aspettavi. Che cosa fai con la tua ipotesi?'),
           options: [T('Faccio finta di niente', 'Ignori il risultato'), T('Cambio idea: l’esperimento ha ragione', 'Cambi o correggi l’ipotesi'), T('Rifaccio finché viene come dico io', 'Ripeti finché il risultato ti dà ragione')],
           answer: 1, explain: T('Bravo! Anche i grandi scienziati cambiano idea quando l’esperimento lo dice.', 'Esatto: un’ipotesi smentita va corretta. È così che la scienza migliora.'),
         },
         {
-          kind: 'q', text: T('Quando misuri il pendolo, il cronometro non si ferma dopo una sola oscillazione: ne conta 5 e poi divide il tempo per 5. Perché si fa così, invece di misurarne una sola?', 'Una sola oscillazione dura poco più di un secondo, e premere il cronometro proprio al momento giusto non riesce mai perfetto. Per questo si misura il tempo di 5 oscillazioni e poi lo si divide per 5. Perché questo aiuta?'),
-          options: [T('Per fare prima e finire presto', 'Per risparmiare tempo nei calcoli'), T('Perché una sola dura troppo poco per misurarla', 'Per ridurre l’errore di misura'), T('Perché all’inizio il pendolo va più piano', 'Perché il pendolo all’inizio è lento')],
-          answer: 1, explain: T('Giusto: un tempo più lungo si misura meglio.', 'Giusto: l’errore del cronometro (la reazione del dito, per esempio) si divide per 5.'),
+          kind: 'q', text: T('Il cronometro conta 5 andate e ritorni del pendolo, non una sola. Perché?', 'Una sola oscillazione dura poco più di un secondo, e premere il cronometro proprio al momento giusto non riesce mai perfetto. Per questo si misura il tempo di 5 oscillazioni e poi lo si divide per 5. Perché questo aiuta?'),
+          options: [T('Per finire prima', 'Per risparmiare tempo nei calcoli'), T('Una sola dura troppo poco', 'Per ridurre l’errore di misura'), T('All’inizio il pendolo va più piano', 'Perché il pendolo all’inizio è lento')],
+          answer: 1, explain: T('Giusto: un tempo più lungo si misura meglio di uno corto.', 'Giusto: l’errore del cronometro (la reazione del dito, per esempio) si divide per 5.'),
         },
         {
-          kind: 'q', text: T('Ripensa alle prove che hai fatto: hai cambiato il peso della pallina e la lunghezza del filo. Quale delle due cambia davvero il ritmo del pendolo, cioè quanto ci mette ad andare e tornare?', 'Con il pendolo hai cambiato una variabile alla volta: prima la massa, poi la lunghezza del filo. Da quale delle due dipende il periodo, cioè il tempo di un’oscillazione completa?'),
+          kind: 'q', text: T('Che cosa cambia davvero il tempo del pendolo?', 'Con il pendolo hai cambiato una variabile alla volta: prima la massa, poi la lunghezza del filo. Da quale delle due dipende il periodo, cioè il tempo di un’oscillazione completa?'),
           options: [T('Il peso della pallina', 'La massa'), T('La lunghezza del filo', 'La lunghezza'), T('Nessuna delle due')],
           answer: 1, explain: T('Esatto: conta il filo!', 'Esatto: conta la lunghezza (e la gravità del pianeta). La massa no.'),
         },
         {
-          kind: 'vars', text: T('Ora vuoi scoprire se il <b>filo</b> cambia il pendolo. Prepara i due lanci: tra il primo e il secondo, ogni cosa la <b>cambi</b> o la lasci <b>uguale</b>?', 'Ora vuoi scoprire se la <b>lunghezza</b> del filo influisce sul periodo. Prepara i due lanci: per ogni variabile, tra un lancio e l’altro la <b>cambi</b> o la tieni <b>uguale</b>?'),
+          kind: 'vars', text: T('Vuoi scoprire se il <b>filo</b> cambia il pendolo. Tra un lancio e l’altro, che cosa <b>cambi</b> e che cosa lasci <b>uguale</b>?', 'Ora vuoi scoprire se la <b>lunghezza</b> del filo influisce sul periodo. Prepara i due lanci: per ogni variabile, tra un lancio e l’altro la <b>cambi</b> o la tieni <b>uguale</b>?'),
           vars: [{ k: 'L', t: T('il filo', 'la lunghezza del filo') }, { k: 'm', t: T('il peso', 'la massa') }, { k: 'a', t: T('quanto lo sposti', 'l’angolo di partenza') }],
           change: 'L',
           wrong: T('Tieni tutto uguale tranne quello che vuoi studiare.', 'Si cambia solo la variabile studiata.'),
@@ -156,17 +156,17 @@ export default {
         'Sono Vetrino. Molti pensano: <i>“Un pendolo che oscilla largo impiega molto più tempo”</i>. Non ti dico se è vero: chiedi all’esperimento.'),
       steps: [
         {
-          kind: 'q', text: T('Il mito dice che, se sposti di più il pendolo, ci mette molto più tempo a tornare indietro. Per controllarlo dobbiamo cambiare <b>soltanto</b> quanto lo spostiamo e lasciare tutto il resto uguale. Quale esperimento ci serve?', 'Il mito sostiene che il periodo cresce molto se aumenti l’angolo di partenza. Un esperimento onesto cambia solo la variabile che vuoi studiare e tiene ferme tutte le altre. Quale esperimento mette davvero alla prova il mito?'),
+          kind: 'q', text: T('Vuoi controllare il mito. Che cosa cambi tra un lancio e l’altro?', 'Il mito sostiene che il periodo cresce molto se aumenti l’angolo di partenza. Un esperimento onesto cambia solo la variabile che vuoi studiare e tiene ferme tutte le altre. Quale esperimento mette davvero alla prova il mito?'),
           options: [
-            T('Stesso filo e stesso peso: prima spostato poco, poi tanto', 'Stessi L e m, angolo 5° e poi 60°'),
-            T('Un filo corto spostato poco e uno lungo spostato tanto', 'Angolo 5° con filo corto, 60° con filo lungo'),
-            T('Spostato tanto, una volta sola, guardando bene', 'Un solo lancio a 60°, misurato con cura'),
+            T('Solo quanto sposto il pendolo', 'Stessi L e m, angolo 5° e poi 60°'),
+            T('Il filo e quanto lo sposto', 'Angolo 5° con filo corto, 60° con filo lungo'),
+            T('Niente: lo lancio una volta sola', 'Un solo lancio a 60°, misurato con cura'),
           ],
           answer: 0, explain: T('Giusto: cambia solo quanto lo sposti. Ora la previsione!', 'Giusto: cambia solo l’angolo. Ora la previsione.'),
           wrong: T('Mmh, così cambiano due cose insieme… o non confronti niente. Come capiresti chi ha ragione?', 'Così non isoli l’angolo: che cosa causerebbe la differenza?'),
         },
         {
-          kind: 'q', text: T('Prima lo lanci spostandolo poco (5°), poi tantissimo (60°). Il filo e la pallina restano gli stessi. Spostato così tanto, quanto tempo ci metterà ad andare e tornare, rispetto a prima?', 'Stesso filo e stessa massa: cambia solo l’angolo di partenza, da 5° a 60°, cioè 12 volte di più. Se il mito avesse ragione, anche il periodo crescerebbe di tanto. Che cosa prevedi? Rispetto al lancio a 5°, il periodo sarà…'),
+          kind: 'q', text: T('Prima sposti il pendolo poco, poi tantissimo. Spostato tanto, quanto ci mette ad andare e tornare?', 'Stesso filo e stessa massa: cambia solo l’angolo di partenza, da 5° a 60°, cioè 12 volte di più. Se il mito avesse ragione, anche il periodo crescerebbe di tanto. Che cosa prevedi? Rispetto al lancio a 5°, il periodo sarà…'),
           options: [T('il doppio del tempo', 'circa il doppio'), T('quasi lo stesso tempo', 'quasi uguale, appena più lungo'), T('la metà del tempo', 'circa la metà')],
           answer: 1,
           predict: [{ L: 1, m: 0.5, a: 5 }, { L: 1, m: 0.5, a: 60 }],
@@ -175,7 +175,7 @@ export default {
             'Circa 2,01 s contro 2,15 s: solo il 7% in più. Per questo un orologio a pendolo resta preciso anche se l’oscillazione si smorza piano piano.'),
         },
         {
-          kind: 'q', review: false, text: T('Hai visto i due tempi: quello del lancio piccolo e quello del lancio grande. Il bambino del mito diceva che, spostandolo tanto, il pendolo ci mette moltissimo di più. Aveva ragione?', 'Confronta i due periodi misurati, a 5° e a 60°. Il mito diceva che il periodo cresce tanto quanto l’angolo. Che cosa puoi concludere?'),
+          kind: 'q', review: false, text: T('Il bambino diceva: «spinto in alto, ci mette tantissimo di più». Aveva ragione?', 'Confronta i due periodi misurati, a 5° e a 60°. Il mito diceva che il periodo cresce tanto quanto l’angolo. Che cosa puoi concludere?'),
           options: [T('Sì: spinto in alto ci mette molto di più', 'Il mito è vero: il periodo cresce quanto l’angolo'), T('No: il tempo cambia pochissimo', 'Il mito è falso: il periodo cresce appena'), T('Dipende da quanto pesa chi è sopra', 'Dipende dalla massa appesa')],
           answer: 1,
           explain: T('Mito smontato! Spingere di più fa andare più in alto, non più lenti.', 'Mito smontato: il periodo dipende quasi solo da L e g; l’angolo conta poco, e solo quando è grande.'),

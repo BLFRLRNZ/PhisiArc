@@ -1,5 +1,5 @@
 // Il motore di un livello: testo, simulazione, passi (domande, prove, regolazioni) e stelle.
-import { h, tx, shuffle, plain, wait, T, asDialog } from './util.js';
+import { h, tx, rich, shuffle, plain, wait, T, asDialog } from './util.js';
 import { S, save, voiceOn } from './state.js';
 import { SIMS } from './sims/index.js';
 import { sfx, speak, stopSpeaking } from './audio.js';
@@ -8,7 +8,7 @@ import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { starsSVG, confetti, countUp, CHECK } from './fx.js';
 import { enroll, grade } from './review.js';
-import { newTools, toolCard } from './tools.js';
+import { TOOLS, newTools, toolCard, toolsToOffer, toolQueue } from './tools.js';
 import { t as tr, LOCALE } from './i18n.js';
 import { KIND, worldOf, zoneOf, nextLevel, gradeNow, worldDone, nextWorld, worldReady, worldOpen, EXAM_MAX_ERRORS } from './content/index.js';
 
@@ -29,6 +29,31 @@ export function runLevel(root, level, nav) {
   if (TEST) { TEST.busy = () => busy || !!(sim && sim.running); TEST.fast = (m) => { if (sim) sim.mul = m; }; }
   let sim = null, pending = null, onResult = null, busy = false;
 
+  // ---------- attrezzi di matematica offerti, non imposti ----------
+  // Un attrezzo mai incontrato che compare in una spiegazione, in un aiuto o in un riquadro «Per chi vuole la formula»
+  // non interrompe il gioco: sotto quel testo c'è un bottone che apre la sua scheda. (Quelli che servono per rispondere
+  // si aprono da soli all'inizio del livello: vedi in fondo.)
+  function offerTools(el) {
+    if (level.exam) return el;
+    const row = (ids) => h('div', { class: 'tool-offer' }, ids.map((id) => h('button', { class: 'chip tool-chip', 'data-tool': id, onclick: (e) => {
+      const host = e.currentTarget.closest('.say, .hintbox, .quest, .bubble, .target') || e.currentTarget.parentNode;
+      root.querySelectorAll('.toolcard.offered').forEach((c) => c.remove());
+      const queue = toolQueue(id); // con la radice arriva prima il quadrato, se non lo si conosce ancora
+      const card = toolCard(queue, null);
+      card.classList.add('offered');
+      host.after(card);
+      // la scheda è aperta: i bottoni di questi attrezzi non servono più
+      root.querySelectorAll('.tool-chip').forEach((b) => { if (!queue.includes(b.dataset.tool)) return; const r = b.parentNode; b.remove(); if (r && !r.children.length) r.remove(); });
+      card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } }, h('span', { class: 'tool-chip-tag' }, tr('Attrezzo')), ' ', TOOLS[id].title())));
+    el.querySelectorAll('details.fbox').forEach((d) => { const ids = toolsToOffer(d.textContent, lens); if (ids.length) d.append(row(ids)); });
+    const rest = el.cloneNode(true);
+    rest.querySelectorAll('details.fbox, .tool-offer').forEach((x) => x.remove());
+    const ids = toolsToOffer(rest.textContent, lens);
+    if (ids.length) el.append(row(ids));
+    return el;
+  }
+
   // ---------- struttura della pagina ----------
   const back = h('button', { class: 'btn ghost', onclick: () => leave() }, h('span', { html: IC.back }), h('span', { class: 'back-t' }, level.exam ? world.name : level.review ? tr('Il percorso') : zone.title));
   const hintBtn = h('button', { class: 'btn ghost hint-btn', onclick: () => showHint() }, h('span', { html: IC.hint }), tr('Aiuto'));
@@ -42,7 +67,7 @@ export function runLevel(root, level, nav) {
   const speakBtn = h('button', { class: 'btn icon', title: tr('Ascolta'), 'aria-label': tr('Ascolta'), onclick: () => speak(readOut(true)), html: IC.sound });
   const intro = h('div', { class: 'intro', style: `--c:${who.c}` },
     h('div', { class: 'who', html: charSVG(who.id), onclick: (e) => hop(e.currentTarget.firstChild) }),
-    h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), h('div', { html: introText })));
+    h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), offerTools(h('div', { html: introText }))));
   const quest = h('div', { class: 'quest', tabindex: '-1' });
   const area = h('div', { class: 'area', 'aria-live': 'polite' });
   const hintBox = h('div', { class: 'hintbox', hidden: true, 'aria-live': 'polite' });
@@ -189,7 +214,7 @@ export function runLevel(root, level, nav) {
     return b;
   }
 
-  function say(html, cls = '') { return h('div', { class: 'say ' + cls, html }); }
+  function say(html, cls = '') { return offerTools(h('div', { class: 'say ' + cls, html })); }
 
   // Risposta giusta: bordo verde, spunta che si traccia e un'onda che parte dal bottone.
   function markRight(b) {
@@ -210,6 +235,7 @@ export function runLevel(root, level, nav) {
     onResult = null;
     area.replaceChildren();
     quest.innerHTML = tx(st.text, lens);
+    offerTools(quest);
     if (sim) {
       sim.stop();
       if (st.set) sim.set(st.set);
@@ -356,7 +382,8 @@ export function runLevel(root, level, nav) {
     const newTarget = () => {
       target = st.gen(lens, r);
       if (target.set && sim) sim.set(target.set);
-      tbox.innerHTML = `<span class="round">${tr('Prova {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${target.text}`;
+      tbox.innerHTML = `<span class="round">${tr('Prova {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${rich(target.text)}`;
+      offerTools(tbox);
       fb.className = 'say muted';
       fb.innerHTML = r === 0 ? tr('Regola i cursori e premi ▶ Lancia.') : tr('Nuovi valori: la regola che hai trovato funziona ancora?');
     };
@@ -390,11 +417,20 @@ export function runLevel(root, level, nav) {
     const ok = h('button', { class: 'btn primary', onclick: () => check() }, tr('Controlla'));
     const fb = h('div', { class: 'say muted', hidden: true });
     inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') check(); });
-    area.append(qn, h('div', { class: 'numrow' }, inp, unit, ok), fb);
+    // Curioso: «le formule solo se le vuoi». Il calcolo si può saltare: si legge come si fa e si va avanti, senza perdere stelle.
+    const skip = lens === 'c' && !level.exam ? h('button', { class: 'btn ghost skip', onclick: () => {
+      ok.disabled = true; inp.disabled = true; skip.remove();
+      fb.hidden = false; fb.className = 'say muted';
+      fb.innerHTML = `<b>${tr('Calcolo saltato.')}</b> ${tr('Si fa così:')} ${rich(autoSol())}`;
+      offerTools(fb);
+      area.append(nextBtn());
+    } }, tr('Salta il calcolo')) : null;
+    area.append(qn, h('div', { class: 'numrow' }, inp, unit, ok, skip), fb);
     const next = () => {
       cur = st.gen(lens, r, sim); // la simulazione serve alle domande che usano le misure appena fatte
       autoSol = () => (cur.explain ? String(cur.explain).replace(/^(Giusto|Esatto|Perfetto)[:!.]?\s*/i, '') : tr('Il risultato è {v} {u}.', { v: cur.ans, u: cur.unit || '' }));
-      qn.innerHTML = `<span class="round">${tr('Domanda {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${cur.text}`;
+      qn.innerHTML = `<span class="round">${tr('Domanda {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${rich(cur.text)}`;
+      offerTools(qn);
       unit.textContent = cur.unit || '';
       inp.value = '';
       fb.hidden = true;
@@ -409,8 +445,9 @@ export function runLevel(root, level, nav) {
         sfx.ok();
         r++;
         fb.className = 'say good';
-        fb.innerHTML = cur.explain || tr('Giusto!');
-        if (r >= rounds) { ok.disabled = true; inp.disabled = true; area.append(nextBtn()); }
+        fb.innerHTML = rich(cur.explain || tr('Giusto!'));
+        offerTools(fb);
+        if (r >= rounds) { ok.disabled = true; inp.disabled = true; if (skip) skip.remove(); area.append(nextBtn()); }
         else setTimeout(next, 1400);
       } else {
         sfx.no();
@@ -456,6 +493,7 @@ export function runLevel(root, level, nav) {
         ok.remove();
         fb.className = 'say good';
         fb.innerHTML = tx(st.explain, lens);
+        offerTools(fb);
         area.append(nextBtn());
       } else {
         sfx.no();
@@ -499,6 +537,7 @@ export function runLevel(root, level, nav) {
         ok.remove();
         fb.className = 'say good';
         fb.innerHTML = tx(st.explain, lens);
+        offerTools(fb);
         area.append(nextBtn());
       } else {
         sfx.no();
@@ -557,12 +596,13 @@ export function runLevel(root, level, nav) {
       stepHints++; hints++;
     } else if (!stepSol && sol) { stepSol = true; solution = true; }
     const parts = hs.slice(0, stepHints).map((x, i) => `<p><b>${tr('Suggerimento {n}.', { n: i + 1 })}</b> ${x === CUT ? cutText : tx(x, lens)}</p>`);
-    if (stepSol) parts.push(`<p><b>${tr('Soluzione.')}</b> ${tx(sol, lens)}</p>`);
+    if (stepSol) parts.push(`<p><b>${tr('Soluzione.')}</b> ${rich(tx(sol, lens))}</p>`);
     let more = '';
     if (stepHints < hs.length) more = `<p class="muted small">${tr('Premi di nuovo Aiuto per un altro suggerimento (le stelle massime scendono a ★★).')}</p>`;
     else if (!stepSol && sol) more = `<p class="muted small">${tr('Premi ancora Aiuto per vedere la soluzione (stella massima ★).')}</p>`;
     hintBox.innerHTML = parts.join('') + more;
     if (!hs.length && !sol) hintBox.innerHTML = `<p>${tr('Rileggi la domanda con calma e prova l’esperimento: la risposta si vede.')}</p>`;
+    offerTools(hintBox);
     if (stacked()) hintBox.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
@@ -646,7 +686,7 @@ export function runLevel(root, level, nav) {
     nav('#/mondo/' + world.id);
   }
 
-  // Attrezzi di matematica nuovi (radice, π, seno…): prima di cominciare, la loro scheda da giocare.
+  // Attrezzi di matematica nuovi che servono per rispondere (potenze di 10, radice, π…): prima di cominciare, la loro scheda da giocare.
   const toolsNew = level.exam || level.review ? [] : newTools(level, lens);
   if (toolsNew.length) {
     quest.hidden = area.hidden = true;

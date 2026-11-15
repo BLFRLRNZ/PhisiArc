@@ -17,11 +17,11 @@ export default {
         { kind: 'free', runs: 1, text: T('Fai cadere piuma e martello. Puoi anche cambiare l’altezza.', 'Fai almeno una prova e confronta i due tempi di caduta.') },
         {
           kind: 'q',
-          text: T('Piuma e martello sono partiti insieme dalla stessa altezza, ma la piuma è arrivata a terra molto dopo, scendendo piano piano e ondeggiando. Che cosa l’ha rallentata?', 'Stessa altezza, stessa partenza, ma la piuma impiega molto più tempo del martello. La gravità tira entrambi verso il basso. C’è però qualcos’altro che agisce sulla piuma mentre cade. Perché ci mette tanto di più?', 'La piuma è leggera e molto larga per il suo peso. Mentre cade, che cosa la rallenta davvero?'),
+          text: T('La piuma è arrivata a terra molto dopo il martello. Che cosa l’ha rallentata?', 'Stessa altezza, stessa partenza, ma la piuma impiega molto più tempo del martello. La gravità tira entrambi verso il basso. C’è però qualcos’altro che agisce sulla piuma mentre cade. Perché ci mette tanto di più?', 'La piuma è leggera e molto larga per il suo peso. Mentre cade, che cosa la rallenta davvero?'),
           options: [
-            T('Perché è troppo leggera per la gravità', 'Perché la gravità non agisce sulle cose leggere', 'La gravità sulla piuma è quasi zero'),
-            T('Perché le cose leggere cadono sempre piano, anche senz’aria', 'Perché la piuma cade sempre a velocità costante', 'Gli oggetti leggeri hanno una gravità tutta loro'),
-            T('Perché l’aria la frena', 'Perché la resistenza dell’aria la frena molto', 'La resistenza dell’aria, enorme rispetto al suo peso'),
+            T('È troppo leggera per la gravità', 'Perché la gravità non agisce sulle cose leggere', 'La gravità sulla piuma è quasi zero'),
+            T('Le cose leggere cadono sempre piano', 'Perché la piuma cade sempre a velocità costante', 'Gli oggetti leggeri hanno una gravità tutta loro'),
+            T('L’aria la frena', 'Perché la resistenza dell’aria la frena molto', 'La resistenza dell’aria, enorme rispetto al suo peso'),
           ],
           answer: 2,
           explain: T(
@@ -51,7 +51,7 @@ export default {
         },
         {
           kind: 'q',
-          text: T('Ora hai tolto l’aria, come dentro un tubo dove l’hanno aspirata tutta. Senza aria, niente può frenare la piuma. Lasci cadere di nuovo piuma e martello insieme: che cosa succede?', 'Senza aria non c’è niente che freni la caduta: sugli oggetti agisce solo la gravità. Piuma e martello partono insieme dalla stessa altezza. Come cadono?'),
+          text: T('Senza aria, piuma e martello cadono dalla stessa altezza. Chi arriva prima?', 'Senza aria non c’è niente che freni la caduta: sugli oggetti agisce solo la gravità. Piuma e martello partono insieme dalla stessa altezza. Come cadono?'),
           options: [
             T('Il martello arriva prima', 'Il martello arriva prima'),
             T('Arrivano insieme', 'Arrivano insieme'),
@@ -66,7 +66,7 @@ export default {
         {
           kind: 'q', only: ['e'],
           set: { objs: ['boccia'], h: 20, air: false, planet: 'terra' },
-          text: 'Ora una palla cade da molto in alto. All’inizio è ferma nella mano, poi la lasci andare. Mentre scende, la palla va…',
+          text: T('Lasci cadere una palla da molto in alto. Mentre scende, la palla va…', 'Ora una palla cade da molto in alto. All’inizio è ferma nella mano, poi la lasci andare. Mentre scende, la palla va…'),
           options: ['sempre più piano', 'sempre uguale', 'sempre più veloce'],
           answer: 2,
           predict: [{ objs: ['boccia'], h: 20, air: false, planet: 'terra' }],
@@ -95,7 +95,7 @@ export default {
       steps: [
         {
           kind: 'q',
-          text: T('Sulla Luna non c’è aria, e la gravità tira più piano che sulla Terra. Un astronauta lascia cadere insieme una piuma e un martello, dalla stessa altezza. Chi tocca il suolo per primo?', 'Sulla Luna non c’è atmosfera e g vale 1,62 m/s², circa un sesto di quella terrestre. Un astronauta lascia cadere piuma e martello da 1,6 m, nello stesso istante. Chi tocca il suolo per primo?'),
+          text: T('Sulla Luna non c’è aria. Un astronauta lascia cadere insieme una piuma e un martello. Chi arriva prima?', 'Sulla Luna non c’è atmosfera e g vale 1,62 m/s², circa un sesto di quella terrestre. Un astronauta lascia cadere piuma e martello da 1,6 m, nello stesso istante. Chi tocca il suolo per primo?'),
           options: [
             T('Arrivano insieme', 'Arrivano insieme'),
             T('Prima il martello, che è pesante', 'Prima il martello, più pesante'),
@@ -125,7 +125,8 @@ export default {
           kind: 'tune', rounds: 2,
           text: T('Scegli l’altezza della torre e lascia cadere la cabina.', 'Regola l’altezza e lancia. La seconda prova chiederà un tempo diverso.'),
           gen: (lens, r) => {
-            const t = pick(r === 0 ? [1.5, 2, 2.5] : [1.8, 2.2, 2.8, 3]);
+            // all'Esploratore solo tempi interi: 2 secondi (torre di circa 20 m), poi 3 (circa 44 m)
+            const t = lens === 'e' ? (r === 0 ? 2 : 3) : pick(r === 0 ? [1.5, 2, 2.5] : [1.8, 2.2, 2.8, 3]);
             return { t, text: tr('La caduta deve durare <b>{t:1} secondi</b>.', { t }) };
           },
           solve: (tg) => ({ h: 0.5 * 9.81 * tg.t * tg.t }),
@@ -146,35 +147,32 @@ export default {
         T('Se la caduta è troppo corta, la torre deve essere più alta o più bassa?', 'Il tempo di caduta cresce con l’altezza, ma non in proporzione: raddoppiando l’altezza il tempo raddoppia?'),
         T('Per 2 secondi serve una torre di circa 20 metri.', 'Usa h = ½·g·t² con g = 9,81 m/s².'),
       ],
-      solution: T(
-        'Circa 11 m per 1,5 secondi, 20 m per 2 secondi, 31 m per 2,5 secondi, 44 m per 3 secondi.',
-        'h = ½·g·T². T = 2 s → 19,6 m; T = 1,5 s → 11,0 m; T = 2,5 s → 30,7 m; T = 3 s → 44,1 m.'),
+      solution: T('Circa 20 metri per 2 secondi, circa 44 metri per 3 secondi.', 'h = ½·g·T². T = 2 s → 19,6 m; T = 1,5 s → 11,0 m; T = 2,5 s → 30,7 m; T = 3 s → 44,1 m.'),
     },
     {
       id: 'm02-5', kind: 'ripasso', title: 'Ripasso della caduta',
       intro: T('Ripassiamo cadute, velocità e metodo scientifico!', 'Ripasso: caduta libera, velocità e metodo scientifico.'),
       steps: [
         {
-          kind: 'q', text: T('Togli l’aria e lascia cadere insieme, dalla stessa altezza, una boccia pesante e una pallina leggera. Ricorda piuma e martello nel tubo senza aria. Come cadono?', 'Nel vuoto agisce solo la gravità. La boccia ha una massa grande, la pallina una massa piccola, e partono insieme dalla stessa altezza. Che cosa si può dire delle loro accelerazioni?'),
-          options: [T('la boccia prima', 'la boccia ha accelerazione maggiore'), T('la pallina prima', 'la pallina ha accelerazione maggiore'), T('insieme', 'hanno la stessa accelerazione g')],
-          answer: 2, explain: T('Esatto: senza aria cadono insieme.', 'Esatto: nel vuoto l’accelerazione è g per tutti i corpi.'),
+          kind: 'q', text: T('In una stanza, con l’aria, lasci cadere insieme una piuma e un martello. Chi arriva prima?', 'Nel vuoto agisce solo la gravità. La boccia ha una massa grande, la pallina una massa piccola, e partono insieme dalla stessa altezza. Che cosa si può dire delle loro accelerazioni?'),
+          options: [T('la piuma', 'la boccia ha accelerazione maggiore'), T('arrivano insieme', 'la pallina ha accelerazione maggiore'), T('il martello', 'hanno la stessa accelerazione g')],
+          answer: 2, explain: T('Esatto: l’aria frena la piuma. Senza aria arriverebbero insieme.', 'Esatto: nel vuoto l’accelerazione è g per tutti i corpi.'),
         },
         {
-          kind: 'q', text: T('Lasci cadere una palla dalla finestra. All’inizio è ferma, poi scende. Mentre cade, la palla va…', 'In caduta libera, senza aria, l’accelerazione è sempre g = 9,81 m/s². Che cosa vuol dire per la velocità dell’oggetto che cade?'),
-          options: [T('sempre più veloce', 'aumenta di 9,81 m/s ogni secondo'), T('sempre uguale', 'resta costante'), T('sempre più piano', 'diminuisce di 9,81 m/s ogni secondo')],
+          kind: 'q', text: T('Una palla cade da una torre. In quale punto va più veloce?', 'In caduta libera, senza aria, l’accelerazione è sempre g = 9,81 m/s². Che cosa vuol dire per la velocità dell’oggetto che cade?'),
+          options: [T('In fondo, vicino a terra', 'aumenta di 9,81 m/s ogni secondo'), T('A metà', 'resta costante'), T('In cima, appena parte', 'diminuisce di 9,81 m/s ogni secondo')],
           answer: 0, explain: T('Giusto: più cade, più corre.', 'Giusto: a = g = 9,81 m/s² vuol dire +9,81 m/s ogni secondo.'),
         },
         {
           kind: 'num', rounds: 1, text: T('Un calcolo veloce.', 'Un calcolo sulla caduta.'),
           vals: { e: { t: [5, 10], v: [3, 4, 6] }, s: { h: [5, 20, 45] } }, derive: { e: { d: 'v * t' }, s: {} },
           calc: { e: 'v', s: 'Math.sqrt(2 * h / 9.81)' }, round: 2, unit: T('metri', 's'), tol: { e: 0, s: 0.03 },
-          ask: T('Un trenino del parco va sempre alla stessa velocità e fa <b>{d} metri</b> in <b>{t} secondi</b>. Se dividi la strada per il tempo, scopri quanti metri fa ogni secondo. Quanti sono?',
-            'Una palla cade, senza aria, da <b>{h} m</b>. Da h = ½·g·t² si ricava il tempo di caduta: t = √(2h/g), con g = 9,81 m/s². Quanto dura la caduta?'),
+          ask: T('Un trenino fa <b>{d} metri</b> in <b>{t} secondi</b>, sempre alla stessa velocità. Quanti metri fa ogni secondo?', 'Una palla cade, senza aria, da <b>{h} m</b>. Da h = ½·g·t² si ricava il tempo di caduta: t = √(2h/g), con g = 9,81 m/s². Quanto dura la caduta?'),
           explain: T('Esatto: {d} diviso {t} fa {v}.', 'Esatto: t = √(2 × {h} / 9,81) ≈ {ans} s.'),
         },
         {
-          kind: 'q', text: T('Vuoi scoprire se le cose pesanti cadono più in fretta di quelle leggere. Ricorda la regola del Laboratorio: si cambia una cosa sola alla volta, e la forma conta perché l’aria frena di più le cose larghe. Quale esperimento fai?', 'Vuoi capire se la massa influisce sulla caduta. Per un esperimento corretto deve cambiare solo la massa, mentre forma, dimensioni e altezza restano uguali, così l’aria agisce allo stesso modo. Che esperimento fai?'),
-          options: [T('Faccio cadere una piuma e un sasso', 'Confronti una piuma e un sasso'), T('Lancio due sassi grandi uguali', 'Due oggetti di massa uguale'), T('Due palle uguali, una leggera e una pesante', 'Stessa forma e altezza, massa diversa')],
+          kind: 'q', text: T('Vuoi scoprire se le cose pesanti cadono più in fretta. Che cosa fai cadere?', 'Vuoi capire se la massa influisce sulla caduta. Per un esperimento corretto deve cambiare solo la massa, mentre forma, dimensioni e altezza restano uguali, così l’aria agisce allo stesso modo. Che esperimento fai?'),
+          options: [T('Una piuma larga e un sasso piccolo', 'Confronti una piuma e un sasso'), T('Due sassi uguali, pesanti uguale', 'Due oggetti di massa uguale'), T('Due palle uguali, una più pesante', 'Stessa forma e altezza, massa diversa')],
           answer: 2, explain: T('Giusto: cambi solo il peso, tutto il resto uguale.', 'Giusto: si cambia una sola variabile, la massa. Piuma e sasso differiscono anche per forma, e l’aria li tratta in modo diverso.'),
         },
       ],
@@ -189,11 +187,11 @@ export default {
         'Sono Vetrino. Per <b>Aristotele</b> <i>“un corpo che pesa il doppio cade in metà tempo”</i>. Un’idea durata quasi duemila anni. Ma cosa dice l’esperimento?'),
       steps: [
         {
-          kind: 'q', text: T('Aristotele diceva che le cose pesanti cadono molto più in fretta. Per controllare, dobbiamo far cadere insieme due oggetti di peso diverso, ma in modo che l’aria non imbrogli il risultato. Quale esperimento ci serve?', 'Il mito dice: con il doppio del peso, metà del tempo di caduta. Per metterlo alla prova serve cambiare la massa, tenendo uguali forma e altezza perché l’aria agisca allo stesso modo. Quale esperimento mette alla prova il mito?'),
+          kind: 'q', text: T('Vuoi controllare Aristotele senza farti imbrogliare dall’aria. Che cosa fai cadere insieme?', 'Il mito dice: con il doppio del peso, metà del tempo di caduta. Per metterlo alla prova serve cambiare la massa, tenendo uguali forma e altezza perché l’aria agisca allo stesso modo. Quale esperimento mette alla prova il mito?'),
           options: [
             T('Una piuma e una boccia di ferro', 'Una piuma e una boccia di ferro, dalla stessa altezza'),
-            T('Pallina leggera e boccia, tutte e due tonde', 'Pallina da ping pong e boccia di ferro, stessa altezza'),
-            T('Una boccia sola, lanciata tante volte', 'Una sola boccia, da altezze diverse'),
+            T('Una pallina e una boccia, tonde', 'Pallina da ping pong e boccia di ferro, stessa altezza'),
+            T('Una boccia sola, tante volte', 'Una sola boccia, da altezze diverse'),
           ],
           answer: 1,
           explain: T('Giusto: stessa forma, cambia solo il peso. La boccia pesa centinaia di volte più della pallina!', 'Giusto: stessa forma, cambia solo la massa. La boccia ha una massa centinaia di volte maggiore.'),
@@ -201,7 +199,7 @@ export default {
         },
         {
           kind: 'q',
-          text: T('La boccia di ferro pesa tantissime volte più della pallina. Se Aristotele avesse ragione, arriverebbe a terra prestissimo, quasi subito, e la pallina molto dopo. Prima di guardare, che cosa succederà secondo te?', 'Pallina e boccia, tutte e due tonde, cadono da 2 m con l’aria. La boccia ha una massa molte volte più grande. Secondo il mito dovrebbe cadere in una frazione del tempo. Che cosa prevedi?'),
+          text: T('La boccia pesa moltissimo più della pallina. Cadono insieme dalla torre: che cosa succede?', 'Pallina e boccia, tutte e due tonde, cadono da 2 m con l’aria. La boccia ha una massa molte volte più grande. Secondo il mito dovrebbe cadere in una frazione del tempo. Che cosa prevedi?'),
           options: [
             T('La boccia arriva molto prima', 'La boccia arriva in una frazione del tempo della pallina'),
             T('La pallina arriva prima', 'La pallina arriva prima'),
@@ -215,10 +213,10 @@ export default {
             'Circa 0,66 s contro 0,64 s. Secondo Aristotele la boccia avrebbe dovuto essere centinaia di volte più rapida. Galileo ci ragionò sopra già nel Seicento.'),
         },
         {
-          kind: 'q', text: T('Hai visto cadere la pallina e la boccia, e hai confrontato i tempi. Aristotele diceva che con il doppio del peso si cade in metà del tempo. Aveva ragione?', 'Le due palle sono arrivate quasi insieme, anche se una ha una massa molto più grande. Che cosa concludi sul mito di Aristotele?'),
+          kind: 'q', text: T('Aristotele diceva: «le cose pesanti cadono molto più in fretta». Aveva ragione?', 'Le due palle sono arrivate quasi insieme, anche se una ha una massa molto più grande. Che cosa concludi sul mito di Aristotele?'),
           options: [
             T('Sì, il pesante cade molto prima', 'Il mito è vero: massa doppia, tempo dimezzato'),
-            T('No: senz’aria cadono insieme', 'Il mito è falso: nel vuoto tutti cadono con la stessa g'),
+            T('No: il peso non conta', 'Il mito è falso: nel vuoto tutti cadono con la stessa g'),
             T('Dipende da quanto è alto il palazzo', 'Vale solo da altezze molto grandi'),
           ],
           answer: 1,

@@ -1,8 +1,10 @@
-// La cassetta degli attrezzi: gli strumenti di matematica che servono alle formule (radice, Pitagora, π, seno…).
-// Nessuna formula è nascosta: la prima volta che un livello ne usa uno, prima di cominciare compare la sua scheda.
+// La cassetta degli attrezzi: gli strumenti di matematica che servono alle formule (potenze di 10, radice, Pitagora, π, seno…).
+// Nessuna formula è nascosta: la prima volta che un livello ha bisogno di un attrezzo PER RISPONDERE, prima di cominciare
+// compare la sua scheda. Quando invece l'attrezzo compare solo in una spiegazione, in un aiuto o in un riquadro facoltativo,
+// la scheda non interrompe: sotto il testo c'è un bottone per aprirla (level.js, offerTools).
 // Ogni scheda spiega lo strumento con un disegno da muovere e una domanda; poi resta nella cassetta per ripassarlo.
 // Le schede si aprono solo nelle lenti con le formule (Studente e Curioso).
-import { h, tx } from './util.js';
+import { h, tx, noBox } from './util.js';
 import { S, save } from './state.js';
 import { t as tr, LOCALE } from './i18n.js';
 import { sfx } from './audio.js';
@@ -21,12 +23,44 @@ function slider(label, min, max, step, val, onIn) {
 }
 
 // ---------- gli strumenti, nell'ordine in cui si imparano ----------
+// needs: gli attrezzi che vanno conosciuti prima (la radice è il quadrato al contrario: prima il quadrato).
+const SUP = (k) => String(k).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
 export const TOOLS = {
+  potenze: {
+    title: () => tr('Le potenze di 10'),
+    sub: () => tr('Contare i passi da 10'),
+    test: (s) => /10[⁻⁺]?[⁰¹²³⁴⁵⁶⁷⁸⁹]/.test(s),
+    body: () => tr('Per i numeri enormi e per quelli piccolissimi si contano i <b>passi da 10</b>. <b>10³</b> vuol dire 10 × 10 × 10 = 1000: tre passi in su. Con il meno si scende: <b>10⁻³</b> è 1 diviso per 10 tre volte, cioè 0,001. Il numero piccolo in alto si chiama <b>esponente</b>: muovilo.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (k) => {
+        // la riga degli esponenti da −6 a 9: un salto per ogni passo da 10, a partire da 1
+        const X = (e) => 14 + (e + 6) * 18, y = 46, d = Math.sign(k);
+        let g = `<line x1="${X(-6)}" y1="${y}" x2="${X(9)}" y2="${y}" class="ground"/>`;
+        for (let e = -6; e <= 9; e++) g += `<line x1="${X(e)}" y1="${y - (e % 3 === 0 ? 6 : 3)}" x2="${X(e)}" y2="${y + (e % 3 === 0 ? 6 : 3)}" class="${e === 0 ? 'dia' : 'ground'}"/>`;
+        for (let e = 0; e !== k; e += d) g += `<path d="M${X(e)} ${y - 6}Q${(X(e) + X(e + d)) / 2} ${y - 28} ${X(e + d)} ${y - 6}" class="hop${d < 0 ? ' down' : ''}"/>`;
+        g += `<circle cx="${X(k)}" cy="${y}" r="5" class="tipdot"/><text x="${X(0)}" y="${y + 22}" class="lb" text-anchor="middle">1</text>`;
+        show.innerHTML = `<svg viewBox="0 0 298 76" class="tool-svg wide" aria-hidden="true">${g}</svg>`
+          + `<div class="tool-f">10${SUP(k)} = <span class="c1">${(10 ** k).toLocaleString(LOCALE, { maximumFractionDigits: 9 })}</span></div>`
+          + `<p class="small muted">${k === 0 ? tr('Nessun passo: 10⁰ vale 1.') : k > 0 ? tr('Passi in su: {k}. Si parte da 1 e a ogni passo si moltiplica per 10.', { k }) : tr('Passi in giù: {k}. Si parte da 1 e a ogni passo si divide per 10.', { k: -k })}</p>`;
+      };
+      const a = slider(tr('esponente'), -6, 9, 1, 3, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Guarda gli zeri: 10⁶ ha sei zeri (un milione), 10⁻² ha due cifre dopo la virgola (un centesimo). Per moltiplicare due potenze si sommano gli esponenti: 10² × 10³ = 10⁵.'),
+    check: () => ({
+      q: tr('Quanto vale 10⁻²?'),
+      options: [n(0.01), '−100', n(0.2)],
+      ok: tr('Giusto: due passi in giù da 1. Dividi per 10 due volte: 1 → 0,1 → 0,01.'),
+    }),
+  },
+
   formula: {
     title: () => tr('Leggere una formula'),
     sub: () => tr('Una frase della fisica scritta in breve'),
-    // una lettera, un uguale: «v = …», «T = …»
-    test: (s) => /(^|[^A-Za-z/])[A-Za-zθ][ₓᵧ₀]?\s?=\s?[^=\s]/.test(s),
+    // una lettera, un uguale: «v = …», «T = …». Non le uguaglianze fra unità di misura: «1000 m = 1 km», «10³ m = 1000 m»
+    test: (s) => /(^|[^A-Za-z/\d⁰¹²³⁴⁵⁶⁷⁸⁹])(?<![\d⁰¹²³⁴⁵⁶⁷⁸⁹] )[A-Za-zθ][ₓᵧ₀]?\s?=\s?[^=\s]/.test(s),
     body: () => tr('Una formula è una <b>frase scritta in breve</b>. Ogni lettera è una grandezza che si può misurare. <b>v = d / t</b> si legge: «la velocità è la distanza divisa per il tempo». Muovi i cursori e leggi la frase.'),
     widget() {
       let d = 40, t = 8;
@@ -52,8 +86,8 @@ export const TOOLS = {
   quadrato: {
     title: () => tr('Il quadrato: x²'),
     sub: () => tr('Un numero per se stesso'),
-    // ² ma non nelle unità di misura (m/s², m²): lì è solo un modo di scrivere l'unità
-    test: (s) => /(?<![/ ]s|\bm|\bkm|\bcm)²/.test(s),
+    // ² ma non nelle unità di misura (m/s², m²), dove è solo un modo di scrivere l'unità, né nelle potenze di 10 (10², 10⁻²)
+    test: (s) => /(?<![/ ]s|\bm|\bkm|\bcm|10|[⁻⁺⁰¹²³⁴⁵⁶⁷⁸⁹])²(?![⁰¹²³⁴⁵⁶⁷⁸⁹])/.test(s),
     body: () => tr('<b>x²</b> si legge «x al quadrato» e vuol dire <b>x per x</b>. Il nome viene da un disegno: è l’area di un quadrato con il lato lungo x. Muovi il lato e conta i quadretti.'),
     widget() {
       const show = h('div', { class: 'tool-show' });
@@ -79,6 +113,7 @@ export const TOOLS = {
   radice: {
     title: () => tr('La radice quadrata: √'),
     sub: () => tr('Il quadrato fatto al contrario'),
+    needs: ['quadrato'],
     test: (s) => /√/.test(s),
     body: () => tr('La radice <b>√</b> fa la domanda al contrario del quadrato: «<b>quanto è lungo il lato</b> di un quadrato con quest’area?». √49 = 7, perché 7 × 7 = 49. Scegli un’area e guarda il lato.'),
     widget() {
@@ -104,6 +139,7 @@ export const TOOLS = {
   pitagora: {
     title: () => tr('Il teorema di Pitagora'),
     sub: () => tr('Quanto è lunga la diagonale'),
+    needs: ['quadrato', 'radice'],
     test: (s) => /Pitagora|Pythagor|√\s?\([^)]*²\s?\+/.test(s), // anche quando la formula c'è ma il nome no
     body: () => tr('In un triangolo con un <b>angolo retto</b>, i quadrati costruiti sui due lati corti, messi insieme, hanno la stessa area del quadrato sul lato lungo: <b>c² = a² + b²</b>. Quindi il lato lungo è <b>c = √(a² + b²)</b>.'),
     widget() {
@@ -193,29 +229,42 @@ export const TOOLS = {
 };
 export const TOOL_IDS = Object.keys(TOOLS);
 
-// ---------- quali strumenti usa un livello ----------
-const texts = (o, lens, out, seen = new Set()) => {
-  if (!o || seen.has(o)) return out;
-  if (typeof o === 'string') { out.push(o); return out; }
-  if (typeof o !== 'object') return out;
-  seen.add(o);
-  if ('e' in o && 's' in o && !Array.isArray(o)) { out.push(tx(o, lens)); return out; }
-  for (const [k, v] of Object.entries(o)) if (!['id', 'sim', 'kind', 'controls', 'params', 'only', 'zoneRef'].includes(k)) texts(v, lens, out, seen);
-  return out;
-};
+// ---------- quali strumenti servono in un livello ----------
+// Conta quello che si legge PRIMA di rispondere: introduzione, consegne, domande e risposte da scegliere; e, nei passi di
+// calcolo, anche lo svolgimento, cioè la formula che serve per fare il conto. Le spiegazioni che arrivano dopo una risposta,
+// gli aiuti, le soluzioni e i riquadri facoltativi «Per chi vuole la formula» non aprono schede: lì l'attrezzo si offre
+// con un bottone (toolsToOffer).
 export function toolsIn(level, lens) {
-  const steps = (level.steps || []).filter((s) => !s.only || s.only.includes(lens));
-  const all = texts({ intro: level.intro, steps, hints: level.hints, solution: level.solution }, lens, []);
-  // i passi con i numeri inventati: si guarda anche un esempio di quello che scrivono
-  for (const s of steps) if (typeof s.gen === 'function') { try { texts(s.gen(lens), lens, all); } catch { /* niente */ } }
-  const txt = all.join('\n');
+  const out = [tx(level.intro, lens)];
+  for (const st of level.steps || []) {
+    if (st.only && !st.only.includes(lens)) continue;
+    out.push(tx(st.text, lens));
+    for (const o of st.options || []) out.push(tx(o, lens));
+    for (const v of st.vars || []) out.push(tx(v.t, lens));
+    for (const it of st.items || []) out.push(tx(it.t, lens));
+    for (const c of st.need || []) out.push(tx(c.msg, lens));
+    // i passi con i numeri inventati: si guarda un esempio della domanda e del suo svolgimento
+    if (typeof st.gen === 'function') { try { const g = st.gen(lens, 0); out.push(g.text, g.explain); } catch { /* niente */ } }
+  }
+  const txt = noBox(out.filter(Boolean).join('\n'));
   return TOOL_IDS.filter((id) => TOOLS[id].test(txt));
 }
 export const toolsOn = (lens) => lens === 's' || lens === 'c';
 export const toolState = (id) => (S.tools || {})[id] || 0; // 0 mai visto, 1 visto, 2 domanda giusta
 const mark = (id, v) => { S.tools = S.tools || {}; if ((S.tools[id] || 0) < v) { S.tools[id] = v; save(); } };
+// un attrezzo porta con sé quelli che servono per capirlo, se non sono ancora stati visti (prima il quadrato, poi la radice)
+const withNeeds = (ids) => {
+  const all = new Set();
+  const add = (id) => { for (const d of TOOLS[id].needs || []) if (!toolState(d)) add(d); all.add(id); };
+  ids.forEach(add);
+  return TOOL_IDS.filter((id) => all.has(id));
+};
 // gli strumenti nuovi per questo livello (vuoto per l'Esploratore)
-export const newTools = (level, lens) => (toolsOn(lens) ? toolsIn(level, lens).filter((id) => !toolState(id)) : []);
+export const newTools = (level, lens) => (toolsOn(lens) ? withNeeds(toolsIn(level, lens).filter((id) => !toolState(id))) : []);
+// la coda per aprire un attrezzo su richiesta: prima quelli che servono per capirlo, se mancano
+export const toolQueue = (id) => withNeeds([id]);
+// gli strumenti mai visti che compaiono in un testo: quelli da offrire con un bottone sotto una spiegazione o un aiuto
+export const toolsToOffer = (text, lens) => (toolsOn(lens) ? TOOL_IDS.filter((id) => !toolState(id) && TOOLS[id].test(String(text ?? ''))) : []);
 
 // ---------- la scheda di uno strumento ----------
 // queue: gli strumenti da mostrare uno dopo l'altro; onEnd: quando l'ultimo è chiuso

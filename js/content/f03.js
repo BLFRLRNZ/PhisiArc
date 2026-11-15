@@ -9,7 +9,7 @@ const VEL = (min, max) => ({ label: 'Velocità', min, max, step: 1, unit: 'm/s' 
 const media3 = (lens) => {
   if (lens === 'e') {
     const m = pick([4, 5, 6, 7]), d = pick([1, 2]);
-    return { text: t('Hai cronometrato la stessa corsa tre volte: <b>{a} s</b>, <b>{m} s</b> e <b>{b} s</b>. Le misure stanno un po’ sotto e un po’ sopra: quale numero sta <b>in mezzo</b>?', { a: m - d, m, b: m + d }), ans: m, tol: 0, unit: 's', explain: t('Giusto: {m} sta in mezzo. Gli scienziati lo chiamano <b>media</b>.', { m }) };
+    return { text: t('Tre misure della stessa corsa: <b>{a} s</b>, <b>{m} s</b> e <b>{b} s</b>. Quale numero sta <b>in mezzo</b>?', { a: m - d, m, b: m + d }), ans: m, tol: 0, unit: 's', explain: t('Giusto: {m} sta in mezzo. Gli scienziati lo chiamano <b>media</b>.', { m }) };
   }
   const base = pick([2, 2.5, 3, 3.5]), a = pick([-0.2, -0.1]), b = pick([0.1, 0.3]), c = -(a + b) + pick([0, 0.3]);
   const xs = [base + a, base + b, base + c].map((v) => Math.round(v * 10) / 10);
@@ -48,10 +48,10 @@ export default {
         { kind: 'free', runs: 3, distinct: true, text: T('Fai almeno <b>tre prove</b>, con tempi diversi: 2 secondi, 4 secondi, 8 secondi…', 'Fai almeno tre prove con tempi diversi e guarda dove finiscono i punti.') },
         {
           kind: 'q', review: false, set: { fit: true },
-          text: T('Ogni volta che apri il rubinetto, sul grafico compare un puntino: più a destra se lo tieni aperto più a lungo, più in alto se raccogli più litri. Guarda tutti i puntini insieme, come se li unissi con una matita. Come sono messi?', 'Ogni prova diventa un punto: in orizzontale il tempo di apertura del rubinetto, in verticale i litri raccolti. Guarda i punti tutti insieme, come se li unissi con una riga. Come sono disposti?', 'Ogni prova è un punto: tempo di apertura in orizzontale, litri raccolti in verticale. Se li unisci, che forma descrivono?'),
+          text: T('Guarda i puntini sul grafico. Come sono messi?', 'Ogni prova diventa un punto: in orizzontale il tempo di apertura del rubinetto, in verticale i litri raccolti. Guarda i punti tutti insieme, come se li unissi con una riga. Come sono disposti?', 'Ogni prova è un punto: tempo di apertura in orizzontale, litri raccolti in verticale. Se li unisci, che forma descrivono?'),
           options: [
-            T('In fila, su una linea dritta che parte da zero', 'Su una retta che passa per l’origine', 'Una retta per l’origine'),
-            T('Sparsi a caso', 'Sparsi senza un ordine', 'Nessuna forma riconoscibile'),
+            T('In fila, su una linea dritta', 'Su una retta che passa per l’origine', 'Una retta per l’origine'),
+            T('Sparsi qua e là, senza un ordine', 'Sparsi senza un ordine', 'Nessuna forma riconoscibile'),
             T('Su una linea che scende', 'Su una curva che scende', 'Un’iperbole che scende'),
           ],
           answer: 0,
@@ -66,13 +66,13 @@ export default {
           gen: (lens) => {
             const tt = pick(lens === 'e' ? [4, 6, 8] : [2, 4, 6]), k = pick([2, 3]);
             return lens === 'e'
-              ? { text: t('Il rubinetto butta fuori l’acqua sempre allo stesso ritmo. Tenendolo aperto <b>{t} secondi</b> raccogli <b>{l:1} litri</b>. Se lo tieni aperto <b>{t2} secondi</b>, quanti litri raccogli?', { t: tt, l: tt / 2, t2: tt * k }), ans: (tt * k) / 2, tol: 0, unit: t('litri'), explain: t('Giusto: il tempo è {k} volte tanto, quindi anche l’acqua: {l:1} litri.', { k, l: (tt * k) / 2 }) }
+              ? { text: t('In <b>{t} secondi</b> il rubinetto dà <b>{l:1} litri</b>. Se lo tieni aperto <b>{t2} secondi</b>, quanti litri dà?', { t: tt, l: tt / 2, t2: tt * k }), ans: (tt * k) / 2, tol: 0, unit: t('litri'), explain: t('Giusto: il tempo è {k} volte tanto, quindi anche l’acqua: {l:1} litri.', { k, l: (tt * k) / 2 }) }
               : { text: t('Il rubinetto ha una portata costante, quindi litri e tempo sono direttamente proporzionali. In <b>{t} s</b> escono <b>{l:1} L</b>. Quanti litri escono in <b>{t2:1} s</b>?', { t: tt, l: tt / 2, t2: tt * k * 0.75 }), ans: (tt * k * 0.75) / 2, tol: 0.01, unit: 'L', explain: t('Esatto: il rapporto è 0,5 L/s, quindi 0,5 × {t2:1} = {l} L.', { t2: tt * k * 0.75, l: (tt * k * 0.75) / 2 }) };
           },
         },
       ],
       hints: [T('Se raddoppi il tempo, cosa succede all’acqua?', 'Quanti litri escono in 1 secondo? Moltiplica per i secondi.')],
-      solution: T('Ogni secondo escono 0,5 litri: doppio tempo, doppia acqua.', 'litri = 0,5 × tempo: proporzionalità diretta.'),
+      solution: T('Ogni 2 secondi esce 1 litro: doppio tempo, doppia acqua.', 'litri = 0,5 × tempo: proporzionalità diretta.'),
     },
     {
       id: 'f03-2', kind: 'lezione', title: 'Doppio, metà',
@@ -82,20 +82,20 @@ export default {
         'La macchinina percorre sempre <b>60 m</b>. La velocità è in <b>metri al secondo</b> (m/s): a 5 m/s fa 5 metri ogni secondo. Cambiala e misura il tempo: sul grafico, velocità in orizzontale e tempo in verticale.',
         'Percorso fisso di 60 m, velocità a scelta in metri al secondo (m/s): quanti metri fa ogni secondo. Che legame c’è fra velocità e tempo impiegato?'),
       steps: [
-        { kind: 'free', runs: 3, distinct: true, text: T('Fai almeno <b>tre corse</b> a velocità diverse.', 'Fai almeno tre corse a velocità diverse.') },
+        { kind: 'free', runs: 3, distinct: true, text: T('Fai almeno <b>tre corse</b> a velocità diverse. Ogni corsa lascia un puntino: più a destra se è veloce, più in alto se dura tanto.', 'Fai almeno tre corse a velocità diverse.') },
         {
           kind: 'q', predict: [{ x: 5 }, { x: 10 }],
-          text: T('La strada è sempre la stessa, 60 metri. Prima la macchinina va piano, poi va al <b>doppio</b> della velocità. Che cosa succede al tempo che ci mette ad arrivare?', 'La distanza è sempre 60 m. Se la velocità passa da 5 a 10 m/s, cioè raddoppia, che cosa succede al tempo del viaggio?'),
+          text: T('La macchinina rifà la stessa strada al <b>doppio</b> della velocità. Il tempo che ci mette…', 'La distanza è sempre 60 m. Se la velocità passa da 5 a 10 m/s, cioè raddoppia, che cosa succede al tempo del viaggio?'),
           options: [T('diventa la metà', 'si dimezza'), T('diventa il doppio', 'raddoppia'), T('resta uguale', 'resta uguale')],
           answer: 0,
           explain: T('Giusto: più veloce, meno tempo. Doppia velocità, metà tempo!', 'Da 12 s a 6 s: doppia velocità, metà tempo.', 'Da 12 s a 6 s: t = 60 m / v, quindi raddoppiando v il tempo si dimezza.'),
         },
         {
           kind: 'q', review: false, set: { fit: true },
-          text: T('Ogni corsa ha lasciato un puntino: a destra le corse più veloci, in alto quelle che sono durate di più. Unisci i puntini con la fantasia, da sinistra a destra. Che forma ha la linea?', 'Sul grafico la velocità è in orizzontale e il tempo del viaggio in verticale. Unisci i punti delle tue corse, dalla più lenta alla più veloce. Che forma ha il grafico?', 'Velocità in orizzontale, tempo in verticale, distanza fissa di 60 m. Che curva descrivono i punti delle tue corse?'),
+          text: T('Unisci i puntini delle corse, da sinistra a destra. Che linea viene?', 'Sul grafico la velocità è in orizzontale e il tempo del viaggio in verticale. Unisci i punti delle tue corse, dalla più lenta alla più veloce. Che forma ha il grafico?', 'Velocità in orizzontale, tempo in verticale, distanza fissa di 60 m. Che curva descrivono i punti delle tue corse?'),
           options: [
             T('Una linea dritta che sale', 'Una retta che sale', 'Una retta per l’origine'),
-            T('Una curva che scende, e diventa sempre più piatta', 'Una curva che scende, sempre meno ripida', 'Un ramo di iperbole'),
+            T('Una curva che scende', 'Una curva che scende, sempre meno ripida', 'Un ramo di iperbole'),
             T('Una linea piatta', 'Una retta orizzontale', 'Una parabola'),
           ],
           answer: 1,
@@ -126,8 +126,8 @@ export default {
       steps: [
         {
           kind: 'q', predict: [{ x: 10 }, { x: 20 }],
-          text: T('L’auto frena sempre allo stesso modo. Quando va a 10 m/s, da quando inizia a frenare a quando è ferma fa circa <b>7 metri</b>. Se va al <b>doppio</b>, a 20 m/s, quanti metri le servono per fermarsi?', 'Lo <b>spazio di frenata</b> è la strada che l’auto fa da quando frena a quando si ferma. Con la stessa frenata, a 10 m/s è circa 7 m. Prevedi: a 20 m/s, il doppio della velocità, quanto sarà?'),
-          options: [T('Circa 14 metri, il doppio', 'Circa 14 m (il doppio)'), T('Circa 28 metri, quattro volte', 'Circa 28 m (quattro volte)'), T('Sempre 7 metri', 'Circa 7 m (uguale)')],
+          text: T('A 10 m/s l’auto si ferma in <b>7 metri</b>. Al <b>doppio</b> della velocità, quanti metri le servono?', 'Lo <b>spazio di frenata</b> è la strada che l’auto fa da quando frena a quando si ferma. Con la stessa frenata, a 10 m/s è circa 7 m. Prevedi: a 20 m/s, il doppio della velocità, quanto sarà?'),
+          options: [T('14 metri: il doppio', 'Circa 14 m (il doppio)'), T('28 metri: quattro volte', 'Circa 28 m (quattro volte)'), T('7 metri: uguale a prima', 'Circa 7 m (uguale)')],
           answer: 1,
           explain: T(
             'Quattro volte! Doppia velocità, frenata quattro volte più lunga. Ecco perché in città bisogna andare piano.',
@@ -137,10 +137,10 @@ export default {
         { kind: 'free', runs: 2, distinct: true, set: { fit: true }, text: T('Prova altre velocità e guarda la linea gialla.', 'Aggiungi almeno due punti e osserva la curva gialla.') },
         {
           kind: 'q', review: false,
-          text: T('Ogni frenata ha lasciato un punto: in orizzontale la velocità dell’auto, in verticale i metri che le servono per fermarsi. La linea gialla unisce i punti. Che forma ha?', 'Il grafico mette la velocità in orizzontale e lo spazio di frenata in verticale. Guarda come cresce la curva gialla quando la velocità aumenta: sempre allo stesso modo, o sempre più in fretta? Che grafico è?', 'Hai visto che, raddoppiando la velocità, lo spazio di frenata non raddoppia soltanto. Che legame c’è fra lo spazio di frenata e la velocità?'),
+          text: T('La linea gialla unisce i punti delle frenate. Che forma ha?', 'Il grafico mette la velocità in orizzontale e lo spazio di frenata in verticale. Guarda come cresce la curva gialla quando la velocità aumenta: sempre allo stesso modo, o sempre più in fretta? Che grafico è?', 'Hai visto che, raddoppiando la velocità, lo spazio di frenata non raddoppia soltanto. Che legame c’è fra lo spazio di frenata e la velocità?'),
           options: [
-            T('Una curva che sale sempre più ripida', 'Una curva che sale sempre più ripida (parabola)', 'Proporzionale al quadrato della velocità'),
-            T('Una linea dritta', 'Una retta per l’origine', 'Direttamente proporzionale alla velocità'),
+            T('Una curva sempre più ripida', 'Una curva che sale sempre più ripida (parabola)', 'Proporzionale al quadrato della velocità'),
+            T('Una linea dritta, come per il rubinetto', 'Una retta per l’origine', 'Direttamente proporzionale alla velocità'),
             T('Una curva che scende', 'Una curva che scende', 'Inversamente proporzionale alla velocità'),
           ],
           answer: 0,
@@ -157,16 +157,14 @@ export default {
     {
       id: 'f03-4', kind: 'costruisci', title: 'La fontana del parco',
       sim: 'lab', params: { mode: 'rubinetto', x: 3, noise: false, keep: true }, controls: ['x'], labels: { x: TEMPO },
-      intro: T(
-        'Nuovo pezzo per il parco: la <b>fontana</b>! La vasca deve ricevere proprio la quantità d’acqua giusta, né troppa né poca. Il rubinetto dà mezzo litro ogni secondo.',
-        'Nuovo pezzo del parco: la <b>fontana</b>. Il rubinetto eroga <b>0,5 L/s</b>. Scegli per quanto tempo aprirlo per avere i litri richiesti.',
-        'Nuovo pezzo del parco: la <b>fontana</b>. Portata 0,5 L/s: calcola il tempo di apertura per il volume richiesto, poi verifica.'),
+      intro: T('Nuovo pezzo per il parco: la <b>fontana</b>! La vasca deve ricevere proprio l’acqua giusta, né troppa né poca. Il rubinetto dà <b>1 litro ogni 2 secondi</b>.', 'Nuovo pezzo del parco: la <b>fontana</b>. Il rubinetto eroga <b>0,5 L/s</b>. Scegli per quanto tempo aprirlo per avere i litri richiesti.', 'Nuovo pezzo del parco: la <b>fontana</b>. Portata 0,5 L/s: calcola il tempo di apertura per il volume richiesto, poi verifica.'),
       piece: { id: 'fontana', name: 'La fontana', desc: 'Getti d’acqua che riempiono la vasca con la quantità esatta che hai calcolato.' },
       steps: [
         {
           kind: 'tune', rounds: 2,
           text: T('Scegli il tempo e apri il rubinetto.', 'Regola il tempo di apertura e lancia. La seconda prova chiederà un volume diverso.'),
-          vals: { L: [[1.5, 2, 2.5, 3], [1.75, 3.5, 4, 4.5]] },
+          // all'Esploratore solo litri interi
+          vals: { e: { L: [[2, 3], [4]] }, s: { L: [[1.5, 2, 2.5, 3], [1.75, 3.5, 4, 4.5]] } },
           ask: T('La vasca deve ricevere <b>{L} litri</b>.'),
           measure: 'y', goal: 'L', tol: 0.12,
           ok: T('{got} litri: la fontana è perfetta!'),
@@ -176,10 +174,10 @@ export default {
         },
       ],
       hints: [
-        T('Ogni secondo esce mezzo litro. Quindi per 1 litro servono…', 'Il tempo è proporzionale ai litri: per 1 L servono 2 s.'),
+        T('Ogni 2 secondi esce 1 litro. Quindi per 2 litri servono…', 'Il tempo è proporzionale ai litri: per 1 L servono 2 s.'),
         T('Il tempo è il doppio dei litri: per 3 litri, 6 secondi.', 'tempo = litri / 0,5 L/s = 2 × litri.'),
       ],
-      solution: T('Il tempo è sempre il doppio dei litri: 2 litri → 4 s, 3 litri → 6 s, 4,5 litri → 9 s.', 't = V / 0,5 L/s: 1,75 L → 3,5 s; 2,5 L → 5 s; 4 L → 8 s.'),
+      solution: T('Il tempo è sempre il doppio dei litri: 2 litri → 4 s, 3 litri → 6 s, 4 litri → 8 s.', 't = V / 0,5 L/s: 1,75 L → 3,5 s; 2,5 L → 5 s; 4 L → 8 s.'),
     },
     {
       id: 'f03-5', kind: 'ripasso', title: 'Ripasso dei grafici',
@@ -187,14 +185,14 @@ export default {
       steps: [
         {
           kind: 'q',
-          text: T('Al parco ogni biglietto costa uguale: 2 biglietti costano 6 €, 4 biglietti 12 €, e 0 biglietti non costano niente. Disegni un grafico con i biglietti in orizzontale e i soldi spesi in verticale. Che linea viene?', 'Ogni biglietto costa 3 €, quindi il costo è <b>direttamente proporzionale</b> al numero di biglietti: se uno raddoppia, raddoppia anche l’altro. Con i biglietti in orizzontale e il costo in verticale, il grafico è…'),
-          options: [T('una linea dritta che parte da zero', 'una retta per l’origine'), T('una curva che scende', 'un’iperbole'), T('una curva sempre più ripida', 'una parabola')],
+          text: T('2 biglietti costano 6 €, 4 biglietti 12 €. Sul grafico, che linea viene?', 'Ogni biglietto costa 3 €, quindi il costo è <b>direttamente proporzionale</b> al numero di biglietti: se uno raddoppia, raddoppia anche l’altro. Con i biglietti in orizzontale e il costo in verticale, il grafico è…'),
+          options: [T('una linea dritta', 'una retta per l’origine'), T('una curva che scende', 'un’iperbole'), T('una curva sempre più ripida', 'una parabola')],
           answer: 0, explain: T('Giusto: doppi biglietti, doppia spesa.', 'Giusto: proporzionalità diretta, retta per l’origine.'),
         },
         {
           kind: 'q',
-          text: T('Una torta si divide in parti uguali fra gli amici alla festa: più amici ci sono, più piccola è la fetta di ognuno. Se arrivano il doppio degli amici, che cosa succede alla tua fetta?', 'La torta è sempre una, divisa in parti uguali: la fetta è <b>inversamente proporzionale</b> al numero di amici, cioè quando uno cresce l’altra cala nella stessa proporzione. Se gli amici raddoppiano, la fetta…'),
-          options: [T('fetta grande la metà', 'la fetta si dimezza'), T('fetta doppia', 'la fetta raddoppia'), T('fetta uguale', 'la fetta resta uguale')],
+          text: T('Dividi una torta in parti uguali fra gli amici. Se gli amici raddoppiano, la tua fetta…', 'La torta è sempre una, divisa in parti uguali: la fetta è <b>inversamente proporzionale</b> al numero di amici, cioè quando uno cresce l’altra cala nella stessa proporzione. Se gli amici raddoppiano, la fetta…'),
+          options: [T('diventa la metà', 'la fetta si dimezza'), T('diventa il doppio', 'la fetta raddoppia'), T('resta uguale', 'la fetta resta uguale')],
           answer: 0, explain: T('Giusto: doppi amici, metà fetta.', 'Giusto: proporzionalità inversa, il prodotto resta costante (una torta).'),
         },
         {
@@ -230,10 +228,10 @@ export default {
         },
         {
           kind: 'q',
-          text: T('Hai aperto il rubinetto tre volte, sempre per 6 secondi, ma i litri raccolti non sono proprio uguali: cambiano di poco. Che cosa vuol dire?', 'Hai ripetuto la stessa misura tre volte, nelle stesse condizioni, e hai ottenuto valori leggermente diversi. Nessuno ha sbagliato apposta. Perché succede?'),
+          text: T('Tre prove uguali, ma i litri cambiano di poco. Che cosa vuol dire?', 'Hai ripetuto la stessa misura tre volte, nelle stesse condizioni, e hai ottenuto valori leggermente diversi. Nessuno ha sbagliato apposta. Perché succede?'),
           options: [
-            T('Ogni misura ha un piccolo errore: è normale', 'Ogni misura ha un piccolo errore casuale: succede sempre', 'Ogni misura ha un’incertezza casuale ineliminabile'),
-            T('Una è sbagliata: va buttata via', 'Almeno una misura è sbagliata e va scartata', 'Almeno una misura è un errore grossolano'),
+            T('È normale: succede sempre', 'Ogni misura ha un piccolo errore casuale: succede sempre', 'Ogni misura ha un’incertezza casuale ineliminabile'),
+            T('Una misura è sbagliata: va buttata', 'Almeno una misura è sbagliata e va scartata', 'Almeno una misura è un errore grossolano'),
             T('Il rubinetto si è rotto', 'La legge cambia ogni volta', 'La legge fisica cambia da una prova all’altra'),
           ],
           answer: 0,
@@ -245,11 +243,11 @@ export default {
         },
         {
           kind: 'q',
-          text: T('Le tre misure sono un po’ diverse, e non sai quale sia «quella giusta». Ma c’è un modo per mettere insieme le misure e ottenere un numero di cui fidarti di più. Come fai?', 'Ogni misura ha un piccolo errore casuale, a volte in più e a volte in meno. Come puoi usare più misure insieme per ottenere un valore affidabile?'),
+          text: T('Tre misure un po’ diverse. Di quale numero ti fidi di più?', 'Ogni misura ha un piccolo errore casuale, a volte in più e a volte in meno. Come puoi usare più misure insieme per ottenere un valore affidabile?'),
           options: [
-            T('Faccio tante misure e prendo il numero in mezzo', 'Ripeti la misura e calcoli la media', 'Molte misure e la loro media: l’errore della media si riduce'),
-            T('Tengo la misura più grande', 'Tieni il valore più grande', 'Tieni il valore massimo'),
-            T('Tengo solo la prima', 'Tieni solo la prima misura', 'Una sola misura molto attenta basta'),
+            T('Di quello in mezzo', 'Ripeti la misura e calcoli la media', 'Molte misure e la loro media: l’errore della media si riduce'),
+            T('Del più grande', 'Tieni il valore più grande', 'Tieni il valore massimo'),
+            T('Del primo che è uscito', 'Tieni solo la prima misura', 'Una sola misura molto attenta basta'),
           ],
           answer: 0,
           explain: T('Giusto: gli errori un po’ in su e un po’ in giù si compensano. Il numero in mezzo si chiama <b>media</b>.', 'Giusto: nella media gli errori in eccesso e in difetto si compensano.', 'Giusto: con N misure l’incertezza della media scende come 1/√N.'),
@@ -257,9 +255,9 @@ export default {
         { kind: 'num', rounds: 1, text: T('Trova il numero in mezzo.', 'Calcola la media delle tue misure.'), gen: (lens, r, sim) => mediaTue(lens, sim) },
         {
           kind: 'q', set: { fit: true },
-          text: T('Il mito diceva: «se due misure sono diverse, vuol dire che una è sbagliata». Ripensa a quello che è successo con le tue tre misure del rubinetto. È vero?', 'Il mito diceva che una misura fatta bene dà sempre lo stesso risultato, e che se due misure differiscono una è sbagliata. Dopo le tue misure ripetute e la media, che cosa concludi?'),
+          text: T('Il mito diceva: «se due misure sono diverse, una è sbagliata». È vero?', 'Il mito diceva che una misura fatta bene dà sempre lo stesso risultato, e che se due misure differiscono una è sbagliata. Dopo le tue misure ripetute e la media, che cosa concludi?'),
           options: [
-            T('No: misure un po’ diverse sono normali, e la media le mette d’accordo', 'Falso: le misure variano sempre un po’, e la media è il valore migliore', 'Falso: ogni misura ha un’incertezza, e la media la riduce'),
+            T('No: un po’ diverse è normale', 'Falso: le misure variano sempre un po’, e la media è il valore migliore', 'Falso: ogni misura ha un’incertezza, e la media la riduce'),
             T('Sì: le misure buone sono tutte uguali', 'Vero: le misure buone coincidono sempre', 'Vero: le misure accurate coincidono'),
           ],
           answer: 0,
