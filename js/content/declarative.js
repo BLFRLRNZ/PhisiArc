@@ -4,7 +4,7 @@
 // Domanda di calcolo:
 //   { kind: 'num', rounds: 2,
 //     vals: { a: [2, 3, 4], t: [3, 4, 5] },        // valori tra cui scegliere a caso (anche per lente: { e: {...}, s: {...} })
-//     derive: { v: 'a * t' },                       // (facoltativo) altri valori calcolati da quelli scelti
+//     derive: { v: 'a * t' },                       // (facoltativo) altri valori calcolati da quelli scelti (anche per lente)
 //     calc: 'a * t',                                // la risposta (anche per lente: { e: '...', s: '...' })
 //     text: T('Calcola la velocità.'),              // la consegna, come negli altri passi
 //     ask: T('Ogni secondo va {a} m/s più veloce. Dopo {t} secondi?', 'Accelerazione {a} m/s². Velocità dopo {t} s?'),
@@ -39,7 +39,7 @@ function choose(st, lens, r) {
     const l = Array.isArray(list[0]) ? list[Math.min(r, list.length - 1)] : list;
     return [k, Array.isArray(l) ? pick(l) : l];
   }));
-  for (const [k, src] of Object.entries(st.derive || {})) { const names = Object.keys(v); v[k] = formula(src, names)(...names.map((n) => v[n])); }
+  for (const [k, src] of Object.entries(byLens(st.derive, lens) || {})) { const names = Object.keys(v); v[k] = formula(src, names)(...names.map((n) => v[n])); }
   return v;
 }
 

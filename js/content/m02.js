@@ -69,7 +69,7 @@ export default {
         {
           kind: 'q', only: ['s', 'c'],
           set: { objs: ['boccia'], h: 20, air: false, planet: 'terra' },
-          text: T(null, 'Nel vuoto la velocità di un oggetto che cade cresce di 9,81 m/s ogni secondo: è un moto <b>uniformemente accelerato</b>. L’altezza percorsa dopo un tempo t è h = ½·g·t². Una boccia cade da <b>20 m</b>: quanto tempo impiega ad arrivare a terra?', 'Cadendo, ogni secondo si guadagnano 9,81 m/s di velocità, e lo spazio percorso è h = ½·g·t². Ricavando t da questa formula, quanto dura la caduta da <b>20 m</b>, l’altezza di un palazzo di 6-7 piani?'),
+          text: T(null, 'Nel vuoto la velocità di un oggetto che cade cresce di 9,81 m/s ogni secondo: è un moto <b>uniformemente accelerato</b>, con a = g. La legge s = ½·a·t² diventa h = ½·g·t². Una boccia cade da <b>20 m</b>: quanto tempo impiega ad arrivare a terra?', 'Cadendo, ogni secondo si guadagnano 9,81 m/s di velocità, e lo spazio percorso è h = ½·g·t². Ricavando t da questa formula, quanto dura la caduta da <b>20 m</b>, l’altezza di un palazzo di 6-7 piani?'),
           options: ['circa 1,0 s', 'circa 2,0 s', 'circa 4,1 s'],
           answer: 1,
           predict: [{ objs: ['boccia'], h: 20, air: false, planet: 'terra' }],
@@ -159,13 +159,12 @@ export default {
           answer: 0, explain: T('Giusto: più cade, più corre.', 'Giusto: a = g = 9,81 m/s² vuol dire +9,81 m/s ogni secondo.'),
         },
         {
-          kind: 'num', rounds: 1, text: T('Un calcolo veloce.', 'Un calcolo veloce.'),
-          gen: (lens) => {
-            const t = pick([5, 8, 10, 12]), v = pick([3, 4, 5, 6]), d = v * t;
-            return lens === 'e'
-              ? { text: tr('Un trenino del parco va sempre alla stessa velocità e fa <b>{d} metri</b> in <b>{t} secondi</b>. Se dividi la strada per il tempo, scopri quanti metri fa ogni secondo. Quanti sono?', { d, t }), ans: v, tol: 0, unit: tr('metri'), explain: tr('Esatto: {d} diviso {t} fa {v}.', { d, t, v }) }
-              : { text: tr('Un trenino del parco, a velocità costante, percorre <b>{d} m</b> in <b>{t} s</b>. Ricorda che la velocità è lo spazio diviso il tempo. Qual è la sua velocità?', { d, t }), ans: v, tol: 0.01, unit: 'm/s', explain: tr('Esatto: v = {d} m / {t} s = {v} m/s.', { d, t, v }) };
-          },
+          kind: 'num', rounds: 1, text: T('Un calcolo veloce.', 'Un calcolo sulla caduta.'),
+          vals: { e: { t: [5, 10], v: [3, 4, 6] }, s: { h: [5, 20, 45] } }, derive: { e: { d: 'v * t' }, s: {} },
+          calc: { e: 'v', s: 'Math.sqrt(2 * h / 9.81)' }, round: 2, unit: T('metri', 's'), tol: { e: 0, s: 0.03 },
+          ask: T('Un trenino del parco va sempre alla stessa velocità e fa <b>{d} metri</b> in <b>{t} secondi</b>. Se dividi la strada per il tempo, scopri quanti metri fa ogni secondo. Quanti sono?',
+            'Una palla cade, senza aria, da <b>{h} m</b>. Da h = ½·g·t² si ricava il tempo di caduta: t = √(2h/g), con g = 9,81 m/s². Quanto dura la caduta?'),
+          explain: T('Esatto: {d} diviso {t} fa {v}.', 'Esatto: t = √(2 × {h} / 9,81) ≈ {ans} s.'),
         },
         {
           kind: 'q', text: T('Vuoi scoprire se le cose pesanti cadono più in fretta di quelle leggere. Ricorda la regola del Laboratorio: si cambia una cosa sola alla volta, e la forma conta perché l’aria frena di più le cose larghe. Quale esperimento fai?', 'Vuoi capire se la massa influisce sulla caduta. Per un esperimento corretto deve cambiare solo la massa, mentre forma, dimensioni e altezza restano uguali, così l’aria agisce allo stesso modo. Che esperimento fai?'),

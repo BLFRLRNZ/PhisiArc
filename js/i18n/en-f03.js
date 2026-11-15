@@ -58,7 +58,6 @@ export default {
  "v × t = 60 m sempre: proporzionalità inversa.": "v × t = 60 m always: inverse proportionality.",
  "La frenata": "Braking",
  "La macchinina arriva alla linea rossa e frena. Quanta strada fa prima di fermarsi? Prima indovina, poi guarda!": "The little car reaches the red line and brakes. How far does it go before stopping? First guess, then watch!",
- "Un’auto frena sempre con la stessa forza. Lo <b>spazio di frenata</b> dipende dalla velocità: ma come?": "A car always brakes with the same force. The <b>braking distance</b> depends on the speed: but how?",
  "Circa 14 metri, il doppio": "About 14 metres, double",
  "Circa 14 m (il doppio)": "About 14 m (double)",
  "Circa 28 metri, quattro volte": "About 28 metres, four times",
@@ -181,7 +180,6 @@ export default {
  "Velocità in orizzontale, tempo in verticale, distanza fissa di 60 m. Che curva descrivono i punti delle tue corse?": "Speed across, time up, a fixed distance of 60 m. What curve do the points of your runs make?",
  "Sempre gli stessi 60 metri: a 4 m/s la macchinina ci mette 15 s. Ora va a 12 m/s, cioè 3 volte più veloce. Quanto tempo le serve?": "Always the same 60 metres: at 4 m/s the little car takes 15 s. Now it goes at 12 m/s, which is 3 times faster. How much time does it need?",
  "Distanza fissa: a 4 m/s servono 15 s. Velocità e tempo sono inversamente proporzionali: se una si moltiplica per un numero, l’altro si divide per lo stesso numero. Quanto tempo serve a 12 m/s?": "Fixed distance: at 4 m/s it takes 15 s. Speed and time are inversely proportional: if one is multiplied by a number, the other is divided by the same number. How long does it take at 12 m/s?",
- "L’auto frena sempre con la stessa forza. Quando va a 10 m/s, da quando inizia a frenare a quando è ferma fa circa <b>7 metri</b>. Se va al <b>doppio</b>, a 20 m/s, quanti metri le servono per fermarsi?": "The car always brakes with the same force. At 10 m/s, from the moment it starts braking to when it stops, it covers about <b>7 metres</b>. If it goes at <b>double</b> the speed, 20 m/s, how many metres does it need to stop?",
  "Lo <b>spazio di frenata</b> è la strada che l’auto fa da quando frena a quando si ferma. Con la stessa frenata, a 10 m/s è circa 7 m. Prevedi: a 20 m/s, il doppio della velocità, quanto sarà?": "The <b>braking distance</b> is how far the car travels from when it brakes until it stops. With the same braking, at 10 m/s it’s about 7 m. Predict: at 20 m/s, double the speed, how long will it be?",
  "Ogni frenata ha lasciato un punto: in orizzontale la velocità dell’auto, in verticale i metri che le servono per fermarsi. La linea gialla unisce i punti. Che forma ha?": "Each stop left a point: the car’s speed across, the metres it needs to stop up. The yellow line joins the points. What shape is it?",
  "Il grafico mette la velocità in orizzontale e lo spazio di frenata in verticale. Guarda come cresce la curva gialla quando la velocità aumenta: sempre allo stesso modo, o sempre più in fretta? Che grafico è?": "The graph has speed across and braking distance up. Look at how the yellow curve grows as the speed increases: always the same way, or faster and faster? What kind of graph is it?",
@@ -221,4 +219,6 @@ export default {
  "Faccio tante misure e prendo il numero in mezzo": "I take many measurements and pick the number in the middle",
  "Giusto: gli errori un po’ in su e un po’ in giù si compensano. Il numero in mezzo si chiama <b>media</b>.": "Right: the errors a bit up and a bit down cancel out. The number in the middle is called the <b>mean</b>.",
  "Le tue misure finora: <b>{l}</b>.": "Your measurements so far: <b>{l}</b>.",
+ "Un’auto frena sempre allo stesso modo. Lo <b>spazio di frenata</b> dipende dalla velocità: ma come?": "A car always brakes in the same way. The <b>braking distance</b> depends on the speed: but how?",
+ "L’auto frena sempre allo stesso modo. Quando va a 10 m/s, da quando inizia a frenare a quando è ferma fa circa <b>7 metri</b>. Se va al <b>doppio</b>, a 20 m/s, quanti metri le servono per fermarsi?": "The car always brakes in the same way. At 10 m/s, from the moment it starts braking to when it stops, it covers about <b>7 metres</b>. If it goes at <b>double</b> the speed, 20 m/s, how many metres does it need to stop?",
 };

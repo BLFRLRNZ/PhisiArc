@@ -135,7 +135,7 @@ export default {
           kind: 'run', only: ['s', 'c'],
           text: T(null, 'Guarda: stessa velocità, angolo sempre più alto. Cambia come si dividono i due moti.'),
           seq: [{ ang: 20, v: 25 }, { ang: 45, v: 25 }, { ang: 70, v: 25 }],
-          explain: T(null, 'Angolo basso: tanta vₓ ma poco tempo in volo. Angolo alto: lungo volo ma poca vₓ. La gittata dipende da entrambi.', 'Angolo basso: va veloce in avanti ma atterra presto. Angolo alto: resta in aria a lungo ma avanza piano.'),
+          explain: T(null, 'Angolo basso: tanta vₓ ma poco tempo in volo. Angolo alto: lungo volo ma poca vₓ. La <b>gittata</b>, cioè la distanza a cui la palla atterra, dipende da entrambi.', 'Angolo basso: va veloce in avanti ma atterra presto. Angolo alto: resta in aria a lungo ma avanza piano.'),
         },
       ],
       hints: [T('Pensa a quando tiri un sasso piano e quando lo tiri forte.', 'Quali forze agiscono sulla palla in volo, se trascuriamo l’aria? In che direzione?'), T('Prova lo stesso angolo con due velocità diverse.', 'C’è solo la gravità, che tira verso il basso: cosa cambia allora in orizzontale?')],
@@ -179,7 +179,7 @@ export default {
         'Nuovo gioco per il parco: il <b>tiro al bersaglio</b>! Colpisci la bandierina con il cannone.',
         'Nuovo pezzo del parco: il <b>tiro al bersaglio</b>. Scegli angolo e velocità per centrare la bandierina (devi atterrare entro 3 m dal centro).',
         'Nuovo pezzo del parco: il <b>tiro al bersaglio</b>. Usa quello che sai sulla gittata per fare centro.'),
-      piece: { id: 'bersaglio', name: 'Il tiro al bersaglio', desc: 'Un cannone che fa centro alla distanza che vuoi, grazie alla regola della gittata.' },
+      piece: { id: 'bersaglio', name: 'Il tiro al bersaglio', desc: 'Un cannone che fa centro alla distanza che scegli tu.' },
       steps: [
         {
           kind: 'tune', rounds: 2,
@@ -203,11 +203,11 @@ export default {
         },
       ],
       hints: [
-        T('Metti il cannone a metà, a 45°, e cambia solo la forza.', 'Conviene fissare una delle due variabili e regolare solo l’altra. Quale angolo rende i conti più semplici?'),
+        T('Metti il cannone a metà, a 45°, e cambia solo quanto forte spari.', 'Conviene fissare una delle due variabili e regolare solo l’altra. Quale angolo rende i conti più semplici?'),
         T('Se la palla cade prima della bandierina, spara più forte.', 'A 45°: R = v²/g, quindi v = √(R·g).'),
       ],
       solution: T(
-        'Lascia l’angolo a 45° e cambia la forza: circa 17 per 30 m, 22 per 50 m, 26 per 70 m, 30 per 90 m.',
+        'Lascia l’angolo a 45° e cambia quanto forte spari: circa 17 per 30 m, 22 per 50 m, 26 per 70 m, 30 per 90 m.',
         'R = v²·sin(2θ)/g. A 45°: v = √(R·g). Per 50 m → v ≈ 22 m/s; per 70 m → 26 m/s; per 90 m → 29,7 m/s.'),
     },
     {
@@ -221,7 +221,7 @@ export default {
       steps: [
         {
           kind: 'q', clear: true,
-          text: T('Lo stesso identico lancio, stesso angolo e stessa forza, prima senza aria e poi con l’aria che frena la palla mentre vola. La linea tratteggiata mostra il volo senza aria. Che cosa succede con l’aria?', 'Lancio a 45° e 35 m/s, prima nel vuoto e poi con l’aria. L’aria frena la palla tanto più quanto più va veloce, e la frena per tutto il volo. Che cosa prevedi per la gittata?'),
+          text: T('Lo stesso identico lancio, stesso angolo e stessa spinta, prima senza aria e poi con l’aria che frena la palla mentre vola. La linea tratteggiata mostra il volo senza aria. Che cosa succede con l’aria?', 'Lancio a 45° e 35 m/s, prima nel vuoto e poi con l’aria. L’aria frena la palla tanto più quanto più va veloce, e la frena per tutto il volo. Che cosa prevedi per la gittata?'),
           options: [T('Con l’aria va più lontano', 'Con l’aria la gittata aumenta'), T('Va lontano uguale', 'La gittata non cambia'), T('Con l’aria va meno lontano', 'Con l’aria la gittata diminuisce')],
           answer: 2,
           predict: [{ ang: 45, v: 35, air: false }, { ang: 45, v: 35, air: true }],
@@ -257,18 +257,20 @@ export default {
       solution: T('Con l’aria la palla va meno lontano, e l’angolo migliore è più basso di 45°: circa 37°.', 'Con l’aria: gittata molto minore, angoli complementari non più equivalenti, angolo ottimale sotto i 45° (qui circa 37°).'),
     },
     {
-      id: 'm03-5', kind: 'ripasso', title: 'Ripasso della Pista',
-      intro: T('Ripassiamo tutta la Pista: velocità, cadute e lanci!', 'Ripasso della Pista: moto, caduta libera, proiettili.'),
+      id: 'm03-5', kind: 'ripasso', title: T('Ripasso di frecce e lanci', 'Ripasso di vettori e proiettili'),
+      intro: T('Ripassiamo frecce, lanci e aria!', 'Ripasso: vettori, proiettili e resistenza dell’aria.'),
       steps: [
         {
-          kind: 'q', text: T('Ricordi il disegno sotto la pista delle macchinine? Ogni macchinina disegna una linea che sale mentre va avanti. Quella più veloce ha la linea…', 'Nel grafico spazio-tempo, la pendenza della retta dice di quanti metri cresce la posizione in ogni secondo. Quindi la pendenza rappresenta…'),
-          options: [T('più sdraiata', 'l’accelerazione'), T('più ripida', 'la velocità'), T('orizzontale', 'la posizione di partenza')],
-          answer: 1, explain: T('Esatto: più ripida.', 'Esatto: pendenza = Δs/Δt = velocità.'),
+          // vettori: i due moti della barca sono indipendenti (m03-v2)
+          kind: 'q', text: T('Una barca attraversa il fiume puntando dritta alla riva di fronte. Poi arriva la corrente, che la spinge di lato. Per arrivare dall’altra parte ci mette…', 'Una barca punta dritta verso la riva opposta a 4 m/s, su un fiume largo 40 m. Poi arriva una corrente di 3 m/s, perpendicolare alla barca. Il tempo di traversata…'),
+          options: [T('lo stesso tempo', 'resta 10 s'), T('più tempo', 'sale a 13 s'), T('meno tempo', 'scende a 8 s')],
+          answer: 0, explain: T('Giusto: la corrente la sposta di lato, ma non la frena verso la riva.', 'Giusto: i due moti sono indipendenti. La corrente cambia dove arrivi (30 m più a valle), non quando.'),
         },
         {
-          kind: 'q', text: T('Sulla Luna non c’è aria che frena. Un astronauta lascia cadere insieme una piuma e un martello dalla stessa altezza. Chi arriva prima a terra?', 'Sulla Luna non c’è aria e l’accelerazione di gravità vale 1,62 m/s². Una piuma e un martello, lasciati insieme dalla stessa altezza, cadono…'),
-          options: [T('Arrivano insieme', 'con la stessa accelerazione, 1,62 m/s²'), T('Prima il martello, che è pesante', 'il martello con accelerazione maggiore'), T('Prima la piuma, che è leggera', 'la piuma con accelerazione maggiore')],
-          answer: 0, explain: T('Insieme: lì non c’è aria che frena.', 'Esatto: senza aria l’accelerazione è g per tutti. Apollo 15, 1971.'),
+          // aria: gittata minore e angolo migliore più basso (m03-aria)
+          kind: 'q', text: T('Spari la stessa palla due volte, nello stesso modo: una volta senza aria, una volta con l’aria. Con l’aria la palla arriva…', 'Stesso lancio, con e senza aria. L’aria frena la palla per tutto il volo. Che cosa succede alla gittata e all’angolo migliore?'),
+          options: [T('meno lontano', 'Gittata minore, angolo migliore sotto i 45°'), T('più lontano', 'Gittata maggiore, angolo migliore sopra i 45°'), T('lontano uguale', 'Non cambia niente: resta 45°')],
+          answer: 0, explain: T('Giusto: l’aria frena la palla per tutto il viaggio.', 'Giusto: l’aria accorcia il volo, e conviene un lancio un po’ più basso, che resta in aria meno tempo.'),
         },
         {
           kind: 'q', text: T('Hai un cannone che spara sempre alla stessa velocità e vuoi mandare la palla il più lontano possibile, senza aria. Puoi solo scegliere quanto inclinarlo. Come lo inclini?', 'Con la stessa velocità di lancio e senza aria, l’angolo decide quanta velocità va in avanti e quanta in alto. Quale angolo dà la gittata massima?'),
@@ -286,7 +288,7 @@ export default {
           answer: 1, explain: T('Esatto: sempre più veloce.', 'Esatto: v = g·t = 9,81 × 2 ≈ 19,6 m/s.'),
         },
       ],
-      hints: [T('Ripensa alla gara, alla Luna e al cannone.')],
+      hints: [T('Ripensa alla barca, al cannone e all’aria.')],
     },
     {
       // Boss: applica "due moti in uno" a una situazione nuova (lancio da una torre), invece di rifare il 45° di m03-3.

@@ -121,12 +121,12 @@ export default {
       sim: 'lab', params: { mode: 'frenata', x: 10, noise: false }, controls: ['x'], labels: { x: VEL(4, 30) },
       intro: T(
         'La macchinina arriva alla linea rossa e frena. Quanta strada fa prima di fermarsi? Prima indovina, poi guarda!',
-        'Un’auto frena sempre con la stessa forza. Lo <b>spazio di frenata</b> dipende dalla velocità: ma come?',
+        'Un’auto frena sempre allo stesso modo. Lo <b>spazio di frenata</b> dipende dalla velocità: ma come?',
         'L’auto frena sempre allo stesso modo, a qualunque velocità stia andando. Come cambia lo spazio di frenata quando la velocità aumenta?'),
       steps: [
         {
           kind: 'q', predict: [{ x: 10 }, { x: 20 }],
-          text: T('L’auto frena sempre con la stessa forza. Quando va a 10 m/s, da quando inizia a frenare a quando è ferma fa circa <b>7 metri</b>. Se va al <b>doppio</b>, a 20 m/s, quanti metri le servono per fermarsi?', 'Lo <b>spazio di frenata</b> è la strada che l’auto fa da quando frena a quando si ferma. Con la stessa frenata, a 10 m/s è circa 7 m. Prevedi: a 20 m/s, il doppio della velocità, quanto sarà?'),
+          text: T('L’auto frena sempre allo stesso modo. Quando va a 10 m/s, da quando inizia a frenare a quando è ferma fa circa <b>7 metri</b>. Se va al <b>doppio</b>, a 20 m/s, quanti metri le servono per fermarsi?', 'Lo <b>spazio di frenata</b> è la strada che l’auto fa da quando frena a quando si ferma. Con la stessa frenata, a 10 m/s è circa 7 m. Prevedi: a 20 m/s, il doppio della velocità, quanto sarà?'),
           options: [T('Circa 14 metri, il doppio', 'Circa 14 m (il doppio)'), T('Circa 28 metri, quattro volte', 'Circa 28 m (quattro volte)'), T('Sempre 7 metri', 'Circa 7 m (uguale)')],
           answer: 1,
           explain: T(

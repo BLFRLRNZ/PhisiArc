@@ -78,6 +78,14 @@ export default {
             return { text: tr('Il seggiolino gira a <b>{r} m</b> dal centro e fa un giro in <b>{t} s</b>. In un giro percorre la circonferenza, 2π volte il raggio. Qual è la sua velocità?', { r, t }), ans: Math.round(v * 100) / 100, tol: 0.06, unit: 'm/s', explain: tr('Esatto: v = 2πr / T = 2π × {r} / {t} ≈ {v} m/s.', { r, t, v }) };
           },
         },
+        {
+          // a = v²/r: la formula dell'introduzione, usata in un calcolo
+          kind: 'num', only: ['s', 'c'], rounds: 1, text: T(null, 'Calcola l’accelerazione centripeta.', 'Quanto «tira» la giostra?'),
+          vals: { v: [4, 6, 8], r: [2, 4, 8] }, calc: 'v * v / r', unit: 'm/s²', tol: 0.02,
+          ask: T(null, 'Il seggiolino va a <b>{v} m/s</b> su un cerchio di raggio <b>{r} m</b>. Quanto vale l’accelerazione centripeta, a = v²/r?',
+            'Un seggiolino va a <b>{v} m/s</b> su un cerchio di raggio <b>{r} m</b>. L’accelerazione verso il centro è il quadrato della velocità diviso il raggio. Quanto vale?'),
+          explain: T(null, 'Esatto: a = v²/r = {v}² / {r} = {ans} m/s².', 'Esatto: {v} × {v} diviso {r} fa {ans} m/s². Per confronto, la gravità dà circa 9,8 m/s².'),
+        },
       ],
       hints: [T('La freccia verde punta sempre verso lo stesso punto della giostra.', 'In un giro il seggiolino percorre la circonferenza, 2πr.')],
       solution: T('Verso il centro della giostra.', 'Verso il centro; v = 2πr/T.'),
@@ -166,12 +174,24 @@ export default {
           options: [T('toccano terra insieme', 'insieme'), T('prima quella lanciata', 'quella lanciata'), T('prima quella lasciata cadere', 'quella lasciata cadere')],
           answer: 0, explain: T('Giusto: in verticale cadono uguali.', 'Giusto: il moto verticale è indipendente da quello orizzontale.'),
         },
+        {
+          kind: 'q',
+          text: T('Sulla giostra un seggiolino si stacca all’improvviso: niente lo tiene più. Dove va?', 'Un seggiolino in moto circolare si sgancia: da quell’istante nessuno lo tira più verso il centro. Che traiettoria segue?'),
+          options: [T('Dritto, dove stava andando in quel momento', 'Una retta tangente al cerchio'), T('Dritto verso fuori, lontano dal centro', 'Una retta lungo il raggio, verso l’esterno'), T('Continua a girare in tondo', 'Continua sul cerchio')],
+          answer: 0, explain: T('Giusto: va dritto, lungo la freccia arancione.', 'Giusto: lungo la tangente, a velocità costante.'),
+        },
+        {
+          kind: 'q',
+          text: T('Due giostre grandi uguali: una fa un giro in 4 secondi, l’altra in 8 secondi. Su quale i seggiolini vanno più veloci?', 'Stesso raggio, periodi diversi: 4 s e 8 s. La velocità è la circonferenza divisa per il periodo, v = 2πr/T. Come sono le due velocità?'),
+          options: [T('Su quella da 4 secondi', 'Con T = 4 s è doppia'), T('Su quella da 8 secondi', 'Con T = 8 s è doppia'), T('Vanno uguali', 'Sono uguali')],
+          answer: 0, explain: T('Giusto: lo stesso giro in meno tempo, quindi più veloce.', 'Giusto: v e T sono inversamente proporzionali. Metà periodo, doppia velocità.'),
+        },
       ],
       hints: [T('Ripensa alla giostra, alla barca e al cannone.')],
     },
     {
       id: 'm05-6', kind: 'boss', title: 'Il mito della forza centrifuga',
-      sim: 'circle', params: { r: 6, T: 4, release: false }, controls: ['release'],
+      sim: 'circle', params: { r: 6, T: 4, release: true, laps: 1.25 }, controls: ['laps'],
       intro: T(
         'Sono Vetrino. Sulla giostra ti senti spinto verso fuori. Un mio amico dice: <i>“C’è una forza che spinge fuori! Se ti stacchi, voli via dritto lontano dal centro”</i>. Sarà vero?',
         'Sono Vetrino. Un mito: <i>“Sulla giostra una forza ti spinge verso l’esterno; se il seggiolino si sgancia, schizza via lungo il braccio, lontano dal centro”</i>. Controlliamo.',
@@ -182,16 +202,25 @@ export default {
           text: T('Il mito dice che sulla giostra una forza ti spinge verso l’esterno, e che se il seggiolino si stacca schizza via lontano dal centro. Prima di provare, ragiona come il mito: se fosse vero, dove andrebbe il seggiolino staccato?', 'Il mito parla di una «forza centrifuga» che spinge il seggiolino verso l’esterno, lungo il braccio. Se il seggiolino si sgancia, che cosa prevede il mito?'),
           options: [T('Dritto verso fuori, lungo il braccio', 'Via in direzione radiale, lungo il braccio'), T('Dritto lungo la freccia arancione', 'Lungo la tangente')],
           answer: 0, keepOrder: true,
-          explain: T('Esatto, questo dice il mito. Ora metti <b>Lascia la presa: sì</b> e guarda cosa succede davvero.', 'Esatto. Ora attiva <b>Lascia la presa</b> e lancia.'),
+          explain: T('Esatto, questo dice il mito. Ora mettiamolo alla prova in un punto nuovo del giro.', 'Esatto: questo prevede il mito. Mettiamolo alla prova in un punto nuovo del giro.'),
         },
-        { kind: 'free', runs: 1, text: T('Metti <b>Lascia la presa: sì</b> e lancia.', 'Attiva Lascia la presa e lancia.') },
+        {
+          // Esperimento nuovo rispetto a m05-3: lo sgancio avviene a sinistra, dove tangente (giù) e braccio (sinistra) danno previsioni diverse.
+          kind: 'q', predict: [{ release: true, laps: 1.5 }],
+          text: T('Questa volta il seggiolino si stacca in un altro punto: quando è a <b>sinistra</b> della giostra, dopo un giro e mezzo. Lì il braccio punta a sinistra. Dove va il seggiolino?',
+            'Ora lo sgancio avviene dopo un giro e mezzo, quando il seggiolino è a <b>sinistra</b> del centro: lì il braccio punta a sinistra. La giostra gira in senso antiorario. Dove va il seggiolino?'),
+          options: [T('In giù', 'Verso il basso'), T('A sinistra, lontano dal centro', 'Verso sinistra, lungo il braccio'), T('In su', 'Verso l’alto')],
+          answer: 0,
+          explain: T('In giù, non a sinistra come diceva il mito! Va dove puntava la freccia arancione in quel momento.', 'Verso il basso, lungo la tangente. Se il mito avesse ragione sarebbe andato a sinistra, lungo il braccio.'),
+        },
+        { kind: 'free', runs: 1, text: T('Ora prova tu: scegli un altro <b>punto di sgancio</b> e lancia.', 'Scegli un altro punto di sgancio e lancia: confronta la linea rosa con il braccio.') },
         {
           kind: 'q',
-          text: T('Hai visto il seggiolino staccarsi. La linea rosa tratteggiata mostra la strada che ha fatto. Confrontala con il braccio della giostra e con la freccia arancione. Dove è andato?', 'Guarda la linea rosa tratteggiata, la strada del seggiolino dopo lo sgancio, e confrontala con la direzione del braccio in quell’istante. Che traiettoria ha seguito?'),
-          options: [T('Dritto lungo la freccia arancione, di lato', 'Lungo la tangente'), T('Dritto verso fuori, lungo il braccio', 'In direzione radiale')],
-          answer: 0, keepOrder: true,
+          text: T('Hai visto il seggiolino staccarsi in punti diversi del giro. Ogni volta la linea rosa mostra la strada che ha fatto. Che cosa segue sempre?', 'Hai sganciato il seggiolino in punti diversi. Confronta ogni volta la linea rosa con il braccio e con la freccia della velocità. Che direzione prende sempre?'),
+          options: [T('La freccia arancione', 'La tangente, cioè la direzione della velocità'), T('Il braccio, verso fuori', 'Il braccio, in direzione radiale'), T('Sempre verso l’alto', 'Sempre verso l’alto')],
+          answer: 0,
           wrong: T('Guarda la linea rosa tratteggiata: segue il braccio o la freccia arancione?', 'Confronta la linea rosa con la direzione del braccio nel momento del distacco.'),
-          explain: T('Giusto: è andato dritto lungo la freccia arancione, non verso fuori.', 'Giusto: lungo la tangente, non lungo il braccio.'),
+          explain: T('Giusto: in ogni punto va dritto lungo la freccia arancione, mai verso fuori.', 'Giusto: in ogni punto parte lungo la tangente, mai lungo il braccio.'),
         },
         {
           kind: 'q',

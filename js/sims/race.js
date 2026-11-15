@@ -14,7 +14,7 @@ export class Race extends Sim {
   };
 
   defaults() {
-    return { v1: 5, v2: 10, a1: 0, a2: 0, x1: 0, x2: 0, D: 100, cars: 2, tmax: 40, graph: 'xt', names: ['blu', 'arancione'] };
+    return { v1: 5, v2: 10, a1: 0, a2: 0, x1: 0, x2: 0, D: 100, cars: 2, tmax: 40, graph: 'xt', area: false, names: ['blu', 'arancione'] };
   }
 
   cars() {
@@ -134,6 +134,13 @@ export class Race extends Sim {
     for (const s of st) {
       const pts = (VT ? s.vpts : s.pts).map(([t, x]) => [GX(t), GY(x)]);
       if (this.running && s.tEnd == null) pts.push([GX(this.t), GY(VT ? s.v : s.x)]);
+      // con "area" accesa (grafico velocità–tempo) la zona sotto la linea si colora: la sua area è la strada fatta
+      if (VT && p.area && s === st[0] && pts.length > 1) {
+        const hx = pts[pts.length - 1][0];
+        g.save(); g.globalAlpha = 0.2; g.fillStyle = s.col; g.beginPath();
+        g.moveTo(pts[0][0], GY(0)); pts.forEach(([x, y]) => g.lineTo(x, y)); g.lineTo(hx, GY(0)); g.closePath(); g.fill(); g.restore();
+        if (hx - gx > 110) this.text(i18n('area = strada: {a} m', { a: fmt(s.x - s.x0, 1) }), gx + (hx - gx) * 0.64, GY(0) - 9, { size: 12, align: 'center', weight: 600, color: s.col });
+      }
       this.line(pts, { color: s.col, width: 3 });
       s.secs.forEach(([t, x, v]) => this.ball(GX(t), GY(VT ? v : x), 2.6, { color: s.col, fill: 1, shine: false }));
       if (this.running && s.tEnd == null) {

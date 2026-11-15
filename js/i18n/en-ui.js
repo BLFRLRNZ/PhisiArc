@@ -350,4 +350,5 @@ export default {
   'Non sei {p}?': 'Not {p}?',
   'Codice copiato: incollalo dove vuoi conservarlo.': 'Code copied: paste it wherever you want to keep it.',
  ": ne servono al massimo {m}, senza aiuti. Gioca i livelli di questo mondo: poi potrai riprovare.": ": you need at most {m}, with no help. Play the levels of this world: then you can try again.",
+ "area = strada: {a} m": "area = distance: {a} m",
 };

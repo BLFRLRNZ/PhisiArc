@@ -1,10 +1,12 @@
-// Mappa dei prerequisiti: per ogni zona, le idee che usa e quelle che introduce.
-// tools/check-prereq.mjs controlla che nessuna zona usi un'idea prima che il percorso l'abbia spiegata.
+// Mappa dei prerequisiti. Due livelli di controllo, tutti e due in tools/check-prereq.mjs:
+// 1. PREREQ, zona per zona: le idee che ogni zona usa e quelle che introduce (anche per le zone ancora da scrivere);
+// 2. IDEE, livello per livello: le parole che rivelano un'idea nei testi. Il controllo legge i testi di ogni livello,
+//    lente per lente, e segnala un'idea che compare prima del livello che la spiega.
 export const PREREQ = {
   F01: { usa: [], introduce: ['metodo', 'variabili', 'periodo', 'g-anticipo'] },
   F02: { usa: ['metodo'], introduce: ['unità', 'potenze10', 'conversioni'] },
-  F03: { usa: ['unità', 'metodo'], introduce: ['grafici', 'proporzionalità', 'errori-misura'] },
-  M01: { usa: ['grafici', 'proporzionalità', 'conversioni'], introduce: ['velocità', 'grafico-st', 'kmh', 'velocità-relativa'] },
+  F03: { usa: ['unità', 'metodo'], introduce: ['grafici', 'proporzionalità', 'errori-misura', 'metri-al-secondo'] },
+  M01: { usa: ['grafici', 'proporzionalità', 'conversioni', 'metri-al-secondo', 'errori-misura'], introduce: ['velocità', 'grafico-st', 'kmh', 'velocità-relativa'] },
   M04: { usa: ['velocità', 'grafici'], introduce: ['accelerazione', 'grafico-vt'] },
   M02: { usa: ['accelerazione', 'proporzionalità'], introduce: ['caduta-libera', 'g'] },
   M03: { usa: ['velocità', 'caduta-libera'], introduce: ['vettori', 'seno-coseno', 'proiettili', 'resistenza-aria'] },
@@ -49,3 +51,44 @@ export const PREREQ = {
   X02: { usa: ['irraggiamento', 'onde-em', 'energia'], introduce: ['clima', 'effetto-serra'] },
   X03: { usa: ['potenza', 'effetto-serra'], introduce: ['città-sostenibile'] },
 };
+
+// ---------- le idee riconosciute nei testi ----------
+//   parole: espressione regolare cercata nei testi del livello (senza i tag HTML), lente per lente
+//   da:     il livello che spiega l'idea per la prima volta: uno per tutte le lenti, o uno per lente { s: …, c: … }.
+//           Se quel livello non esiste ancora (zone da scrivere), ogni uso va dichiarato in ANTICIPI.
+//   mai:    le lenti che non devono incontrarla affatto (l'Esploratore non vede formule)
+export const IDEE = {
+  'metri al secondo': { parole: 'm/s(?!²)|metri al secondo', da: 'f03-2' },
+  'errore di misura': { parole: 'error[ei] (di misura|casual)|incertezz', da: 'f01-1' },
+  'periodo': { parole: 'period', da: 'f01-2', mai: ['e'] },
+  'proporzionalità': { parole: 'proporzional', da: 'f03-1' },
+  'media': { parole: '\\bmedi[ae]\\b', da: 'f03-6' },
+  'km/h': { parole: 'km/h', da: 'm01-1' },
+  'accelerazione': { parole: 'accelerazion|deceleraz|m/s²', da: 'm04-1' },
+  'legge oraria (s = ½·a·t²)': { parole: '½·[ag]·t²|½ · [0-9,]+ · t²', da: { s: 'm04-area', c: 'm04-1' }, mai: ['e'] },
+  'g = 9,81 m/s²': { parole: '9,81|[L)h]/g|g·[tT]²|\\bg = [19]|accelerazione g\\b|stessa g\\b', da: 'm02-2', mai: ['e'] },
+  'vettori': { parole: 'vettor', da: 'm03-v1', mai: ['e'] },
+  'teorema di Pitagora': { parole: 'pitagora', da: 'm03-v1', mai: ['e'] },
+  'seno e coseno': { parole: '(sin|cos) ?[(θ]', da: 'm03-v2', mai: ['e'] },
+  'gittata': { parole: 'gittata', da: 'm03-2', mai: ['e'] },
+  'tangente': { parole: 'tangent', da: 'm05-1' },
+  'accelerazione centripeta': { parole: 'centripet', da: 'm05-2', mai: ['e'] },
+  'forza e inerzia': { parole: '\\bforz[ae]\\b|inerzia', da: 'd01-1' },
+  'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
+};
+
+// Anticipi dichiarati: livelli che nominano un'idea prima del livello che la spiega, sapendolo.
+// Ogni voce è una scelta, non una svista: il controllo le accetta, e avvisa se una non serve più.
+export const ANTICIPI = {
+  // il pendolo: g compare nella formula del periodo, con la promessa «la studierai nella Pista»
+  'f01-3': ['accelerazione', 'g = 9,81 m/s²'],
+  'f01-4': ['g = 9,81 m/s²'],
+  'f01-6': ['g = 9,81 m/s²'],
+  // forze: si spiegano nell'Officina (D01). Qui servono a dire che in orizzontale niente spinge la palla,
+  // e che sulla giostra qualcosa tira verso il centro; il boss m05-6 smonta proprio la «forza centrifuga».
+  'm03-2': ['forza e inerzia'],
+  'm05-2': ['forza e inerzia'],
+  'm05-3': ['forza e inerzia'],
+  'm05-6': ['forza e inerzia'],
+};
+

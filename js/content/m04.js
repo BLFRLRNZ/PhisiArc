@@ -71,6 +71,69 @@ export default {
       solution: T('Una linea dritta che sale: ogni secondo la velocità cresce dello stesso numero.', 'Retta che sale, v = a·t.'),
     },
     {
+      // Dal grafico velocità–tempo alla strada: l'area sotto la linea. Qui lo Studente trova s = ½·a·t² e v² = 2·a·s,
+      // che servono al treno a razzo (m04-4) e alla caduta libera (M02).
+      id: 'm04-area', kind: 'lezione', title: 'Dal grafico alla strada',
+      sim: 'race', params: { v1: 0, a1: 2, cars: 1, D: 100, graph: 'vt', area: true, names: ['blu'] }, controls: ['a1'], labels: { a1: A1 },
+      intro: T(
+        'Sotto la linea della velocità ora c’è una <b>macchia colorata</b>. Più strada fa la macchinina, più la macchia cresce. Guardala!',
+        'Nel grafico velocità–tempo è nascosta anche la <b>strada percorsa</b>: è l’<b>area</b> sotto la linea. Con accelerazione costante quell’area è un triangolo.',
+        'Il grafico velocità–tempo racconta anche quanta strada hai fatto: è l’<b>area</b> sotto la linea. È il conto che fa un contachilometri, istante per istante.'),
+      steps: [
+        { kind: 'free', runs: 2, text: T('Fai <b>due corse</b> con accelerazioni diverse e guarda la macchia crescere.', 'Fai due corse con accelerazioni diverse: l’area colorata cresce insieme alla strada percorsa.') },
+        {
+          kind: 'q', only: ['e'], predict: [{ a1: 2, D: 4 }, { a1: 2, D: 16 }],
+          text: 'Con questa accelerazione la macchinina fa <b>4 metri</b> in 2 secondi. Se corre per 4 secondi, il doppio del tempo, quanti metri fa?',
+          options: ['8 metri, il doppio', '16 metri, quattro volte', '4 metri, uguale'],
+          answer: 1,
+          explain: 'Quattro volte! Nel doppio del tempo va anche più veloce: così la strada non raddoppia, diventa <b>quattro volte</b> più lunga.',
+        },
+        {
+          kind: 'q', only: ['e'], set: { D: 100 },
+          text: 'Guarda la macchia colorata sotto la linea: più è grande, più strada ha fatto la macchinina. Quando cresce più in fretta?',
+          options: ['Alla fine, quando va veloce', 'All’inizio, appena parte', 'Sempre allo stesso modo'],
+          answer: 0,
+          explain: 'Giusto: più va veloce, più strada fa in ogni secondo, e più in fretta cresce la macchia.',
+          wrong: 'Fai una corsa e guarda la macchia: all’inizio è una punta sottile.',
+        },
+        {
+          kind: 'q', only: ['s', 'c'],
+          text: T(null,
+            'Un’auto parte da ferma con a = 2 m/s². Dopo 4 s va a 8 m/s. L’area sotto la linea è un triangolo: base 4 s, altezza 8 m/s. Quanta strada ha fatto?',
+            'Un’auto parte da ferma e in 4 secondi arriva a 8 m/s, crescendo in modo regolare: in media, quindi, è andata a 4 m/s. Quanta strada ha fatto in quei 4 secondi?'),
+          options: ['16 m', '32 m', '8 m'],
+          answer: 0,
+          explain: T(null,
+            'Esatto: area del triangolo = ½ · base · altezza = ½ · t · (a·t). In formula: <b>s = ½·a·t²</b>.',
+            'Esatto: 4 m/s di media per 4 secondi fanno 16 m. È la metà di quanto avrebbe fatto andando sempre a 8 m/s.'),
+          wrong: T(null, 'L’area di un triangolo è metà di base per altezza.', 'Non è andata sempre a 8 m/s: all’inizio era ferma. Usa la velocità media.'),
+        },
+        {
+          kind: 'num', only: ['s', 'c'], rounds: 2, text: T(null, 'Calcola la strada percorsa.'),
+          vals: { a: [2, 3, 4], t: [2, 3, 4] }, calc: '0.5 * a * t * t', unit: 'm', tol: 0.01,
+          ask: T(null, 'Un’auto parte da ferma con accelerazione <b>{a} m/s²</b>. Quanta strada fa in <b>{t} s</b>?'),
+          explain: T(null, 'Esatto: s = ½·a·t² = ½ × {a} × {t}² = {ans} m.'),
+        },
+        {
+          kind: 'q', only: ['s', 'c'],
+          text: T(null,
+            'Unendo v = a·t e s = ½·a·t² si ottiene un legame diretto fra velocità e strada: <b>v² = 2·a·s</b>. Un treno parte da fermo con a = 1 m/s². Che velocità ha dopo 50 m?',
+            'Più strada hai per accelerare, più veloce arrivi, ma non in proporzione: per raddoppiare la velocità finale serve una strada <b>quattro volte</b> più lunga. Un treno arriva a 10 m/s in 50 m. Quanta strada gli serve per arrivare a 20 m/s?'),
+          options: [T(null, '10 m/s', '200 m'), T(null, '50 m/s', '100 m'), T(null, '100 m/s', '75 m')],
+          answer: 0,
+          explain: T(null,
+            'Esatto: v² = 2 × 1 × 50 = 100, quindi v = 10 m/s. Ti servirà fra poco, per il treno a razzo.',
+            'Esatto: 200 m. Velocità doppia, strada quadrupla: è la regola della frenata del Laboratorio, vista al contrario.'),
+          wrong: T(null, 'v² = 2·a·s = 2 × 1 × 50. Poi serve la radice quadrata.', 'Ricorda la frenata del Laboratorio: velocità doppia, spazio quadruplo.'),
+        },
+      ],
+      hints: [
+        T('Guarda quanti metri ha fatto dopo 2 secondi, e quanti dopo 4.', 'Area di un triangolo: ½ · base · altezza. La base è il tempo, l’altezza è la velocità finale, a·t.', 'Se parte da ferma, la velocità media è la metà di quella finale.'),
+        T('Nel doppio del tempo la macchinina va anche più veloce.', 's = ½·a·t², e poi v² = 2·a·s.', 'Strada = velocità media × tempo.'),
+      ],
+      solution: T('Nel doppio del tempo fa quattro volte la strada.', 's = ½·a·t² (l’area del triangolo sotto la retta v–t) e v² = 2·a·s.', 'Strada = velocità media × tempo; per una velocità doppia serve una strada quadrupla.'),
+    },
+    {
       id: 'm04-3', kind: 'prevedi', title: 'La lepre e la tartaruga',
       sim: 'race', params: { v1: 10, a1: 0, v2: 0, a2: 2.5, cars: 2, D: 100, graph: 'xt', names: ['blu', 'arancione'] }, controls: [],
       intro: T(
@@ -85,7 +148,7 @@ export default {
           answer: 1,
           explain: T(
             'L’arancione! All’inizio resta indietro, ma va sempre più forte e alla fine supera la blu.',
-            'L’arancione: 8,9 s contro 10 s. All’inizio è dietro, ma la sua velocità cresce e la sorpassa.',
+            'L’arancione: da s = ½·a·t², 100 = ½ · 2,5 · t² dà t ≈ 8,9 s, contro i 10 s della blu. All’inizio è dietro, ma la sua velocità cresce e la sorpassa.',
             'L’arancione: ½·2,5·t² = 100 → t ≈ 8,9 s, contro 10 s. Le curve sul grafico si incrociano dove avviene il sorpasso.'),
         },
         {
@@ -95,7 +158,7 @@ export default {
           answer: 1,
           explain: T(
             'La blu! Sulla pista corta l’arancione non fa in tempo a raggiungerla.',
-            'La blu: 5 s contro 6,3 s. L’arancione non fa in tempo a recuperare.',
+            'La blu: 5 s contro 6,3 s (50 = ½ · 2,5 · t²). L’arancione non fa in tempo a recuperare.',
             'La blu: 5 s contro √40 ≈ 6,3 s. Il sorpasso avverrebbe a t = 8 s, a 80 m: oltre il traguardo.'),
         },
       ],
@@ -107,8 +170,8 @@ export default {
       sim: 'race', params: { v1: 0, a1: 1, cars: 1, D: 50, graph: 'vt', names: ['treno'] }, controls: ['a1'], labels: { a1: A1 },
       intro: T(
         'Nuovo gioco per il parco: un <b>treno a razzo</b> che parte fermo e schizza via! Alla fine del rettilineo di <b>50 metri</b> deve avere proprio la velocità giusta.',
-        'Nuovo pezzo del parco: il <b>treno a razzo</b>, una montagna russa lanciata. Parte da fermo su un rettilineo di 50 m: scegli l’accelerazione per arrivare in fondo alla velocità richiesta.',
-        'Nuovo pezzo del parco: il <b>treno a razzo</b>. Rettilineo di 50 m, partenza da fermo: trova a per la velocità finale richiesta (v² = 2·a·d).'),
+        'Nuovo pezzo del parco: il <b>treno a razzo</b>, una montagna russa lanciata. Parte da fermo su un rettilineo di 50 m: scegli l’accelerazione per arrivare in fondo alla velocità richiesta. Ti serve v² = 2·a·s.',
+        'Nuovo pezzo del parco: il <b>treno a razzo</b>. Rettilineo di 50 m, partenza da fermo: trova l’accelerazione per la velocità finale richiesta. Ricorda: sulla stessa strada, per una velocità doppia serve un’accelerazione quattro volte più grande.'),
       piece: { id: 'razzo', name: 'Il treno a razzo', desc: 'Parte da fermo e in un attimo è lanciato, con l’accelerazione che hai scelto tu.' },
       steps: [
         {
@@ -125,7 +188,7 @@ export default {
       ],
       hints: [
         T('Con accelerazione 1 arriva a 10 m/s. Per andare più forte serve più accelerazione.', 'Raddoppiare l’accelerazione non raddoppia la velocità finale: prova e guarda.'),
-        T('Per 20 m/s serve accelerazione 4. Per 15, circa 2,25.', 'a = v² / (2·d) = v² / 100.'),
+        T('Per 20 m/s serve accelerazione 4. Per 15, circa 2,25.', 'a = v² / (2·s) = v² / 100.'),
       ],
       solution: T('10 m/s → 1; 15 m/s → 2,25; 20 m/s → 4.', 'a = v²/100: 10 m/s → 1; 12 → 1,44 (1,5); 15 → 2,25; 18 → 3,24 (3,25); 20 → 4 m/s².'),
     },
@@ -162,7 +225,7 @@ export default {
       hints: [T('Ripensa ai due grafici: posizione–tempo e velocità–tempo.')],
     },
     {
-      id: 'm04-6', kind: 'boss', title: 'Il mito del più veloce',
+      id: 'm04-6', kind: 'boss', title: 'Il mito del veloce che accelera',
       sim: 'race', params: { v1: 15, a1: 0, v2: 2, a2: 3, cars: 2, D: 100, graph: 'vt', names: ['blu', 'arancione'] }, controls: ['graph'],
       intro: T(
         'Sono Vetrino. Ho sentito dire: <i>“Chi va più veloce ha anche più accelerazione. Velocità e accelerazione sono la stessa cosa!”</i>. Guarda queste due auto e dimmi tu.',
