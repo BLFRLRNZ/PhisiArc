@@ -184,7 +184,7 @@ export class Cannon extends Sim {
         this.line([[X(tx), Y(ty)], [X(tx), oy]], { color: sun, width: 1.6, dash: [3, 5], upto: u1 });
         g.globalAlpha = u1;
         // l'etichetta non deve coprire la scritta in alto né uscire dallo schermo
-        const lab = `altezza max ${fmt(ty, 1)} m`, ly = Y(ty) - 10 < 46 ? Y(ty) + 18 : Y(ty) - 10, right = X(tx) + 140 > W;
+        const lab = i18n('altezza max {a} m', { a: fmt(ty, 1) }), ly = Y(ty) - 10 < (W < 480 ? 66 : 46) ? Y(ty) + 18 : Y(ty) - 10, right = X(tx) + 140 > W;
         this.text(lab, right ? X(tx) - 8 : X(tx) + 8, ly, { size: 11, color: sun, align: right ? 'right' : 'left' });
         g.globalAlpha = 1;
       }
@@ -196,10 +196,12 @@ export class Cannon extends Sim {
 
     this.text(`${fmt(p.ang, 0)}°  ·  ${fmt(p.v, 1)} m/s${p.air ? '  ·  ' + i18n('con l’aria') : ''}`, 14, 24, { size: 14, weight: 600 });
     if (this.result) {
-      const msg = `Atterra a ${fmt(this.result.x, 1)} m` + (p.target != null && this.result.hit ? ' · Centro!' : '');
+      const msg = i18n('Atterra a {a} m', { a: fmt(this.result.x, 1) }) + (p.target != null && this.result.hit ? ' · ' + i18n('Centro!') : '');
+      // sul telefono la riga in alto non basta per due scritte: il risultato scende nella seconda
+      const ry = W < 480 ? 44 : 24;
       g.globalAlpha = easeOut(this.age / 0.4);
-      this.text(msg, W - 14, 24, { size: 14, align: 'right', weight: 700, color: this.result.hit ? sun : this.c('accent2') });
-      if (p.drop) this.text(i18n('in volo {a} s · lasciata cadere {b} s', { a: fmt(this.result.t, 2), b: fmt(this.result.tDrop, 2) }), W - 14, 44, { size: 12, align: 'right', color: muted });
+      this.text(msg, W - 14, ry, { size: 14, align: 'right', weight: 700, color: this.result.hit ? sun : this.c('accent2') });
+      if (p.drop) this.text(i18n('in volo {a} s · lasciata cadere {b} s', { a: fmt(this.result.t, 2), b: fmt(this.result.tDrop, 2) }), W - 14, ry + 20, { size: 12, align: 'right', color: muted });
       g.globalAlpha = 1;
     }
   }

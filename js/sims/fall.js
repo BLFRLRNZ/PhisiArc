@@ -100,9 +100,9 @@ export class Fall extends Sim {
         g.globalAlpha = 1;
       }
     });
-    const where = luna ? 'Luna (niente aria)' : p.air ? 'Terra, con aria' : 'Terra, senza aria (tubo a vuoto)';
+    const where = luna ? i18n('Luna (niente aria)') : p.air ? i18n('Terra, con aria') : i18n('Terra, senza aria (tubo a vuoto)');
     // Tempo e luogo sulla stessa riga in alto a sinistra: niente si sovrappone agli oggetti che partono.
     this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 2) }), 14, 24, { size: 14, weight: 600 });
-    this.text(where, 14 + g.measureText(`Tempo: ${fmt(9.99, 2)} s`).width + 14, 24, { size: 12, color: this.c('muted'), weight: 500 });
+    this.text(where, 14 + g.measureText(i18n('Tempo: {a} s', { a: fmt(9.99, 2) })).width + 14, 24, { size: 12, color: this.c('muted'), weight: 500 });
   }
 }

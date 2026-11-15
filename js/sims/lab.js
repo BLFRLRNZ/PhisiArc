@@ -174,7 +174,7 @@ export class Lab extends Sim {
       this.line([[GX(xv), gy + gh], [GX(xv), gy]], { color: this.c('sky'), width: 1, dash: [2, 5], alpha: 0.4 });
     }
     if (this.result) {
-      const msg = `${M.xl.split(' (')[0]} ${fmt(this.result.x, 1)} → ${M.yl.split(' (')[0]} ${fmt(this.result.y, 2)}`;
+      const msg = `${i18n(M.xl).split(' (')[0]} ${fmt(this.result.x, 1)} → ${i18n(M.yl).split(' (')[0]} ${fmt(this.result.y, 2)}`;
       g.globalAlpha = easeInOut(this.age / 0.4);
       this.text(msg, W - 14, gy + 10, { size: 12, align: 'right', weight: 600, color: this.c('accent2') });
       g.globalAlpha = 1;

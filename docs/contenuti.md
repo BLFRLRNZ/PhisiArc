@@ -1,24 +1,41 @@
 # Scrivere una zona di PhysiArc
 
-Una zona è un file in `js/content/` (per esempio `m04.js`) con sei livelli. Chi scrive i contenuti lavora con **testi, numeri e formule brevi**:
+Una zona è un file in `js/content/` (per esempio `m04.js`), di solito con sei livelli (da 4 a 9). Chi scrive i contenuti lavora con **testi, numeri e formule brevi**:
 non serve scrivere funzioni. Le funzioni restano possibili per i casi speciali, ma non sono la strada normale.
 
 ## I testi nelle tre lenti
 
 Ogni testo si scrive con `T(esploratore, studente, curioso)`. Se un testo manca, si usa quello prima:
 `T('Uguale per tutti')` vale per tutte e tre le lenti; `T('Per i piccoli', 'Per gli altri')` vale per Studente e Curioso.
+Un passo riservato a Studente e Curioso (`only: ['s', 'c']`) si scrive `T(null, 'Studente', 'Curioso')`. Anche il titolo di un livello può essere un `T(...)`.
 
 ## I passi
 
 | Tipo | Che cosa fa | Cosa si scrive |
 |------|-------------|----------------|
-| `free` | Esperimenti liberi | `text`, `runs` (quanti lanci servono) |
+| `free` | Esperimenti liberi | `text`, `runs` (quanti lanci servono); `distinct: true` se ogni lancio deve avere valori diversi; `need` se serve un lancio per ogni condizione (vedi sotto) |
 | `run` | Una sequenza di esperimenti da guardare | `text`, `seq` (i parametri di ogni lancio), `explain` |
 | `q` | Domanda a scelta | `text`, `options` (da 2 a 4), `answer` (da 0), `explain`, `wrong`; con `predict` diventa una previsione |
 | `vars` | Quale variabile cambiare | `vars` (`{ k, t }`), `change`, `explain` |
 | `order` | Mettere in ordine | `items` (`{ t, v }`), `explain` |
 | `num` | Domanda di calcolo | vedi sotto |
 | `tune` | Regolare i controlli per centrare un obiettivo | vedi sotto |
+
+### Prove libere che controllano che cosa hai provato (`free`)
+
+```js
+{
+  kind: 'free', runs: 2, text: T('Fai una traversata senza corrente, poi una con la corrente.'),
+  need: [
+    { when: 'vc == 0', try: { vc: 0 }, msg: T('Fai anche una traversata con la corrente a zero.') },
+    { when: 'vc > 0', try: { vc: 2 }, msg: T('Ora accendi la corrente e rilancia.') },
+  ],
+}
+```
+
+`when` è una formula breve sui valori dei controlli della simulazione; `try` sono valori che la soddisfano (li usa il test automatico);
+`msg` è quello che il gioco dice quando un lancio non serve a niente. Con `distinct: true`, invece, basta che ogni lancio abbia valori
+diversi da quelli già contati.
 
 ### Domanda di calcolo (`num`)
 
@@ -35,7 +52,8 @@ Ogni testo si scrive con `T(esploratore, studente, curioso)`. Se un testo manca,
 ```
 
 Nei testi `{a}` diventa il valore scelto (con la virgola), `{ans}` la risposta; `{a:1}` mostra al massimo un decimale.
-Valori e formule possono cambiare per lente: `vals: { e: {...}, s: {...} }`, `calc: { e: 'c / t', s: '2 * Math.PI * r / T' }`.
+Valori e formule possono cambiare per lente: `vals: { e: {...}, s: {...} }`, `derive: { e: {...}, s: {} }`, `calc: { e: 'c / t', s: '2 * Math.PI * r / T' }`.
+Un `gen` scritto a mano riceve `(lente, prova, simulazione)`: così una domanda può usare le misure appena fatte (vedi `mediaTue` in `f03.js`).
 
 ### Prova da regolare (`tune`)
 
@@ -55,10 +73,25 @@ Valori e formule possono cambiare per lente: `vals: { e: {...}, s: {...} }`, `ca
 `{got}` è il valore misurato. `measure` è il nome di un campo del risultato della simulazione (per la gara `times[0]`, `vEnd[0]`;
 per il laboratorio `y`; per la giostra `v`; vedi il `finish(...)` di ogni simulazione in `js/sims/`).
 
+## Gli aiuti
+
+Prima della soluzione c'è sempre un passaggio. Per ogni passo il motore usa, in ordine: i suggerimenti del passo (`hints`);
+per una domanda a scelta in un livello con più domande, il suo «riprova» (`wrong`) e poi un suggerimento automatico che toglie
+una risposta sbagliata (se le risposte sono almeno tre); altrimenti i suggerimenti del livello (`hints` del livello).
+La soluzione è quella del passo (`solution`), poi quella che il motore ricava da solo (la risposta giusta, il risultato, l'ordine),
+poi quella del livello. Una previsione ha bisogno della sua `solution`: quella del livello parla del compito principale.
+
+## Sul telefono
+
+Sotto gli 820 px la pagina è in colonna. Nei passi con una risposta da dare (`q`, `num`, `vars`, `order`) le risposte stanno subito sotto
+la domanda e la simulazione viene dopo; negli altri (`free`, `run`, `tune`) la simulazione sta sotto la consegna. Conviene che una domanda
+si capisca anche senza scorrere fino alla simulazione.
+
 ## Prima di caricare
 
 1. `node tools/check-content.mjs`: risposte valide, testi in tutte le lenti, aiuti e soluzioni, generatori che funzionano, file offline.
-2. `node tools/check-prereq.mjs`: nessuna idea usata prima di essere spiegata (aggiorna `js/content/prereq.js`).
+2. `node tools/check-prereq.mjs`: nessuna idea usata prima di essere spiegata. Legge i testi, lente per lente: se introduci un'idea nuova,
+   aggiungila a `IDEE` in `js/content/prereq.js` con le sue parole e il livello che la spiega.
 3. `node tests/play-all.mjs http://localhost:8765` con il gioco servito in locale: un Chrome gioca tutti i livelli nelle tre lenti.
    Gli stessi controlli girano su GitHub a ogni push.
 
@@ -68,7 +101,7 @@ Se rinomini un livello o una zona già pubblicati, aggiungi la coppia `'vecchio-
 le stelle e gli sblocchi dei giocatori seguono il nome nuovo. Se cambi la forma dei dati salvati, alza `VERSION` e aggiungi il passo in `MIGRATIONS`.
 
 Il ripasso del giorno (`js/review.js`) ricorda le domande per livello e posizione del passo (`m03-3#1`): se riordini i passi di un livello già pubblicato
-non si rompe niente, ma qualche domanda tornerà prima o dopo del previsto. Entrano nel ripasso le domande `q` senza esperimento e le `num`.
+non si rompe niente, ma qualche domanda tornerà prima o dopo del previsto. Entrano nel ripasso le domande `q` senza esperimento e le `num`. Una domanda che chiede di guardare la simulazione («guarda le due linee…») si tiene fuori con `review: false`.
 
 ## L’inglese
 

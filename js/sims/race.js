@@ -139,7 +139,7 @@ export class Race extends Sim {
         const hx = pts[pts.length - 1][0];
         g.save(); g.globalAlpha = 0.2; g.fillStyle = s.col; g.beginPath();
         g.moveTo(pts[0][0], GY(0)); pts.forEach(([x, y]) => g.lineTo(x, y)); g.lineTo(hx, GY(0)); g.closePath(); g.fill(); g.restore();
-        if (hx - gx > 110) this.text(i18n('area = strada: {a} m', { a: fmt(s.x - s.x0, 1) }), gx + (hx - gx) * 0.64, GY(0) - 9, { size: 12, align: 'center', weight: 600, color: s.col });
+        if (hx - gx > 110) this.text(i18n('area = strada: {a} m', { a: fmt(s.x - s.x0, 1) }), gx + (hx - gx) * 0.42, GY(0) - 9, { size: 12, align: 'center', weight: 600, color: s.col });
       }
       this.line(pts, { color: s.col, width: 3 });
       s.secs.forEach(([t, x, v]) => this.ball(GX(t), GY(VT ? v : x), 2.6, { color: s.col, fill: 1, shine: false }));
@@ -150,7 +150,7 @@ export class Race extends Sim {
       }
       // a gara finita: il triangolo della pendenza. Nel grafico posizione–tempo è la velocità (se costante),
       // nel grafico velocità–tempo è l'accelerazione: quanto cresce la velocità in un secondo.
-      if (this.result && s.secs.length >= 3 && (VT || !s.a)) {
+      if (this.result && s.secs.length >= 3 && (VT ? s.a : !s.a)) { // una linea piatta nel grafico velocità–tempo non ha pendenza da mostrare
         const u = easeInOut((this.age - 0.2) / 0.8);
         if (u > 0) {
           const f = VT ? (T) => s.v0 + s.a * T : (T) => s.x0 + s.v0 * T;
@@ -165,14 +165,13 @@ export class Race extends Sim {
       }
     }
     g.lineWidth = 1;
-    this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), W - 20, gy + 10, { size: 13, align: 'right', weight: 600 });
-    if (this.result) {
-      // un tempo per riga, ognuno del colore della sua auto, su un fondo che lo stacca dalle linee del grafico
-      const rows = st.map((s, i) => [s.tEnd != null ? `${i18n(p.names[i])}: ${fmt(s.tEnd, 1)} s` : `${i18n(p.names[i])}: ${i18n('non arriva')}`, s.col]);
-      g.font = '700 13px Lexend, system-ui, sans-serif';
-      const bw = Math.max(...rows.map(([r]) => g.measureText(r).width)) + 14;
-      g.save(); g.globalAlpha = 0.85; g.fillStyle = this.c('sim-bg'); g.fillRect(W - 20 - bw + 7, gy + 16, bw, rows.length * 17 + 4); g.restore();
-      rows.forEach(([r, col], i) => this.text(r, W - 20, gy + 30 + i * 17, { size: 13, align: 'right', weight: 700, color: col }));
-    }
+    // Tempo e arrivi stanno in basso a destra, sopra la scritta dell'asse: le linee del grafico finiscono in alto a destra,
+    // e lì i numeri le coprivano. Un tempo per riga, ognuno del colore della sua auto, su un fondo che lo stacca dal disegno.
+    const rows = [[i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), this.c('ink')]];
+    if (this.result) st.forEach((s, i) => rows.push([s.tEnd != null ? `${i18n(p.names[i])}: ${fmt(s.tEnd, 1)} s` : `${i18n(p.names[i])}: ${i18n('non arriva')}`, s.col]));
+    g.font = '700 13px Lexend, system-ui, sans-serif';
+    const bw = Math.max(...rows.map(([r]) => g.measureText(r).width)) + 14, by = gy + gh - 20 - rows.length * 17;
+    g.save(); g.globalAlpha = 0.85; g.fillStyle = this.c('sim-bg'); g.fillRect(W - 20 - bw + 7, by, bw, rows.length * 17 + 4); g.restore();
+    rows.forEach(([r, col], i) => this.text(r, W - 20, by + 14 + i * 17, { size: 13, align: 'right', weight: i ? 700 : 600, color: col }));
   }
 }

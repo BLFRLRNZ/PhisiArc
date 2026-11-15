@@ -255,7 +255,7 @@ export function runLevel(root, level, nav) {
         markRight(btns[st.answer]);
         // Una previsione sbagliata non costa stelle: sbagliare la previsione fa parte del gioco.
         if (i !== st.answer) { btns[i].classList.add('wrong'); sfx.no(); } else sfx.ok();
-        const head = i === st.answer ? '<b>Previsione giusta!</b> ' : '<b>La previsione era diversa, ed è normale: gli scienziati imparano proprio così.</b> ';
+        const head = i === st.answer ? `<b>${tr('Previsione giusta!')}</b> ` : `<b>${tr('La previsione era diversa, ed è normale: gli scienziati imparano proprio così.')}</b> `;
         after.replaceChildren(say(head + tx(st.explain, lens), i === st.answer ? 'good' : 'warn'), nextBtn());
         setLaunch(true);
         toQuest(); // sul telefono l'esperimento è più in basso: si torna alla domanda, dove ora c'è la spiegazione
@@ -635,7 +635,7 @@ export function runLevel(root, level, nav) {
       h('div', { class: 'cele', html: charSVG(who.id, { cls: 'party' }) }),
       h('h2', {}, tr('Ripasso fatto!')),
       h('p', {}, tr('{a} su {n} al primo colpo. Quelle sicure tornano fra qualche giorno, le altre già domani.', { a: first, n })),
-      h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: () => nav('#/') }, 'Il percorso'))));
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: () => nav('#/') }, tr('Il percorso')))));
     root.append(asDialog(modal));
     setTimeout(() => confetti(modal.firstChild, {}), 250);
   }

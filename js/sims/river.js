@@ -74,9 +74,11 @@ export class River extends Sim {
     }
     // pontile d'arrivo, proprio di fronte alla partenza
     this.line([[X(0) - 12, yTop], [X(0) - 12, yTop - 14], [X(0) + 12, yTop - 14], [X(0) + 12, yTop]], { color: this.c('sun'), width: 2 });
-    this.text('pontile', X(0) + 18, yTop - 4, { size: 11, color: this.c('sun') });
+    // le due scritte stanno dal lato opposto a quello dove la corrente porta la barca: così la barca e la scia non le coprono
+    const lato = p.vc - p.vb * Math.sin((p.ang * Math.PI) / 180) > 0.05 ? -1 : 1, al = lato < 0 ? 'right' : 'left';
+    this.text('pontile', X(0) + lato * 18, yTop - 4, { size: 11, color: this.c('sun'), align: al });
     this.line([[X(0), yBot], [X(0), yTop]], { color: this.c('line'), width: 1, dash: [3, 6] });
-    this.text(`${p.Wd} m`, X(0) + 6, (yTop + yBot) / 2, { size: 11, color: this.c('muted'), mono: true });
+    this.text(`${p.Wd} m`, X(0) + lato * 6, (yTop + yBot) / 2, { size: 11, color: this.c('muted'), mono: true, align: al });
 
     // scia
     if (this.trail.length > 1) this.line(this.trail.map(([x, y]) => [X(x), Y(y)]), { color: this.c('chalk'), width: 1.6, dash: [4, 5], alpha: 0.6 });
@@ -106,17 +108,19 @@ export class River extends Sim {
       }
     }
 
-    this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), 14, 24, { size: 14, weight: 600 });
-    this.text(`barca ${fmt(p.vb, 1)} m/s · corrente ${fmt(p.vc, 1)} m/s${p.ang ? ` · prua ${p.ang}°` : ''}`, W - 14, 24, { size: 12, align: 'right', color: this.c('muted') });
+    // In alto a sinistra il tempo; a traversata finita, al suo posto, il risultato (una riga in più finiva sulle frecce).
+    if (!this.result) this.text(i18n('Tempo: {a} s', { a: fmt(this.t, 1) }), 14, 24, { size: 14, weight: 600 });
+    // I valori di barca e corrente si ripetono in alto a destra solo se c'è spazio: sul telefono li mostrano già i cursori.
+    if (W >= 520) this.text(i18n('barca {a} m/s · corrente {b} m/s', { a: fmt(p.vb, 1), b: fmt(p.vc, 1) }) + (p.ang ? i18n(' · prua {a}°', { a: p.ang }) : ''), W - 14, 24, { size: 12, align: 'right', color: this.c('muted') });
     if (this.result) {
       const d = this.result.drift, u = easeOut(this.age / 0.5);
       if (Math.abs(d) > 0.3) {
         const xe = Math.max(12, Math.min(W - 12, X(d)));
         this.arrow(X(0), yTop - 30, X(0) + (xe - X(0)) * u, yTop - 30, { color: this.c('pink'), width: 1.8, head: 7 });
-        this.text(`${fmt(Math.abs(d), 1)} m ${d > 0 ? 'a valle' : 'a monte'}`, Math.max(70, Math.min(W - 70, (X(0) + xe) / 2)), yTop - 36, { size: 12, align: 'center', color: this.c('pink'), weight: 600 });
+        this.text(d > 0 ? i18n('{a} m a valle', { a: fmt(d, 1) }) : i18n('{a} m a monte', { a: fmt(-d, 1) }), Math.max(70, Math.min(W - 70, (X(0) + xe) / 2)), yTop - 36, { size: 12, align: 'center', color: this.c('pink'), weight: 600 });
       } else this.text('dritta al pontile!', X(0), yTop - 30, { size: 12, align: 'center', color: this.c('mint'), weight: 700 });
       g.globalAlpha = easeInOut(this.age / 0.4);
-      this.text(`attraversato in ${fmt(this.result.t, 1)} s`, 14, 44, { size: 13, weight: 700, color: this.c('accent2') });
+      this.text(i18n('attraversato in {a} s', { a: fmt(this.result.t, 1) }), 14, 24, { size: 14, weight: 700, color: this.c('accent2') });
       g.globalAlpha = 1;
     }
   }

@@ -25,15 +25,29 @@ Pianeta Casa non introduce un campo nuovo: è il mondo di **sintesi**, dove si u
 
 ## La mappa dei prerequisiti
 
-`js/content/prereq.js` dice, per ogni zona (anche quelle ancora da scrivere), quali idee **usa** e quali **introduce**.
-`node tools/check-prereq.mjs` percorre i mondi nell'ordine del gioco e segnala ogni idea usata prima di essere spiegata.
-Va lanciato ogni volta che si aggiunge o si sposta una zona: deve rispondere "Nessuna idea usata prima di essere spiegata".
+`js/content/prereq.js` ha due parti, e `node tools/check-prereq.mjs` le controlla tutte e due.
+
+- `PREREQ` dice, per ogni zona (anche quelle ancora da scrivere), quali idee **usa** e quali **introduce**.
+  Il controllo percorre i mondi nell'ordine del gioco e segnala ogni idea usata prima di essere introdotta.
+- `IDEE` elenca le parole che rivelano un'idea nei testi («m/s» per i metri al secondo, «media», «forza»…) e il livello che la spiega.
+  Il controllo legge i testi di ogni livello, lente per lente: se un'idea compare prima del suo livello, o in una lente che non deve
+  incontrarla (l'Esploratore non vede formule), lo segnala. Un anticipo voluto si dichiara in `ANTICIPI`, con il motivo in un commento.
+
+Va lanciato ogni volta che si aggiunge o si sposta una zona, o si cambia un testo: deve rispondere "Nessuna idea usata prima di essere spiegata".
+Con `--tutti` elenca anche gli anticipi dichiarati.
+
+## I codici delle zone
+
+Nella tabella qui sopra le zone hanno il loro nome interno (M04 è l'accelerazione, anche se è la seconda zona della Pista): è il nome dei file
+e degli id dei livelli (`m04-1`), a cui sono legati i salvataggi, e per questo non cambia mai. Sulla pagina del mondo il giocatore vede invece
+un codice in ordine (M01, M02… M05), calcolato dalla posizione della zona.
 
 ## La prova d'ingresso
 
 Chi conosce già un mondo può saltarlo: in fondo alla pagina del mondo c'è **Fai la prova d'ingresso**.
 La prova mette in fila le domande dei ripassi di tutte le zone del mondo. Con al massimo 2 errori e senza aiuti
 il mondo conta come superato (`S.skip`) e si apre quello dopo; i livelli restano lì da giocare.
+Il tasto Aiuto resta acceso, ma a ogni passo il primo tocco avvisa soltanto: usare un aiuto deve essere una scelta.
 
 ## Graduale dentro ogni mondo
 
@@ -48,7 +62,7 @@ Dal terzo mondo il ritmo cambia, perché lo schema fisso stanca:
 
 - alcune zone **partono da un esperimento** (costruisci prima della lezione: prima provi, poi capisci perché funziona);
 - alcune **partono da un mistero** (un prevedi in apertura, la spiegazione dopo);
-- le zone brevi possono avere 4 livelli invece di 6, quelle ricche 7;
+- le zone brevi possono avere 4 livelli invece di 6, quelle ricche 7 o più (Vettori e proiettili ne ha 9);
 - il boss alterna **il mito da smontare**, **la sfida a tempo** e **l'esperimento al buio** (si deduce la legge senza vedere il meccanismo).
 
 ## Regole contro la ripetizione
