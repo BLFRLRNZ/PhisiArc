@@ -1,5 +1,5 @@
 // Il motore di un livello: testo, simulazione, passi (domande, prove, regolazioni) e stelle.
-import { h, tx, shuffle, plain, wait, T, asDialog } from './util.js';
+import { h, tx, rich, shuffle, plain, wait, T, asDialog } from './util.js';
 import { S, save, voiceOn } from './state.js';
 import { SIMS } from './sims/index.js';
 import { sfx, speak, stopSpeaking } from './audio.js';
@@ -8,7 +8,7 @@ import { IC } from './icons.js';
 import { pieceSVG } from './pieces.js';
 import { starsSVG, confetti, countUp, CHECK } from './fx.js';
 import { enroll, grade } from './review.js';
-import { newTools, toolCard } from './tools.js';
+import { TOOLS, newTools, toolCard, toolsToOffer, toolQueue } from './tools.js';
 import { t as tr, LOCALE } from './i18n.js';
 import { KIND, worldOf, zoneOf, nextLevel, gradeNow, worldDone, nextWorld, worldReady, worldOpen, EXAM_MAX_ERRORS } from './content/index.js';
 
@@ -29,12 +29,38 @@ export function runLevel(root, level, nav) {
   if (TEST) { TEST.busy = () => busy || !!(sim && sim.running); TEST.fast = (m) => { if (sim) sim.mul = m; }; }
   let sim = null, pending = null, onResult = null, busy = false;
 
+  // ---------- attrezzi di matematica offerti, non imposti ----------
+  // Un attrezzo mai incontrato che compare in una spiegazione, in un aiuto o in un riquadro «Per chi vuole la formula»
+  // non interrompe il gioco: sotto quel testo c'è un bottone che apre la sua scheda. (Quelli che servono per rispondere
+  // si aprono da soli all'inizio del livello: vedi in fondo.)
+  function offerTools(el) {
+    if (level.exam) return el;
+    const row = (ids) => h('div', { class: 'tool-offer' }, ids.map((id) => h('button', { class: 'chip tool-chip', 'data-tool': id, onclick: (e) => {
+      const host = e.currentTarget.closest('.say, .hintbox, .quest, .bubble, .target') || e.currentTarget.parentNode;
+      root.querySelectorAll('.toolcard.offered').forEach((c) => c.remove());
+      const queue = toolQueue(id); // con la radice arriva prima il quadrato, se non lo si conosce ancora
+      const card = toolCard(queue, null);
+      card.classList.add('offered');
+      host.after(card);
+      // la scheda è aperta: i bottoni di questi attrezzi non servono più
+      root.querySelectorAll('.tool-chip').forEach((b) => { if (!queue.includes(b.dataset.tool)) return; const r = b.parentNode; b.remove(); if (r && !r.children.length) r.remove(); });
+      card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } }, h('span', { class: 'tool-chip-tag' }, tr('Attrezzo')), ' ', TOOLS[id].title())));
+    // nel riquadro conta il testo della formula, non il titolo «Per chi vuole la formula»
+    el.querySelectorAll('details.fbox').forEach((d) => { const ids = toolsToOffer((d.querySelector(':scope > div') || d).textContent, lens); if (ids.length) d.append(row(ids)); });
+    const rest = el.cloneNode(true);
+    rest.querySelectorAll('details.fbox, .tool-offer').forEach((x) => x.remove());
+    const ids = toolsToOffer(rest.textContent, lens);
+    if (ids.length) el.append(row(ids));
+    return el;
+  }
+
   // ---------- struttura della pagina ----------
   const back = h('button', { class: 'btn ghost', onclick: () => leave() }, h('span', { html: IC.back }), h('span', { class: 'back-t' }, level.exam ? world.name : level.review ? tr('Il percorso') : zone.title));
   const hintBtn = h('button', { class: 'btn ghost hint-btn', onclick: () => showHint() }, h('span', { html: IC.hint }), tr('Aiuto'));
   const dots = h('div', { class: 'dots' });
   const head = h('header', { class: 'lvl-head' }, back, h('div', { class: 'lvl-title' },
-    h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', (level.exam ? tr('Prova') : KIND[level.kind].name)), h('strong', {}, level.title)), dots, hintBtn);
+    h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', (level.exam ? tr('Prova') : KIND[level.kind].name)), h('strong', {}, tx(level.title, lens))), dots, hintBtn);
 
   const boss = level.kind === 'boss';
   const who = CAST[boss ? 'vetrino' : world.mascot];
@@ -42,7 +68,7 @@ export function runLevel(root, level, nav) {
   const speakBtn = h('button', { class: 'btn icon', title: tr('Ascolta'), 'aria-label': tr('Ascolta'), onclick: () => speak(readOut(true)), html: IC.sound });
   const intro = h('div', { class: 'intro', style: `--c:${who.c}` },
     h('div', { class: 'who', html: charSVG(who.id), onclick: (e) => hop(e.currentTarget.firstChild) }),
-    h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), h('div', { html: introText })));
+    h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), offerTools(h('div', { html: introText }))));
   const quest = h('div', { class: 'quest', tabindex: '-1' });
   const area = h('div', { class: 'area', 'aria-live': 'polite' });
   const hintBox = h('div', { class: 'hintbox', hidden: true, 'aria-live': 'polite' });
@@ -79,7 +105,21 @@ export function runLevel(root, level, nav) {
   };
 
   root.style.setProperty('--c', world.color);
-  root.replaceChildren(head, h('main', { class: 'lvl' + (SimClass ? '' : ' nosim') }, textPane, simPane));
+  const main = h('main', { class: 'lvl' + (SimClass ? '' : ' nosim') }, textPane, simPane);
+  root.replaceChildren(head, main);
+  // Sul telefono la pagina è in colonna. Nei passi con una risposta da dare (domande, calcoli, ordini) le risposte
+  // stanno subito sotto la domanda e la simulazione viene dopo (vedi .lvl.ask nel CSS); quando il passo cambia,
+  // la domanda sale in cima allo schermo: così domanda e risposte si vedono insieme, senza scorrere.
+  const ASK = ['q', 'num', 'vars', 'order'];
+  const stacked = () => getComputedStyle(textPane).display === 'contents';
+  const toQuest = () => {
+    if (!stacked() || quest.hidden) return;
+    // posizione nella pagina presa dall'impaginazione, non dal rettangolo sullo schermo: la domanda entra con un'animazione
+    let top = 0;
+    for (let e = quest; e; e = e.offsetParent) top += e.offsetTop;
+    const y = top - head.offsetHeight - 10 - window.scrollY;
+    if (Math.abs(y) > 6) window.scrollBy({ top: y, behavior: 'smooth' });
+  };
 
   if (SimClass) {
     sim = new SimClass(canvas, { ...(level.params || {}) });
@@ -175,7 +215,7 @@ export function runLevel(root, level, nav) {
     return b;
   }
 
-  function say(html, cls = '') { return h('div', { class: 'say ' + cls, html }); }
+  function say(html, cls = '') { return offerTools(h('div', { class: 'say ' + cls, html })); }
 
   // Risposta giusta: bordo verde, spunta che si traccia e un'onda che parte dal bottone.
   function markRight(b) {
@@ -189,12 +229,14 @@ export function runLevel(root, level, nav) {
     slipsAt = slips();
     autoSol = null;
     quest.classList.remove('enter'); void quest.offsetWidth; quest.classList.add('enter');
+    main.classList.toggle('ask', ASK.includes(st.kind));
     drawDots();
     // dal secondo passo in poi il fuoco va alla nuova domanda, così chi usa tastiera o lettore di schermo non si perde
     if (si > 0) quest.focus({ preventScroll: true });
     onResult = null;
     area.replaceChildren();
     quest.innerHTML = tx(st.text, lens);
+    offerTools(quest);
     if (sim) {
       sim.stop();
       if (st.set) sim.set(st.set);
@@ -206,8 +248,9 @@ export function runLevel(root, level, nav) {
     const keys = st.controls ?? level.controls ?? [];
     renderControls(locked ? keys : keys, locked);
     setLaunch(!locked);
-    testSolve = null;
+    testSolve = null; cutOption = null;
     ({ q: stepQ, free: stepFree, run: stepRun, tune: stepTune, num: stepNum, order: stepOrder, vars: stepVars })[st.kind](st);
+    if (si > 0) requestAnimationFrame(toQuest);
     if (voiceOn()) speak(readOut(si === 0));
   }
 
@@ -222,6 +265,13 @@ export function runLevel(root, level, nav) {
     box.append(...opts.map(({ i }) => btns[i]));
     area.append(box, after);
     testSolve = () => choose(st.answer);
+    cutOption = () => {
+      const wrongs = opts.map(({ i }) => i).filter((i) => i !== st.answer && !btns[i].disabled);
+      if (wrongs.length < 2) return tr('Guarda le risposte rimaste: una delle due non regge.'); // ne resta una sola sbagliata: toglierla sarebbe dare la soluzione
+      const i = wrongs[Math.floor(Math.random() * wrongs.length)];
+      btns[i].disabled = true; btns[i].classList.add('cut');
+      return tr('Tolgo una risposta sbagliata: ne restano {n}.', { n: wrongs.length });
+    };
     async function choose(i) {
       if (busy) return;
       if (st.predict) {
@@ -232,9 +282,10 @@ export function runLevel(root, level, nav) {
         markRight(btns[st.answer]);
         // Una previsione sbagliata non costa stelle: sbagliare la previsione fa parte del gioco.
         if (i !== st.answer) { btns[i].classList.add('wrong'); sfx.no(); } else sfx.ok();
-        const head = i === st.answer ? '<b>Previsione giusta!</b> ' : '<b>La previsione era diversa, ed è normale: gli scienziati imparano proprio così.</b> ';
+        const head = i === st.answer ? `<b>${tr('Previsione giusta!')}</b> ` : `<b>${tr('La previsione era diversa, ed è normale: gli scienziati imparano proprio così.')}</b> `;
         after.replaceChildren(say(head + tx(st.explain, lens), i === st.answer ? 'good' : 'warn'), nextBtn());
         setLaunch(true);
+        toQuest(); // sul telefono l'esperimento è più in basso: si torna alla domanda, dove ora c'è la spiegazione
         return;
       }
       if (i === st.answer) {
@@ -252,19 +303,62 @@ export function runLevel(root, level, nav) {
     }
   }
 
+  // Prove libere. Una prova conta se fa quello che la consegna chiede:
+  //   runs: quanti lanci servono;
+  //   distinct: true → ogni lancio deve avere valori dei controlli diversi dai lanci già contati;
+  //   need: [{ when: 'vc > 0', try: { vc: 2 }, msg: T(…) }, …] → serve un lancio per ogni condizione.
+  //         when è una formula breve sui valori dei controlli (e su r, il risultato); try sono valori che la soddisfano
+  //         (li usa il test automatico); msg dice che cosa manca quando un lancio non serve a niente.
   function stepFree(st) {
-    const need = st.runs || 0;
+    const conds = (st.need || []).map((c) => ({ ...c, ok: false }));
+    const need = conds.length || st.runs || 0;
+    const keys = st.controls ?? level.controls ?? [];
+    const seen = new Set();
     let n = 0;
+    const holds = (c, res) => { const p = { ...sim.params }, names = Object.keys(p); try { return !!new Function(...names, 'r', `return (${c.when});`)(...names.map((k) => p[k]), res); } catch { return false; } };
+    const sig = () => JSON.stringify(keys.map((k) => sim.params[k]));
     const info = h('div', { class: 'muted small' });
+    const fb = h('div', { class: 'fb say muted', hidden: true });
     const nb = nextBtn();
     const upd = () => {
       nb.disabled = n < need;
       info.textContent = need ? tr('Esperimenti fatti: {n} di {tot}', { n: Math.min(n, need), tot: need }) : '';
     };
-    onResult = (r) => { n++; upd(); if (st.onRun) { const m = st.onRun(r, lens); if (m) area.querySelector('.fb').innerHTML = m; } };
-    area.append(info, h('div', { class: 'fb say muted' }), nb);
-    testSolve = () => fire();
-    if (!st.onRun) area.querySelector('.fb').remove();
+    onResult = (r) => {
+      let miss = '';
+      if (conds.length) {
+        const hit = conds.filter((c) => !c.ok && holds(c, r));
+        hit.forEach((c) => { c.ok = true; });
+        n = conds.filter((c) => c.ok).length;
+        const next = conds.find((c) => !c.ok);
+        if (!hit.length && next) miss = next.msg ? tx(next.msg, lens) : tr('Questa prova l’avevi già fatta: ora cambia quello che chiede la consegna e rilancia.');
+      } else if (st.distinct && sim && keys.length) {
+        const s = sig();
+        if (seen.has(s)) miss = tr('Questi valori li hai già provati: cambia qualcosa e rilancia.');
+        else { seen.add(s); n++; }
+      } else n++;
+      upd();
+      const m = miss || (st.onRun ? st.onRun(r, lens) : '');
+      fb.hidden = !m; fb.className = 'fb say ' + (miss ? 'warn' : 'muted'); fb.innerHTML = m || '';
+    };
+    area.append(info, fb, nb);
+    // la mossa del test automatico: valori che soddisfano la prossima condizione, o comunque diversi da quelli già provati
+    testSolve = () => {
+      const c = conds.find((x) => !x.ok);
+      if (c && c.try) sim.set(c.try);
+      else if (st.distinct && seen.size) {
+        for (const k of keys) {
+          const def = { ...SimClass.controls[k], ...(typeof (level.labels || {})[k] === 'object' ? level.labels[k] : {}) };
+          if (def.type === 'toggle') { sim.set({ [k]: !sim.params[k] }); break; }
+          if (def.type === 'select') { const vs = def.options.map((o) => o[0]); sim.set({ [k]: vs[(vs.indexOf(sim.params[k]) + 1) % vs.length] }); break; }
+          const steps5 = Math.max(1, Math.round((def.max - def.min) / def.step / 6));
+          let v = sim.params[k] + steps5 * def.step; if (v > def.max) v = def.min + ((seen.size * steps5 * def.step) % (def.max - def.min));
+          sim.set({ [k]: Math.round(v / def.step) * def.step }); break;
+        }
+      }
+      ctrlEls.forEach((u) => u());
+      fire();
+    };
     upd();
   }
 
@@ -289,7 +383,8 @@ export function runLevel(root, level, nav) {
     const newTarget = () => {
       target = st.gen(lens, r);
       if (target.set && sim) sim.set(target.set);
-      tbox.innerHTML = `<span class="round">${tr('Prova {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${target.text}`;
+      tbox.innerHTML = `<span class="round">${tr('Prova {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${rich(target.text)}`;
+      offerTools(tbox);
       fb.className = 'say muted';
       fb.innerHTML = r === 0 ? tr('Regola i cursori e premi ▶ Lancia.') : tr('Nuovi valori: la regola che hai trovato funziona ancora?');
     };
@@ -323,11 +418,20 @@ export function runLevel(root, level, nav) {
     const ok = h('button', { class: 'btn primary', onclick: () => check() }, tr('Controlla'));
     const fb = h('div', { class: 'say muted', hidden: true });
     inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') check(); });
-    area.append(qn, h('div', { class: 'numrow' }, inp, unit, ok), fb);
+    // Curioso: «le formule solo se le vuoi». Il calcolo si può saltare: si legge come si fa e si va avanti, senza perdere stelle.
+    const skip = lens === 'c' && !level.exam ? h('button', { class: 'btn ghost skip', onclick: () => {
+      ok.disabled = true; inp.disabled = true; skip.remove();
+      fb.hidden = false; fb.className = 'say muted';
+      fb.innerHTML = `<b>${tr('Calcolo saltato.')}</b> ${tr('Ecco la risposta:')} ${rich(autoSol())}`;
+      offerTools(fb);
+      area.append(nextBtn());
+    } }, tr('Salta il calcolo')) : null;
+    area.append(qn, h('div', { class: 'numrow' }, inp, unit, ok, skip), fb);
     const next = () => {
-      cur = st.gen(lens, r);
+      cur = st.gen(lens, r, sim); // la simulazione serve alle domande che usano le misure appena fatte
       autoSol = () => (cur.explain ? String(cur.explain).replace(/^(Giusto|Esatto|Perfetto)[:!.]?\s*/i, '') : tr('Il risultato è {v} {u}.', { v: cur.ans, u: cur.unit || '' }));
-      qn.innerHTML = `<span class="round">${tr('Domanda {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${cur.text}`;
+      qn.innerHTML = `<span class="round">${tr('Domanda {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${rich(cur.text)}`;
+      offerTools(qn);
       unit.textContent = cur.unit || '';
       inp.value = '';
       fb.hidden = true;
@@ -342,8 +446,9 @@ export function runLevel(root, level, nav) {
         sfx.ok();
         r++;
         fb.className = 'say good';
-        fb.innerHTML = cur.explain || tr('Giusto!');
-        if (r >= rounds) { ok.disabled = true; inp.disabled = true; area.append(nextBtn()); }
+        fb.innerHTML = rich(cur.explain || tr('Giusto!'));
+        offerTools(fb);
+        if (r >= rounds) { ok.disabled = true; inp.disabled = true; if (skip) skip.remove(); area.append(nextBtn()); }
         else setTimeout(next, 1400);
       } else {
         sfx.no();
@@ -389,6 +494,7 @@ export function runLevel(root, level, nav) {
         ok.remove();
         fb.className = 'say good';
         fb.innerHTML = tx(st.explain, lens);
+        offerTools(fb);
         area.append(nextBtn());
       } else {
         sfx.no();
@@ -432,6 +538,7 @@ export function runLevel(root, level, nav) {
         ok.remove();
         fb.className = 'say good';
         fb.innerHTML = tx(st.explain, lens);
+        offerTools(fb);
         area.append(nextBtn());
       } else {
         sfx.no();
@@ -448,32 +555,56 @@ export function runLevel(root, level, nav) {
   // ---------- aiuti a gradini ----------
   // Gli aiuti seguono il passo in cui sei: se il passo ha i suoi suggerimenti si usano quelli, altrimenti quelli del livello.
   // Le stelle massime scendono una volta sola: ★★ dal primo suggerimento, ★ dalla prima soluzione vista.
-  let stepHints = 0, stepSol = false;
+  // Prima della soluzione c'è sempre un passaggio: un suggerimento oppure, se il passo non ne ha, un avviso che non costa niente.
+  let stepHints = 0, stepSol = false, stepWarned = false, cutText = null;
+  // Il suggerimento automatico delle domande a scelta: toglie una risposta sbagliata (lo prepara stepQ).
+  const CUT = { cut: true };
+  let cutOption = null;
   // I suggerimenti del livello valgono per il compito principale; le domande a scelta di un livello con più domande
-  // usano i propri (o il loro "riprova" come unico indizio), così l'aiuto parla sempre del passo che hai davanti.
+  // usano i propri: il loro "riprova" e poi una risposta sbagliata in meno, così l'aiuto parla sempre del passo che hai davanti.
   const nQ = steps.filter((x) => x.kind === 'q' && !x.predict).length;
   const hintsHere = () => {
     const st = steps[si];
     if (st.hints) return st.hints;
-    if (st.kind === 'q' && !st.predict && nQ > 1) return st.wrong ? [st.wrong] : [];
+    if (st.kind === 'q' && !st.predict && nQ > 1) {
+      const own = st.wrong ? [st.wrong] : [];
+      // con due sole risposte, toglierne una sarebbe dare la soluzione
+      return st.options.length > 2 ? [...own, CUT] : own.length ? own : (level.hints || []).slice(0, 1);
+    }
     if (st.kind === 'vars') return [st.wrong || tr('Una cosa alla volta: cambia solo quello che vuoi studiare.')];
     return level.hints || [];
   };
   // Soluzione: quella del passo, poi quella ricavata dal passo stesso (domanda, calcolo, ordine), poi quella del livello.
   let autoSol = null;
   const solHere = () => steps[si].solution || (autoSol && autoSol()) || level.solution;
-  function resetHints() { stepHints = 0; stepSol = false; hintBox.hidden = true; hintBox.replaceChildren(); }
+  function resetHints() { stepHints = 0; stepSol = false; stepWarned = false; cutText = null; hintBox.hidden = true; hintBox.replaceChildren(); }
   function showHint() {
     const hs = hintsHere(), sol = solHere();
     hintBox.hidden = false;
-    if (stepHints < hs.length) { stepHints++; hints++; } else if (!stepSol && sol) { stepSol = true; solution = true; }
-    const parts = hs.slice(0, stepHints).map((x, i) => `<p><b>${tr('Suggerimento {n}.', { n: i + 1 })}</b> ${tx(x, lens)}</p>`);
-    if (stepSol) parts.push(`<p><b>${tr('Soluzione.')}</b> ${tx(sol, lens)}</p>`);
+    // Un tocco che avvisa e basta, senza togliere niente:
+    // - nella prova d'ingresso, il primo di ogni passo (usare un aiuto annulla la prova: deve essere una scelta);
+    // - quando il passo non ha suggerimenti, prima di mostrare la soluzione.
+    if (!stepWarned && !stepHints && !stepSol && (level.exam || (!hs.length && sol))) {
+      stepWarned = true;
+      hintBox.innerHTML = level.exam
+        ? `<p>${tr('Questa è una prova: se usi un aiuto, la prova non vale. Puoi sempre giocare i livelli e riprovare.')}</p><p class="muted small">${tr('Premi ancora Aiuto solo se vuoi usarlo lo stesso.')}</p>`
+        : `<p>${tr('Per questo passo non ci sono suggerimenti.')}</p><p class="muted small">${tr('Premi ancora Aiuto per vedere la soluzione (stella massima ★).')}</p>`;
+      if (stacked()) hintBox.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      return;
+    }
+    if (stepHints < hs.length) {
+      if (hs[stepHints] === CUT) cutText = cutOption ? cutOption() : '';
+      stepHints++; hints++;
+    } else if (!stepSol && sol) { stepSol = true; solution = true; }
+    const parts = hs.slice(0, stepHints).map((x, i) => `<p><b>${tr('Suggerimento {n}.', { n: i + 1 })}</b> ${x === CUT ? cutText : tx(x, lens)}</p>`);
+    if (stepSol) parts.push(`<p><b>${tr('Soluzione.')}</b> ${rich(tx(sol, lens))}</p>`);
     let more = '';
     if (stepHints < hs.length) more = `<p class="muted small">${tr('Premi di nuovo Aiuto per un altro suggerimento (le stelle massime scendono a ★★).')}</p>`;
     else if (!stepSol && sol) more = `<p class="muted small">${tr('Premi ancora Aiuto per vedere la soluzione (stella massima ★).')}</p>`;
     hintBox.innerHTML = parts.join('') + more;
     if (!hs.length && !sol) hintBox.innerHTML = `<p>${tr('Rileggi la domanda con calma e prova l’esperimento: la risposta si vede.')}</p>`;
+    offerTools(hintBox);
+    if (stacked()) hintBox.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
   // ---------- fine livello ----------
@@ -529,7 +660,7 @@ export function runLevel(root, level, nav) {
       h('h2', {}, ok ? tr('Prova superata!') : tr('Non ancora')),
       h('p', {}, ok
         ? (nw ? (nwOpen ? tr('{w} è superato. Si apre {n}.', { w: world.name, n: nw.name }) : tr('{w} è superato. {n} è in costruzione, arriva presto.', { w: world.name, n: nw.name })) : tr('{w} è superato.', { w: world.name }))
-        : (errors === 1 ? tr('1 errore') : tr('{n} errori', { n: errors })) + (hints || solution ? tr(' e qualche aiuto') : '') + tr(': ne servono al massimo {m}, senza aiuti. Gioca i livelli di {w}: poi potrai riprovare.', { m: EXAM_MAX_ERRORS, w: world.name })),
+        : (errors === 1 ? tr('1 errore') : tr('{n} errori', { n: errors })) + (hints || solution ? tr(' e qualche aiuto') : '') + tr(': ne servono al massimo {m}, senza aiuti. Gioca i livelli di questo mondo: poi potrai riprovare.', { m: EXAM_MAX_ERRORS })),
       h('div', { class: 'row' },
         h('button', { class: 'btn', onclick: () => leave() }, world.name),
         nwOpen ? h('button', { class: 'btn primary', onclick: () => nav('#/mondo/' + nw.id) }, `${nw.name} →`) : null)));
@@ -545,7 +676,7 @@ export function runLevel(root, level, nav) {
       h('div', { class: 'cele', html: charSVG(who.id, { cls: 'party' }) }),
       h('h2', {}, tr('Ripasso fatto!')),
       h('p', {}, tr('{a} su {n} al primo colpo. Quelle sicure tornano fra qualche giorno, le altre già domani.', { a: first, n })),
-      h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: () => nav('#/') }, 'Il percorso'))));
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', onclick: () => nav('#/') }, tr('Il percorso')))));
     root.append(asDialog(modal));
     setTimeout(() => confetti(modal.firstChild, {}), 250);
   }
@@ -556,7 +687,7 @@ export function runLevel(root, level, nav) {
     nav('#/mondo/' + world.id);
   }
 
-  // Attrezzi di matematica nuovi (radice, π, seno…): prima di cominciare, la loro scheda da giocare.
+  // Attrezzi di matematica nuovi che servono per rispondere (potenze di 10, radice, π…): prima di cominciare, la loro scheda da giocare.
   const toolsNew = level.exam || level.review ? [] : newTools(level, lens);
   if (toolsNew.length) {
     quest.hidden = area.hidden = true;

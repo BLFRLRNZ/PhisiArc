@@ -37,7 +37,7 @@ for (const lens of LENSES) {
   await page.evaluate(({ ids, lens, lingua }) => {
     localStorage.setItem('phisiarc-lingua', lingua);
     const done = Object.fromEntries(ids.map((i) => [i, 1]));
-    localStorage.setItem('phisiarc-v1', JSON.stringify({ lens, done, joule: 0, park: [], seen: Object.fromEntries(['laboratorio', 'pista', 'officina', 'cielo'].map((w) => [w, true])), introSeen: true, tools: { formula: 2, quadrato: 2, radice: 2, pitagora: 2, pi: 2, seno: 2 }, settings: { sound: false, voice: false, voiceChosen: true, intro: false, introChosen: true } }));
+    localStorage.setItem('phisiarc-v1', JSON.stringify({ lens, done, joule: 0, park: [], seen: Object.fromEntries(['laboratorio', 'pista', 'officina', 'cielo'].map((w) => [w, true])), introSeen: true, tools: { potenze: 2, formula: 2, quadrato: 2, radice: 2, pitagora: 2, pi: 2, seno: 2 }, settings: { sound: false, voice: false, voiceChosen: true, intro: false, introChosen: true } }));
   }, { ids, lens, lingua: LINGUA });
   for (const id of ids) {
     if (ONLY && !ONLY.includes(id)) continue;

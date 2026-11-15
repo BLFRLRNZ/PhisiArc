@@ -112,6 +112,44 @@ const shadow = (x, y, up = 0) => `<ellipse cx="${x.toFixed(1)}" cy="${y + 1}" rx
 // ---------- le scene ----------
 const G = 172;
 export const SCENES = {
+  // 10ⁿ: l'omino salta lungo una riga di paletti. Ogni salto a destra moltiplica per 10, ogni salto a sinistra divide per 10.
+  potenze: {
+    dur: 8.6,
+    draw(t) {
+      const G = 138, X = (k) => 118 + k * 46, HD = 0.6;
+      const sup = (k) => String(k).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+      const val = { '-2': n(0.01), '-1': n(0.1), 0: '1', 1: '10', 2: '100', 3: '1000' };
+      const hops = [[0.7, 0, 1], [1.5, 1, 2], [2.3, 2, 3], [5.4, 0, -1], [6.2, -1, -2]]; // [quando parte, da, a]
+      let s = ground(G);
+      for (let k = -2; k <= 3; k++) s += `<line x1="${X(k)}" y1="${G}" x2="${X(k)}" y2="${G + 7}" class="ta-flag"/>` + txt(X(k), G + 24, val[k], 'mono' + (k === 0 ? ' c1' : ''), 12) + txt(X(k), G + 41, `10${sup(k)}`, 'muted', 10);
+      // gli archi dei salti già fatti, con la loro scritta
+      for (const [t0, a, b] of hops) {
+        if (t < t0 + HD) continue;
+        const up = b > a, xm = (X(a) + X(b)) / 2;
+        s += `<path d="M${X(a)} ${G - 5}Q${xm} ${G - 50} ${X(b)} ${G - 5}" class="ta-hop${up ? '' : ' dn'}"/>` + pop(t, t0 + HD, xm, G - 34, up ? '×10' : '÷10', up ? 'c2' : 'c3', 12);
+      }
+      // dov'è l'omino: in volo durante un salto, altrimenti fermo su un paletto (o di corsa, quando torna all'1)
+      let k = -2, up = 0, dir = -1, p = POSE.stand;
+      const fly = hops.find(([t0]) => t >= t0 && t < t0 + HD);
+      if (fly) {
+        const u = (t - fly[0]) / HD;
+        k = lerp(fly[1], fly[2], E.io(u)); up = Math.sin(u * Math.PI) * 30; dir = fly[2] > fly[1] ? 1 : -1;
+        p = mix(POSE.crouch, POSE.jump, prog(u, 0, 0.3, E.out));
+      } else if (t < 0.7) { k = 0; dir = 1; }
+      else if (t < 1.5) { k = 1; dir = 1; }
+      else if (t < 2.3) { k = 2; dir = 1; }
+      else if (t < 4.2) { k = 3; dir = 1; p = mix(POSE.stand, POSE.point, prog(t, 3.1, 3.4, E.back)); }
+      else if (t < 5.1) { k = lerp(3, 0, prog(t, 4.2, 5.1)); p = run((t - 4.2) * 14, 0.8); }
+      else if (t < 5.4) k = 0;
+      else if (t < 6.2) k = -1;
+      else p = mix(POSE.stand, POSE.cheer, prog(t, 7.0, 7.4, E.back));
+      if (t >= 3.1 && t < 5.0) s += pop(t, 3.1, 160, 34, `10³ = 10 × 10 × 10 = ${val[3]}`, 'c2', 16) + burst(t, 3.15, 160, 28, 26);
+      if (t >= 6.9) s += pop(t, 6.9, 160, 34, `10⁻² = 1 ÷ 10 ÷ 10 = ${val[-2]}`, 'c3', 16) + burst(t, 6.95, 160, 28, 26);
+      s += shadow(X(k), G, up) + fig(X(k), G - up, p, { dir, s: 0.82 });
+      return s;
+    },
+  },
+
   // v = d / t: l'omino corre, il cronometro conta, le lettere volano a formare la formula
   formula: {
     dur: 7.2,

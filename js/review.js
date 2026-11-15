@@ -14,9 +14,11 @@ export const REVIEW_ID = 'ripasso-giorno';
 // il giorno di oggi (ora locale), contato in giorni interi
 export const today = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5);
 
-// le domande che si possono ripassare fuori dal livello: a scelta senza esperimento, e di calcolo
-const reviewable = (st) => (st.kind === 'q' && !st.predict) || st.kind === 'num';
-const lensOk = (st) => !st.only || st.only.includes(S.lens || 's');
+// le domande che si possono ripassare fuori dal livello: a scelta senza esperimento, e di calcolo.
+// Quelle che chiedono di guardare la simulazione («guarda le due linee…») si escludono con review: false.
+const reviewable = (st) => st.review !== false && ((st.kind === 'q' && !st.predict) || st.kind === 'num');
+// al Curioso i calcoli non tornano nel ripasso: nei livelli sono facoltativi («Salta il calcolo»)
+const lensOk = (st) => (!st.only || st.only.includes(S.lens || 's')) && !(st.kind === 'num' && S.lens === 'c');
 const parse = (key) => { const i = key.lastIndexOf('#'); return [key.slice(0, i), +key.slice(i + 1)]; };
 
 function stepOf(key) {

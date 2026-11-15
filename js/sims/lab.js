@@ -38,12 +38,22 @@ export class Lab extends Sim {
     this.speed = M.speed;
     this.y = 0; this.phase = 0; this.pos = 0; this.v = this.params.x;
     this.target = M.f(Math.max(0.5, this.params.x));
+    // Con l'errore di misura acceso, dal rubinetto esce un po' più o un po' meno acqua: la vasca mostra quello che si misura
+    // davvero (a passi di 0,05 L, come una vasca graduata), mai due volte di fila lo stesso valore.
+    this.meas = null;
+    if (this.params.noise && this.params.mode === 'rubinetto') {
+      const last = this.points[this.points.length - 1];
+      let y = Math.max(0.05, Math.round((this.target * (1 + 0.07 * gauss())) / 0.05) * 0.05);
+      if (last && Math.abs(last.y - y) < 1e-6) y += Math.random() < 0.5 && y > 0.1 ? -0.05 : 0.05;
+      this.meas = Math.round(y * 100) / 100;
+    }
   }
 
   step(dt) {
     const p = this.params, M = this.M, x = Math.max(0.5, p.x);
     if (p.mode === 'rubinetto') {
-      this.y = Math.min(this.target, 0.5 * this.t);
+      const goal = this.meas ?? this.target;
+      this.y = Math.min(goal, (goal / x) * this.t);
       if (this.t >= x) this.done();
     } else if (p.mode === 'viaggio') {
       this.pos = Math.min(60, x * this.t);
@@ -62,10 +72,10 @@ export class Lab extends Sim {
   done() {
     const p = this.params, M = this.M, x = Math.max(0.5, p.x);
     const truth = M.f(x);
-    const meas = p.noise ? Math.max(0.05, truth * (1 + 0.07 * gauss())) : truth;
+    const meas = this.meas ?? (p.noise ? Math.max(0.05, truth * (1 + 0.07 * gauss())) : truth);
     const pt = { x, y: meas, at: this.clock };
     if (p.keep) this.points.push(pt); else this.points = [pt];
-    this.finish({ x, y: meas, truth, n: this.points.length });
+    this.finish({ x, y: meas, truth, n: this.points.length, ys: this.points.map((q) => q.y) });
   }
 
   car(x, y, col, rot = 0) { drawCar(this, x, y, col, rot); }
@@ -164,7 +174,7 @@ export class Lab extends Sim {
       this.line([[GX(xv), gy + gh], [GX(xv), gy]], { color: this.c('sky'), width: 1, dash: [2, 5], alpha: 0.4 });
     }
     if (this.result) {
-      const msg = `${M.xl.split(' (')[0]} ${fmt(this.result.x, 1)} → ${M.yl.split(' (')[0]} ${fmt(this.result.y, 2)}`;
+      const msg = `${i18n(M.xl).split(' (')[0]} ${fmt(this.result.x, 1)} → ${i18n(M.yl).split(' (')[0]} ${fmt(this.result.y, 2)}`;
       g.globalAlpha = easeInOut(this.age / 0.4);
       this.text(msg, W - 14, gy + 10, { size: 12, align: 'right', weight: 600, color: this.c('accent2') });
       g.globalAlpha = 1;

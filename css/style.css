@@ -251,6 +251,7 @@ a.lvl-item:hover { border-color: var(--c); }
 .opt.right { border-color: var(--mint); background: var(--good-bg); }
 .opt.wrong { border-color: var(--coral); background: var(--warn-bg); animation: shake .3s; }
 .opt:disabled { cursor: default; }
+.opt.cut { opacity: .45; text-decoration: line-through; }
 @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 .say { padding: .7em .95em; border-radius: 14px; background: var(--surface); border: 1.5px solid var(--edge); }
 .say.good { background: var(--good-bg); border-color: var(--mint); }
@@ -433,8 +434,10 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 @media (max-width: 820px) {
   .lvl { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px; }
   .pane { display: contents; }
-  .intro { order: 1; } .hintbox { order: 2; margin-top: 0; } .quest { order: 3; margin: 0; }
+  .intro { order: 1; } .quest { order: 2; margin: 0; } .hintbox { order: 3; margin-top: 0; scroll-margin-top: 90px; }
   .simcard { order: 4; } .area { order: 5; }
+  /* passi con una risposta da dare: le risposte subito sotto la domanda, la simulazione dopo */
+  .lvl.ask .area { order: 4; } .lvl.ask .simcard { order: 5; }
   .who svg { width: 54px; height: 54px; }
   .lvl.nosim { grid-template-columns: 1fr; }
   .lvl-head { padding: .3em 12px; }
@@ -636,3 +639,21 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .voice-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn.sm { padding: .3em .8em; font-size: .85rem; min-height: 0; }
 .who-else { justify-content: center; align-items: center; margin-top: 1.4em; }
+
+/* ---------- riquadro «Per chi vuole la formula» (lente Curioso) e attrezzi offerti con un bottone ---------- */
+.fbox { margin: .55em 0 .2em; border-radius: 12px; background: var(--glass2); padding: 0 .8em; }
+.fbox > summary { cursor: pointer; padding: .45em 0; color: var(--sky); font-size: .92rem; font-weight: 600; list-style: none; display: flex; align-items: center; gap: .45em; -webkit-user-select: none; user-select: none; }
+.fbox > summary::-webkit-details-marker { display: none; }
+.fbox > summary::before { content: '+'; display: inline-grid; place-items: center; width: 1.25em; height: 1.25em; border-radius: 50%; background: rgba(124, 200, 255, .18); font-weight: 700; line-height: 1; }
+.fbox[open] > summary::before { content: '−'; }
+.fbox > div { padding: 0 0 .6em; font-size: .95em; }
+.fbox .tool-offer { padding-bottom: .6em; margin-top: 0; }
+.tool-offer { display: flex; flex-wrap: wrap; gap: 6px; margin-top: .6em; }
+.tool-chip { font-size: .86rem; text-align: left; }
+.tool-chip-tag { font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--night); background: var(--sun); border-radius: 99px; padding: 1px 8px; font-weight: 600; }
+.btn.skip { font-size: .9rem; }
+.tool-svg.wide { max-width: 340px; }
+.tool-svg .hop { fill: none; stroke: var(--sky); stroke-width: 2; }
+.tool-svg .hop.down { stroke: var(--mint); }
+.ta-hop { fill: none; stroke: var(--orange); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 2 6; }
+.ta-hop.dn { stroke: var(--mint); }

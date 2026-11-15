@@ -14,7 +14,7 @@ const EN = (await import(join(root, 'js/i18n/en.js'))).default;
 const C = await import(join(root, 'js/content/index.js'));
 const { CAST } = await import(join(root, 'js/cast.js'));
 
-const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type']);
+const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try']);
 const isLens = (o) => o && typeof o === 'object' && !Array.isArray(o) && 'e' in o && 's' in o;
 const wordy = (s) => /[A-Za-zÀ-ÿ]{2,}/.test(s.replace(/<[^>]+>/g, '')) && !/^(m\/s|km\/h|m\/s²|rad\/s|cm|mm|km|kg|Hz)$/.test(s);
 function walk(o, out, seen = new Set()) {
@@ -46,7 +46,7 @@ const sims = new Set();
 const simFiles = ['js/sims', 'js/sims/art'].flatMap((d) => readdirSync(join(root, d)).filter((f) => f.endsWith('.js')).map((f) => join(root, d, f)));
 for (const f of simFiles) {
   const src = readFileSync(f, 'utf8');
-  for (const m of src.matchAll(/(?:text\(|label: |name: |\bt: |options: \[\[[^\]]*?, |\], \[[^\]]*?, |-?\d+'?: )'([^'\n]+)'/g)) if (/[a-zà-ù]{3,}/i.test(m[1]) && !/^(sim-bg|accent2|chalk|muted|orange|sun|coral|sky|mint|pink|ink|car2)$/.test(m[1])) sims.add(m[1]);
+  for (const m of src.matchAll(/(?:text\(|label: |name: |xl: |yl: |\bt: |options: \[\[[^\]]*?, |\], \[[^\]]*?, |-?\d+'?: )'([^'\n]+)'/g)) if (/[a-zà-ù]{3,}/i.test(m[1]) && !/^(sim-bg|accent2|chalk|muted|orange|sun|coral|sky|mint|pink|ink|car2)$/.test(m[1])) sims.add(m[1]);
 }
 for (const m of readFileSync(join(root, 'js/state.js'), 'utf8').matchAll(/new Error\(t\('([^']+)'\)/g)) code.add(m[1]);
 groups.code = code;

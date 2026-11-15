@@ -18,12 +18,8 @@ import {
 const app = document.getElementById('app');
 document.documentElement.lang = LANG;
 
-// Niente zoom della pagina, come in un'app: pizzico, Ctrl + rotella e Ctrl +/− (il doppio tocco lo blocca il CSS).
-const noZoom = (e) => e.preventDefault();
-['gesturestart', 'gesturechange', 'gestureend'].forEach((ev) => document.addEventListener(ev, noZoom, { passive: false }));
-document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
-window.addEventListener('wheel', (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
-window.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault(); });
+// La pagina si può ingrandire (pizzico, Ctrl + rotella, Ctrl +/−): chi vede poco ne ha bisogno.
+// Resta escluso solo lo zoom da doppio tocco (touch-action nel CSS), che scatterebbe toccando in fretta i bottoni.
 let cleanup = null;
 
 const go = (hash) => { if (location.hash === hash) render(); else location.hash = hash; };
@@ -146,16 +142,18 @@ function toolbox() {
 function world(id) {
   const w = worldById(id);
   if (!w || !worldReady(w) || !worldOpen(w)) return home();
-  const zones = w.zones.map((zid) => {
+  const zones = w.zones.map((zid, zi) => {
     const z = ZONES[zid], open = zoneOpen(zid);
     const lv = z.levels.map((l) => {
       const ok = levelOpen(l.id), st = S.done[l.id] || 0;
-      const inner = [h('span', { class: 'lk k-' + l.kind, title: KIND[l.kind].name, html: KIND[l.kind].ic }), h('span', { class: 'ln' }, l.title),
+      const inner = [h('span', { class: 'lk k-' + l.kind, title: KIND[l.kind].name, html: KIND[l.kind].ic }), h('span', { class: 'ln' }, tx(l.title, S.lens)),
         h('span', { class: 'lst' }, st ? h('span', {}, '★'.repeat(st), h('span', { class: 'off' }, '★'.repeat(3 - st))) : ok ? tr('nuovo') : h('span', { html: IC.lock }))];
       return ok ? h('a', { class: 'lvl-item' + (st ? ' done' : ' next'), href: `#/livello/${l.id}` }, inner) : h('div', { class: 'lvl-item locked' }, inner);
     });
+    // Il codice mostrato (M01, M02…) è la posizione della zona nel mondo. Gli id interni (M04 per l'accelerazione) non cambiano mai:
+    // a loro sono legati i salvataggi.
     return h('section', { class: 'zone' + (open ? '' : ' locked') },
-      h('div', { class: 'zone-head' }, h('span', { class: 'zid' }, z.id), h('h2', {}, z.title), zoneDone(zid) ? h('span', { class: 'ok', html: IC.check }) : null),
+      h('div', { class: 'zone-head' }, h('span', { class: 'zid' }, zid.replace(/\d+$/, '') + String(zi + 1).padStart(2, '0')), h('h2', {}, z.title), zoneDone(zid) ? h('span', { class: 'ok', html: IC.check }) : null),
       h('div', { class: 'lvl-list' }, lv));
   });
   const soon = w.soon && w.soon.length ? h('section', { class: 'zone locked' }, h('div', { class: 'zone-head' }, h('h2', {}, tr('In arrivo'))), h('p', { class: 'muted small' }, w.soon.join(' · '))) : null;

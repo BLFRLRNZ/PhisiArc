@@ -8,6 +8,8 @@ export class Circle extends Sim {
     r: { label: 'Raggio', min: 2, max: 10, step: 0.5, unit: 'm' },
     T: { label: 'Durata di un giro', min: 2, max: 15, step: 0.1, unit: 's' },
     release: { label: 'Lascia la presa', type: 'toggle' },
+    // dove avviene lo sgancio, in giri dalla partenza (a destra): 1,25 = in alto, 1,5 = a sinistra…
+    laps: { label: 'Punto di sgancio', type: 'select', options: [[1.25, 'in alto'], [1.5, 'a sinistra'], [1.75, 'in basso'], [2, 'a destra']] },
   };
 
   defaults() { return { r: 6, T: 6, release: false, laps: 1.25 }; }

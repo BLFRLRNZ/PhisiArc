@@ -1,24 +1,54 @@
 # Scrivere una zona di PhysiArc
 
-Una zona è un file in `js/content/` (per esempio `m04.js`) con sei livelli. Chi scrive i contenuti lavora con **testi, numeri e formule brevi**:
+Una zona è un file in `js/content/` (per esempio `m04.js`), di solito con sei livelli (da 4 a 9). Chi scrive i contenuti lavora con **testi, numeri e formule brevi**:
 non serve scrivere funzioni. Le funzioni restano possibili per i casi speciali, ma non sono la strada normale.
 
 ## I testi nelle tre lenti
 
 Ogni testo si scrive con `T(esploratore, studente, curioso)`. Se un testo manca, si usa quello prima:
 `T('Uguale per tutti')` vale per tutte e tre le lenti; `T('Per i piccoli', 'Per gli altri')` vale per Studente e Curioso.
+Un passo riservato a Studente e Curioso (`only: ['s', 'c']`) si scrive `T(null, 'Studente', 'Curioso')`. Anche il titolo di un livello può essere un `T(...)`.
+
+Ogni lente ha la sua voce, e `node tools/check-lenti.mjs` controlla che la mantenga:
+
+- **Esploratore** (6-11 anni). Le domande a scelta stanno entro **20 parole**: quello che serve per capirle va nell'introduzione del
+  livello o nella spiegazione del passo prima. Niente formule né simboli. Nei calcoli e nei bersagli solo **numeri interi**
+  (valori per lente: `vals: { e: {...}, s: {...} }`). La risposta giusta non deve riconoscersi dalla lunghezza, e non deve essere
+  sempre dello stesso tipo («insieme», «uguale»): ogni tanto la domanda si gira, e la risposta giusta è la differenza.
+- **Studente** (12-19 anni). Formule, unità, grafici e calcoli.
+- **Curioso** (adulti). Ogni domanda ha un **testo suo**, che parte da qualcosa di tutti i giorni (l'altalena, il cartello «2 km»,
+  la bilancia del bagno, il rinvio del portiere). Le formule si scrivono fra doppie parentesi quadre, `[[v = d / t]]`: sulla pagina
+  diventano un riquadro chiuso, **«Per chi vuole la formula»**, che non viene letto dalla voce e non fa aprire schede di matematica.
+  Fuori dal riquadro la stessa idea va detta a parole. I passi di calcolo hanno il tasto **«Salta il calcolo»** (mostra la risposta,
+  non costa stelle), e per questa lente i calcoli non entrano nella prova d'ingresso né nel ripasso del giorno.
 
 ## I passi
 
 | Tipo | Che cosa fa | Cosa si scrive |
 |------|-------------|----------------|
-| `free` | Esperimenti liberi | `text`, `runs` (quanti lanci servono) |
+| `free` | Esperimenti liberi | `text`, `runs` (quanti lanci servono); `distinct: true` se ogni lancio deve avere valori diversi; `need` se serve un lancio per ogni condizione (vedi sotto) |
 | `run` | Una sequenza di esperimenti da guardare | `text`, `seq` (i parametri di ogni lancio), `explain` |
 | `q` | Domanda a scelta | `text`, `options` (da 2 a 4), `answer` (da 0), `explain`, `wrong`; con `predict` diventa una previsione |
 | `vars` | Quale variabile cambiare | `vars` (`{ k, t }`), `change`, `explain` |
 | `order` | Mettere in ordine | `items` (`{ t, v }`), `explain` |
 | `num` | Domanda di calcolo | vedi sotto |
 | `tune` | Regolare i controlli per centrare un obiettivo | vedi sotto |
+
+### Prove libere che controllano che cosa hai provato (`free`)
+
+```js
+{
+  kind: 'free', runs: 2, text: T('Fai una traversata senza corrente, poi una con la corrente.'),
+  need: [
+    { when: 'vc == 0', try: { vc: 0 }, msg: T('Fai anche una traversata con la corrente a zero.') },
+    { when: 'vc > 0', try: { vc: 2 }, msg: T('Ora accendi la corrente e rilancia.') },
+  ],
+}
+```
+
+`when` è una formula breve sui valori dei controlli della simulazione; `try` sono valori che la soddisfano (li usa il test automatico);
+`msg` è quello che il gioco dice quando un lancio non serve a niente. Con `distinct: true`, invece, basta che ogni lancio abbia valori
+diversi da quelli già contati.
 
 ### Domanda di calcolo (`num`)
 
@@ -35,7 +65,9 @@ Ogni testo si scrive con `T(esploratore, studente, curioso)`. Se un testo manca,
 ```
 
 Nei testi `{a}` diventa il valore scelto (con la virgola), `{ans}` la risposta; `{a:1}` mostra al massimo un decimale.
-Valori e formule possono cambiare per lente: `vals: { e: {...}, s: {...} }`, `calc: { e: 'c / t', s: '2 * Math.PI * r / T' }`.
+Valori e formule possono cambiare per lente: `vals: { e: {...}, s: {...} }`, `derive: { e: {...}, s: {} }`, `calc: { e: 'c / t', s: '2 * Math.PI * r / T' }`.
+Un `gen` scritto a mano riceve `(lente, prova, simulazione)`: così una domanda può usare le misure appena fatte (vedi `mediaTue` in `f03.js`).
+Lo svolgimento (`explain`) è anche quello che legge chi, con la lente Curioso, preme «Salta il calcolo».
 
 ### Prova da regolare (`tune`)
 
@@ -55,10 +87,27 @@ Valori e formule possono cambiare per lente: `vals: { e: {...}, s: {...} }`, `ca
 `{got}` è il valore misurato. `measure` è il nome di un campo del risultato della simulazione (per la gara `times[0]`, `vEnd[0]`;
 per il laboratorio `y`; per la giostra `v`; vedi il `finish(...)` di ogni simulazione in `js/sims/`).
 
+## Gli aiuti
+
+Prima della soluzione c'è sempre un passaggio. Per ogni passo il motore usa, in ordine: i suggerimenti del passo (`hints`);
+per una domanda a scelta in un livello con più domande, il suo «riprova» (`wrong`) e poi un suggerimento automatico che toglie
+una risposta sbagliata (se le risposte sono almeno tre); altrimenti i suggerimenti del livello (`hints` del livello).
+La soluzione è quella del passo (`solution`), poi quella che il motore ricava da solo (la risposta giusta, il risultato, l'ordine),
+poi quella del livello. Una previsione ha bisogno della sua `solution`: quella del livello parla del compito principale.
+
+## Sul telefono
+
+Sotto gli 820 px la pagina è in colonna. Nei passi con una risposta da dare (`q`, `num`, `vars`, `order`) le risposte stanno subito sotto
+la domanda e la simulazione viene dopo; negli altri (`free`, `run`, `tune`) la simulazione sta sotto la consegna. Conviene che una domanda
+si capisca anche senza scorrere fino alla simulazione.
+
 ## Prima di caricare
 
 1. `node tools/check-content.mjs`: risposte valide, testi in tutte le lenti, aiuti e soluzioni, generatori che funzionano, file offline.
-2. `node tools/check-prereq.mjs`: nessuna idea usata prima di essere spiegata (aggiorna `js/content/prereq.js`).
+   `node tools/check-lenti.mjs`: le promesse delle lenti (Esploratore entro 20 parole e con numeri interi; Curioso con testi suoi e
+   formule nei riquadri). Stampa anche quante parole ha in media una domanda e quanto spesso la risposta giusta è la più lunga.
+2. `node tools/check-prereq.mjs`: nessuna idea usata prima di essere spiegata. Legge i testi, lente per lente: se introduci un'idea nuova,
+   aggiungila a `IDEE` in `js/content/prereq.js` con le sue parole e il livello che la spiega.
 3. `node tests/play-all.mjs http://localhost:8765` con il gioco servito in locale: un Chrome gioca tutti i livelli nelle tre lenti.
    Gli stessi controlli girano su GitHub a ogni push.
 
@@ -68,7 +117,7 @@ Se rinomini un livello o una zona già pubblicati, aggiungi la coppia `'vecchio-
 le stelle e gli sblocchi dei giocatori seguono il nome nuovo. Se cambi la forma dei dati salvati, alza `VERSION` e aggiungi il passo in `MIGRATIONS`.
 
 Il ripasso del giorno (`js/review.js`) ricorda le domande per livello e posizione del passo (`m03-3#1`): se riordini i passi di un livello già pubblicato
-non si rompe niente, ma qualche domanda tornerà prima o dopo del previsto. Entrano nel ripasso le domande `q` senza esperimento e le `num`.
+non si rompe niente, ma qualche domanda tornerà prima o dopo del previsto. Entrano nel ripasso le domande `q` senza esperimento e le `num`. Una domanda che chiede di guardare la simulazione («guarda le due linee…») si tiene fuori con `review: false`.
 
 ## L’inglese
 
@@ -85,12 +134,21 @@ Per provare: `?lang=en` in fondo all’indirizzo, oppure Impostazioni → Lingua
 
 ## La cassetta degli attrezzi
 
-Le formule non si nascondono: si insegnano. Gli strumenti di matematica che usano (leggere una formula, il quadrato, la
-radice, Pitagora, π, seno e coseno) sono in `js/tools.js`, ognuno con una scheda da giocare: un’animazione con l’omino
-di gesso (`js/toolanim.js`), una spiegazione, un disegno con i cursori e una domanda.
+Le formule non si nascondono: si insegnano. Gli strumenti di matematica che usano (le potenze di 10, leggere una formula,
+il quadrato, la radice, Pitagora, π, seno e coseno) sono in `js/tools.js`, ognuno con una scheda da giocare: un’animazione
+con l’omino di gesso (`js/toolanim.js`), una spiegazione, un disegno con i cursori e una domanda. Valgono per le lenti
+Studente e Curioso.
 
-- La scheda si apre da sola, prima di cominciare, nel primo livello che usa lo strumento (lenti Studente e Curioso).
-  Non serve segnarlo a mano: `toolsIn()` cerca nei testi del livello i segni dello strumento (√, π, ², sin…).
+- **Quando serve per rispondere, la scheda si apre da sola**, prima di cominciare, nel primo livello che usa lo strumento.
+  Non serve segnarlo a mano: `toolsIn()` cerca i segni dello strumento (10³, √, π, ², sin…) in quello che si legge prima di
+  rispondere (introduzione, consegne, domande, risposte) e nello svolgimento dei calcoli.
+- **Quando lo strumento compare solo in una spiegazione, in un aiuto, in una soluzione o in un riquadro `[[…]]`**, la scheda
+  non interrompe: sotto quel testo c’è un bottone «Attrezzo · …» che la apre. Così una formula mostrata «per completezza»
+  non costringe a tre schede di fila.
+- Uno strumento può chiederne altri prima (`needs`): la radice porta con sé il quadrato, Pitagora tutti e due.
+  Conviene che un livello non apra più di una scheda: `node tools/check-lenti.mjs -v` dice dove si apre ognuna,
+  e segnala un livello che ne aprirebbe più di due.
 - Chi lo sa già preme «Li so già». Tutte le schede restano nella pagina `#/attrezzi`, raggiungibile dalla mappa.
 - Un nuovo strumento: si aggiunge a `TOOLS` (titolo, test, spiegazione, disegno, domanda) e a `SCENES` per l’animazione,
-  con le frasi inglesi in `js/i18n/en-tools.js`. `tests/tools.mjs` controlla che le schede compaiano e si superino.
+  con le frasi inglesi in `js/i18n/en-tools.js`. `tests/tools.mjs` controlla che la scheda si apra quando serve, che il
+  bottone la offra quando non serve, e che la cassetta le contenga tutte.
