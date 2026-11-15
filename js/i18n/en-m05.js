@@ -203,4 +203,5 @@ export default {
  "a sinistra": "left",
  "in basso": "bottom",
  "a destra": "right",
+ "Questo punto l’hai già visto: scegline un altro.": "You have already seen this point: choose another one.",
 };

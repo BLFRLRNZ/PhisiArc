@@ -251,6 +251,7 @@ a.lvl-item:hover { border-color: var(--c); }
 .opt.right { border-color: var(--mint); background: var(--good-bg); }
 .opt.wrong { border-color: var(--coral); background: var(--warn-bg); animation: shake .3s; }
 .opt:disabled { cursor: default; }
+.opt.cut { opacity: .45; text-decoration: line-through; }
 @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 .say { padding: .7em .95em; border-radius: 14px; background: var(--surface); border: 1.5px solid var(--edge); }
 .say.good { background: var(--good-bg); border-color: var(--mint); }

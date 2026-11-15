@@ -56,7 +56,7 @@ export default {
       steps: [
         {
           // Il passo è una scoperta: la domanda non dice quale cosa non conta, lo trova chi gioca cambiando una cosa alla volta.
-          kind: 'free', runs: 3, controls: ['L', 'm'],
+          kind: 'free', runs: 3, distinct: true, controls: ['L', 'm'],
           text: T('Una di queste due cose <b>non cambia</b> il ritmo del pendolo: anche se la cambi, va avanti e indietro sempre con lo stesso tempo. <b>Scopri quale!</b> Lancia, poi cambia <b>una cosa sola</b> e rilancia. Guarda quanto dura un’oscillazione.',
             'Una delle due variabili <b>non influisce</b> sul periodo, cioè sul tempo di un’andata e ritorno. <b>Scopri quale.</b> Fai un lancio, poi cambia <b>una sola variabile</b> e rilancia: se ne cambi due insieme, non sai quale ha fatto la differenza.'),
           onRun: (r) => t('Un’oscillazione dura <b>{T} s</b>. Ora cambia una cosa sola e rilancia.', { T: r.T }),
@@ -175,7 +175,7 @@ export default {
             'Circa 2,01 s contro 2,15 s: solo il 7% in più. Per questo un orologio a pendolo resta preciso anche se l’oscillazione si smorza piano piano.'),
         },
         {
-          kind: 'q', text: T('Hai visto i due tempi: quello del lancio piccolo e quello del lancio grande. Il bambino del mito diceva che, spostandolo tanto, il pendolo ci mette moltissimo di più. Aveva ragione?', 'Confronta i due periodi misurati, a 5° e a 60°. Il mito diceva che il periodo cresce tanto quanto l’angolo. Che cosa puoi concludere?'),
+          kind: 'q', review: false, text: T('Hai visto i due tempi: quello del lancio piccolo e quello del lancio grande. Il bambino del mito diceva che, spostandolo tanto, il pendolo ci mette moltissimo di più. Aveva ragione?', 'Confronta i due periodi misurati, a 5° e a 60°. Il mito diceva che il periodo cresce tanto quanto l’angolo. Che cosa puoi concludere?'),
           options: [T('Sì: spinto in alto ci mette molto di più', 'Il mito è vero: il periodo cresce quanto l’angolo'), T('No: il tempo cambia pochissimo', 'Il mito è falso: il periodo cresce appena'), T('Dipende da quanto pesa chi è sopra', 'Dipende dalla massa appesa')],
           answer: 1,
           explain: T('Mito smontato! Spingere di più fa andare più in alto, non più lenti.', 'Mito smontato: il periodo dipende quasi solo da L e g; l’angolo conta poco, e solo quando è grande.'),

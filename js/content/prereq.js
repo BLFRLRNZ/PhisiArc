@@ -66,7 +66,7 @@ export const IDEE = {
   'km/h': { parole: 'km/h', da: 'm01-1' },
   'accelerazione': { parole: 'accelerazion|deceleraz|m/s²', da: 'm04-1' },
   'legge oraria (s = ½·a·t²)': { parole: '½·[ag]·t²|½ · [0-9,]+ · t²', da: { s: 'm04-area', c: 'm04-1' }, mai: ['e'] },
-  'g = 9,81 m/s²': { parole: '9,81|[L)h]/g|g·[tT]²|\\bg = [19]|accelerazione g\\b|stessa g\\b', da: 'm02-2', mai: ['e'] },
+  'g = 9,81 m/s²': { parole: '9,81|[L)h]/g|g·[tT]²|g = 1,62|accelerazione g\\b|stessa g\\b', da: 'm02-2', mai: ['e'] },
   'vettori': { parole: 'vettor', da: 'm03-v1', mai: ['e'] },
   'teorema di Pitagora': { parole: 'pitagora', da: 'm03-v1', mai: ['e'] },
   'seno e coseno': { parole: '(sin|cos) ?[(θ]', da: 'm03-v2', mai: ['e'] },

@@ -165,4 +165,7 @@ export default {
  "Un calcolo sulla caduta.": "A calculation about falling.",
  "Una palla cade, senza aria, da <b>{h} m</b>. Da h = ½·g·t² si ricava il tempo di caduta: t = √(2h/g), con g = 9,81 m/s². Quanto dura la caduta?": "A ball falls, with no air, from <b>{h} m</b>. From h = ½·g·t² you get the fall time: t = √(2h/g), with g = 9.81 m/s². How long does the fall last?",
  "Esatto: t = √(2 × {h} / 9,81) ≈ {ans} s.": "Exactly: t = √(2 × {h} / 9.81) ≈ {ans} s.",
+ "Fai anche una prova con l’aria accesa.": "Do a run with the air on as well.",
+ "Ora metti <b>Aria: no</b> e lancia ancora.": "Now set <b>Air: off</b> and launch again.",
+ "Ora spegni l’aria (Aria: no) e rilancia.": "Now turn the air off (Air: off) and launch again.",
 };

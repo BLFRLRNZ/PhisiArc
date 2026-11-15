@@ -45,9 +45,9 @@ export default {
         'Un <b>grafico</b> mette in relazione due grandezze: qui il tempo in cui il rubinetto resta aperto (asse orizzontale) e i litri d’acqua raccolti (asse verticale). Ogni esperimento diventa un punto.',
         'Un grafico è il modo più veloce per vedere una legge della natura. Misura i litri raccolti per diversi tempi di apertura: ogni misura è un punto (tempo, litri).'),
       steps: [
-        { kind: 'free', runs: 3, text: T('Fai almeno <b>tre prove</b>, con tempi diversi: 2 secondi, 4 secondi, 8 secondi…', 'Fai almeno tre prove con tempi diversi e guarda dove finiscono i punti.') },
+        { kind: 'free', runs: 3, distinct: true, text: T('Fai almeno <b>tre prove</b>, con tempi diversi: 2 secondi, 4 secondi, 8 secondi…', 'Fai almeno tre prove con tempi diversi e guarda dove finiscono i punti.') },
         {
-          kind: 'q', set: { fit: true },
+          kind: 'q', review: false, set: { fit: true },
           text: T('Ogni volta che apri il rubinetto, sul grafico compare un puntino: più a destra se lo tieni aperto più a lungo, più in alto se raccogli più litri. Guarda tutti i puntini insieme, come se li unissi con una matita. Come sono messi?', 'Ogni prova diventa un punto: in orizzontale il tempo di apertura del rubinetto, in verticale i litri raccolti. Guarda i punti tutti insieme, come se li unissi con una riga. Come sono disposti?', 'Ogni prova è un punto: tempo di apertura in orizzontale, litri raccolti in verticale. Se li unisci, che forma descrivono?'),
           options: [
             T('In fila, su una linea dritta che parte da zero', 'Su una retta che passa per l’origine', 'Una retta per l’origine'),
@@ -82,7 +82,7 @@ export default {
         'La macchinina percorre sempre <b>60 m</b>. La velocità è in <b>metri al secondo</b> (m/s): a 5 m/s fa 5 metri ogni secondo. Cambiala e misura il tempo: sul grafico, velocità in orizzontale e tempo in verticale.',
         'Percorso fisso di 60 m, velocità a scelta in metri al secondo (m/s): quanti metri fa ogni secondo. Che legame c’è fra velocità e tempo impiegato?'),
       steps: [
-        { kind: 'free', runs: 3, text: T('Fai almeno <b>tre corse</b> a velocità diverse.', 'Fai almeno tre corse a velocità diverse.') },
+        { kind: 'free', runs: 3, distinct: true, text: T('Fai almeno <b>tre corse</b> a velocità diverse.', 'Fai almeno tre corse a velocità diverse.') },
         {
           kind: 'q', predict: [{ x: 5 }, { x: 10 }],
           text: T('La strada è sempre la stessa, 60 metri. Prima la macchinina va piano, poi va al <b>doppio</b> della velocità. Che cosa succede al tempo che ci mette ad arrivare?', 'La distanza è sempre 60 m. Se la velocità passa da 5 a 10 m/s, cioè raddoppia, che cosa succede al tempo del viaggio?'),
@@ -91,7 +91,7 @@ export default {
           explain: T('Giusto: più veloce, meno tempo. Doppia velocità, metà tempo!', 'Da 12 s a 6 s: doppia velocità, metà tempo.', 'Da 12 s a 6 s: t = 60 m / v, quindi raddoppiando v il tempo si dimezza.'),
         },
         {
-          kind: 'q', set: { fit: true },
+          kind: 'q', review: false, set: { fit: true },
           text: T('Ogni corsa ha lasciato un puntino: a destra le corse più veloci, in alto quelle che sono durate di più. Unisci i puntini con la fantasia, da sinistra a destra. Che forma ha la linea?', 'Sul grafico la velocità è in orizzontale e il tempo del viaggio in verticale. Unisci i punti delle tue corse, dalla più lenta alla più veloce. Che forma ha il grafico?', 'Velocità in orizzontale, tempo in verticale, distanza fissa di 60 m. Che curva descrivono i punti delle tue corse?'),
           options: [
             T('Una linea dritta che sale', 'Una retta che sale', 'Una retta per l’origine'),
@@ -134,9 +134,9 @@ export default {
             'Quattro volte: 7 m diventano 28,6 m. Raddoppiando la velocità lo spazio di frenata si quadruplica.',
             'Quattro volte: d = v²/(2a). Con v doppia, v² è quadruplo. Per questo un piccolo eccesso di velocità allunga molto la frenata.'),
         },
-        { kind: 'free', runs: 2, set: { fit: true }, text: T('Prova altre velocità e guarda la linea gialla.', 'Aggiungi almeno due punti e osserva la curva gialla.') },
+        { kind: 'free', runs: 2, distinct: true, set: { fit: true }, text: T('Prova altre velocità e guarda la linea gialla.', 'Aggiungi almeno due punti e osserva la curva gialla.') },
         {
-          kind: 'q',
+          kind: 'q', review: false,
           text: T('Ogni frenata ha lasciato un punto: in orizzontale la velocità dell’auto, in verticale i metri che le servono per fermarsi. La linea gialla unisce i punti. Che forma ha?', 'Il grafico mette la velocità in orizzontale e lo spazio di frenata in verticale. Guarda come cresce la curva gialla quando la velocità aumenta: sempre allo stesso modo, o sempre più in fretta? Che grafico è?', 'Hai visto che, raddoppiando la velocità, lo spazio di frenata non raddoppia soltanto. Che legame c’è fra lo spazio di frenata e la velocità?'),
           options: [
             T('Una curva che sale sempre più ripida', 'Una curva che sale sempre più ripida (parabola)', 'Proporzionale al quadrato della velocità'),
@@ -262,7 +262,7 @@ export default {
             T('No: misure un po’ diverse sono normali, e la media le mette d’accordo', 'Falso: le misure variano sempre un po’, e la media è il valore migliore', 'Falso: ogni misura ha un’incertezza, e la media la riduce'),
             T('Sì: le misure buone sono tutte uguali', 'Vero: le misure buone coincidono sempre', 'Vero: le misure accurate coincidono'),
           ],
-          answer: 0, keepOrder: true,
+          answer: 0,
           explain: T('Mito sfatato! La linea gialla è il valore vero: la media delle tue misure ci va vicinissima.', 'Mito sfatato: la linea gialla è la legge vera, 3 L a 6 s. La media delle misure ci cade vicino.', 'Mito sfatato: misurare è stimare un valore con la sua incertezza. La media si avvicina alla legge vera (linea gialla).'),
         },
       ],

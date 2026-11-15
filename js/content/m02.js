@@ -42,7 +42,13 @@ export default {
         'Nel <b>tubo a vuoto</b> non c’è aria. Spegni l’aria e confronta di nuovo piuma e martello.',
         'Nei laboratori si usa un <b>tubo a vuoto</b>: tolta l’aria, resta solo la gravità. Prova tu.'),
       steps: [
-        { kind: 'free', runs: 2, text: T('Lancia con l’aria, poi metti <b>Aria: no</b> e lancia ancora.', 'Fai una prova con l’aria e una senza (Aria: no). Confronta i tempi.') },
+        {
+          kind: 'free', runs: 2, text: T('Lancia con l’aria, poi metti <b>Aria: no</b> e lancia ancora.', 'Fai una prova con l’aria e una senza (Aria: no). Confronta i tempi.'),
+          need: [
+            { when: 'air', try: { air: true }, msg: T('Fai anche una prova con l’aria accesa.') },
+            { when: '!air', try: { air: false }, msg: T('Ora metti <b>Aria: no</b> e lancia ancora.', 'Ora spegni l’aria (Aria: no) e rilancia.') },
+          ],
+        },
         {
           kind: 'q',
           text: T('Ora hai tolto l’aria, come dentro un tubo dove l’hanno aspirata tutta. Senza aria, niente può frenare la piuma. Lasci cadere di nuovo piuma e martello insieme: che cosa succede?', 'Senza aria non c’è niente che freni la caduta: sugli oggetti agisce solo la gravità. Piuma e martello partono insieme dalla stessa altezza. Come cadono?'),

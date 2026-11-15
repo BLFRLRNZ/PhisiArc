@@ -14,9 +14,15 @@ export default {
         'Una velocità non è solo un numero: ha anche una <b>direzione</b>. Per questo si disegna con una freccia, che si chiama <b>vettore</b>. La barca punta dritta verso il pontile, ma la corrente la trascina di lato.',
         'Le velocità sono <b>vettori</b>: hanno intensità, direzione e verso, e si sommano come frecce, punta contro coda. Barca e corrente: quale sarà il moto vero?'),
       steps: [
-        { kind: 'free', runs: 2, text: T('Fai una traversata <b>senza corrente</b>, poi una <b>con la corrente</b>.', 'Attraversa una volta con corrente 0 e una volta con la corrente accesa.') },
         {
-          kind: 'q',
+          kind: 'free', runs: 2, text: T('Fai una traversata <b>senza corrente</b>, poi una <b>con la corrente</b>.', 'Attraversa una volta con corrente 0 e una volta con la corrente accesa.'),
+          need: [
+            { when: 'vc == 0', try: { vc: 0 }, msg: T('Fai anche una traversata con la corrente a zero.') },
+            { when: 'vc > 0', try: { vc: 2 }, msg: T('Ora accendi la corrente e rilancia.', 'Ora dai una velocità alla corrente e rilancia.') },
+          ],
+        },
+        {
+          kind: 'q', review: false,
           text: T('La prua della barca punta dritta verso il pontile di fronte. Ma ora l’acqua del fiume scorre e spinge la barca di lato mentre attraversa. Guarda le frecce: dove arriva la barca?', 'La barca spinge dritta verso l’altra riva (freccia arancione), la corrente la trascina di lato (freccia azzurra). Le due spinte agiscono insieme. In che direzione si muove davvero la barca?', 'Un osservatore sulla riva vede insieme due velocità: quella della barca rispetto all’acqua e quella dell’acqua rispetto alla riva. Qual è la velocità effettiva della barca rispetto alla riva?'),
           options: [
             T('Più in là del pontile, spinta dall’acqua', 'In diagonale: lungo la freccia bianca, somma delle altre due', 'La somma vettoriale di velocità della barca e della corrente'),
@@ -50,7 +56,7 @@ export default {
       steps: [
         {
           kind: 'q', predict: [{ vc: 0, ang: 0 }, { vc: 3, ang: 0 }],
-          text: T('Prima la barca attraversa il fiume senza corrente, poi con una corrente forte che la spinge di lato. In tutte e due le traversate la barca spinge verso l’altra riva allo stesso modo. Con la corrente, quanto tempo ci mette ad arrivare dall’altra parte?', 'Prima una traversata senza corrente, poi una con corrente di 3 m/s, perpendicolare alla direzione della barca. La velocità della barca verso l’altra riva resta la stessa. Il tempo della seconda traversata…'),
+          text: T('Prima la barca attraversa il fiume senza corrente, poi con una corrente forte che la spinge di lato. Il motore spinge sempre uguale. Con la corrente, quanto tempo ci mette ad arrivare dall’altra parte?', 'Prima una traversata senza corrente, poi una con corrente di 3 m/s, perpendicolare alla barca. La barca punta sempre dritta verso l’altra riva, con il motore allo stesso regime. Il tempo della seconda traversata…'),
           options: [T('Lo stesso tempo', 'è uguale'), T('Di più', 'è maggiore'), T('Di meno', 'è minore')],
           answer: 0,
           explain: T(
@@ -80,9 +86,9 @@ export default {
         'Un <b>proiettile</b> è un oggetto lanciato che poi vola soltanto sotto l’effetto della gravità. Scegli <b>angolo</b> e <b>velocità di lancio</b> e osserva la traiettoria.',
         'Un pallone calciato, un getto d’acqua, un salto in lungo: sono tutti <b>proiettili</b>. Scegli angolo e velocità e osserva il volo.'),
       steps: [
-        { kind: 'free', runs: 2, text: T('Fai almeno due lanci, cambiando qualcosa.', 'Fai almeno due lanci con valori diversi. Le traiettorie precedenti restano in grigio.') },
+        { kind: 'free', runs: 2, distinct: true, text: T('Fai almeno due lanci, cambiando qualcosa.', 'Fai almeno due lanci con valori diversi. Le traiettorie precedenti restano in grigio.') },
         {
-          kind: 'q',
+          kind: 'q', review: false,
           text: T('Hai sparato qualche palla e ognuna ha lasciato una scia nel cielo: sale, arriva in cima e scende. Guarda la scia dalla partenza all’arrivo. Che forma disegna?', 'La <b>traiettoria</b> è la linea che la palla disegna nell’aria durante il volo. Guarda le scie dei tuoi lanci, anche quelle grigie dei lanci di prima. Che forma ha la traiettoria?', 'Lo zampillo di una fontana, un pallone calciato, la palla del cannone: segui la scia dalla partenza all’arrivo. Che curva disegnano tutti?'),
           options: [
             T('Una linea dritta in diagonale', 'Una retta'),
@@ -231,7 +237,7 @@ export default {
         },
         {
           kind: 'q', only: ['s', 'c'], clear: true,
-          text: T(null, 'Senza aria, i lanci a 30° e a 60° atterravano nello stesso punto. Ma il lancio a 60° sale più in alto e resta in volo più a lungo, quindi l’aria ha più tempo per frenarlo. Con l’aria, che cosa succede?'),
+          text: T(null, 'Senza aria, i lanci a 30° e a 60° atterravano nello stesso punto. Ora l’aria è accesa, per tutti e due. Che cosa succede?'),
           options: ['30° va più lontano', 'Atterrano ancora nello stesso punto', '60° va più lontano'],
           answer: 0,
           predict: [{ ang: 30, v: 35, air: true }, { ang: 60, v: 35, air: true }],

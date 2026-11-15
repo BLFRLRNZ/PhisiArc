@@ -1,7 +1,7 @@
 /* PhysiArc: funziona offline dopo la prima visita.
    Ogni file si chiede alla rete, così le novità arrivano subito. Ma se la rete è lenta (oltre 2,5 secondi)
    o assente, si usa subito la copia salvata, e intanto la risposta della rete, quando arriva, aggiorna la copia. */
-const CACHE = 'phisiarc-v31';
+const CACHE = 'phisiarc-v32';
 const WAIT = 2500;
 const SHELL = [
   './', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './css/style.css',
