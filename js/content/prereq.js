@@ -87,7 +87,6 @@ export const ANTICIPI = {
   // forze: si spiegano nell'Officina (D01). Qui servono a dire che in orizzontale niente spinge la palla,
   // e che sulla giostra qualcosa tira verso il centro; il boss m05-6 smonta proprio la «forza centrifuga».
   'm03-2': ['forza e inerzia'],
-  'm05-2': ['forza e inerzia'],
   'm05-3': ['forza e inerzia'],
   'm05-6': ['forza e inerzia'],
 };

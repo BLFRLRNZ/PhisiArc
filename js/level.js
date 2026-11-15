@@ -46,7 +46,8 @@ export function runLevel(root, level, nav) {
       root.querySelectorAll('.tool-chip').forEach((b) => { if (!queue.includes(b.dataset.tool)) return; const r = b.parentNode; b.remove(); if (r && !r.children.length) r.remove(); });
       card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     } }, h('span', { class: 'tool-chip-tag' }, tr('Attrezzo')), ' ', TOOLS[id].title())));
-    el.querySelectorAll('details.fbox').forEach((d) => { const ids = toolsToOffer(d.textContent, lens); if (ids.length) d.append(row(ids)); });
+    // nel riquadro conta il testo della formula, non il titolo «Per chi vuole la formula»
+    el.querySelectorAll('details.fbox').forEach((d) => { const ids = toolsToOffer((d.querySelector(':scope > div') || d).textContent, lens); if (ids.length) d.append(row(ids)); });
     const rest = el.cloneNode(true);
     rest.querySelectorAll('details.fbox, .tool-offer').forEach((x) => x.remove());
     const ids = toolsToOffer(rest.textContent, lens);
@@ -421,7 +422,7 @@ export function runLevel(root, level, nav) {
     const skip = lens === 'c' && !level.exam ? h('button', { class: 'btn ghost skip', onclick: () => {
       ok.disabled = true; inp.disabled = true; skip.remove();
       fb.hidden = false; fb.className = 'say muted';
-      fb.innerHTML = `<b>${tr('Calcolo saltato.')}</b> ${tr('Si fa così:')} ${rich(autoSol())}`;
+      fb.innerHTML = `<b>${tr('Calcolo saltato.')}</b> ${tr('Ecco la risposta:')} ${rich(autoSol())}`;
       offerTools(fb);
       area.append(nextBtn());
     } }, tr('Salta il calcolo')) : null;

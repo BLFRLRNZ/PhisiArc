@@ -9,6 +9,19 @@ Ogni testo si scrive con `T(esploratore, studente, curioso)`. Se un testo manca,
 `T('Uguale per tutti')` vale per tutte e tre le lenti; `T('Per i piccoli', 'Per gli altri')` vale per Studente e Curioso.
 Un passo riservato a Studente e Curioso (`only: ['s', 'c']`) si scrive `T(null, 'Studente', 'Curioso')`. Anche il titolo di un livello può essere un `T(...)`.
 
+Ogni lente ha la sua voce, e `node tools/check-lenti.mjs` controlla che la mantenga:
+
+- **Esploratore** (6-11 anni). Le domande a scelta stanno entro **20 parole**: quello che serve per capirle va nell'introduzione del
+  livello o nella spiegazione del passo prima. Niente formule né simboli. Nei calcoli e nei bersagli solo **numeri interi**
+  (valori per lente: `vals: { e: {...}, s: {...} }`). La risposta giusta non deve riconoscersi dalla lunghezza, e non deve essere
+  sempre dello stesso tipo («insieme», «uguale»): ogni tanto la domanda si gira, e la risposta giusta è la differenza.
+- **Studente** (12-19 anni). Formule, unità, grafici e calcoli.
+- **Curioso** (adulti). Ogni domanda ha un **testo suo**, che parte da qualcosa di tutti i giorni (l'altalena, il cartello «2 km»,
+  la bilancia del bagno, il rinvio del portiere). Le formule si scrivono fra doppie parentesi quadre, `[[v = d / t]]`: sulla pagina
+  diventano un riquadro chiuso, **«Per chi vuole la formula»**, che non viene letto dalla voce e non fa aprire schede di matematica.
+  Fuori dal riquadro la stessa idea va detta a parole. I passi di calcolo hanno il tasto **«Salta il calcolo»** (mostra la risposta,
+  non costa stelle), e per questa lente i calcoli non entrano nella prova d'ingresso né nel ripasso del giorno.
+
 ## I passi
 
 | Tipo | Che cosa fa | Cosa si scrive |
@@ -54,6 +67,7 @@ diversi da quelli già contati.
 Nei testi `{a}` diventa il valore scelto (con la virgola), `{ans}` la risposta; `{a:1}` mostra al massimo un decimale.
 Valori e formule possono cambiare per lente: `vals: { e: {...}, s: {...} }`, `derive: { e: {...}, s: {} }`, `calc: { e: 'c / t', s: '2 * Math.PI * r / T' }`.
 Un `gen` scritto a mano riceve `(lente, prova, simulazione)`: così una domanda può usare le misure appena fatte (vedi `mediaTue` in `f03.js`).
+Lo svolgimento (`explain`) è anche quello che legge chi, con la lente Curioso, preme «Salta il calcolo».
 
 ### Prova da regolare (`tune`)
 
@@ -90,6 +104,8 @@ si capisca anche senza scorrere fino alla simulazione.
 ## Prima di caricare
 
 1. `node tools/check-content.mjs`: risposte valide, testi in tutte le lenti, aiuti e soluzioni, generatori che funzionano, file offline.
+   `node tools/check-lenti.mjs`: le promesse delle lenti (Esploratore entro 20 parole e con numeri interi; Curioso con testi suoi e
+   formule nei riquadri). Stampa anche quante parole ha in media una domanda e quanto spesso la risposta giusta è la più lunga.
 2. `node tools/check-prereq.mjs`: nessuna idea usata prima di essere spiegata. Legge i testi, lente per lente: se introduci un'idea nuova,
    aggiungila a `IDEE` in `js/content/prereq.js` con le sue parole e il livello che la spiega.
 3. `node tests/play-all.mjs http://localhost:8765` con il gioco servito in locale: un Chrome gioca tutti i livelli nelle tre lenti.
@@ -118,12 +134,21 @@ Per provare: `?lang=en` in fondo all’indirizzo, oppure Impostazioni → Lingua
 
 ## La cassetta degli attrezzi
 
-Le formule non si nascondono: si insegnano. Gli strumenti di matematica che usano (leggere una formula, il quadrato, la
-radice, Pitagora, π, seno e coseno) sono in `js/tools.js`, ognuno con una scheda da giocare: un’animazione con l’omino
-di gesso (`js/toolanim.js`), una spiegazione, un disegno con i cursori e una domanda.
+Le formule non si nascondono: si insegnano. Gli strumenti di matematica che usano (le potenze di 10, leggere una formula,
+il quadrato, la radice, Pitagora, π, seno e coseno) sono in `js/tools.js`, ognuno con una scheda da giocare: un’animazione
+con l’omino di gesso (`js/toolanim.js`), una spiegazione, un disegno con i cursori e una domanda. Valgono per le lenti
+Studente e Curioso.
 
-- La scheda si apre da sola, prima di cominciare, nel primo livello che usa lo strumento (lenti Studente e Curioso).
-  Non serve segnarlo a mano: `toolsIn()` cerca nei testi del livello i segni dello strumento (√, π, ², sin…).
+- **Quando serve per rispondere, la scheda si apre da sola**, prima di cominciare, nel primo livello che usa lo strumento.
+  Non serve segnarlo a mano: `toolsIn()` cerca i segni dello strumento (10³, √, π, ², sin…) in quello che si legge prima di
+  rispondere (introduzione, consegne, domande, risposte) e nello svolgimento dei calcoli.
+- **Quando lo strumento compare solo in una spiegazione, in un aiuto, in una soluzione o in un riquadro `[[…]]`**, la scheda
+  non interrompe: sotto quel testo c’è un bottone «Attrezzo · …» che la apre. Così una formula mostrata «per completezza»
+  non costringe a tre schede di fila.
+- Uno strumento può chiederne altri prima (`needs`): la radice porta con sé il quadrato, Pitagora tutti e due.
+  Conviene che un livello non apra più di una scheda: `node tools/check-lenti.mjs -v` dice dove si apre ognuna,
+  e segnala un livello che ne aprirebbe più di due.
 - Chi lo sa già preme «Li so già». Tutte le schede restano nella pagina `#/attrezzi`, raggiungibile dalla mappa.
 - Un nuovo strumento: si aggiunge a `TOOLS` (titolo, test, spiegazione, disegno, domanda) e a `SCENES` per l’animazione,
-  con le frasi inglesi in `js/i18n/en-tools.js`. `tests/tools.mjs` controlla che le schede compaiano e si superino.
+  con le frasi inglesi in `js/i18n/en-tools.js`. `tests/tools.mjs` controlla che la scheda si apra quando serve, che il
+  bottone la offra quando non serve, e che la cassetta le contenga tutte.

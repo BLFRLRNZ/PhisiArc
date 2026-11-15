@@ -33,7 +33,7 @@ export default {
         },
       ],
       hints: [T('Fai la gara con 5 e 10 e guarda chi tocca la bandiera prima.', 'Dividi lo spazio per la velocità.')],
-      solution: T('Quella a 10.', '10 s, perché t = 100 m / 10 m/s.'),
+      solution: T('Quella a 10.', '10 s, perché t = 100 m / 10 m/s.', 'Dieci secondi: 100 metri, 10 metri ogni secondo. [[t = 100 m / 10 m/s]]'),
     },
     {
       id: 'm01-2', kind: 'lezione', title: 'Il grafico della gara',
@@ -45,13 +45,13 @@ export default {
       steps: [
         { kind: 'run', text: T('Guarda la gara e la sua linea.', 'Osserva come si disegnano le due linee.'), seq: [{ v1: 4, v2: 8 }], explain: T('Due linee, una per macchinina.', 'Velocità costante = linea dritta.') },
         {
-          kind: 'q', text: T('Sul grafico della gara, com’è la linea della macchinina più veloce?', 'Nel grafico spazio-tempo il tempo è in orizzontale e la posizione in verticale: in ogni secondo la linea sale di tanti metri quanti ne fa la macchina. Allora la macchina più veloce ha la retta…'),
+          kind: 'q', text: T('Sul grafico della gara, com’è la linea della macchinina più veloce?', 'Nel grafico spazio-tempo il tempo è in orizzontale e la posizione in verticale: in ogni secondo la linea sale di tanti metri quanti ne fa la macchina. Allora la macchina più veloce ha la retta…', 'Il navigatore disegna il tuo viaggio: tempo in orizzontale, chilometri fatti in verticale. In autostrada, rispetto al traffico di città, la linea è…'),
           options: [T('più in piedi (ripida)', 'più ripida'), T('più sdraiata', 'meno ripida'), T('dritta in orizzontale', 'orizzontale')], answer: 0,
-          explain: T('Giusto: va più su in meno tempo, quindi la linea è più ripida.', 'Esatto: la <b>pendenza</b> del grafico spazio-tempo è la velocità. Una linea orizzontale vuol dire fermo.'),
+          explain: T('Giusto: va più su in meno tempo, quindi la linea è più ripida.', 'Esatto: la <b>pendenza</b> del grafico spazio-tempo è la velocità. Una linea orizzontale vuol dire fermo.', 'Esatto: più strada nello stesso tempo, linea più ripida. La <b>pendenza</b> del grafico spazio-tempo è la velocità.'),
         },
         {
-          kind: 'q', only: ['s', 'c'], text: 'Immagina che a un certo punto la linea di una macchina diventi orizzontale: il tempo passa, ma la posizione resta sempre la stessa. Che cosa sta facendo la macchina?',
-          options: ['Va velocissima', 'È ferma', 'Torna indietro'], answer: 1, explain: 'Il tempo passa ma la posizione non cambia: è ferma.',
+          kind: 'q', only: ['s', 'c'], text: T('Immagina che a un certo punto la linea di una macchina diventi orizzontale: il tempo passa, ma la posizione resta sempre la stessa. Che cosa sta facendo la macchina?', null, 'Nel grafico del viaggio, a un certo punto la linea diventa orizzontale per dieci minuti. Che cosa è successo?'),
+          options: [T('Va velocissima', null, 'Hai corso moltissimo'), T('È ferma', null, 'Eri fermo: una sosta, o una coda'), T('Torna indietro', null, 'Sei tornato indietro')], answer: 1, explain: T('Il tempo passa ma la posizione non cambia: è ferma.', null, 'Il tempo passa ma la posizione non cambia: sei fermo.'),
         },
       ],
       hints: [T('Guarda quale linea arriva prima in alto.')],
@@ -64,21 +64,18 @@ export default {
       steps: [
         {
           kind: 'q',
-          text: T('L’arancione va il doppio della blu. Quando l’arancione arriva ai 100 metri, dov’è la blu?', 'Blu a 4 m/s, arancione a 8 m/s, stessa partenza. L’arancione arriva ai 100 m dopo un certo tempo: in quello stesso tempo, quanta strada ha fatto la blu? A che posizione si trova?'),
+          text: T('L’arancione va il doppio della blu. Quando l’arancione arriva ai 100 metri, dov’è la blu?', 'Blu a 4 m/s, arancione a 8 m/s, stessa partenza. L’arancione arriva ai 100 m dopo un certo tempo: in quello stesso tempo, quanta strada ha fatto la blu? A che posizione si trova?', 'Due amici partono insieme verso la stessa meta, a 100 metri: uno corre, l’altro va a metà della sua velocità. Quando il primo arriva, dov’è il secondo?'),
           options: [T('All’inizio, a 25 m', 'a 25 m'), T('A metà, a 50 m', 'a 50 m'), T('Quasi alla fine, a 75 m', 'a 75 m')], answer: 1,
           predict: [{ v1: 4, v2: 8 }],
-          explain: T('A metà! Va a metà velocità, quindi nello stesso tempo fa metà strada.', 'L’arancione arriva in 100/8 = 12,5 s. In 12,5 s la blu fa 4 × 12,5 = 50 m. Metà velocità, metà strada.'),
+          explain: T('A metà! Va a metà velocità, quindi nello stesso tempo fa metà strada.', 'L’arancione arriva in 100/8 = 12,5 s. In 12,5 s la blu fa 4 × 12,5 = 50 m. Metà velocità, metà strada.', 'A metà strada: nello stesso tempo, chi va a metà velocità fa metà strada. Qui l’arancione arriva in 12,5 s, e in 12,5 s la blu fa 50 m.'),
         },
         {
           // velocità relativa: chi insegue recupera ogni secondo la differenza delle velocità
           kind: 'q',
-          text: T('La blu va a <b>10 m/s</b>, l’arancione a <b>6 m/s</b> ma parte <b>20 metri</b> avanti. Quando la raggiunge?', 'Inseguimento: la blu parte da 0 m a 10 m/s, l’arancione da 20 m a 6 m/s. A ogni secondo la distanza fra le due si accorcia. Dopo quanto tempo la blu la raggiunge?', 'Blu a 10 m/s da 0 m, arancione a 6 m/s da 20 m. Nel grafico spazio-tempo il sorpasso è il punto in cui le due rette si incrociano. A che istante avviene?'),
+          text: T('La blu va a <b>10 m/s</b>, l’arancione a <b>6 m/s</b> ma parte <b>20 metri</b> avanti. Quando la raggiunge?', 'Inseguimento: la blu parte da 0 m a 10 m/s, l’arancione da 20 m a 6 m/s. A ogni secondo la distanza fra le due si accorcia. Dopo quanto tempo la blu la raggiunge?', 'Un inseguimento: la blu va a 10 m/s, l’arancione a 6 m/s ma ha 20 metri di vantaggio. Sul grafico il sorpasso è dove le due linee si incrociano. Dopo quanto?'),
           options: [T('Dopo 2 secondi', 'Dopo 2 s', 'Dopo 2 s'), T('Dopo 5 secondi', 'Dopo 5 s', 'Dopo 5 s'), T('Dopo 10 secondi', 'Dopo 10 s', 'Dopo 10 s')], answer: 1,
           predict: [{ v1: 10, v2: 6, x2: 20 }],
-          explain: T(
-            'Dopo 5 secondi: ogni secondo la blu recupera 4 metri (10 meno 6), e 20 metri si recuperano in 5 secondi. Sul grafico è dove le linee si incrociano.',
-            'Dopo 5 s. Vista dall’arancione, la blu si avvicina a 10 − 6 = 4 m/s: è la <b>velocità relativa</b>. 20 m / 4 m/s = 5 s. Sul grafico, le rette si incrociano lì.',
-            'Dopo 5 s: la <b>velocità relativa</b> è 10 − 6 = 4 m/s, e 20 m / 4 m/s = 5 s, a 50 m dalla partenza. Le rette x(t) si incrociano proprio lì.'),
+          explain: T('Dopo 5 secondi: ogni secondo la blu recupera 4 metri (10 meno 6), e 20 metri si recuperano in 5 secondi. Sul grafico è dove le linee si incrociano.', 'Dopo 5 s. Vista dall’arancione, la blu si avvicina a 10 − 6 = 4 m/s: è la <b>velocità relativa</b>. 20 m / 4 m/s = 5 s. Sul grafico, le rette si incrociano lì.', 'Dopo 5 secondi: la blu recupera 4 metri ogni secondo (10 − 6), e 20 metri si recuperano in 5 secondi. Le due linee si incrociano proprio lì, a 50 m dalla partenza.'),
           hints: [T('Quanti metri recupera la blu ogni secondo?', 'Ogni secondo la distanza cala della differenza fra le due velocità.')],
           solution: T('Dopo 5 secondi: la blu recupera 4 metri al secondo, e 20 diviso 4 fa 5.', 'Dopo 5 s: 20 m / (10 − 6) m/s.'),
         },
@@ -106,17 +103,17 @@ export default {
         },
       ],
       hints: [T('Se il viaggio è troppo lungo, alza la velocità.', 'Velocità = spazio / tempo.'), T('Per fare 60 metri in 10 secondi, quanti metri ogni secondo?', 'Per 60 m in 12 s: 60 / 12 = ?')],
-      solution: T('Dividi 60 per i secondi: per 10 secondi serve 6, per 12 secondi serve 5.', 'v = 60 m / t. Per 12 s → 5 m/s; per 15 s → 4 m/s; per 8 s → 7,5 m/s.'),
+      solution: T('Dividi 60 per i secondi: per 10 secondi serve 6, per 12 secondi serve 5.', 'v = 60 m / t. Per 12 s → 5 m/s; per 15 s → 4 m/s; per 8 s → 7,5 m/s.', 'Dividi i 60 metri per i secondi: 12 s → 5 m/s; 15 s → 4 m/s; 8 s → 7,5 m/s. [[v = 60 m / t]]'),
     },
     {
       id: 'm01-5', kind: 'ripasso', title: 'Ripasso del moto',
       intro: T('Ripassiamo velocità, grafici e misure!', 'Ripasso: velocità, grafici, unità.'),
       steps: [
-        { kind: 'q', text: T('Una macchinina va a 5 metri al secondo. Che cosa dice quel numero?', 'La velocità si scrive in metri al secondo (m/s) e si calcola come spazio diviso tempo. Che cosa misura, in parole?'), options: [T('Quanto pesa', 'La massa'), T('Quanta strada fa in un secondo', 'Lo spazio fatto in un secondo'), T('Quanto è lontana dalla partenza', 'La distanza da casa')], answer: 1, explain: T('Esatto!', 'Esatto: v = Δs / Δt.') },
-        { kind: 'q', text: T('Sul grafico della gara, com’è la linea di una macchinina ferma?', 'Nel grafico spazio-tempo la linea sale quando la posizione cambia. Un oggetto fermo resta sempre alla stessa posizione mentre il tempo scorre. Come lo disegni?'), options: [T('ripida', 'una retta ripida'), T('piatta', 'una retta orizzontale'), T('in discesa', 'una retta in discesa')], answer: 1, explain: T('Giusto: il tempo passa, lei resta lì.', 'Giusto: la posizione non cambia.') },
+        { kind: 'q', text: T('Una macchinina va a 5 metri al secondo. Che cosa dice quel numero?', 'La velocità si scrive in metri al secondo (m/s) e si calcola come spazio diviso tempo. Che cosa misura, in parole?', 'Il cartello dice «limite 50 km/h». Che cosa conta, esattamente, quel numero?'), options: [T('Quanto pesa', 'La massa', 'I chilometri che mancano alla meta'), T('Quanta strada fa in un secondo', 'Lo spazio fatto in un secondo', 'I chilometri che faresti in un’ora, andando sempre così'), T('Quanto è lontana dalla partenza', 'La distanza da casa', 'Il tempo che manca all’arrivo')], answer: 1, explain: T('Esatto!', 'Esatto: v = Δs / Δt.', 'Esatto: la velocità dice quanta strada fai in un’unità di tempo. [[v = Δs / Δt]]') },
+        { kind: 'q', text: T('Sul grafico della gara, com’è la linea di una macchinina ferma?', 'Nel grafico spazio-tempo la linea sale quando la posizione cambia. Un oggetto fermo resta sempre alla stessa posizione mentre il tempo scorre. Come lo disegni?', 'Un’auto resta parcheggiata tutta la notte. Nel grafico spazio-tempo, la sua linea è…'), options: [T('ripida', 'una retta ripida'), T('piatta', 'una retta orizzontale'), T('in discesa', 'una retta in discesa')], answer: 1, explain: T('Giusto: il tempo passa, lei resta lì.', 'Giusto: la posizione non cambia.', 'Giusto: il tempo scorre, la posizione non cambia.') },
         // Valori nuovi a ogni partita: si ripassa la regola, non la risposta.
         { kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da km/h a m/s.', gen: () => { const k = pick([18, 36, 54, 72, 90, 108]); return { text: tr('Il tachimetro di un’auto segna <b>{k} km/h</b>. In fisica si usano i metri al secondo, e per passare da km/h a m/s si divide per 3,6. A quanti m/s va l’auto?', { k }), ans: k / 3.6, tol: 0.01, unit: 'm/s', explain: tr('Giusto: {k} ÷ 3,6 = {v} m/s.', { k, v: Math.round(k / 3.6) }) }; } },
-        { kind: 'q', text: T('Due amici corrono su strade diverse. Per sapere chi è più veloce, che cosa misuri?', 'Due oggetti si muovono su percorsi diversi, per tempi diversi. Per confrontare le loro velocità, quali grandezze devi misurare per ciascuno?'), options: [T('La strada e il tempo', 'Spazio e tempo'), T('Solo quanto è lunga la strada', 'Solo la massa'), T('Solo il tempo che ci mettono', 'Solo la forma')], answer: 0, explain: T('Proprio così: due misure insieme.', 'Esatto: la velocità è un rapporto tra due misure.') },
+        { kind: 'q', text: T('Due amici corrono su strade diverse. Per sapere chi è più veloce, che cosa misuri?', 'Due oggetti si muovono su percorsi diversi, per tempi diversi. Per confrontare le loro velocità, quali grandezze devi misurare per ciascuno?', 'Un amico fa jogging al parco, tu sul lungomare: percorsi diversi, durate diverse. Per sapere chi è andato più veloce, che cosa vi serve?'), options: [T('La strada e il tempo', 'Spazio e tempo', 'I chilometri fatti e il tempo, per tutti e due'), T('Solo quanto è lunga la strada', 'Solo la massa', 'Solo i chilometri fatti'), T('Solo il tempo che ci mettono', 'Solo la forma', 'Solo la durata dell’uscita')], answer: 0, explain: T('Proprio così: due misure insieme.', 'Esatto: la velocità è un rapporto tra due misure.', 'Esatto: la velocità è un rapporto fra due misure, strada e tempo.') },
         {
           // Ponte con il Laboratorio: la media (spiegata nel boss f03-6) torna qui, a qualche livello di distanza.
           kind: 'num', rounds: 1, text: T('Una misura, come nel Laboratorio.', 'Un ponte con il Laboratorio: la media.'),
@@ -137,15 +134,15 @@ export default {
         'Sono Vetrino. <i>“Il più veloce arriva sempre prima”</i>: sembra logica pura. Ma è tutta la storia?'),
       steps: [
         {
-          kind: 'q', text: T('La blu va a 8 m/s. L’arancione va a 5 m/s, ma parte <b>a metà pista</b>. Chi arriva prima?', 'Blu a 8 m/s, parte da 0 m; arancione a 5 m/s, ma parte da <b>50 m</b>. Calcola per ciascuna il tempo come strada da fare divisa per la velocità. Chi arriva prima ai 100 m?'),
+          kind: 'q', text: T('La blu va a 8 m/s. L’arancione va a 5 m/s, ma parte <b>a metà pista</b>. Chi arriva prima?', 'Blu a 8 m/s, parte da 0 m; arancione a 5 m/s, ma parte da <b>50 m</b>. Calcola per ciascuna il tempo come strada da fare divisa per la velocità. Chi arriva prima ai 100 m?', 'Tu esci in auto, un collega in bici: lui è più lento, ma abita a metà strada dall’ufficio. Qui la blu va a 8 m/s da zero, l’arancione a 5 m/s da metà pista. Chi arriva prima?'),
           options: [T('La blu, è più veloce', 'La blu'), T('L’arancione, che parte avanti', 'L’arancione'), T('Arrivano insieme', 'Arrivano insieme')], answer: 1,
           predict: [{ v1: 8, v2: 5, x1: 0, x2: 50 }],
           explain: T('Vince l’arancione! Aveva meno strada da fare.', 'Arancione: 50 / 5 = 10 s. Blu: 100 / 8 = 12,5 s. Vince l’arancione.'),
         },
         {
-          kind: 'q', text: T('Ha vinto l’arancione, la più lenta. Allora chi arriva prima dipende…', 'Il mito diceva che vince sempre il più veloce. Ma il tempo per arrivare è la strada da fare divisa per la velocità. Allora il tempo di arrivo dipende da…'),
-          options: [T('solo dalla velocità', 'solo dalla velocità'), T('anche dalla strada da fare', 'da velocità e distanza'), T('da quanto è grande la macchina', 'dalla massa e dal motore')], answer: 1,
-          explain: T('Mito smontato! Conta anche da dove parti.', 'Mito smontato: t = distanza / velocità. Conta anche la distanza.'),
+          kind: 'q', text: T('Ha vinto l’arancione, la più lenta. Allora chi arriva prima dipende…', 'Il mito diceva che vince sempre il più veloce. Ma il tempo per arrivare è la strada da fare divisa per la velocità. Allora il tempo di arrivo dipende da…', '«Il più veloce arriva sempre prima». Dopo questa gara, da che cosa dipende davvero l’ora di arrivo?'),
+          options: [T('solo dalla velocità', null, 'Solo dalla velocità'), T('anche dalla strada da fare', 'da velocità e distanza', 'Dalla velocità e dalla strada da fare'), T('da quanto è grande la macchina', 'dalla massa e dal motore', 'Dal motore e dal peso')], answer: 1,
+          explain: T('Mito smontato! Conta anche da dove parti.', 'Mito smontato: t = distanza / velocità. Conta anche la distanza.', 'Mito smontato: conta anche quanta strada c’è da fare. Per questo chi abita vicino arriva prima anche a piedi. [[t = distanza / velocità]]'),
         },
       ],
       hints: [T('Vetrino chiede: quanta strada deve fare ognuna?'), T('Vetrino chiede: quanto tempo ci mette ognuna a fare la sua strada?')],

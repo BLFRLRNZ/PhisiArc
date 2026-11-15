@@ -70,8 +70,8 @@ export default {
           options: ['Il pollice', 'Il chilogrammo', 'L’ora'], answer: 1, explain: T('', 'Il kg è l’unità SI della massa. L’ora si usa, ma l’unità SI del tempo è il secondo.'),
         },
         {
-          kind: 'q', only: ['s', 'c'], text: 'Il prefisso <b>chilo</b> vuol dire «mille»: lo trovi in chilometro e in chilogrammo. Allora 1 km è uguale a…', options: ['10 m', '100 m', '1000 m'], answer: 2,
-          explain: T('', '“Kilo” vuol dire mille: 1 km = 10³ m. “Milli” vuol dire un millesimo: 1 mm = 10⁻³ m.'),
+          kind: 'q', only: ['s', 'c'], text: T('Il prefisso <b>chilo</b> vuol dire «mille»: lo trovi in chilometro e in chilogrammo. Allora 1 km è uguale a…', null, 'Sul cartello c’è scritto «Uscita 2 km». «Chilo» vuol dire mille: quanti metri mancano?'), options: [T('10 m', null, '200 m'), T('100 m', null, '20.000 m'), T('1000 m', null, '2000 m')], answer: 2,
+          explain: T('', '“Kilo” vuol dire mille: 1 km = 10³ m. “Milli” vuol dire un millesimo: 1 mm = 10⁻³ m.', '«Chilo» vuol dire mille: 2 km sono 2000 metri. «Milli» vuol dire un millesimo: un millimetro è la millesima parte di un metro. [[1 km = 10³ m · 1 mm = 10⁻³ m]]'),
         },
       ],
       hints: [T('Pensa a cosa stai misurando: una lunghezza, un tempo o un peso?'), T('Nel SI: metro, secondo, chilogrammo.')],
@@ -115,9 +115,9 @@ export default {
           explain: T('Perfetto! Dal virus all’Everest.', 'Perfetto: 10⁻⁷, 10⁻³, 10⁰, 10¹, 10², 10⁴ m.'),
         },
         {
-          kind: 'q', text: T('Prima di un esperimento dici che cosa succederà, secondo te. Come si chiama?', 'Nel metodo scientifico i passi hanno un ordine: si osserva, si fa una previsione che si possa controllare, si prova, si conclude. Che cosa viene subito prima dell’esperimento?'),
-          options: [T('Una previsione', 'L’ipotesi'), T('Un risultato', 'La conclusione'), T('Una misura', 'La pubblicazione')], answer: 0,
-          explain: T('Esatto: prima indovini, poi controlli!', 'Esatto: ipotesi, poi esperimento, poi conclusione.'), wrong: 'Ripensa al Laboratorio: prima indovini, poi…',
+          kind: 'q', text: T('Prima di un esperimento dici che cosa succederà, secondo te. Come si chiama?', 'Nel metodo scientifico i passi hanno un ordine: si osserva, si fa una previsione che si possa controllare, si prova, si conclude. Che cosa viene subito prima dell’esperimento?', 'Un cuoco prova una ricetta nuova. Prima di assaggiare dice: «con più lievito verrà più soffice». Nel metodo scientifico, come si chiama questa frase?'),
+          options: [T('Una previsione', 'L’ipotesi', 'Un’ipotesi'), T('Un risultato', 'La conclusione', 'Una conclusione'), T('Una misura', 'La pubblicazione', 'Una misura')], answer: 0,
+          explain: T('Esatto: prima indovini, poi controlli!', 'Esatto: ipotesi, poi esperimento, poi conclusione.', 'Esatto: prima l’ipotesi, poi la prova (l’assaggio), poi la conclusione.'), wrong: 'Ripensa al Laboratorio: prima indovini, poi…',
         },
         {
           kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da kg a grammi.',
@@ -132,15 +132,15 @@ export default {
       intro: T('Sono Vetrino. Tutto è fatto di <b>atomi</b>, pezzettini piccolissimi. Un bambino dice: <i>“Un atomo è un granello di sabbia un po’ più piccolo”</i>. Sarà vero?', 'Sono Vetrino. Un compagno sostiene: <i>“Un atomo è solo un po’ più piccolo di un granello di sabbia”</i>. Quanto è “un po’”?', 'Sono Vetrino. Si sente dire che un atomo è “appena più piccolo di un granello di sabbia”. Vediamo i numeri.'),
       steps: [
         {
-          kind: 'q', text: T('Quanti atomi in fila servono per coprire un granello di sabbia?', 'Un granello di sabbia è largo circa 10⁻³ m (un millimetro), un atomo circa 10⁻¹⁰ m. Per sapere quante volte uno sta nell’altro si dividono le due misure: con le potenze di 10 basta sottrarre gli esponenti. Quante volte è più piccolo l’atomo?'),
-          options: [T('Circa 10', '10 volte (10¹)'), T('Circa 1000', '1000 volte (10³)'), T('Circa 10 milioni', '10 milioni di volte (10⁷)')], answer: 2,
+          kind: 'q', text: T('Quanti atomi in fila servono per coprire un granello di sabbia?', 'Un granello di sabbia è largo circa 10⁻³ m (un millimetro), un atomo circa 10⁻¹⁰ m. Per sapere quante volte uno sta nell’altro si dividono le due misure: con le potenze di 10 basta sottrarre gli esponenti. Quante volte è più piccolo l’atomo?', 'Un granello di sabbia è largo circa un millimetro. Se metti in fila degli atomi lungo quel millimetro, quanti ce ne stanno?'),
+          options: [T('Circa 10', '10 volte (10¹)', 'Una decina'), T('Circa 1000', '1000 volte (10³)', 'Un migliaio'), T('Circa 10 milioni', '10 milioni di volte (10⁷)', 'Una decina di milioni')], answer: 2,
           predict: [{ exp: -3 }, { exp: -10 }],
-          explain: T('Dieci milioni! Il granello è un gigante per un atomo.', '10⁻³ / 10⁻¹⁰ = 10⁷: dieci milioni di volte.'),
+          explain: T('Dieci milioni! Il granello è un gigante per un atomo.', '10⁻³ / 10⁻¹⁰ = 10⁷: dieci milioni di volte.', 'Dieci milioni: un atomo è largo circa un decimilionesimo di millimetro. [[10⁻³ m : 10⁻¹⁰ m = 10⁷]]'),
         },
         {
-          kind: 'q', text: T('Il bambino diceva: «un atomo è un granello un po’ più piccolo». Aveva ragione?', 'Il mito dice che un atomo è «quasi visibile», appena più piccolo di un granello di sabbia. Un granello misura circa 10⁻³ m, un atomo circa 10⁻¹⁰ m: confronta i due ordini di grandezza. Il mito è vero?'),
-          options: [T('Sì: sono tutti e due piccolissimi', 'Sì, la differenza è piccola'), T('No: l’atomo è molto più piccolo', 'No: 7 ordini di grandezza di differenza'), T('Quasi: l’atomo è la metà', 'Quasi: al massimo un fattore 10 o 20')], answer: 1,
-          explain: T('Mito smontato! Gli atomi sono così piccoli che non si vedono nemmeno col microscopio normale.', 'Mito smontato: 7 ordini di grandezza. Se un atomo fosse grande come un granello, il granello sarebbe lungo 10 km!'),
+          kind: 'q', text: T('Il bambino diceva: «un atomo è un granello un po’ più piccolo». Aveva ragione?', 'Il mito dice che un atomo è «quasi visibile», appena più piccolo di un granello di sabbia. Un granello misura circa 10⁻³ m, un atomo circa 10⁻¹⁰ m: confronta i due ordini di grandezza. Il mito è vero?', '«Appena più piccolo di un granello di sabbia»: con dieci milioni di atomi in un millimetro, la frase regge?'),
+          options: [T('Sì: sono tutti e due piccolissimi', 'Sì, la differenza è piccola', 'Sì: piccolo l’uno, piccolo l’altro'), T('No: l’atomo è molto più piccolo', 'No: 7 ordini di grandezza di differenza', 'No: sta al granello come il granello a una città'), T('Quasi: l’atomo è la metà', 'Quasi: al massimo un fattore 10 o 20', 'Quasi: l’atomo è dieci o venti volte più piccolo')], answer: 1,
+          explain: T('Mito smontato! Gli atomi sono così piccoli che non si vedono nemmeno col microscopio normale.', 'Mito smontato: 7 ordini di grandezza. Se un atomo fosse grande come un granello, il granello sarebbe lungo 10 km!', 'Mito smontato: fra i due ci sono sette potenze di 10. Se un atomo fosse grande come un granello di sabbia, il granello sarebbe largo 10 chilometri.'),
         },
       ],
       hints: [T('Vetrino chiede: quante volte hai mosso lo zoom per passare dal granello all’atomo?'), T('Vetrino chiede: ogni scatto dello zoom vale 10 volte. Quanti scatti sono 7?')],

@@ -375,6 +375,6 @@ export default {
  "frenata (m)": "braking (m)",
  "Per chi vuole la formula": "For those who want the formula",
  "Calcolo saltato.": "Calculation skipped.",
- "Si fa così:": "This is how it goes:",
+ "Ecco la risposta:": "Here is the answer:",
  "Salta il calcolo": "Skip the calculation",
 };

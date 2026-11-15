@@ -18,6 +18,8 @@ jobs:
         run: node tools/check-content.mjs
       - name: Controllo dei prerequisiti
         run: node tools/check-prereq.mjs
+      - name: Controllo delle lenti
+        run: node tools/check-lenti.mjs
       - name: Controllo delle traduzioni inglesi
         run: node tools/i18n-strings.mjs --check
       - name: Installa Playwright e Chrome
