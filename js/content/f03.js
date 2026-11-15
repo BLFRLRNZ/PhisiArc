@@ -1,5 +1,5 @@
 // F03 · Grafici e proporzionalità, con gli errori di misura. Simulazione: il laboratorio dei grafici.
-import { T, pick } from '../util.js';
+import { T, pick, num } from '../util.js';
 import { t } from '../i18n.js';
 
 const TEMPO = { label: 'Tempo aperto', min: 1, max: 10, step: 0.5, unit: 's' };
@@ -9,7 +9,7 @@ const VEL = (min, max) => ({ label: 'Velocità', min, max, step: 1, unit: 'm/s' 
 const media3 = (lens) => {
   if (lens === 'e') {
     const m = pick([4, 5, 6, 7]), d = pick([1, 2]);
-    return { text: t('Hai cronometrato la stessa corsa tre volte: <b>{a} s</b>, <b>{m} s</b> e <b>{b} s</b>. Qual è la media?', { a: m - d, m, b: m + d }), ans: m, tol: 0, unit: 's', explain: t('Giusto: {a} + {m} + {b} = {s}, diviso 3 fa {m}.', { a: m - d, m, b: m + d, s: 3 * m }) };
+    return { text: t('Hai cronometrato la stessa corsa tre volte: <b>{a} s</b>, <b>{m} s</b> e <b>{b} s</b>. Le misure stanno un po’ sotto e un po’ sopra: quale numero sta <b>in mezzo</b>?', { a: m - d, m, b: m + d }), ans: m, tol: 0, unit: 's', explain: t('Giusto: {m} sta in mezzo. Gli scienziati lo chiamano <b>media</b>.', { m }) };
   }
   const base = pick([2, 2.5, 3, 3.5]), a = pick([-0.2, -0.1]), b = pick([0.1, 0.3]), c = -(a + b) + pick([0, 0.3]);
   const xs = [base + a, base + b, base + c].map((v) => Math.round(v * 10) / 10);
@@ -18,6 +18,18 @@ const media3 = (lens) => {
     text: t('Tre misure dell’acqua uscita in {t:0} s: <b>{a:1} L</b>, <b>{b:1} L</b>, <b>{c:1} L</b>. Qual è la media?', { t: base * 2, a: xs[0], b: xs[1], c: xs[2] }),
     ans: m, tol: 0.02, unit: 'L',
     explain: t('Esatto: ({a:1} + {b:1} + {c:1}) / 3 = {m} L.', { a: xs[0], b: xs[1], c: xs[2], m }),
+  };
+};
+
+// la media delle tre misure appena fatte dal giocatore; dove la simulazione non c'è (ripasso del giorno), tre misure d'esempio
+const mediaTue = (lens, sim) => {
+  const ys = lens !== 'e' && sim && sim.points ? sim.points.slice(-3).map((q) => q.y) : [];
+  if (ys.length < 3) return media3(lens);
+  const m = Math.round(((ys[0] + ys[1] + ys[2]) / 3) * 100) / 100;
+  return {
+    text: t('Le tue tre misure: <b>{a} L</b>, <b>{b} L</b> e <b>{c} L</b>. Qual è la media?', { a: ys[0], b: ys[1], c: ys[2] }),
+    ans: m, tol: 0.02, unit: 'L',
+    explain: t('Esatto: ({a} + {b} + {c}) / 3 = {m} L. La legge vera dice 3 L: la media ci va vicino.', { a: ys[0], b: ys[1], c: ys[2], m }),
   };
 };
 
@@ -52,7 +64,7 @@ export default {
         {
           kind: 'num', rounds: 2, text: T('Usa quello che hai scoperto.', 'Usa la proporzionalità.'),
           gen: (lens) => {
-            const tt = pick([2, 4, 6]), k = pick([2, 3]);
+            const tt = pick(lens === 'e' ? [4, 6, 8] : [2, 4, 6]), k = pick([2, 3]);
             return lens === 'e'
               ? { text: t('Il rubinetto butta fuori l’acqua sempre allo stesso ritmo. Tenendolo aperto <b>{t} secondi</b> raccogli <b>{l:1} litri</b>. Se lo tieni aperto <b>{t2} secondi</b>, quanti litri raccogli?', { t: tt, l: tt / 2, t2: tt * k }), ans: (tt * k) / 2, tol: 0, unit: t('litri'), explain: t('Giusto: il tempo è {k} volte tanto, quindi anche l’acqua: {l:1} litri.', { k, l: (tt * k) / 2 }) }
               : { text: t('Il rubinetto ha una portata costante, quindi litri e tempo sono direttamente proporzionali. In <b>{t} s</b> escono <b>{l:1} L</b>. Quanti litri escono in <b>{t2:1} s</b>?', { t: tt, l: tt / 2, t2: tt * k * 0.75 }), ans: (tt * k * 0.75) / 2, tol: 0.01, unit: 'L', explain: t('Esatto: il rapporto è 0,5 L/s, quindi 0,5 × {t2:1} = {l} L.', { t2: tt * k * 0.75, l: (tt * k * 0.75) / 2 }) };
@@ -66,9 +78,9 @@ export default {
       id: 'f03-2', kind: 'lezione', title: 'Doppio, metà',
       sim: 'lab', params: { mode: 'viaggio', x: 5, noise: false }, controls: ['x'], labels: { x: VEL(2, 20) },
       intro: T(
-        'Ora una gara sul rettilineo del parco: <b>60 metri</b>. Scegli quanto va veloce la macchinina e guarda quanto tempo ci mette.',
-        'La macchinina percorre sempre <b>60 m</b>. Cambia la velocità e misura il tempo: sul grafico, velocità in orizzontale e tempo in verticale.',
-        'Percorso fisso di 60 m, velocità variabile. Che legame c’è fra velocità e tempo impiegato?'),
+        'Ora una gara sul rettilineo del parco: <b>60 metri</b>. Scegli quanto va veloce la macchinina e guarda quanto tempo ci mette. La velocità si misura in <b>metri al secondo</b> (m/s): a 5 m/s fa 5 metri ogni secondo.',
+        'La macchinina percorre sempre <b>60 m</b>. La velocità è in <b>metri al secondo</b> (m/s): a 5 m/s fa 5 metri ogni secondo. Cambiala e misura il tempo: sul grafico, velocità in orizzontale e tempo in verticale.',
+        'Percorso fisso di 60 m, velocità a scelta in metri al secondo (m/s): quanti metri fa ogni secondo. Che legame c’è fra velocità e tempo impiegato?'),
       steps: [
         { kind: 'free', runs: 3, text: T('Fai almeno <b>tre corse</b> a velocità diverse.', 'Fai almeno tre corse a velocità diverse.') },
         {
@@ -110,7 +122,7 @@ export default {
       intro: T(
         'La macchinina arriva alla linea rossa e frena. Quanta strada fa prima di fermarsi? Prima indovina, poi guarda!',
         'Un’auto frena sempre con la stessa forza. Lo <b>spazio di frenata</b> dipende dalla velocità: ma come?',
-        'Decelerazione costante (7 m/s²). Come dipende lo spazio di frenata dalla velocità iniziale?'),
+        'L’auto frena sempre allo stesso modo, a qualunque velocità stia andando. Come cambia lo spazio di frenata quando la velocità aumenta?'),
       steps: [
         {
           kind: 'q', predict: [{ x: 10 }, { x: 20 }],
@@ -189,9 +201,17 @@ export default {
           kind: 'q', only: ['s', 'c'],
           text: T('Due grandezze sono legate così: quando una diventa il triplo, anche l’altra diventa il triplo; quando una si dimezza, si dimezza anche l’altra. Nel Laboratorio hai visto tre tipi di legame: diretto, inverso e quadratico. Quale è questo?'),
           options: [T('Diretta'), T('Inversa'), T('Quadratica')],
-          answer: 0, explain: T('Giusto: rapporto costante, proporzionalità diretta. Con un legame quadratico triplicherebbe 9 volte.'),
+          answer: 0, explain: T('Giusto: rapporto costante, proporzionalità diretta. Con un legame quadratico diventerebbe 9 volte più grande.'),
         },
-        { kind: 'num', rounds: 1, text: T('Un’ultima misura.', 'Un’ultima misura.'), gen: (lens) => media3(lens) },
+        {
+          // Un calcolo sulle proporzioni. La media si spiega nel boss, subito dopo, e torna nel ripasso della Pista (m01-5).
+          kind: 'num', rounds: 1, text: T('Un ultimo conto.', 'Un ultimo calcolo.'),
+          vals: { t: [6, 12], k: [2, 3], n: [2, 3] }, derive: { m: 'n * k' },
+          calc: { e: 't * k', s: 't / k' }, unit: T('bicchieri', 'min'), tol: { e: 0, s: 0.01 },
+          ask: T('Per riempire un secchio servono <b>{t} bicchieri</b> d’acqua. Quanti bicchieri servono per riempire <b>{k} secchi</b> uguali?',
+            'Per riempire la vasca grande, <b>{n} rubinetti</b> uguali ci mettono <b>{t} minuti</b>. Rubinetti e tempo sono inversamente proporzionali. Quanti minuti servono con <b>{m} rubinetti</b>?'),
+          explain: T('Giusto: {k} volte i secchi, {k} volte i bicchieri: {ans}.', 'Esatto: i rubinetti sono {k} volte tanti, quindi il tempo si divide per {k}: {ans} minuti.'),
+        },
       ],
       hints: [T('Ripensa al rubinetto, alla gara e alla frenata.')],
     },
@@ -203,7 +223,11 @@ export default {
         'Sono Vetrino. Si sente dire: <i>“Una misura fatta bene dà sempre lo stesso risultato. Se due misure differiscono, una è sbagliata”</i>. Ora l’<b>errore di misura</b> è acceso: misuriamo come in un vero laboratorio.',
         'Sono Vetrino. Il mito: <i>“Una misura accurata è sempre identica; misure diverse significano errori grossolani”</i>. Con l’errore di misura acceso, mettiamolo alla prova.'),
       steps: [
-        { kind: 'free', runs: 3, text: T('Apri il rubinetto per 6 secondi, <b>tre volte</b>. Guarda i numeri che escono.', 'Ripeti la stessa misura (6 s) tre volte e confronta i risultati.') },
+        {
+          kind: 'free', runs: 3, text: T('Apri il rubinetto per 6 secondi, <b>tre volte</b>. Guarda i numeri che escono.', 'Ripeti la stessa misura (6 s) tre volte e confronta i risultati.'),
+          // le misure fatte restano scritte in fila: sul grafico i tre punti sono troppo vicini per leggerli
+          onRun: (r) => t('Le tue misure finora: <b>{l}</b>.', { l: r.ys.map((y) => num(y, 2) + ' L').join(' · ') }),
+        },
         {
           kind: 'q',
           text: T('Hai aperto il rubinetto tre volte, sempre per 6 secondi, ma i litri raccolti non sono proprio uguali: cambiano di poco. Che cosa vuol dire?', 'Hai ripetuto la stessa misura tre volte, nelle stesse condizioni, e hai ottenuto valori leggermente diversi. Nessuno ha sbagliato apposta. Perché succede?'),
@@ -223,14 +247,14 @@ export default {
           kind: 'q',
           text: T('Le tre misure sono un po’ diverse, e non sai quale sia «quella giusta». Ma c’è un modo per mettere insieme le misure e ottenere un numero di cui fidarti di più. Come fai?', 'Ogni misura ha un piccolo errore casuale, a volte in più e a volte in meno. Come puoi usare più misure insieme per ottenere un valore affidabile?'),
           options: [
-            T('Faccio tante misure e calcolo la media', 'Ripeti la misura e calcoli la media', 'Molte misure e la loro media: l’errore della media si riduce'),
+            T('Faccio tante misure e prendo il numero in mezzo', 'Ripeti la misura e calcoli la media', 'Molte misure e la loro media: l’errore della media si riduce'),
             T('Tengo la misura più grande', 'Tieni il valore più grande', 'Tieni il valore massimo'),
             T('Tengo solo la prima', 'Tieni solo la prima misura', 'Una sola misura molto attenta basta'),
           ],
           answer: 0,
-          explain: T('Giusto: gli errori un po’ in su e un po’ in giù si compensano. Ecco come si batte il mito!', 'Giusto: nella media gli errori in eccesso e in difetto si compensano.', 'Giusto: con N misure l’incertezza della media scende come 1/√N.'),
+          explain: T('Giusto: gli errori un po’ in su e un po’ in giù si compensano. Il numero in mezzo si chiama <b>media</b>.', 'Giusto: nella media gli errori in eccesso e in difetto si compensano.', 'Giusto: con N misure l’incertezza della media scende come 1/√N.'),
         },
-        { kind: 'num', rounds: 1, text: T('Calcola la media.', 'Calcola la media.'), gen: (lens) => media3(lens) },
+        { kind: 'num', rounds: 1, text: T('Trova il numero in mezzo.', 'Calcola la media delle tue misure.'), gen: (lens, r, sim) => mediaTue(lens, sim) },
         {
           kind: 'q', set: { fit: true },
           text: T('Il mito diceva: «se due misure sono diverse, vuol dire che una è sbagliata». Ripensa a quello che è successo con le tue tre misure del rubinetto. È vero?', 'Il mito diceva che una misura fatta bene dà sempre lo stesso risultato, e che se due misure differiscono una è sbagliata. Dopo le tue misure ripetute e la media, che cosa concludi?'),

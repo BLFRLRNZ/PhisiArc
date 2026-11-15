@@ -4,13 +4,16 @@ import { t } from '../i18n.js';
 
 const conv = (lens, r) => {
   if (lens === 'e') {
-    const kind = r === 0 ? 'treno' : 'ruota';
-    if (kind === 'treno') {
+    if (r === 0) {
       const n = pick([3, 4, 5, 6, 7]);
       return { text: t('Il trenino del parco ha <b>{n} vagoni</b>, e ogni vagone è lungo <b>2 metri</b>. Quanto è lungo tutto il trenino?', { n }), ans: n * 2, tol: 0, unit: t('metri'), explain: t('Giusto: {n} volte 2 fa {a} metri.', { n, a: n * 2 }) };
     }
-    const m = pick([2, 3, 4, 5]);
-    return { text: t('Un giro sulla ruota panoramica dura <b>{m} minuti</b>. Un minuto ha 60 secondi. Quanti secondi dura il giro?', { m }), ans: m * 60, tol: 0, unit: t('secondi'), explain: t('Giusto: {m} × 60 = {a} secondi.', { m, a: m * 60 }) };
+    if (r === 1) {
+      const m = pick([2, 3, 4, 5]);
+      return { text: t('Un giro sulla ruota panoramica dura <b>{m} minuti</b>. Un minuto ha 60 secondi. Quanti secondi dura il giro?', { m }), ans: m * 60, tol: 0, unit: t('secondi'), explain: t('Giusto: {m} × 60 = {a} secondi.', { m, a: m * 60 }) };
+    }
+    const g = pick([3, 4, 5]);
+    return { text: t('Lo scivolo del parco è alto <b>{g} metri</b>. Un metro sono 100 centimetri. Quanti centimetri è alto?', { g }), ans: g * 100, tol: 0, unit: t('centimetri'), explain: t('Giusto: {g} × 100 = {a} centimetri.', { g, a: g * 100 }) };
   }
   const opts = [
     () => { const v = pick([35, 42, 48, 55, 63]); return { text: t('La montagna russa è alta <b>{k:3} km</b>. Quanti metri sono?', { k: v / 1000 }), ans: v, tol: 0.01, unit: 'm', explain: t('1 km = 1000 m, quindi {k:3} × 1000 = {v} m.', { k: v / 1000, v }) }; },
@@ -138,7 +141,7 @@ export default {
           explain: T('Dieci milioni! Il granello è un gigante per un atomo.', '10⁻³ / 10⁻¹⁰ = 10⁷: dieci milioni di volte.'),
         },
         {
-          kind: 'q', text: T('Il bambino del mito diceva che un atomo è appena un po’ più piccolo di un granello di sabbia, quasi abbastanza grande da vederlo. Dopo quello che hai scoperto, aveva ragione?', 'Il mito dice che un atomo è «quasi visibile», appena più piccolo di un granello di sabbia. Un granello misura circa 10⁻⁴ m, un atomo circa 10⁻¹⁰ m: confronta i due ordini di grandezza. Il mito è vero?'),
+          kind: 'q', text: T('Il bambino del mito diceva che un atomo è appena un po’ più piccolo di un granello di sabbia, quasi abbastanza grande da vederlo. Dopo quello che hai scoperto, aveva ragione?', 'Il mito dice che un atomo è «quasi visibile», appena più piccolo di un granello di sabbia. Un granello misura circa 10⁻³ m, un atomo circa 10⁻¹⁰ m: confronta i due ordini di grandezza. Il mito è vero?'),
           options: [T('Sì: sono tutti e due piccolissimi', 'Sì, la differenza è piccola'), T('No: l’atomo è molto, molto più piccolo', 'No: 7 ordini di grandezza di differenza'), T('Quasi: l’atomo è la metà', 'Quasi: al massimo un fattore 10 o 20')], answer: 1,
           explain: T('Mito smontato! Gli atomi sono così piccoli che non si vedono nemmeno col microscopio normale.', 'Mito smontato: 7 ordini di grandezza. Se un atomo fosse grande come un granello, il granello sarebbe lungo 10 km!'),
         },

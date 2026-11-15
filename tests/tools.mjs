@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 let pw;
 try { pw = await import('playwright'); } catch { pw = createRequire(import.meta.url)('playwright'); }
 const BASE = process.argv[2] || 'http://localhost:8765';
-const b = await pw.chromium.launch();
+const b = await pw.chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
 const p = await b.newPage();
 const errs = [];
 p.on('pageerror', (e) => errs.push(e.message));

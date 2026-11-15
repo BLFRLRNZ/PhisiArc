@@ -71,7 +71,7 @@ export default {
           kind: 'num', rounds: 2, text: T('Calcola la velocità del seggiolino.', 'Calcola la velocità.'),
           gen: (lens) => {
             if (lens === 'e') {
-              const c = pick([24, 30, 36]), t = pick([4, 6]);
+              const [c, t] = pick([[24, 4], [24, 6], [30, 5], [30, 6], [36, 4], [36, 6]]); // solo divisioni senza virgola
               return { text: tr('In un giro completo il seggiolino percorre tutto il cerchio, lungo <b>{c} metri</b>, e ci mette <b>{t} secondi</b>. Come per le macchinine, la velocità è la strada divisa per il tempo. Quanti metri fa ogni secondo?', { c, t }), ans: c / t, tol: 0.01, unit: 'm/s', explain: tr('Giusto: {c} diviso {t} fa {v:1}.', { c, t, v: c / t }) };
             }
             const r = pick([3, 4, 5, 6]), t = pick([4, 5, 6, 8]), v = (2 * Math.PI * r) / t;
@@ -147,9 +147,9 @@ export default {
         },
         {
           kind: 'q',
-          text: T('Ricordi la barca sul fiume? Due frecce che formano un angolo retto si sommano mettendole punta contro coda, e la somma è la diagonale. Una freccia è lunga 3, l’altra 4. Quanto è lunga la freccia somma?', 'Due velocità perpendicolari, 3 m/s e 4 m/s, agiscono insieme, come barca e corrente. La velocità totale è la diagonale, e la si trova con Pitagora. Quanto vale?'),
-          options: [T('5'), T('7'), T('1')], answer: 0, keepOrder: true,
-          explain: T('Giusto: è il triangolo 3-4-5, come per la barca sul fiume.', 'Giusto: √(9 + 16) = 5 m/s.'),
+          text: T('Ricordi la barca sul fiume? La barca punta dritta verso l’altra riva, ma la corrente la spinge di lato. Dove va davvero la barca?', 'Due velocità perpendicolari, 3 m/s e 4 m/s, agiscono insieme, come barca e corrente. La velocità totale è la diagonale, e la si trova con Pitagora. Quanto vale?'),
+          options: [T('In diagonale', '5 m/s'), T('Dritta, come punta', '7 m/s'), T('Solo di lato, con l’acqua', '1 m/s')], answer: 0,
+          explain: T('Giusto: le due spinte si sommano, e la barca va in diagonale.', 'Giusto: √(9 + 16) = 5 m/s.'),
         },
         {
           kind: 'num', rounds: 1, text: T('Un calcolo veloce.', 'Un calcolo veloce.'),

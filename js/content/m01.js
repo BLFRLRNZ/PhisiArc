@@ -26,13 +26,13 @@ export default {
           // km/h e m/s: si spiega qui, così il Ripasso può chiederlo.
           kind: 'q',
           text: T(
-            'Le auto vere usano i <b>km/h</b>, chilometri all’ora. Un trucco: per passare ai metri al secondo si divide per <b>3,6</b>. Così 36 km/h fanno 10 m/s. Quanto fa <b>18 km/h</b>?',
+            'Le auto vere usano i <b>km/h</b>, chilometri all’ora: dicono quanti chilometri fai in un’ora. Un’auto va a 50 km/h, una bici a 15 km/h. In un’ora, chi va più lontano?',
             'In un’ora ci sono 3600 s e in un km 1000 m, quindi 1 m/s = 3,6 km/h: da km/h a m/s si <b>divide per 3,6</b>. Quanto fa <b>18 km/h</b> in m/s?',
             'Il tachimetro segna km/h, la fisica usa m/s. Un’ora ha 3600 s e un km 1000 m: 1 m/s = 3,6 km/h. Una bici a <b>18 km/h</b> va a…'),
-          options: [T('5 m/s', '5 m/s', '5 m/s'), T('18 m/s', '18 m/s', '18 m/s'), T('65 m/s', '64,8 m/s', 'circa 65 m/s')],
+          options: [T('L’auto', '5 m/s'), T('La bici', '18 m/s'), T('Fanno la stessa strada', '64,8 m/s', 'circa 65 m/s')],
           answer: 0,
-          wrong: T('Dividi per 3,6, non moltiplicare.', 'Da km/h a m/s si divide per 3,6.'),
-          explain: T('Giusto: 18 ÷ 3,6 = 5. La bici fa 5 metri ogni secondo.', '18 / 3,6 = 5 m/s. Al contrario, da m/s a km/h si moltiplica per 3,6.', '18 ÷ 3,6 = 5 m/s: cinque metri ogni secondo.'),
+          wrong: T('Guarda i numeri: 50 chilometri in un’ora, oppure 15?', 'Da km/h a m/s si divide per 3,6.'),
+          explain: T('Giusto: in un’ora l’auto fa 50 chilometri, la bici solo 15.', '18 / 3,6 = 5 m/s. Al contrario, da m/s a km/h si moltiplica per 3,6.', '18 ÷ 3,6 = 5 m/s: cinque metri ogni secondo.'),
         },
       ],
       hints: [T('Fai la gara con 5 e 10 e guarda chi tocca la bandiera prima.', 'Dividi lo spazio per la velocità.')],
@@ -54,7 +54,7 @@ export default {
         },
         {
           kind: 'q', only: ['s', 'c'], text: 'Immagina che a un certo punto la linea di una macchina diventi orizzontale: il tempo passa, ma la posizione resta sempre la stessa. Che cosa sta facendo la macchina?',
-          options: ['Va velocissimo', 'È fermo', 'Torna indietro'], answer: 1, explain: 'Il tempo passa ma la posizione non cambia: è fermo.',
+          options: ['Va velocissima', 'È ferma', 'Torna indietro'], answer: 1, explain: 'Il tempo passa ma la posizione non cambia: è ferma.',
         },
       ],
       hints: [T('Guarda quale linea arriva prima in alto.')],
@@ -67,7 +67,7 @@ export default {
       steps: [
         {
           kind: 'q',
-          text: T('La blu va a 4 m/s, l’arancione a 8 m/s, il doppio. Partono insieme. Nello stesso tempo, la blu fa sempre la metà della strada dell’arancione. Quando l’arancione arriva al traguardo, a 100 m, dove si trova la blu?', 'Blu a 4 m/s, arancione a 8 m/s, stessa partenza. L’arancione arriva ai 100 m dopo un certo tempo: in quello stesso tempo, quanta strada ha fatto la blu? A che posizione si trova?'),
+          text: T('La blu va a 4 m/s, l’arancione a 8 m/s: il doppio. Partono insieme. Quando l’arancione arriva al traguardo, a 100 m, dove si trova la blu?', 'Blu a 4 m/s, arancione a 8 m/s, stessa partenza. L’arancione arriva ai 100 m dopo un certo tempo: in quello stesso tempo, quanta strada ha fatto la blu? A che posizione si trova?'),
           options: [T('All’inizio, a 25 m', 'a 25 m'), T('A metà, a 50 m', 'a 50 m'), T('Quasi alla fine, a 75 m', 'a 75 m')], answer: 1,
           predict: [{ v1: 4, v2: 8 }],
           explain: T('A metà! Va a metà velocità, quindi nello stesso tempo fa metà strada.', 'L’arancione arriva in 100/8 = 12,5 s. In 12,5 s la blu fa 4 × 12,5 = 50 m. Metà velocità, metà strada.'),
@@ -76,8 +76,8 @@ export default {
           // velocità relativa: chi insegue recupera ogni secondo la differenza delle velocità
           kind: 'q',
           text: T(
-            'Ora un inseguimento! La blu va a <b>10 m/s</b>, l’arancione a <b>6 m/s</b>, ma parte con <b>20 metri di vantaggio</b>. Ogni secondo la blu recupera 4 metri, perché va 4 m/s più forte. Dopo quanti secondi la raggiunge?',
-            'Inseguimento: la blu parte da 0 m a 10 m/s, l’arancione da 20 m a 6 m/s. La distanza fra le due cala di 4 m ogni secondo, cioè la differenza fra le velocità. Dopo quanto tempo la blu la raggiunge?',
+            'Ora un inseguimento! La blu va a <b>10 m/s</b>, l’arancione a <b>6 m/s</b>, ma parte con <b>20 metri di vantaggio</b>. Dopo quanti secondi la blu la raggiunge?',
+            'Inseguimento: la blu parte da 0 m a 10 m/s, l’arancione da 20 m a 6 m/s. A ogni secondo la distanza fra le due si accorcia. Dopo quanto tempo la blu la raggiunge?',
             'Blu a 10 m/s da 0 m, arancione a 6 m/s da 20 m. Nel grafico spazio-tempo il sorpasso è il punto in cui le due rette si incrociano. A che istante avviene?'),
           options: [T('Dopo 2 secondi', 'Dopo 2 s', 'Dopo 2 s'), T('Dopo 5 secondi', 'Dopo 5 s', 'Dopo 5 s'), T('Dopo 10 secondi', 'Dopo 10 s', 'Dopo 10 s')], answer: 1,
           predict: [{ v1: 10, v2: 6, x2: 20 }],
@@ -85,9 +85,11 @@ export default {
             'Dopo 5 secondi: ogni secondo la blu recupera 4 metri (10 meno 6), e 20 metri si recuperano in 5 secondi. Sul grafico è dove le linee si incrociano.',
             'Dopo 5 s. Vista dall’arancione, la blu si avvicina a 10 − 6 = 4 m/s: è la <b>velocità relativa</b>. 20 m / 4 m/s = 5 s. Sul grafico, le rette si incrociano lì.',
             'Dopo 5 s: la <b>velocità relativa</b> è 10 − 6 = 4 m/s, e 20 m / 4 m/s = 5 s, a 50 m dalla partenza. Le rette x(t) si incrociano proprio lì.'),
+          hints: [T('Quanti metri recupera la blu ogni secondo?', 'Ogni secondo la distanza cala della differenza fra le due velocità.')],
+          solution: T('Dopo 5 secondi: la blu recupera 4 metri al secondo, e 20 diviso 4 fa 5.', 'Dopo 5 s: 20 m / (10 − 6) m/s.'),
         },
       ],
-      hints: [T('Una va il doppio dell’altra. Nell’inseguimento: quanti metri recupera la blu ogni secondo?', 'Calcola prima il tempo dell’arancione. Nell’inseguimento usa la differenza delle velocità.')],
+      hints: [T('Una va il doppio dell’altra.', 'Calcola prima il tempo dell’arancione: 100 m a 8 m/s.')],
       solution: T('A metà, 50 m.'),
     },
     {
@@ -121,6 +123,15 @@ export default {
         // Valori nuovi a ogni partita: si ripassa la regola, non la risposta.
         { kind: 'num', only: ['s', 'c'], rounds: 1, text: 'Da km/h a m/s.', gen: () => { const k = pick([18, 36, 54, 72, 90, 108]); return { text: tr('Il tachimetro di un’auto segna <b>{k} km/h</b>. In fisica si usano i metri al secondo, e per passare da km/h a m/s si divide per 3,6. A quanti m/s va l’auto?', { k }), ans: k / 3.6, tol: 0.01, unit: 'm/s', explain: tr('Giusto: {k} ÷ 3,6 = {v} m/s.', { k, v: Math.round(k / 3.6) }) }; } },
         { kind: 'q', text: T('Due amici corrono su percorsi diversi e vuoi sapere chi è il più veloce. Non basta guardare chi arriva prima, perché le strade non sono uguali. Che cosa devi misurare?', 'Due oggetti si muovono su percorsi diversi, per tempi diversi. Per confrontare le loro velocità, quali grandezze devi misurare per ciascuno?'), options: [T('Spazio e tempo', 'Spazio e tempo'), T('Solo la strada', 'Solo la massa'), T('Solo il tempo', 'Solo la forma')], answer: 0, explain: T('Proprio così: due misure insieme.', 'Esatto: la velocità è un rapporto tra due misure.') },
+        {
+          // Ponte con il Laboratorio: la media (spiegata nel boss f03-6) torna qui, a qualche livello di distanza.
+          kind: 'num', rounds: 1, text: T('Una misura, come nel Laboratorio.', 'Un ponte con il Laboratorio: la media.'),
+          vals: { e: { m: [8, 10, 12], d: [1, 2] }, s: { m: [9.8, 10.4, 12.5], d: [0.2, 0.3] } }, derive: { a: 'm - d', b: 'm + d' },
+          calc: 'm', unit: 's', tol: { e: 0, s: 0.01 },
+          ask: T('Hai cronometrato la stessa gara tre volte: <b>{a} s</b>, <b>{m} s</b> e <b>{b} s</b>. Le misure non escono mai uguali: di quale numero ti fidi di più? Scrivi quello <b>in mezzo</b>.',
+            'Hai cronometrato la stessa gara tre volte: <b>{b} s</b>, <b>{a} s</b> e <b>{m} s</b>. Come nel Laboratorio, il valore migliore è la media delle tre misure. Quanto vale?'),
+          explain: T('Giusto: {m} s sta in mezzo, è la media.', 'Esatto: ({b} + {a} + {m}) / 3 = {ans} s.'),
+        },
       ],
       hints: [T('Ripensa alla gara e al suo grafico.')],
     },

@@ -150,7 +150,7 @@ function world(id) {
     const z = ZONES[zid], open = zoneOpen(zid);
     const lv = z.levels.map((l) => {
       const ok = levelOpen(l.id), st = S.done[l.id] || 0;
-      const inner = [h('span', { class: 'lk k-' + l.kind, title: KIND[l.kind].name, html: KIND[l.kind].ic }), h('span', { class: 'ln' }, l.title),
+      const inner = [h('span', { class: 'lk k-' + l.kind, title: KIND[l.kind].name, html: KIND[l.kind].ic }), h('span', { class: 'ln' }, tx(l.title, S.lens)),
         h('span', { class: 'lst' }, st ? h('span', {}, '★'.repeat(st), h('span', { class: 'off' }, '★'.repeat(3 - st))) : ok ? tr('nuovo') : h('span', { html: IC.lock }))];
       return ok ? h('a', { class: 'lvl-item' + (st ? ' done' : ' next'), href: `#/livello/${l.id}` }, inner) : h('div', { class: 'lvl-item locked' }, inner);
     });

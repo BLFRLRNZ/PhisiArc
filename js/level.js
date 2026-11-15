@@ -34,7 +34,7 @@ export function runLevel(root, level, nav) {
   const hintBtn = h('button', { class: 'btn ghost hint-btn', onclick: () => showHint() }, h('span', { html: IC.hint }), tr('Aiuto'));
   const dots = h('div', { class: 'dots' });
   const head = h('header', { class: 'lvl-head' }, back, h('div', { class: 'lvl-title' },
-    h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', (level.exam ? tr('Prova') : KIND[level.kind].name)), h('strong', {}, level.title)), dots, hintBtn);
+    h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', (level.exam ? tr('Prova') : KIND[level.kind].name)), h('strong', {}, tx(level.title, lens))), dots, hintBtn);
 
   const boss = level.kind === 'boss';
   const who = CAST[boss ? 'vetrino' : world.mascot];
@@ -79,7 +79,21 @@ export function runLevel(root, level, nav) {
   };
 
   root.style.setProperty('--c', world.color);
-  root.replaceChildren(head, h('main', { class: 'lvl' + (SimClass ? '' : ' nosim') }, textPane, simPane));
+  const main = h('main', { class: 'lvl' + (SimClass ? '' : ' nosim') }, textPane, simPane);
+  root.replaceChildren(head, main);
+  // Sul telefono la pagina è in colonna. Nei passi con una risposta da dare (domande, calcoli, ordini) le risposte
+  // stanno subito sotto la domanda e la simulazione viene dopo (vedi .lvl.ask nel CSS); quando il passo cambia,
+  // la domanda sale in cima allo schermo: così domanda e risposte si vedono insieme, senza scorrere.
+  const ASK = ['q', 'num', 'vars', 'order'];
+  const stacked = () => getComputedStyle(textPane).display === 'contents';
+  const toQuest = () => {
+    if (!stacked() || quest.hidden) return;
+    // posizione nella pagina presa dall'impaginazione, non dal rettangolo sullo schermo: la domanda entra con un'animazione
+    let top = 0;
+    for (let e = quest; e; e = e.offsetParent) top += e.offsetTop;
+    const y = top - head.offsetHeight - 10 - window.scrollY;
+    if (Math.abs(y) > 6) window.scrollBy({ top: y, behavior: 'smooth' });
+  };
 
   if (SimClass) {
     sim = new SimClass(canvas, { ...(level.params || {}) });
@@ -189,6 +203,7 @@ export function runLevel(root, level, nav) {
     slipsAt = slips();
     autoSol = null;
     quest.classList.remove('enter'); void quest.offsetWidth; quest.classList.add('enter');
+    main.classList.toggle('ask', ASK.includes(st.kind));
     drawDots();
     // dal secondo passo in poi il fuoco va alla nuova domanda, così chi usa tastiera o lettore di schermo non si perde
     if (si > 0) quest.focus({ preventScroll: true });
@@ -208,6 +223,7 @@ export function runLevel(root, level, nav) {
     setLaunch(!locked);
     testSolve = null;
     ({ q: stepQ, free: stepFree, run: stepRun, tune: stepTune, num: stepNum, order: stepOrder, vars: stepVars })[st.kind](st);
+    if (si > 0) requestAnimationFrame(toQuest);
     if (voiceOn()) speak(readOut(si === 0));
   }
 
@@ -235,6 +251,7 @@ export function runLevel(root, level, nav) {
         const head = i === st.answer ? '<b>Previsione giusta!</b> ' : '<b>La previsione era diversa, ed è normale: gli scienziati imparano proprio così.</b> ';
         after.replaceChildren(say(head + tx(st.explain, lens), i === st.answer ? 'good' : 'warn'), nextBtn());
         setLaunch(true);
+        toQuest(); // sul telefono l'esperimento è più in basso: si torna alla domanda, dove ora c'è la spiegazione
         return;
       }
       if (i === st.answer) {
@@ -325,7 +342,7 @@ export function runLevel(root, level, nav) {
     inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') check(); });
     area.append(qn, h('div', { class: 'numrow' }, inp, unit, ok), fb);
     const next = () => {
-      cur = st.gen(lens, r);
+      cur = st.gen(lens, r, sim); // la simulazione serve alle domande che usano le misure appena fatte
       autoSol = () => (cur.explain ? String(cur.explain).replace(/^(Giusto|Esatto|Perfetto)[:!.]?\s*/i, '') : tr('Il risultato è {v} {u}.', { v: cur.ans, u: cur.unit || '' }));
       qn.innerHTML = `<span class="round">${tr('Domanda {n} di {tot}', { n: r + 1, tot: rounds })}</span> ${cur.text}`;
       unit.textContent = cur.unit || '';
@@ -529,7 +546,7 @@ export function runLevel(root, level, nav) {
       h('h2', {}, ok ? tr('Prova superata!') : tr('Non ancora')),
       h('p', {}, ok
         ? (nw ? (nwOpen ? tr('{w} è superato. Si apre {n}.', { w: world.name, n: nw.name }) : tr('{w} è superato. {n} è in costruzione, arriva presto.', { w: world.name, n: nw.name })) : tr('{w} è superato.', { w: world.name }))
-        : (errors === 1 ? tr('1 errore') : tr('{n} errori', { n: errors })) + (hints || solution ? tr(' e qualche aiuto') : '') + tr(': ne servono al massimo {m}, senza aiuti. Gioca i livelli di {w}: poi potrai riprovare.', { m: EXAM_MAX_ERRORS, w: world.name })),
+        : (errors === 1 ? tr('1 errore') : tr('{n} errori', { n: errors })) + (hints || solution ? tr(' e qualche aiuto') : '') + tr(': ne servono al massimo {m}, senza aiuti. Gioca i livelli di questo mondo: poi potrai riprovare.', { m: EXAM_MAX_ERRORS })),
       h('div', { class: 'row' },
         h('button', { class: 'btn', onclick: () => leave() }, world.name),
         nwOpen ? h('button', { class: 'btn primary', onclick: () => nav('#/mondo/' + nw.id) }, `${nw.name} →`) : null)));

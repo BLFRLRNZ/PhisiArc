@@ -37,7 +37,7 @@ export default {
           },
         },
       ],
-      hints: [T('Guarda le tre frecce sulla barca: arancione, azzurra e bianca.', 'Metti la freccia azzurra in coda all’arancione: dove arriva la punta?'), T('Le frecce sono a squadra: serve Pitagora.', 'v = √(v_barca² + v_corrente²).')],
+      hints: [T('Guarda le tre frecce sulla barca: arancione, azzurra e bianca.', 'Metti la freccia azzurra in coda all’arancione: dove arriva la punta?'), T('Segui la freccia bianca: la barca va dove punta lei.', 'v = √(v_barca² + v_corrente²).')],
       solution: T('Arriva più in là del pontile: la corrente la porta di lato.', 'In diagonale: la velocità vera è la somma vettoriale. Con frecce perpendicolari, v = √(a² + b²).'),
     },
     {
@@ -83,7 +83,7 @@ export default {
         { kind: 'free', runs: 2, text: T('Fai almeno due lanci, cambiando qualcosa.', 'Fai almeno due lanci con valori diversi. Le traiettorie precedenti restano in grigio.') },
         {
           kind: 'q',
-          text: T('Hai sparato qualche palla e ognuna ha lasciato una scia nel cielo: sale, arriva in cima e scende. Guarda la scia dalla partenza all’arrivo. Che forma disegna?', 'La <b>traiettoria</b> è la linea che la palla disegna nell’aria durante il volo. Guarda le scie dei tuoi lanci, anche quelle grigie dei lanci di prima. Che forma ha la traiettoria?', 'Trascurando l’aria, la palla si muove a velocità costante in orizzontale e con accelerazione g in verticale. Che curva viene fuori combinando i due moti?'),
+          text: T('Hai sparato qualche palla e ognuna ha lasciato una scia nel cielo: sale, arriva in cima e scende. Guarda la scia dalla partenza all’arrivo. Che forma disegna?', 'La <b>traiettoria</b> è la linea che la palla disegna nell’aria durante il volo. Guarda le scie dei tuoi lanci, anche quelle grigie dei lanci di prima. Che forma ha la traiettoria?', 'Lo zampillo di una fontana, un pallone calciato, la palla del cannone: segui la scia dalla partenza all’arrivo. Che curva disegnano tutti?'),
           options: [
             T('Una linea dritta in diagonale', 'Una retta'),
             T('Un pezzo di cerchio', 'Un arco di circonferenza'),
@@ -101,7 +101,7 @@ export default {
       solution: T('Una curva come un ponte.', 'Una parabola.'),
     },
     {
-      id: 'm03-2', kind: 'lezione', title: 'Due moti in uno',
+      id: 'm03-2', kind: 'lezione', title: T('Più forte, più lontano', 'Due moti in uno'),
       sim: 'cannon', params: { ang: 45, v: 20, xmax: 100 }, controls: ['ang', 'v'],
       intro: T(
         'Cosa succede se spari <b>più forte</b>? Proviamo!',
@@ -162,7 +162,7 @@ export default {
         },
         {
           kind: 'q', only: ['s', 'c'], clear: true,
-          text: T(null, 'Ora due lanci alla stessa velocità, 25 m/s: uno a 30°, più basso, e uno a 60°, più alto. Nota che 30 e 60 sommati fanno 90. Prevedi: dove atterrano le due palle?', 'Due lanci alla stessa velocità, a 30° e a 60°: angoli complementari, che sommati fanno 90°. Pensa alla formula della gittata. Dove atterrano?'),
+          text: T(null, 'Ora due lanci alla stessa velocità, 25 m/s: uno a 30°, più basso, e uno a 60°, più alto. Nota che 30 e 60 sommati fanno 90. Prevedi: dove atterrano le due palle?', 'Due lanci alla stessa velocità: uno teso, a 30°, e uno a campanile, a 60°. Il primo corre di più in avanti, il secondo resta in aria più a lungo. Dove atterrano?'),
           options: ['30° va più lontano', 'Atterrano nello stesso punto', '60° va più lontano'],
           answer: 1,
           predict: [{ ang: 30, v: 25 }, { ang: 60, v: 25 }],

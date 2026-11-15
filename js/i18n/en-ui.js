@@ -143,7 +143,6 @@ export default {
  "1 errore": "1 mistake",
  "{n} errori": "{n} mistakes",
  " e qualche aiuto": " and some help",
- ": ne servono al massimo {m}, senza aiuti. Gioca i livelli di {w}: poi potrai riprovare.": ": you need at most {m}, with no help. Play the levels of {w}: then you can try again.",
  "Ripasso fatto!": "Review done!",
  "{a} su {n} al primo colpo. Quelle sicure tornano fra qualche giorno, le altre già domani.": "{a} of {n} right first time. The ones you’re sure of come back in a few days, the others tomorrow.",
  "Ti ricordi? Ecco qualche domanda dei livelli che hai già finito. Quelle che sai tornano più avanti, le altre tornano presto.": "Remember? Here are some questions from levels you’ve already finished. The ones you know come back later, the others come back soon.",
@@ -350,4 +349,5 @@ export default {
   'Prova': 'Test',
   'Non sei {p}?': 'Not {p}?',
   'Codice copiato: incollalo dove vuoi conservarlo.': 'Code copied: paste it wherever you want to keep it.',
+ ": ne servono al massimo {m}, senza aiuti. Gioca i livelli di questo mondo: poi potrai riprovare.": ": you need at most {m}, with no help. Play the levels of this world: then you can try again.",
 };
