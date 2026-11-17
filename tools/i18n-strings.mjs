@@ -14,7 +14,7 @@ const EN = (await import(join(root, 'js/i18n/en.js'))).default;
 const C = await import(join(root, 'js/content/index.js'));
 const { CAST } = await import(join(root, 'js/cast.js'));
 
-const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try']);
+const SKIP = new Set(['id', 'kind', 'sim', 'film', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try']);
 const isLens = (o) => o && typeof o === 'object' && !Array.isArray(o) && 'e' in o && 's' in o;
 const wordy = (s) => /[A-Za-zÀ-ÿ]{2,}/.test(s.replace(/<[^>]+>/g, '')) && !/^(m\/s|km\/h|m\/s²|rad\/s|cm|mm|km|kg|Hz)$/.test(s);
 function walk(o, out, seen = new Set()) {

@@ -22,6 +22,19 @@ Ogni lente ha la sua voce, e `node tools/check-lenti.mjs` controlla che la mante
   Fuori dal riquadro la stessa idea va detta a parole. I passi di calcolo hanno il tasto **«Salta il calcolo»** (mostra la risposta,
   non costa stelle), e per questa lente i calcoli non entrano nella prova d'ingresso né nel ripasso del giorno.
 
+## Il film della lezione
+
+Una lezione che porta un'idea nuova può cominciare con un piccolo film (dall'Officina in poi tutte lo fanno): basta scrivere
+`film: 'forza'` nel livello, con il nome di un film di `js/lessonfilm.js`. La prima volta il film sta in cima alla lezione,
+parte quando si vede e la domanda aspetta il tasto «Comincia»; dopo, nel fumetto della mascotte, resta il bottone «Rivedi il film».
+
+I film delle lezioni si scrivono come quelli della cassetta degli attrezzi (vedi in fondo), con una regola in più: li vedono
+tutte e tre le lenti, e all'Esploratore non si mostrano lettere né formule. Nel film si chiede `formulas()` (da `toonkit.js`)
+prima di disegnare le lettere sullo schermo: per l'Esploratore resta il film, con le frecce, i segni e i numeri interi.
+Gli oggetti che tornano nei film dell'Officina (il carrello, i pavimenti, il paraurti, le frecce delle forze, la molla, i blocchi)
+sono in `js/films/props.js`. `tests/films.mjs` controlla che ogni film duri circa un minuto, disegni dall'inizio alla fine
+e che la mano dell'omino arrivi sempre agli oggetti che tocca.
+
 ## I passi
 
 | Tipo | Che cosa fa | Cosa si scrive |
@@ -81,6 +94,7 @@ Lo svolgimento (`explain`) è anche quello che legge chi, con la lente Curioso, 
   ok: T('{got:1} m/s: lancio perfetto!'),
   high: T('{got:1} m/s: troppo veloce.'), low: T('{got:1} m/s: troppo lento.'),
   solve: { a1: 'v * v / 100' },             // i controlli che risolvono la prova (li usa il test automatico)
+  set: { m1: 'm' },                          // (facoltativo) parametri della simulazione per ogni prova, dai valori scelti
 }
 ```
 

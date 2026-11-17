@@ -594,6 +594,12 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .ta-wrap.playing .ta-replay { opacity: .38; }
 .ta-wrap.playing .ta-replay:hover, .ta-wrap.playing .ta-replay:focus-visible { opacity: 1; }
 .tool-holder, .toolcard { scroll-margin-top: 80px; }
+/* il film della lezione: in cima, con il colore del mondo; poi si richiude in un bottone nel fumetto della mascotte */
+.filmcard { margin: 12px 0; padding: 10px 12px 12px; background: var(--surface2); border: 1.5px solid var(--c, var(--sky)); border-radius: var(--r); animation: rise-in .45s cubic-bezier(.2, .7, .2, 1) backwards; scroll-margin-top: 80px; }
+.filmcard .ta-wrap { margin: 0 0 10px; }
+.filmcard .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.film-chip { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; }
+.film-chip svg { width: 14px; height: 14px; }
 .voice-pick { margin-top: 8px; } .voice-pick .chips { margin-bottom: 6px; }
 .voice-panel { margin-top: 8px; }
 .nv-list { display: grid; gap: 6px; margin: 8px 0; }

@@ -74,6 +74,10 @@ export const IDEE = {
   'tangente': { parole: 'tangent', da: 'm05-1' },
   'accelerazione centripeta': { parole: 'centripet', da: 'm05-2', mai: ['e'] },
   'forza e inerzia': { parole: '\\bforz[ae]\\b|inerzia', da: 'd01-1' },
+  'newton (unità)': { parole: '\\d ?N\\b|\\d newton', da: 'd01-2', mai: ['e'] },
+  'seconda legge (F = m·a)': { parole: 'm·a\\b|F ?/ ?m\\b', da: 'd01-2', mai: ['e'] },
+  'peso (P = m·g)': { parole: 'm·g\\b', da: 'd01-2', mai: ['e'] },
+  'azione e reazione': { parole: 'azione e reazione|terza legge', da: 'd01-4' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

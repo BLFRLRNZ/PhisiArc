@@ -50,6 +50,12 @@ export const PIECE_SVG = {
     `<g class="pz-spin2">` +
     P('M16 16l-8 22M48 16l8 22M26 17l-4 26M38 17l4 26', 'muted', null, 1) +
     P('M5 38h6v4H5zM53 38h6v4h-6zM19 43h6v4h-6zM39 43h6v4h-6z', 'sky', 'sky', 1.4) + `</g>`),
+  miniera: svg(
+    P('M2 58h60', 'muted', null, 1.4) + P('M6 61v-3M14 61v-3M22 61v-3M30 61v-3M38 61v-3M46 61v-3M54 61v-3', 'muted', null, 1.2) +
+    P('M44 58V36a10 10 0 0 1 20 0v22', 'chalk', null, 1.8) + P('M48 58V38a6 6 0 0 1 12 0v20', 'muted', null, 1.2) +
+    P('M2 47h6M3 51h5', 'coral', null, 1.6) + P('M8 42v12', 'coral', null, 2) +
+    `<g class="pz-launch">${P('M10 40h22l-3 12H13z', 'sky', 'sky')}${P('M14 40l3-6 4 3 4-5 4 8', 'sun', 'sun', 1.4)}` +
+    `${P(C(15, 55, 2.8) + C(27, 55, 2.8), 'chalk', null, 1.4)}${P('M33 45h6l-2-3M39 45l-2 3', 'coral', null, 1.4)}</g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),

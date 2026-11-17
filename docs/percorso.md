@@ -49,6 +49,13 @@ La prova mette in fila le domande dei ripassi di tutte le zone del mondo. Con al
 il mondo conta come superato (`S.skip`) e si apre quello dopo; i livelli restano lì da giocare.
 Il tasto Aiuto resta acceso, ma a ogni passo il primo tocco avvisa soltanto: usare un aiuto deve essere una scelta.
 
+## Un mondo in costruzione
+
+Un mondo si può aprire prima di essere finito: le zone pronte vanno in `zones`, quelle ancora da scrivere restano in `soon`
+e il mondo porta `building: true`. Finché è in costruzione non conta come finito (niente grado, niente prova d'ingresso,
+il mondo dopo non si apre), e alla fine dell'ultima zona pronta il gioco dice che le altre arrivano presto.
+Oggi è così l'Officina: D01 «Le forze e Newton» si gioca, D02–D05 sono in arrivo.
+
 ## Graduale dentro ogni mondo
 
 - Le zone di un mondo vanno dalla più intuitiva alla più formale (es. Pista: velocità → accelerazione → caduta → vettori e proiettili → moto circolare).

@@ -6,21 +6,22 @@ Si gioca nel browser, si installa come app e funziona anche offline.
 
 ## Cosa c'è in questa prima versione
 
-- **Due mondi giocabili** su dodici: **Il Laboratorio** (Il metodo scientifico, Grandezze e misure, Grafici e proporzionalità) e **La Pista** (Posizione e velocità, L'accelerazione, La caduta libera, Vettori e proiettili, Il moto circolare): 8 zone e 52 livelli. Gli altri dieci mondi sono già sulla mappa, con gli argomenti che arriveranno. Sulla pagina le zone sono numerate in ordine (M01…M05); nei file hanno un nome interno che non cambia mai (l'accelerazione è `m04.js`), perché a quel nome sono legati i salvataggi.
+- **Due mondi giocabili** su dodici: **Il Laboratorio** (Il metodo scientifico, Grandezze e misure, Grafici e proporzionalità) e **La Pista** (Posizione e velocità, L'accelerazione, La caduta libera, Vettori e proiettili, Il moto circolare): 8 zone e 52 livelli. Il terzo, **L'Officina** (la dinamica), è in costruzione: la sua prima zona, **Le forze e Newton**, si gioca già (7 livelli). Gli altri mondi sono già sulla mappa, con gli argomenti che arriveranno. Sulla pagina le zone sono numerate in ordine (M01…M05); nei file hanno un nome interno che non cambia mai (l'accelerazione è `m04.js`), perché a quel nome sono legati i salvataggi.
 - **Un percorso solo**: i dodici mondi sono in fila dal più semplice al più difficile, uno per campo della fisica, e ognuno si apre quando finisci il precedente. Quello che hai già aperto resta aperto anche quando arrivano zone nuove. Chi conosce già un mondo può saltarlo con la **prova d'ingresso**. Il piano completo è in [docs/percorso.md](docs/percorso.md).
 - **Il ritmo delle zone**: per ora ogni zona ha due **Lezioni**, un **Prevedi** (scegli cosa succederà, poi guardi l'esperimento), un **Costruisci**, un **Ripasso** e il **Boss**; le zone più ricche hanno qualche livello in più (L'accelerazione 7, Vettori e proiettili 9). Dai prossimi mondi il ritmo cambierà da zona a zona.
 - **Tre lenti per età** sullo stesso percorso, scelte all'inizio e cambiabili quando vuoi:
   - **Esploratore** (6-11 anni): niente formule, domande entro 20 parole, conti con soli numeri interi, e una voce, accesa da sola, che legge domande e risposte.
   - **Studente** (12-19 anni): formule, unità, grafici e calcoli.
   - **Curioso** (adulti): le idee della fisica raccontate con esempi di tutti i giorni (l'altalena, il navigatore, la bilancia del bagno). Le formule ci sono, ma chiuse in un riquadro «Per chi vuole la formula», e i calcoli si possono saltare.
-- **Otto simulazioni**, disegnate a linee in stile lavagna animata: il pendolo, lo zoom delle grandezze (dal protone all'universo osservabile, 30 tappe), il laboratorio dei grafici (rubinetto, viaggio e frenata, anche con l'errore di misura), la gara con i grafici posizione–tempo e velocità–tempo, la caduta libera (con o senza aria, sulla Terra o sulla Luna), la barca sul fiume, il cannone (con o senza aria) e la giostra vista dall'alto.
+- **Nove simulazioni**, disegnate a linee in stile lavagna animata: i carrelli dell'Officina (forze, blocchi della massa, pavimenti che frenano o no, e due carrelli che si staccano con una molla), il pendolo, lo zoom delle grandezze (dal protone all'universo osservabile, 30 tappe), il laboratorio dei grafici (rubinetto, viaggio e frenata, anche con l'errore di misura), la gara con i grafici posizione–tempo e velocità–tempo, la caduta libera (con o senza aria, sulla Terra o sulla Luna), la barca sul fiume, il cannone (con o senza aria) e la giostra vista dall'alto.
 - **Verifiche a prova di memoria**: nei Costruisci e nei Ripassi i calcoli tornano con valori nuovi, e le opzioni delle domande si mescolano a ogni partita: passa chi ha capito la regola, non chi ricorda la posizione.
 - **Esperimenti che contano**: nelle prove libere un lancio conta solo se fa quello che la consegna chiede (valori diversi da quelli già provati, la corrente accesa, l'aria spenta…); se non conta, il gioco dice che cosa manca.
 - **Prepara l'esperimento**: in alcuni passi scegli tu, variabile per variabile, cosa cambiare e cosa tenere uguale.
 - **Velocità 1×, 2×, 4×** accanto al tasto Lancia, per non aspettare le gare lente.
-- **Il tuo parco divertimenti**: ogni livello Costruisci aggiunge un gioco (l'altalena, i cartelli, la fontana, il trenino, il treno a razzo, la torre a caduta libera, il tiro al bersaglio, la giostra a catene).
-- **I boss di Vetrino e Bilancia**: ogni zona finisce con un mito da smontare con un esperimento. Vetrino, il microscopio investigatore, risponde con domande, non con soluzioni.
+- **Il tuo parco divertimenti**: ogni livello Costruisci aggiunge un gioco (l'altalena, i cartelli, la fontana, il trenino, il treno a razzo, la torre a caduta libera, il tiro al bersaglio, la giostra a catene, il carrello della miniera).
+- **I boss di Vetrino e Bilancia**: ogni zona finisce con un mito da smontare con un esperimento. Vetrino, il microscopio investigatore, risponde con domande, non con soluzioni. Dall'Officina ci sono anche gli **esperimenti al buio**: la legge si usa senza vedere il meccanismo (la massa nascosta sotto un telo si trova misurando l'accelerazione).
 - **Aiuti a gradini**: prima della soluzione c'è sempre almeno un passaggio: i suggerimenti scritti per quel passo oppure, nelle domande a scelta, una risposta sbagliata in meno; dove non c'è niente da suggerire, un avviso che non costa stelle. Nella prova d'ingresso il primo tocco su Aiuto avvisa soltanto, e la prova resta valida. **Stelle**: si parte da ★★★ senza aiuti, ★★ se usi un suggerimento, ★ se guardi la soluzione; una sola regola sugli errori: **sbagliare una risposta costa una stella, sperimentare no** (le previsioni sbagliate e i lanci di prova con i cursori sono gratis); un livello superato vale sempre almeno ★. Gli aiuti seguono il passo in cui sei, e ogni passo ha la sua soluzione.
+- **I film delle lezioni** (dall'Officina, per tutte e tre le lenti): ogni lezione che porta un'idea nuova comincia con un piccolo film senza parole, di circa un minuto, con l'omino della cassetta degli attrezzi: la forza e l'inerzia, F = m·a, azione e reazione. La prima volta la domanda aspetta il tasto «Comincia»; dopo resta un bottone per rivederlo. All'Esploratore lo stesso film, senza lettere né formule sullo schermo.
 - **La cassetta degli attrezzi** (Studente e Curioso): sette schede di matematica, ognuna con un piccolo film di un minuto (l'omino costruisce l'attrezzo con le mani, senza una parola), un disegno da muovere e una domanda: le potenze di 10, leggere una formula, il quadrato, la radice, Pitagora, π, seno e coseno. Una scheda si apre da sola solo nel primo livello in cui l'attrezzo serve per rispondere, mai più di una alla volta; se compare soltanto in una spiegazione o in un aiuto, sotto il testo c'è un bottone per aprirla.
 - **Joule e gradi**: ogni stella vale 10 joule; ogni mondo finito dà il nome di uno scienziato (Sperimentatore, Galileo, … fino a Curie).
 - **Italiano e inglese**: la lingua si sceglie all'inizio e nelle impostazioni (di base quella del browser); numeri e voce seguono la lingua. Come si traduce: [docs/contenuti.md](docs/contenuti.md).
@@ -52,6 +53,8 @@ js/content/prereq.js  la mappa dei prerequisiti: le idee di ogni zona e le parol
 tools/check-prereq.mjs  legge i testi, lente per lente: nessuna idea usata prima di essere spiegata
 js/review.js          il ripasso del giorno (scatole a 1, 3, 7, 14 e 30 giorni)
 js/tools.js           la cassetta degli attrezzi: le schede di matematica che si aprono quando servono
+js/toon.js, toonkit.js  il motore e la regia dei piccoli film; js/films/ i film; toolfilm.js e lessonfilm.js i due elenchi
+js/toolanim.js        il riproduttore dei film; js/lessonfilm.js mette il film in cima alle lezioni
 js/i18n.js, js/i18n/  l'inglese: un dizionario per zona, con la frase italiana come chiave
 tools/check-content.mjs controlla i contenuti; tests/play-all.mjs gioca tutti i livelli
 js/content/declarative.js  i passi scritti solo a testo (num, tune) diventano giocabili
@@ -68,6 +71,7 @@ node tools/check-lenti.mjs       # le promesse delle lenti: Esploratore entro 20
 node tools/check-prereq.mjs      # nessuna idea usata prima di essere spiegata (legge i testi, lente per lente)
 node tools/i18n-strings.mjs --check   # ogni frase ha la sua traduzione inglese
 node tests/tools.mjs URL         # la cassetta degli attrezzi si apre e si supera
+node tests/films.mjs URL         # i film delle lezioni: la prima volta la domanda aspetta, poi il bottone; ogni film disegna tutto
 node tests/play-all.mjs URL      # un Chrome gioca tutti i livelli nelle tre lenti (serve playwright)
 ```
 

@@ -75,7 +75,7 @@ function home() {
     let total = 0, got = 0;
     if (ready) for (const z of w.zones) for (const l of ZONES[z].levels) { total++; if (S.done[l.id]) got++; }
     const prev = w.requires.map((r) => worldById(r).name).join(tr(' e '));
-    const status = done ? (got < total ? tr('Superato con la prova · {got} di {total} livelli', { got, total }) : tr('Completato')) : open ? tr('{got} di {total} livelli', { got, total }) : !ready ? tr('In costruzione · {n} zone in arrivo', { n: w.soon.length }) : tr('Si apre quando finisci {prev}', { prev });
+    const status = done ? (got < total ? tr('Superato con la prova · {got} di {total} livelli', { got, total }) : tr('Completato')) : open ? tr('{got} di {total} livelli', { got, total }) + (w.building ? tr(' · altre zone in arrivo') : '') : !ready ? tr('In costruzione · {n} zone in arrivo', { n: w.soon.length }) : tr('Si apre quando finisci {prev}', { prev });
     const diff = w.diff ?? Math.ceil((w.n / WORLDS.length) * 5); // difficoltà decisa sul contenuto, non sul numero
     const body = h('div', { class: 'wbody', title: ready ? '' : w.soon.join(' · ') },
       h('div', { class: 'wnum' }, `${tr('Mondo')} ${String(w.n).padStart(2, '0')} · ${w.field}`),
@@ -164,7 +164,7 @@ function world(id) {
         h('div', {}, h('div', { class: 'wnum' }, `${tr('Mondo')} ${String(w.n).padStart(2, '0')} · ${w.place}`), h('h1', {}, w.name))),
       zones, soon,
       // chi conosce già questo mondo può saltarlo con la prova d'ingresso
-      !worldDone(w) && examFor(w).steps.length >= 4 ? h('section', { class: 'zone exam' },
+      !worldDone(w) && !w.building && examFor(w).steps.length >= 4 ? h('section', { class: 'zone exam' },
         h('div', { class: 'zone-head' }, h('h2', {}, tr('Lo conosci già?'))),
         h('p', { class: 'muted small' }, tr('Fai la prova d’ingresso: {n} domande dai ripassi. Con al massimo {e} errori, senza aiuti, si apre il mondo dopo.', { n: examFor(w).steps.filter((st) => !st.only || st.only.includes(S.lens)).length, e: EXAM_MAX_ERRORS })),
         h('a', { class: 'btn', href: `#/esame/${w.id}` }, tr('Fai la prova d’ingresso'))) : null));
@@ -300,7 +300,7 @@ function render(stay) {
     }
     case 'esame': {
       const w = worldById(parts[1]);
-      if (!w || !worldReady(w) || !worldOpen(w) || worldDone(w)) { app.replaceChildren(home()); break; }
+      if (!w || !worldReady(w) || !worldOpen(w) || worldDone(w) || w.building) { app.replaceChildren(home()); break; }
       const root = h('div', { class: 'level-page' });
       app.replaceChildren(root);
       cleanup = runLevel(root, examFor(w), go);

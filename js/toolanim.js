@@ -1,7 +1,7 @@
-// Le animazioni della cassetta degli attrezzi: un piccolo film per ogni attrezzo (toolfilm.js).
-// L'omino «fa» la matematica: corre, tira, spinge e lancia, e le idee si vedono muovere prima di diventare una formula.
-// Qui c'è solo il riproduttore: il film parte quando si vede, aspetta se esce dallo schermo, si ferma se lo si tocca,
-// e alla fine lascia l'ultimo fotogramma (la formula finita) con il bottone per rivederlo.
+// Il riproduttore dei piccoli film: quelli della cassetta degli attrezzi (toolfilm.js) e quelli delle lezioni (lessonfilm.js).
+// L'omino «fa» la matematica e la fisica: corre, tira, spinge e lancia, e le idee si vedono muovere prima di diventare parole o formule.
+// Il film parte quando si vede, aspetta se esce dallo schermo, si ferma se lo si tocca,
+// e alla fine lascia l'ultimo fotogramma con il bottone per rivederlo.
 import { h } from './util.js';
 import { t as tr } from './i18n.js';
 import { S } from './state.js';
@@ -21,7 +21,11 @@ const LABEL = { pause: 'Ferma il film', play: 'Fai partire il film', again: 'Gua
 
 export function toolAnim(id) {
   const film = FILMS[id];
-  if (!film) return null;
+  return film ? filmPlayer(film) : null;
+}
+
+// Un film qualunque (una scena di toon.js) dentro il suo riquadro nero, con il bottone ferma/riparti/rivedi.
+export function filmPlayer(film) {
   const cv = h('canvas', { class: 'ta-cv', 'aria-hidden': 'true' });
   const btn = h('button', { class: 'btn icon sm ta-replay' });
   const wrap = h('div', { class: 'ta-wrap film' }, cv, btn);
@@ -55,5 +59,6 @@ export function toolAnim(id) {
     }, { threshold: [0, 0.05, 0.3] });
     io.observe(cv);
   } else requestAnimationFrame(begin);
+  wrap.stop = () => stage.stop();
   return wrap;
 }

@@ -19,7 +19,8 @@
 //     measure: 'vEnd[0]', goal: 'v',                // cosa si misura nel risultato, e quanto deve valere
 //     tol: { e: 1, s: 0.6 },
 //     ok: T('{got} m/s: perfetto!'), high: T('{got} m/s: troppo.'), low: T('{got} m/s: troppo poco.'),
-//     solve: { a1: 'v * v / 100' } }                // i valori dei controlli che risolvono (servono al test automatico)
+//     solve: { a1: 'v * v / 100' },                 // i valori dei controlli che risolvono (servono al test automatico)
+//     set: { m1: 'm' } }                            // (facoltativo) parametri della simulazione per ogni prova, dai valori scelti
 //
 // Nei testi, {nome} si sostituisce con il valore (con la virgola, fino a 2 decimali; {nome:1} fino a 1),
 // {ans} con la risposta e {got} con la misura.
@@ -64,7 +65,8 @@ function compileTune(st) {
     gen: (lens, r) => {
       const v = choose(st, lens, r), names = Object.keys(v);
       const goal = formula(st.goal, names)(...names.map((k) => v[k]));
-      return { ...v, goal, vars: v, text: fill(tx(st.ask, lens), v) };
+      const set = st.set ? Object.fromEntries(Object.entries(st.set).map(([k, src]) => [k, formula(src, names)(...names.map((n) => v[n]))])) : undefined;
+      return { ...v, goal, vars: v, set, text: fill(tx(st.ask, lens), v) };
     },
     check: (res, tg, lens) => {
       const got = measure(res), tol = byLens(st.tol, lens) ?? 0;

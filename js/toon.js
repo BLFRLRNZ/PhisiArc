@@ -164,7 +164,7 @@ export function makeStage(cv, scene, opts = {}) {
     clock = 0; hitstop = 0; accT = 0; S.T = 0; S.fired.clear(); S.v = {};
     for (const a of [bursts, waves, ripples, shakes, punches, flashes, chromas]) a.length = 0;
     A = newBody();
-    Object.assign(hero, { x: 0, y: 0, face: 1, gs: 0, onG: true, jump: null, landT: -9, landV: 0, big: false, brake: false, ant: 0, heavy: 0, bag: true, hide: false });
+    Object.assign(hero, { x: 0, y: 0, face: 1, gs: 0, onG: true, jump: null, landT: -9, landV: 0, big: false, brake: false, ant: 0, heavy: 0, bag: true, hide: false, ride: 0 });
     Object.assign(S.cam, { x: 0, y: 0, zm: 1, k: 3.2, kz: 2.4 });
     if (scene.init) scene.init(S);
     Object.assign(cam, { x: S.cam.x, y: S.cam.y, zm: S.cam.zm });
@@ -176,7 +176,8 @@ export function makeStage(cv, scene, opts = {}) {
   // ---------- il corpo si muove: passo, corsa, frenata, salto, atterraggio, e i gesti chiesti dalla scena ----------
   function animate(dt) {
     const k = (r) => 1 - Math.exp(-dt * r), T = S.T, face = hero.face, sin = Math.sin, cos = Math.cos, onG = hero.onG;
-    if (dt > 0) hero.gs = onG && A.xPrev !== null ? (hero.x - A.xPrev) / dt : 0;
+    // ride: la velocità di quello su cui sta in piedi (un carrello): conta solo il passo fatto sopra, non il viaggio
+    if (dt > 0) hero.gs = onG && A.xPrev !== null ? (hero.x - A.xPrev) / dt - (hero.ride || 0) : 0;
     A.xPrev = hero.x;
     const spd = onG ? Math.abs(hero.gs) : 0, md = hero.gs < -0.01 ? -1 : hero.gs > 0.01 ? 1 : face;
     if (dt > 0) A.acc += ((onG ? (hero.gs - A.gsPrev) / dt : 0) - A.acc) * k(12);
