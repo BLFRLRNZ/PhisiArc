@@ -45,8 +45,8 @@ export default film((tl) => {
   const BORN = BAG.at(0.45);
   const one = tl.chip({ str: '1', col: COL.ink, up: true, size: 0.7, born: BORN, at: (S) => add(S.J.h[0], [0, 0.27]), go: TOSS.at(0.4), fly: 0.6, h: 0.5, slot: { u: U1, v: HV, frac: FS } });
   const level = (t) => { let k = 0; for (const h of hops) if (t >= h.b) k = h.to; return k; };
-  // uno zero del numero: quando è arrivato (dal suo gradino) o se n'è andato
-  const zero = (k, t) => { let st = null; for (const h of hops) { if (h.to === k && Math.abs(h.from) < Math.abs(k) && t >= h.b) st = { on: true, t0: h.b }; if (h.from === k && Math.abs(h.to) < Math.abs(k) && t >= h.a) st = { on: false, t0: h.a }; } return st; };
+  // uno zero del numero: quando è arrivato (dal suo gradino) o se n'è andato; il numero cambia sempre all'atterraggio, insieme all'esponente
+  const zero = (k, t) => { let st = null; for (const h of hops) { if (h.to === k && Math.abs(h.from) < Math.abs(k) && t >= h.b) st = { on: true, t0: h.b }; if (h.from === k && Math.abs(h.to) < Math.abs(k) && t >= h.b) st = { on: false, t0: h.b }; } return st; };
   // quanti zeri ci sono dopo la virgola, con il passaggio morbido
   const after = (t) => { let n = 0; for (const k of [-2, -3]) { const z = zero(k, t); if (z) n += z.on ? prog(t, z.t0, z.t0 + 0.3) : 1 - prog(t, z.t0, z.t0 + 0.3); } return n; };
 
