@@ -587,45 +587,12 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .toolbox-link h3 { margin: 0 0 .2em; }
 .toolbox-link:hover { border-color: var(--sky); }
 
-/* le animazioni: l'omino di gesso */
-.ta-wrap { position: relative; margin: 6px 0 10px; background: var(--sim-bg); border: 1.5px solid var(--edge); border-radius: 14px; overflow: hidden; }
-.ta-svg { display: block; width: 100%; height: auto; }
-.ta-replay { position: absolute; right: 8px; bottom: 8px; }
-.ta-svg .fig path { fill: none; stroke: var(--chalk); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
-.ta-svg .fig circle { fill: var(--sim-bg); stroke: var(--chalk); stroke-width: 3.2; }
-.ta-svg .ta-t { font-family: var(--f-ui); font-weight: 700; fill: var(--chalk); paint-order: stroke; stroke: var(--sim-bg); stroke-width: 4px; }
-.ta-svg .ta-t.mono { font-family: var(--f-num); }
-.ta-svg .ta-t.c1 { fill: var(--sky); } .ta-svg .ta-t.c2 { fill: var(--orange); } .ta-svg .ta-t.c3 { fill: var(--mint); } .ta-svg .ta-t.muted { fill: var(--muted); font-weight: 400; }
-.ta-ground { stroke: var(--edge); stroke-width: 2.5; }
-.ta-shadow { fill: rgba(0, 0, 0, .45); }
-.ta-speed { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
-.ta-dust { fill: var(--muted); }
-.ta-burst { stroke: var(--sun); stroke-width: 2.5; stroke-linecap: round; }
-.ta-flag, .ta-hand { stroke: var(--chalk); stroke-width: 2; }
-.ta-flagc { fill: var(--mint); }
-.ta-check { fill: var(--chalk); stroke: var(--chalk); stroke-dasharray: 4 4; }
-.ta-d { stroke: var(--orange); stroke-width: 3; stroke-linecap: round; }
-.ta-watch { fill: var(--surface); stroke: var(--chalk); stroke-width: 2.5; }
-.ta-watchtop { fill: var(--chalk); }
-.ta-stick { stroke-width: 5; stroke-linecap: round; }
-.ta-stick.c1 { stroke: var(--sky); } .ta-stick.c2 { stroke: var(--orange); }
-.ta-sq { fill: none; stroke: var(--sky); stroke-width: 2.5; stroke-linejoin: round; }
-.ta-cell.c1f { fill: var(--sky); } .ta-cell.c2f { fill: var(--orange); } .ta-cell.c3f { fill: var(--mint); }
-.ta-tri { fill: rgba(238, 244, 255, .06); stroke: var(--chalk); stroke-width: 2.5; stroke-linejoin: round; }
-.ta-rt { fill: none; stroke: var(--chalk); stroke-width: 1.5; }
-.ta-wheel { fill: rgba(124, 200, 255, .1); stroke: var(--sky); stroke-width: 3; }
-.ta-dia { stroke: var(--orange); stroke-width: 2.5; }
-.ta-paint { stroke: var(--pink); stroke-width: 5; stroke-linecap: round; }
-.ta-paintdot { fill: var(--pink); }
-.ta-bit { fill: var(--mint); }
-.ta-wall { stroke: var(--edge); stroke-width: 3; }
-.ta-sun { fill: var(--sun); } .ta-sunray { stroke: var(--sun); stroke-width: 2; stroke-linecap: round; }
-.ta-lamp { fill: var(--sun); }
-.ta-ray { stroke: rgba(255, 209, 102, .35); stroke-width: 1.5; stroke-dasharray: 3 5; }
-.ta-shx { stroke: var(--orange); stroke-width: 5; stroke-linecap: round; }
-.ta-shy { stroke: var(--mint); stroke-width: 5; stroke-linecap: round; }
-.ta-arrow { stroke: var(--chalk); stroke-width: 3.5; stroke-linecap: round; fill: none; }
-.ta-ang { fill: none; stroke: var(--sun); stroke-width: 1.5; }
+/* i piccoli film della cassetta: una tela nera, come una lavagna spenta */
+.ta-wrap { position: relative; margin: 6px 0 10px; background: #000; border: 1.5px solid #20263a; border-radius: 14px; overflow: hidden; }
+.ta-cv { display: block; width: 100%; aspect-ratio: 16 / 9; cursor: pointer; }
+.ta-replay { position: absolute; right: 8px; bottom: 10px; display: inline-flex; align-items: center; justify-content: center; transition: opacity .2s; }
+.ta-wrap.playing .ta-replay { opacity: .38; }
+.ta-wrap.playing .ta-replay:hover, .ta-wrap.playing .ta-replay:focus-visible { opacity: 1; }
 .tool-holder, .toolcard { scroll-margin-top: 80px; }
 .voice-pick { margin-top: 8px; } .voice-pick .chips { margin-bottom: 6px; }
 .voice-panel { margin-top: 8px; }
@@ -655,5 +622,3 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .tool-svg.wide { max-width: 340px; }
 .tool-svg .hop { fill: none; stroke: var(--sky); stroke-width: 2; }
 .tool-svg .hop.down { stroke: var(--mint); }
-.ta-hop { fill: none; stroke: var(--orange); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 2 6; }
-.ta-hop.dn { stroke: var(--mint); }

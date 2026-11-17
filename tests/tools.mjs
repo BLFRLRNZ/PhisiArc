@@ -23,7 +23,7 @@ await p.evaluate(async () => {
 // 1) f02-1 usa le potenze di 10 nell'introduzione: la scheda si apre da sola
 await p.goto(BASE + '/#/livello/f02-1'); await p.reload();
 await p.waitForSelector('.toolcard', { timeout: 5000 }).catch(() => fail('la scheda non compare'));
-if (!(await p.$('.toolcard .ta-svg path'))) fail('manca l’animazione');
+if (!(await p.$('.toolcard canvas.ta-cv'))) fail('manca il film dell’attrezzo');
 if (!(await p.$eval('.quest', (e) => e.hidden))) fail('la domanda del livello dovrebbe aspettare la scheda');
 let n = 0;
 while (await p.$('.toolcard')) {
@@ -60,6 +60,46 @@ if (!tools.radice || !tools.quadrato) fail('quadrato e radice aperti dal bottone
 
 await p.goto(BASE + '/#/attrezzi'); await p.waitForSelector('.tool-item');
 if ((await p.$$('.tool-item')).length !== 7) fail('la cassetta non ha 7 attrezzi');
+
+// 3) ogni attrezzo ha il suo piccolo film: dura circa un minuto, parte da solo, disegna dall'inizio alla fine,
+//    e in nessun momento la mano dell'omino deve arrivare a un oggetto che non raggiunge
+const film = (fn, arg) => p.$eval('.toolcard canvas.ta-cv', fn, arg);
+// quanti punti accesi ci sono sulla tela (lo sfondo è nero)
+const lit = () => film((c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 16) if (d[i] + d[i + 1] + d[i + 2] > 300) n++; return n; });
+for (let i = 0; i < 7; i++) {
+  await p.goto(BASE + '/#/attrezzi'); await p.waitForSelector('.tool-item');
+  await p.click(`.tool-item:nth-child(${i + 1})`);
+  const name = await p.$eval('.toolcard h3', (e) => e.textContent);
+  await p.waitForSelector('.toolcard canvas.ta-cv', { timeout: 3000 }).catch(() => fail(`«${name}» non ha il suo film`));
+  await film((c) => c.scrollIntoView({ block: 'center' }));   // il film parte appena si vede
+  await p.waitForFunction(() => document.querySelector('.toolcard canvas.ta-cv').__film.playing, null, { timeout: 3000 }).catch(() => fail(`il film di «${name}» non parte da solo`));
+  const dur = await film((c) => c.__film.dur);
+  if (!(dur >= 40 && dur <= 70)) fail(`il film di «${name}» dura ${dur.toFixed(1)} s: dovrebbe durare circa un minuto`);
+  // tutto il film, un passo alla volta
+  const run = await film((c) => { const st = c.__film; st.stop(); st.reset(); let over = 0, at = 0; for (let k = 0; k < st.dur * 60 + 20; k++) { st.advance(1 / 60); if (st.state.over > over) { over = st.state.over; at = st.t; } } st.render(); return { over, at }; });
+  if (run.over > 0.02) fail(`nel film di «${name}» a ${run.at.toFixed(1)} s la mano non arriva all'oggetto (mancano ${(run.over * 100).toFixed(0)} cm)`);
+  for (const k of [0.3, 0.65, 1]) { await film((c, q) => c.__film.seek(c.__film.dur * q), k); if (!((await lit()) > 150)) fail(`il film di «${name}» è vuoto a ${Math.round(k * 100)}%`); }
+}
+// i comandi, sull'ultimo film aperto: il bottone ferma e fa ripartire; a film finito lo fa ricominciare
+await film((c) => { c.scrollIntoView({ block: 'center' }); c.__film.play(); });
+await p.click('.ta-replay');
+if (!(await film((c) => c.__film.paused && !c.__film.playing))) fail('il bottone non ferma il film');
+await p.click('.ta-replay');
+if (!(await film((c) => c.__film.playing))) fail('il bottone non fa ripartire il film');
+await film((c) => c.__film.play(c.__film.dur - 0.3));   // salta quasi alla fine
+await p.waitForFunction(() => !document.querySelector('.toolcard canvas.ta-cv').__film.playing, null, { timeout: 4000 }).catch(() => fail('il film non finisce'));
+if (!(await p.$eval('.ta-replay', (e) => e.getAttribute('aria-label') === 'Guarda di nuovo'))) fail('a film finito manca il bottone «guarda di nuovo»');
+await p.click('.ta-replay');
+if (!(await film((c) => c.__film.playing && c.__film.t < 1))) fail('il bottone non fa ricominciare il film');
+// chi ha chiesto meno movimento vede subito l'ultimo fotogramma, fermo, e può far partire il film con il bottone
+await p.emulateMedia({ reducedMotion: 'reduce' });
+await p.goto(BASE + '/#/attrezzi'); await p.reload(); await p.waitForSelector('.tool-item');
+await p.click('.tool-item:nth-child(2)'); await p.waitForSelector('.toolcard canvas.ta-cv');
+await film((c) => c.scrollIntoView({ block: 'center' }));
+await p.waitForFunction(() => { const st = document.querySelector('.toolcard canvas.ta-cv').__film; return !st.playing && st.t >= st.dur - 0.1; }, null, { timeout: 4000 }).catch(() => fail('con «meno movimento» il film deve restare fermo sull’ultimo fotogramma'));
+if (!((await lit()) > 150)) fail('con «meno movimento» la tela è vuota');
+await p.click('.ta-replay');
+if (!(await film((c) => c.__film.playing))) fail('con «meno movimento» il bottone non fa partire il film');
 await b.close();
 if (errs.length) fail('errori nella pagina');
-console.log('ok  cassetta degli attrezzi: scheda all’inizio di f02-1, bottoni sotto la spiegazione di f01-3, 7 attrezzi');
+console.log('ok  cassetta degli attrezzi: scheda all’inizio di f02-1, bottoni sotto la spiegazione di f01-3, 7 attrezzi, 7 film');

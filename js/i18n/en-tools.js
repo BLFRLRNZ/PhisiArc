@@ -13,6 +13,8 @@ export default {
   'giro = π × diametro': 'round = π × diameter',
   'a 30°: sin = 0,5': 'at 30°: sin = 0.5',
   'Guarda di nuovo': 'Watch again',
+  'Ferma il film': 'Pause the film',
+  'Fai partire il film': 'Play the film',
   'Leggere una formula': 'Reading a formula',
   'Una frase della fisica scritta in breve': 'A physics sentence written in short',
   'Una formula è una <b>frase scritta in breve</b>. Ogni lettera è una grandezza che si può misurare. <b>v = d / t</b> si legge: «la velocità è la distanza divisa per il tempo». Muovi i cursori e leggi la frase.': 'A formula is a <b>sentence written in short</b>. Each letter is a quantity you can measure. <b>v = d / t</b> reads: “speed is distance divided by time”. Move the sliders and read the sentence.',
