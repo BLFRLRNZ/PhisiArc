@@ -4,10 +4,19 @@ import { S, save } from './state.js';
 import { NEURAL_VOICES, synth, play } from './neural.js';
 
 let ctx;
+// il contesto audio è uno solo per tutta l'app: lo usano anche i piccoli film della cassetta degli attrezzi (toolanim.js)
+export const audioCtx = () => (ctx = ctx || new (window.AudioContext || window.webkitAudioContext)());
+// su telefoni e tablet l'audio parte solo dopo un tocco: al primo tocco lo si sveglia, così i film non restano muti
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('pointerdown', () => {
+    if (!S.settings.sound) return;
+    try { const c = audioCtx(); if (c.state === 'suspended') c.resume().catch(() => {}); } catch { /* niente audio */ }
+  }, { passive: true, capture: true });
+}
 function tone(freq, dur, when = 0, type = 'sine', vol = 0.12) {
   if (!S.settings.sound) return;
   try {
-    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    audioCtx();
     const o = ctx.createOscillator(), g = ctx.createGain();
     o.type = type;
     o.frequency.value = freq;

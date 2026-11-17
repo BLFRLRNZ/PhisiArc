@@ -136,9 +136,23 @@ Per provare: `?lang=en` in fondo all’indirizzo, oppure Impostazioni → Lingua
 
 Le formule non si nascondono: si insegnano. Gli strumenti di matematica che usano (le potenze di 10, leggere una formula,
 il quadrato, la radice, Pitagora, π, seno e coseno) sono in `js/tools.js`, ognuno con una scheda da giocare: un’animazione
-con l’omino di gesso (`js/toolanim.js`), una spiegazione, un disegno con i cursori e una domanda. Valgono per le lenti
+con l’omino (`js/toolanim.js`), una spiegazione, un disegno con i cursori e una domanda. Valgono per le lenti
 Studente e Curioso.
 
+- **In cima a ogni scheda c’è un piccolo film** di circa un minuto (`js/films/<attrezzo>.js`, raccolti in `js/toolfilm.js`):
+  una tela nera, l’omino del percorso arcade, i suoni e nessuna scritta. Ogni segno della formula nasce da una cosa che
+  l’omino tocca: la striscia della corsa diventa d, il cronometro t; gli zeri saltano fuori dai gradini; le piastrelle
+  riempiono il quadrato. Le lettere e i numeri che restano fermi sullo schermo mentre il mondo scorre sono la «frase»
+  dell’attrezzo, scritta con le lettere e con i numeri (v = d / t = 6 / 3 = 2).
+  - Il motore è `js/toon.js`: il corpo con i piedi che restano piantati, la telecamera, gli urti, i suoni, il carattere
+    delle formule (STIX Two Text, in `fonts/`).
+  - La regia è `js/toonkit.js`: un film è una fila di battute (`tl.span`, `tl.walk`, `tl.jump`), con i gesti che tornano
+    sempre (`grab`, `carry`, `toss`, `point`, `push`, `cheer`…), le cose che succedono in un istante (`tl.on`) e le lettere
+    che volano al loro posto (`tl.chip`). L’inizio del file spiega come si scrive.
+  - Il riproduttore è `js/toolanim.js`: il film parte quando si vede, aspetta se esce dallo schermo, si ferma e riparte
+    con un tocco, e alla fine lascia l’ultimo fotogramma con il bottone per rivederlo. Chi ha chiesto «meno movimento»
+    al dispositivo vede subito l’ultimo fotogramma e fa partire il film con il bottone.
+  - I numeri con la virgola seguono la lingua (`num`, `comma` in `toonkit.js`): nei film non ci sono parole da tradurre.
 - **Quando serve per rispondere, la scheda si apre da sola**, prima di cominciare, nel primo livello che usa lo strumento.
   Non serve segnarlo a mano: `toolsIn()` cerca i segni dello strumento (10³, √, π, ², sin…) in quello che si legge prima di
   rispondere (introduzione, consegne, domande, risposte) e nello svolgimento dei calcoli.
@@ -149,6 +163,8 @@ Studente e Curioso.
   Conviene che un livello non apra più di una scheda: `node tools/check-lenti.mjs -v` dice dove si apre ognuna,
   e segnala un livello che ne aprirebbe più di due.
 - Chi lo sa già preme «Li so già». Tutte le schede restano nella pagina `#/attrezzi`, raggiungibile dalla mappa.
-- Un nuovo strumento: si aggiunge a `TOOLS` (titolo, test, spiegazione, disegno, domanda) e a `SCENES` per l’animazione,
-  con le frasi inglesi in `js/i18n/en-tools.js`. `tests/tools.mjs` controlla che la scheda si apra quando serve, che il
-  bottone la offra quando non serve, e che la cassetta le contenga tutte.
+- Un nuovo strumento: si aggiunge a `TOOLS` (titolo, test, spiegazione, disegno, domanda), con il suo film in
+  `js/films/` (e il file in `SHELL` di `sw.js`) e le frasi inglesi in `js/i18n/en-tools.js`. `tests/tools.mjs` controlla
+  che la scheda si apra quando serve, che il bottone la offra quando non serve, che la cassetta le contenga tutte, e che
+  ogni film duri circa un minuto, parta da solo, disegni dall’inizio alla fine e che la mano dell’omino arrivi sempre
+  agli oggetti che deve toccare.
