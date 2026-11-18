@@ -28,7 +28,6 @@ const fresh = () => ({
   aperti: {},          // mondi e zone già sbloccati: restano aperti anche se si aggiungono zone
   skip: {},            // mondi superati con la prova d'ingresso
   tools: {},           // attrezzi di matematica già visti: 1 visto, 2 domanda giusta (vedi tools.js)
-  films: {},           // film delle lezioni già visti fino al tasto «Comincia» (vedi lessonfilm.js)
   rev: {},             // ripasso a distanza di giorni: domanda -> { scatola, giorno in cui torna } (vedi review.js)
   introSeen: false,
   settings: { sound: true, voice: null, intro: true }, // intro: animazione a ogni avvio (si spegne dalle impostazioni); voice null = automatica

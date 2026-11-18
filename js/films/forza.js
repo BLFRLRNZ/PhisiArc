@@ -156,7 +156,7 @@ export default film((tl) => {
   tl.pose(LOOK, (S, P, auto, t) => { P.look = t < LOOK.at(0.55) ? [1, -0.45] : [1, -0.1]; P.expr = t > LOOK.at(0.55) ? '^' : 'o'; return false; });
   tl.pose(TAP, push((S, t) => back(t), { in: 0.25, out: 0.3, lean: 12, look: [1, -0.2] }));
   tl.pose(HOLD0, look(1, -0.3));
-  tl.pose(PULL, push((S, t) => handle(t), { in: 0.2, out: 0.2, lean: -2, look: [1, -0.3] }));
+  tl.pose(PULL, push((S, t) => handle(t), { in: 0.2, out: 0.2, lean: 7, look: [1, -0.3] }));
   tl.pose(SET, look(1, -0.2));
   for (const [P, ST] of [[P1, STOP1], [P2, STOP2]]) {
     tl.pose(tl.between(P.a - 0.25, P.b + 0.02), push((S, t) => back(t), { in: 0.2, out: 0.03, lean: 16, look: [1, -0.15], expr: '>' }));

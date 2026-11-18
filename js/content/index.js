@@ -63,9 +63,9 @@ export const WORLDS = [
     zones: ['D01'], building: true,
     soon: ['D02 Attrito e piani inclinati', 'D03 Lavoro, energia e potenza', 'D04 Quantità di moto e urti', 'D05 Rotazioni ed equilibrio'], requires: ['pista'],
     intro: {
-      e: 'Ciao, sono Mela! Nell’Officina si spinge, si tira e si lancia. Scopriremo che cosa fa partire le cose, e che cosa le ferma. Ogni lezione comincia con un film!',
-      s: 'Sono Mela, benvenuto nell’Officina. Nella Pista hai imparato a descrivere il moto; qui scopri le sue cause: le forze e le tre leggi di Newton. Ogni lezione comincia con un film.',
-      c: 'Sono Mela, quella caduta in testa a Newton. Nella Pista hai visto come si muovono le cose; qui si scopre perché. Ogni lezione comincia con un piccolo film senza parole.',
+      e: 'Ciao, sono Mela! Nell’Officina si spinge, si tira e si lancia. Scopriremo che cosa fa partire le cose, e che cosa le ferma.',
+      s: 'Sono Mela, benvenuto nell’Officina. Nella Pista hai imparato a descrivere il moto; qui scopri le sue cause: le forze, le leggi di Newton e l’energia.',
+      c: 'Sono Mela, quella caduta in testa a Newton. Nella Pista hai visto come si muovono le cose; qui si scopre perché.',
     },
   },
   { id: 'cielo', n: 4, diff: 3, name: 'Il Cielo', field: 'Gravitazione', place: 'Osservatorio e sistema solare', color: '#a9b8ff', mascot: 'saturnino',

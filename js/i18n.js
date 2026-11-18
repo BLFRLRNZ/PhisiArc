@@ -43,7 +43,7 @@ export const t = (s, vars) => {
 };
 
 // campi che non sono testi da mostrare: non si traducono mai
-const SKIP = new Set(['id', 'kind', 'sim', 'film', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try']);
+const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try']);
 // la lente 'c' (Curioso) è un campo di testo dentro T(...): si salta 'c' solo quando è un colore
 const isLensObj = (o) => o && typeof o === 'object' && !Array.isArray(o) && 'e' in o && 's' in o;
 

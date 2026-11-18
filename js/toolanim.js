@@ -1,4 +1,4 @@
-// Il riproduttore dei piccoli film: quelli della cassetta degli attrezzi (toolfilm.js) e quelli delle lezioni (lessonfilm.js).
+// Il riproduttore dei piccoli film della cassetta degli attrezzi (toolfilm.js): matematica e fisica.
 // L'omino «fa» la matematica e la fisica: corre, tira, spinge e lancia, e le idee si vedono muovere prima di diventare parole o formule.
 // Il film parte quando si vede, aspetta se esce dallo schermo, si ferma se lo si tocca,
 // e alla fine lascia l'ultimo fotogramma con il bottone per rivederlo.

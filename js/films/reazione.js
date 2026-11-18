@@ -72,7 +72,7 @@ export default film((tl) => {
   const SK = path(-5.55, segs);
   const sk = (t) => SK.at(t).x;
   // il carrello leggero, fermo davanti all'omino quando lui si ferma dopo la spinta forte
-  const CX0 = sk(PREP3.a) + 0.3 + 0.12;
+  const CX0 = sk(PREP3.a) + 0.26 + 0.12;
   const cartX = (t) => (t < PC.a ? CX0 : t < PC.b ? CX0 + 0.5 * (VC / PC.d) * (t - PC.a) ** 2 : CX0 + 0.5 * VC * PC.d + VC * (t - PC.b));
   const handsCart = (t) => [cartX(t) - 0.12, CART.HY];
   const wallHand = [WX + 0.02, 1.5];
@@ -176,7 +176,7 @@ export default film((tl) => {
   tl.pose(BRAKE2, braking(BRAKE2));
   tl.pose(EQUAL, (S, P, auto, t) => { P.look = [EQUAL.u(t) < 0.8 ? -0.3 : 1, 0.85]; P.expr = EQUAL.u(t) > 0.55 ? '^' : 'o'; return false; });
   tl.pose(CART_IN, look(1, -0.4, 'o'));
-  tl.pose(tl.between(PREP3.a, PC.b + 0.02), push((S, t) => handsCart(t), { in: 0.4, out: 0.04, lean: 10, look: [1, -0.2], expr: '>' }));
+  tl.pose(tl.between(PREP3.a, PC.at(0.55)), push((S, t) => handsCart(t), { in: 0.4, out: 0.1, lean: 12, look: [1, -0.2], expr: '>' }));
   tl.pose(GLIDE3, (S, P, auto, t) => { P.look = [1, 0]; P.expr = 'O'; return false; });
   tl.pose(BRAKE3, braking(BRAKE3));
   tl.pose(COMP, (S, P, auto, t) => { P.look = COMP.u(t) < 0.85 ? [1, -0.6] : [1, 0]; P.expr = 'o'; return false; });

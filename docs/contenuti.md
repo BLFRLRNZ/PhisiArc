@@ -22,19 +22,6 @@ Ogni lente ha la sua voce, e `node tools/check-lenti.mjs` controlla che la mante
   Fuori dal riquadro la stessa idea va detta a parole. I passi di calcolo hanno il tasto **«Salta il calcolo»** (mostra la risposta,
   non costa stelle), e per questa lente i calcoli non entrano nella prova d'ingresso né nel ripasso del giorno.
 
-## Il film della lezione
-
-Una lezione che porta un'idea nuova può cominciare con un piccolo film (dall'Officina in poi tutte lo fanno): basta scrivere
-`film: 'forza'` nel livello, con il nome di un film di `js/lessonfilm.js`. La prima volta il film sta in cima alla lezione,
-parte quando si vede e la domanda aspetta il tasto «Comincia»; dopo, nel fumetto della mascotte, resta il bottone «Rivedi il film».
-
-I film delle lezioni si scrivono come quelli della cassetta degli attrezzi (vedi in fondo), con una regola in più: li vedono
-tutte e tre le lenti, e all'Esploratore non si mostrano lettere né formule. Nel film si chiede `formulas()` (da `toonkit.js`)
-prima di disegnare le lettere sullo schermo: per l'Esploratore resta il film, con le frecce, i segni e i numeri interi.
-Gli oggetti che tornano nei film dell'Officina (il carrello, i pavimenti, il paraurti, le frecce delle forze, la molla, i blocchi)
-sono in `js/films/props.js`. `tests/films.mjs` controlla che ogni film duri circa un minuto, disegni dall'inizio alla fine
-e che la mano dell'omino arrivi sempre agli oggetti che tocca.
-
 ## I passi
 
 | Tipo | Che cosa fa | Cosa si scrive |
@@ -151,7 +138,8 @@ Per provare: `?lang=en` in fondo all’indirizzo, oppure Impostazioni → Lingua
 Le formule non si nascondono: si insegnano. Gli strumenti di matematica che usano (le potenze di 10, leggere una formula,
 il quadrato, la radice, Pitagora, π, seno e coseno) sono in `js/tools.js`, ognuno con una scheda da giocare: un’animazione
 con l’omino (`js/toolanim.js`), una spiegazione, un disegno con i cursori e una domanda. Valgono per le lenti
-Studente e Curioso.
+Studente e Curioso. Dall’Officina la cassetta ha un secondo scaffale, **Fisica**, con le idee che reggono le leggi
+(la forza e l’inerzia, F = m·a, azione e reazione): stesse schede, con il film, ma segnate `offer: true` e `area: 'fisica'`.
 
 - **In cima a ogni scheda c’è un piccolo film** di circa un minuto (`js/films/<attrezzo>.js`, raccolti in `js/toolfilm.js`):
   una tela nera, l’omino del percorso arcade, i suoni e nessuna scritta. Ogni segno della formula nasce da una cosa che
@@ -167,7 +155,11 @@ Studente e Curioso.
     con un tocco, e alla fine lascia l’ultimo fotogramma con il bottone per rivederlo. Chi ha chiesto «meno movimento»
     al dispositivo vede subito l’ultimo fotogramma e fa partire il film con il bottone.
   - I numeri con la virgola seguono la lingua (`num`, `comma` in `toonkit.js`): nei film non ci sono parole da tradurre.
-- **Quando serve per rispondere, la scheda si apre da sola**, prima di cominciare, nel primo livello che usa lo strumento.
+- **Gli attrezzi di fisica non interrompono mai**: dove un testo ne parla (l’introduzione, una spiegazione, un aiuto) sotto c’è
+  il bottone «Attrezzo · …». La lezione resta un esperimento; il film è lì per chi vuole rivedere l’idea con calma.
+  Gli oggetti che tornano nei loro film (il carrello, i pavimenti, il paraurti, le frecce delle forze, la molla, i blocchi)
+  sono in `js/films/props.js`.
+- **Quando serve per rispondere, la scheda di matematica si apre da sola**, prima di cominciare, nel primo livello che usa lo strumento.
   Non serve segnarlo a mano: `toolsIn()` cerca i segni dello strumento (10³, √, π, ², sin…) in quello che si legge prima di
   rispondere (introduzione, consegne, domande, risposte) e nello svolgimento dei calcoli.
 - **Quando lo strumento compare solo in una spiegazione, in un aiuto, in una soluzione o in un riquadro `[[…]]`**, la scheda

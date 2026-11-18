@@ -21,8 +21,7 @@ Si gioca nel browser, si installa come app e funziona anche offline.
 - **Il tuo parco divertimenti**: ogni livello Costruisci aggiunge un gioco (l'altalena, i cartelli, la fontana, il trenino, il treno a razzo, la torre a caduta libera, il tiro al bersaglio, la giostra a catene, il carrello della miniera).
 - **I boss di Vetrino e Bilancia**: ogni zona finisce con un mito da smontare con un esperimento. Vetrino, il microscopio investigatore, risponde con domande, non con soluzioni. Dall'Officina ci sono anche gli **esperimenti al buio**: la legge si usa senza vedere il meccanismo (la massa nascosta sotto un telo si trova misurando l'accelerazione).
 - **Aiuti a gradini**: prima della soluzione c'è sempre almeno un passaggio: i suggerimenti scritti per quel passo oppure, nelle domande a scelta, una risposta sbagliata in meno; dove non c'è niente da suggerire, un avviso che non costa stelle. Nella prova d'ingresso il primo tocco su Aiuto avvisa soltanto, e la prova resta valida. **Stelle**: si parte da ★★★ senza aiuti, ★★ se usi un suggerimento, ★ se guardi la soluzione; una sola regola sugli errori: **sbagliare una risposta costa una stella, sperimentare no** (le previsioni sbagliate e i lanci di prova con i cursori sono gratis); un livello superato vale sempre almeno ★. Gli aiuti seguono il passo in cui sei, e ogni passo ha la sua soluzione.
-- **I film delle lezioni** (dall'Officina, per tutte e tre le lenti): ogni lezione che porta un'idea nuova comincia con un piccolo film senza parole, di circa un minuto, con l'omino della cassetta degli attrezzi: la forza e l'inerzia, F = m·a, azione e reazione. La prima volta la domanda aspetta il tasto «Comincia»; dopo resta un bottone per rivederlo. All'Esploratore lo stesso film, senza lettere né formule sullo schermo.
-- **La cassetta degli attrezzi** (Studente e Curioso): sette schede di matematica, ognuna con un piccolo film di un minuto (l'omino costruisce l'attrezzo con le mani, senza una parola), un disegno da muovere e una domanda: le potenze di 10, leggere una formula, il quadrato, la radice, Pitagora, π, seno e coseno. Una scheda si apre da sola solo nel primo livello in cui l'attrezzo serve per rispondere, mai più di una alla volta; se compare soltanto in una spiegazione o in un aiuto, sotto il testo c'è un bottone per aprirla.
+- **La cassetta degli attrezzi** (Studente e Curioso): ogni scheda ha un piccolo film di un minuto (l'omino costruisce l'idea con le mani, senza una parola), un disegno da muovere e una domanda. Sono due scaffali. **Matematica**: le potenze di 10, leggere una formula, il quadrato, la radice, Pitagora, π, seno e coseno; una scheda si apre da sola solo nel primo livello in cui l'attrezzo serve per rispondere, mai più di una alla volta, e se compare soltanto in una spiegazione o in un aiuto sotto il testo c'è un bottone per aprirla. **Fisica** (dall'Officina): la forza e l'inerzia, F = m·a, azione e reazione; non interrompono mai, si aprono con il bottone sotto i testi che ne parlano.
 - **Joule e gradi**: ogni stella vale 10 joule; ogni mondo finito dà il nome di uno scienziato (Sperimentatore, Galileo, … fino a Curie).
 - **Italiano e inglese**: la lingua si sceglie all'inizio e nelle impostazioni (di base quella del browser); numeri e voce seguono la lingua. Come si traduce: [docs/contenuti.md](docs/contenuti.md).
 - **Ripasso del giorno**: le domande dei livelli finiti tornano dopo qualche giorno (1, 3, 7, 14, 30), finché non le sai al primo colpo. Restano fuori quelle che chiedono di guardare la simulazione.
@@ -52,9 +51,9 @@ js/content/f01.js …   i testi e i livelli di ogni zona, nelle tre lenti
 js/content/prereq.js  la mappa dei prerequisiti: le idee di ogni zona e le parole che le rivelano nei testi
 tools/check-prereq.mjs  legge i testi, lente per lente: nessuna idea usata prima di essere spiegata
 js/review.js          il ripasso del giorno (scatole a 1, 3, 7, 14 e 30 giorni)
-js/tools.js           la cassetta degli attrezzi: le schede di matematica che si aprono quando servono
-js/toon.js, toonkit.js  il motore e la regia dei piccoli film; js/films/ i film; toolfilm.js e lessonfilm.js i due elenchi
-js/toolanim.js        il riproduttore dei film; js/lessonfilm.js mette il film in cima alle lezioni
+js/tools.js           la cassetta degli attrezzi: le schede di matematica (si aprono quando servono) e di fisica (si offrono)
+js/toon.js, toonkit.js  il motore e la regia dei piccoli film; js/films/ i film; toolfilm.js il loro elenco
+js/toolanim.js        il riproduttore dei film
 js/i18n.js, js/i18n/  l'inglese: un dizionario per zona, con la frase italiana come chiave
 tools/check-content.mjs controlla i contenuti; tests/play-all.mjs gioca tutti i livelli
 js/content/declarative.js  i passi scritti solo a testo (num, tune) diventano giocabili
@@ -70,8 +69,7 @@ node tools/check-content.mjs     # risposte, testi nelle tre lenti, aiuti, soluz
 node tools/check-lenti.mjs       # le promesse delle lenti: Esploratore entro 20 parole e numeri interi, Curioso con testi suoi e formule nei riquadri
 node tools/check-prereq.mjs      # nessuna idea usata prima di essere spiegata (legge i testi, lente per lente)
 node tools/i18n-strings.mjs --check   # ogni frase ha la sua traduzione inglese
-node tests/tools.mjs URL         # la cassetta degli attrezzi si apre e si supera
-node tests/films.mjs URL         # i film delle lezioni: la prima volta la domanda aspetta, poi il bottone; ogni film disegna tutto
+node tests/tools.mjs URL         # la cassetta degli attrezzi si apre e si supera; ogni film dura un minuto e disegna tutto
 node tests/play-all.mjs URL      # un Chrome gioca tutti i livelli nelle tre lenti (serve playwright)
 ```
 

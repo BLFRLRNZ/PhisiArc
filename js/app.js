@@ -122,19 +122,19 @@ function reviewCard() {
     h('a', { class: 'btn primary', href: '#/ripasso' }, tr('Ripassa')));
 }
 
-// la cassetta degli attrezzi di matematica (solo nelle lenti con le formule)
+// la cassetta degli attrezzi: la matematica delle formule e le idee della fisica (solo nelle lenti con le formule)
 function toolboxCard() {
   if (!toolsOn(S.lens)) return null;
   return h('a', { class: 'zone toolbox-link', href: '#/attrezzi' },
     h('div', {}, h('h3', {}, tr('La cassetta degli attrezzi')),
-      h('p', { class: 'muted small' }, tr('Radice, Pitagora, π, seno e coseno: gli strumenti di matematica delle formule, da guardare e provare. Ne hai trovati {n} di {tot}.', { n: toolCount(), tot: TOOL_IDS.length }))),
+      h('p', { class: 'muted small' }, tr('La matematica delle formule e le idee della fisica, ognuna con il suo piccolo film, da guardare e provare. Ne hai trovati {n} di {tot}.', { n: toolCount(), tot: TOOL_IDS.length }))),
     h('span', { class: 'btn' }, tr('Apri')));
 }
 function toolbox() {
   return h('div', { class: 'page' }, topbar(), h('div', { class: 'page-in narrow' },
     h('a', { class: 'btn ghost', href: '#/' }, h('span', { html: IC.back }), tr('I mondi')),
     h('h1', {}, tr('La cassetta degli attrezzi')),
-    h('p', { class: 'muted' }, tr('Le formule della fisica usano pochi attrezzi di matematica. Ognuno si apre da solo la prima volta che un livello ne ha bisogno, e qui puoi riguardarlo quando vuoi.')),
+    h('p', { class: 'muted' }, tr('Le formule della fisica usano pochi attrezzi di matematica: ognuno si apre da solo la prima volta che un livello ne ha bisogno. Gli attrezzi di fisica, invece, non interrompono: nei livelli che ne parlano c’è un bottone per aprirli. Qui puoi riguardarli tutti quando vuoi.')),
     toolboxPage()));
 }
 

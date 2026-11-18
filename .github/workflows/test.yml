@@ -31,6 +31,5 @@ jobs:
           python3 -m http.server 8765 >/dev/null 2>&1 &
           sleep 1
           node tests/tools.mjs http://localhost:8765
-          node tests/films.mjs http://localhost:8765
           node tests/play-all.mjs http://localhost:8765
           LINGUA=en node tests/play-all.mjs http://localhost:8765 s

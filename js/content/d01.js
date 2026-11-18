@@ -1,5 +1,5 @@
 // D01 · Le forze e Newton. Simulazione: i carrelli (cart.js), su tre pavimenti, con i blocchi della massa e le frecce delle forze.
-// Le tre lezioni si aprono con un film (lessonfilm.js): la forza e l'inerzia, F = m · a, azione e reazione.
+// Le tre idee della zona (l'inerzia, F = m · a, azione e reazione) hanno anche la loro scheda nella cassetta degli attrezzi, con il film.
 // Il boss è un esperimento al buio: la massa nascosta sotto il telo si trova misurando l'accelerazione.
 import { T } from '../util.js';
 
@@ -12,12 +12,12 @@ export default {
   title: 'Le forze e Newton',
   levels: [
     {
-      id: 'd01-1', kind: 'lezione', title: 'Spingere e lasciare andare', film: 'forza',
+      id: 'd01-1', kind: 'lezione', title: 'Spingere e lasciare andare',
       sim: 'cart', params: { cars: 1, F1: 8, m1: 2, tP: 1, floor: 'tappeto', D: 24 }, controls: ['floor'], labels: { floor: FLOOR },
       intro: T(
-        'Ciao, sono Mela! Nell’Officina si spinge e si tira. Una spinta o un tiro è una <b>forza</b>: la disegniamo con una freccia. Guarda il film!',
+        'Ciao, sono Mela! Nell’Officina si spinge e si tira. Una spinta o un tiro è una <b>forza</b>: la disegniamo con una freccia. Prova a spingere il carrello!',
         'Benvenuto nell’Officina: qui si scopre <b>perché</b> le cose si muovono come si muovono. Una spinta o un tiro è una <b>forza</b>: ha una direzione e un’intensità, e si disegna con una freccia. Guarda che cosa fa il carrello quando la spinta finisce.',
-        'Sono Mela, quella caduta in testa a Newton. Qui si scopre perché le cose si muovono. Ogni spinta o tiro è una <b>forza</b>, una freccia con una direzione e una grandezza. Per duemila anni si è creduto che, senza una spinta, tutto si fermi. Guarda il film: è vero?'),
+        'Sono Mela, quella caduta in testa a Newton. Qui si scopre perché le cose si muovono. Ogni spinta o tiro è una <b>forza</b>, una freccia con una direzione e una grandezza. Per duemila anni si è creduto che, senza una spinta, tutto si fermi. È vero? Provalo.'),
       steps: [
         {
           kind: 'free', runs: 3,
@@ -64,7 +64,7 @@ export default {
       solution: T('Sul binario liscio il carrello non si ferma: niente lo frena. Sul tappeto si ferma perché il tappeto lo frena.', 'Senza forze la velocità resta costante (inerzia); il tappeto frena con una forza all’indietro.', 'Senza forze la velocità non cambia: è l’inerzia. A fermare il carrello è il pavimento, con una forza all’indietro.'),
     },
     {
-      id: 'd01-2', kind: 'lezione', title: 'Più forza, più massa', film: 'newton',
+      id: 'd01-2', kind: 'lezione', title: 'Più forza, più massa',
       sim: 'cart', params: { cars: 2, F1: 4, m1: 1, F2: 4, m2: 2, tP: 0, floor: 'liscio', D: 16 }, controls: ['F1', 'm1'], labels: { F1, m1: M1 },
       intro: T(
         'Più blocchi ci sono sul carrello, più è <b>difficile farlo partire</b>. Più forte spingi, più parte in fretta. Il carrello arancione resta sempre uguale: cambia quello blu e prova a batterlo!',
@@ -149,7 +149,7 @@ export default {
       solution: T('Con la stessa spinta vince il più leggero; con spinta doppia e blocchi doppi si arriva insieme.', 'Vince chi ha F/m più grande; con F/m uguali si arriva insieme.', 'Conta la forza per ogni kg: con lo stesso rapporto si arriva insieme.'),
     },
     {
-      id: 'd01-4', kind: 'lezione', title: 'Spingi e ti spinge', film: 'reazione',
+      id: 'd01-4', kind: 'lezione', title: 'Spingi e ti spinge',
       sim: 'cart', params: { mode: 'coppia', m1: 1, m2: 3, D: 12 }, controls: ['m1', 'm2'], labels: { m1: M1, m2: { label: 'Blocchi sul carrello arancione', min: 1, max: 6, step: 1, unit: 'kg' } },
       intro: T(
         'Quando spingi qualcosa, anche lui spinge te! Fra i due carrelli c’è una molla schiacciata: lanciala e guarda le due frecce.',
@@ -188,7 +188,7 @@ export default {
           options: [T('vai un po’ indietro', 'i gas spingono il razzo verso l’alto', 'spinge via i gas, e i gas spingono lui'), T('vai avanti, con la palla', 'l’aria sotto lo sostiene', 'si appoggia al vuoto'), T('resti fermo', 'il razzo è più leggero dell’aria', 'non può: nello spazio si va solo per inerzia')],
           answer: 0,
           explain: T(
-            'Giusto: tu spingi la palla avanti, la palla spinge te indietro. Come nel film!',
+            'Giusto: tu spingi la palla avanti, la palla spinge te indietro. Come i due carrelli con la molla!',
             'Esatto: il razzo spinge i gas verso il basso (azione) e i gas spingono il razzo verso l’alto (reazione). Funziona anche nel vuoto.',
             'Esatto: il razzo spinge i gas indietro e i gas spingono il razzo avanti. Non serve l’aria: è la terza legge.'),
         },
@@ -276,7 +276,7 @@ export default {
           explain: T('Giusto! Tirata più forte, ma anche più carica: le due cose si pareggiano, e cadono insieme.', 'Esatto: P = m·g e a = P/m = g, qualunque sia la massa.', 'Esatto: forza doppia su massa doppia dà la stessa accelerazione. [[a = P/m = m·g/m = g]]'),
         },
       ],
-      hints: [T('Ripensa ai tre film: il binario liscio, i blocchi, lo skate.')],
+      hints: [T('Ripensa ai carrelli: il binario liscio, i blocchi, la molla.')],
     },
     {
       id: 'd01-7', kind: 'boss', title: 'Il carrello misterioso', win: T('Esperimento riuscito!'),

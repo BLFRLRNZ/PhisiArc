@@ -2,6 +2,8 @@
 // 1) Un attrezzo che serve per rispondere: all'inizio del livello compare la sua scheda, con l'animazione;
 //    si risponde giusto, si va avanti e il livello riparte; la seconda volta la scheda non torna.
 // 2) Un attrezzo che compare solo in una spiegazione: nessuna scheda all'inizio, ma sotto la spiegazione c'è un bottone che la apre.
+// 3) Gli attrezzi di fisica non interrompono mai: in d01-2 l'introduzione parla della seconda legge, e sotto c'è il bottone.
+// 4) La cassetta: due scaffali, matematica e fisica; ogni attrezzo ha il suo film.
 import { createRequire } from 'node:module';
 let pw;
 try { pw = await import('playwright'); } catch { pw = createRequire(import.meta.url)('playwright'); }
@@ -58,17 +60,30 @@ if (await p.$('.toolcard')) fail('la scheda offerta non si chiude');
 tools = await p.evaluate(() => JSON.parse(localStorage.getItem('phisiarc-v1')).tools);
 if (!tools.radice || !tools.quadrato) fail('quadrato e radice aperti dal bottone non risultano visti: ' + JSON.stringify(tools));
 
+// 3) d01-2: la seconda legge è nell'introduzione, ma l'attrezzo di fisica si offre soltanto
+await p.goto(BASE + '/#/livello/d01-2'); await p.reload(); await p.waitForSelector('.lvl-head');
+await p.waitForTimeout(300);
+if (await p.$('.toolcard')) fail('in d01-2 un attrezzo di fisica non deve aprirsi da solo');
+if (await p.$eval('.quest', (e) => e.hidden)) fail('in d01-2 la domanda non deve aspettare');
+if (!(await p.$('.bubble .tool-chip[data-tool="newton"]'))) fail('in d01-2 manca il bottone «Forza, massa e accelerazione»');
+await p.click('.bubble .tool-chip[data-tool="newton"]');
+await p.waitForSelector('.toolcard.offered canvas.ta-cv', { timeout: 3000 }).catch(() => fail('il bottone della seconda legge non apre la scheda con il film'));
+
 await p.goto(BASE + '/#/attrezzi'); await p.waitForSelector('.tool-item');
-if ((await p.$$('.tool-item')).length !== 7) fail('la cassetta non ha 7 attrezzi');
+const ids = await p.$$eval('.tool-item', (es) => es.map((e) => e.dataset.tool));
+if (ids.length !== 10) fail(`la cassetta dovrebbe avere 10 attrezzi, ne ha ${ids.length}`);
+const shelves = await p.$$eval('.tool-shelf', (es) => es.map((e) => e.textContent));
+if (shelves.join() !== 'Matematica,Fisica') fail('gli scaffali della cassetta sono: ' + shelves);
+if (ids.slice(-3).join() !== 'inerzia,newton,reazione') fail('sullo scaffale della fisica mancano inerzia, newton, reazione: ' + ids);
 
 // 3) ogni attrezzo ha il suo piccolo film: dura circa un minuto, parte da solo, disegna dall'inizio alla fine,
 //    e in nessun momento la mano dell'omino deve arrivare a un oggetto che non raggiunge
 const film = (fn, arg) => p.$eval('.toolcard canvas.ta-cv', fn, arg);
 // quanti punti accesi ci sono sulla tela (lo sfondo è nero)
 const lit = () => film((c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 16) if (d[i] + d[i + 1] + d[i + 2] > 300) n++; return n; });
-for (let i = 0; i < 7; i++) {
+for (const id of ids) {
   await p.goto(BASE + '/#/attrezzi'); await p.waitForSelector('.tool-item');
-  await p.click(`.tool-item:nth-child(${i + 1})`);
+  await p.click(`.tool-item[data-tool="${id}"]`);
   const name = await p.$eval('.toolcard h3', (e) => e.textContent);
   await p.waitForSelector('.toolcard canvas.ta-cv', { timeout: 3000 }).catch(() => fail(`«${name}» non ha il suo film`));
   await film((c) => c.scrollIntoView({ block: 'center' }));   // il film parte appena si vede
@@ -94,7 +109,7 @@ if (!(await film((c) => c.__film.playing && c.__film.t < 1))) fail('il bottone n
 // chi ha chiesto meno movimento vede subito l'ultimo fotogramma, fermo, e può far partire il film con il bottone
 await p.emulateMedia({ reducedMotion: 'reduce' });
 await p.goto(BASE + '/#/attrezzi'); await p.reload(); await p.waitForSelector('.tool-item');
-await p.click('.tool-item:nth-child(2)'); await p.waitForSelector('.toolcard canvas.ta-cv');
+await p.click('.tool-item[data-tool="formula"]'); await p.waitForSelector('.toolcard canvas.ta-cv');
 await film((c) => c.scrollIntoView({ block: 'center' }));
 await p.waitForFunction(() => { const st = document.querySelector('.toolcard canvas.ta-cv').__film; return !st.playing && st.t >= st.dur - 0.1; }, null, { timeout: 4000 }).catch(() => fail('con «meno movimento» il film deve restare fermo sull’ultimo fotogramma'));
 if (!((await lit()) > 150)) fail('con «meno movimento» la tela è vuota');
@@ -102,4 +117,4 @@ await p.click('.ta-replay');
 if (!(await film((c) => c.__film.playing))) fail('con «meno movimento» il bottone non fa partire il film');
 await b.close();
 if (errs.length) fail('errori nella pagina');
-console.log('ok  cassetta degli attrezzi: scheda all’inizio di f02-1, bottoni sotto la spiegazione di f01-3, 7 attrezzi, 7 film');
+console.log(`ok  cassetta degli attrezzi: scheda all’inizio di f02-1, bottoni sotto la spiegazione di f01-3, la fisica si offre in d01-2, ${ids.length} attrezzi, ${ids.length} film`);

@@ -24,7 +24,7 @@ for (const z of Object.keys(PREREQ)) if (!order.includes(z)) problems.push(`${z}
 
 // ---------- 2. livelli ----------
 const LENSES = ['e', 's', 'c'];
-const SKIP = new Set(['id', 'kind', 'sim', 'film', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'labels', 'when', 'try']);
+const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'labels', 'when', 'try']);
 const isLens = (o) => o && typeof o === 'object' && !Array.isArray(o) && 'e' in o && 's' in o;
 const plain = (s) => String(s).replace(/<[^>]+>/g, ' ');
 function collect(o, lens, out) {

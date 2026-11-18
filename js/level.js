@@ -9,7 +9,6 @@ import { pieceSVG } from './pieces.js';
 import { starsSVG, confetti, countUp, CHECK } from './fx.js';
 import { enroll, grade } from './review.js';
 import { TOOLS, newTools, toolCard, toolsToOffer, toolQueue } from './tools.js';
-import { lessonFilm } from './lessonfilm.js';
 import { t as tr, LOCALE } from './i18n.js';
 import { KIND, worldOf, zoneOf, nextLevel, gradeNow, worldDone, nextWorld, worldReady, worldOpen, EXAM_MAX_ERRORS } from './content/index.js';
 
@@ -690,7 +689,7 @@ export function runLevel(root, level, nav) {
     nav('#/mondo/' + world.id);
   }
 
-  // Prima della domanda, a volte, c'è qualcosa da guardare: il film della lezione, le schede degli attrezzi nuovi.
+  // Prima della domanda, a volte, c'è qualcosa da guardare: le schede degli attrezzi nuovi.
   // La domanda resta nascosta finché non sono finiti tutti (holds); poi la voce la legge.
   function hold(k) { holds.add(k); quest.hidden = area.hidden = true; }
   function release(k) {
@@ -699,10 +698,6 @@ export function runLevel(root, level, nav) {
     quest.hidden = area.hidden = false; quest.focus?.({ preventScroll: true });
     if (voiceOn()) speak(readOut(si === 0));
   }
-  // Il film della lezione: la prima volta sta in cima e la domanda aspetta «Comincia»; poi resta un bottone per rivederlo.
-  const lf = level.film && !level.exam && !level.review
-    ? lessonFilm(level.film, lens, { first: !(S.films && S.films[level.film]) && !S.done[level.id], onGo: () => release('film') }) : null;
-  if (lf) { bubble.append(lf.chip); textPane.insertBefore(lf.card, hintBox); if (!lf.card.hidden) hold('film'); }
   // Attrezzi di matematica nuovi che servono per rispondere (potenze di 10, radice, π…): prima di cominciare, la loro scheda da giocare.
   const toolsNew = level.exam || level.review ? [] : newTools(level, lens);
   if (toolsNew.length) {
@@ -711,5 +706,5 @@ export function runLevel(root, level, nav) {
   }
   renderStep();
 
-  return () => { stopSpeaking(); if (sim) sim.destroy(); if (lf) lf.stop(); };
+  return () => { stopSpeaking(); if (sim) sim.destroy(); };
 }
