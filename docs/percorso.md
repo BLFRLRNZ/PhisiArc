@@ -54,7 +54,7 @@ Il tasto Aiuto resta acceso, ma a ogni passo il primo tocco avvisa soltanto: usa
 Un mondo si può aprire prima di essere finito: le zone pronte vanno in `zones`, quelle ancora da scrivere restano in `soon`
 e il mondo porta `building: true`. Finché è in costruzione non conta come finito (niente grado, niente prova d'ingresso,
 il mondo dopo non si apre), e alla fine dell'ultima zona pronta il gioco dice che le altre arrivano presto.
-Oggi è così l'Officina: D01 «Le forze e Newton» si gioca, D02–D05 sono in arrivo.
+L'Officina è stata costruita così, una zona alla volta; oggi è completa, e il prossimo mondo da costruire è il Cielo.
 
 ## Graduale dentro ogni mondo
 
@@ -78,6 +78,6 @@ Dal terzo mondo il ritmo cambia, perché lo schema fisso stanca:
    I proiettili sono della Pista; l'Officina parla di forze, non di nuovo di traiettorie.
 2. **Ogni zona porta qualcosa di nuovo da toccare**: una simulazione nuova o un modo nuovo di usarla
    (il laboratorio dei grafici, la barca sul fiume, la giostra, i carrelli e le rampe, le vasche, i circuiti…).
-3. **Ogni mondo ha la sua mascotte**, e i boss sono di Vetrino, il cacciatore di miti.
+3. **Ogni mondo ha la sua mascotte**, e i boss sono di Vetrino, il cacciatore di miti; qualche esperimento al buio lo presenta Bilancia.
 4. **I ripassi richiamano un'idea di un mondo precedente** solo come ponte (es. il moto circolare richiama la proporzionalità inversa del Laboratorio),
    mai rifacendo lo stesso esercizio.

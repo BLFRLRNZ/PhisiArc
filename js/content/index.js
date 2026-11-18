@@ -61,10 +61,8 @@ export const WORLDS = [
   // Il Cielo viene subito dopo l'Officina (la gravitazione continua Newton e usa il moto circolare della Pista);
   // la Frontiera viene prima dell'Abisso (l'energia dei nuclei si spiega con E = mc²).
   {
-    // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
-    // (niente grado di Newton, niente prova d'ingresso), ma le zone pronte si giocano già.
     id: 'officina', n: 3, diff: 2, name: 'L’Officina', field: 'Dinamica: forze ed energia', place: 'Carrelli, rampe e montagne russe', color: 'var(--coral)', mascot: 'mela',
-    zones: ['D01', 'D02', 'D03', 'D04', 'D05'], building: true,
+    zones: ['D01', 'D02', 'D03', 'D04', 'D05'],
     soon: [], requires: ['pista'],
     intro: {
       e: 'Ciao, sono Mela! Nell’Officina si spinge, si tira e si lancia. Scopriremo che cosa fa partire le cose, e che cosa le ferma.',
@@ -96,7 +94,7 @@ export const GRADES = [
   { name: 'Apprendista', world: null, desc: 'Si parte da qui.' },
   { name: 'Sperimentatore', world: 'laboratorio', desc: 'Sai prevedere, provare e misurare: il metodo di ogni scienziato.' },
   { name: 'Galileo', world: 'pista', desc: 'Galileo Galilei (1564-1642) capì che, senza aria, tutto cade allo stesso modo e che il moto si può misurare.' },
-  { name: 'Newton', world: 'officina', desc: 'In arrivo.' },
+  { name: 'Newton', world: 'officina', desc: 'Isaac Newton (1642-1727) scrisse le leggi del moto: una forza non serve a mantenere il moto, ma a cambiarlo.' },
   { name: 'Keplero', world: 'cielo', desc: 'In arrivo.' },
   { name: 'Archimede', world: 'oceano', desc: 'In arrivo.' },
   { name: 'Kelvin', world: 'vulcano', desc: 'In arrivo.' },

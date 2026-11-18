@@ -34,6 +34,9 @@ Ogni lente ha la sua voce, e `node tools/check-lenti.mjs` controlla che la mante
 | `num` | Domanda di calcolo | vedi sotto |
 | `tune` | Regolare i controlli per centrare un obiettivo | vedi sotto |
 
+Il **boss** (`kind: 'boss'`) senza `win` è un mito da smontare, e alla fine dice «Mito smontato!»; con `win: T('Esperimento riuscito!')`
+è un esperimento al buio. Di solito lo presenta Vetrino; con `who: 'bilancia'` lo presenta un altro personaggio del cast.
+
 ### Prove libere che controllano che cosa hai provato (`free`)
 
 ```js
