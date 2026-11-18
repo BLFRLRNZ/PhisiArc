@@ -1,5 +1,5 @@
 // La cassetta degli attrezzi: gli strumenti di matematica che servono alle formule (potenze di 10, radice, Pitagora, π, seno…)
-// e, dall'Officina, le idee della fisica (l'inerzia, F = m·a, azione e reazione).
+// e, dall'Officina, le idee della fisica, uno scaffale per mondo (l'inerzia, F = m·a, azione e reazione; le altre in tools-mondi.js).
 // Nessuna formula è nascosta: la prima volta che un livello ha bisogno di un attrezzo di matematica PER RISPONDERE, prima di
 // cominciare compare la sua scheda. Quando invece l'attrezzo compare solo in una spiegazione, in un aiuto o in un riquadro
 // facoltativo, la scheda non interrompe: sotto il testo c'è un bottone per aprirla (level.js, offerTools).
@@ -11,18 +11,9 @@ import { S, save } from './state.js';
 import { t as tr, LOCALE } from './i18n.js';
 import { sfx } from './audio.js';
 import { toolAnim } from './toolanim.js';
-
-const n = (x, d = 2) => Number(x).toLocaleString(LOCALE, { maximumFractionDigits: d });
-const svg = (w, hh, inner) => `<svg viewBox="0 0 ${w} ${hh}" class="tool-svg" aria-hidden="true">${inner}</svg>`;
-
-// un cursore con il valore accanto
-function slider(label, min, max, step, val, onIn) {
-  const out = h('output');
-  const r = h('input', { type: 'range', min, max, step, value: val, 'aria-label': label });
-  const set = () => { out.textContent = n(r.value); onIn(Number(r.value)); };
-  r.addEventListener('input', set);
-  return { el: h('label', { class: 'tool-sl' }, h('span', {}, label, ' ', out), r), set, r };
-}
+import { n, svg, slider } from './toolui.js';
+import { MONDI } from './tools-mondi.js';
+import { WORLDS } from './content/index.js';
 
 // ---------- gli strumenti, nell'ordine in cui si imparano ----------
 // needs: gli attrezzi che vanno conosciuti prima (la radice è il quadrato al contrario: prima il quadrato).
@@ -231,7 +222,7 @@ export const TOOLS = {
 
   // ---------- gli attrezzi di fisica: le idee dell'Officina ----------
   inerzia: {
-    area: 'fisica', offer: true,
+    area: 'fisica', offer: true, world: 'officina',
     title: () => tr('La forza e l’inerzia'),
     sub: () => tr('Senza forze, la velocità non cambia'),
     test: (s) => /(?<!\p{L})(inerzia|inertia)(?!\p{L})/iu.test(s),
@@ -266,7 +257,7 @@ export const TOOLS = {
   },
 
   newton: {
-    area: 'fisica', offer: true,
+    area: 'fisica', offer: true, world: 'officina',
     title: () => tr('Forza, massa e accelerazione'),
     sub: () => tr('La seconda legge di Newton: F = m · a'),
     test: (s) => /m ?· ?a\b|F ?\/ ?m\b|seconda legge|second law/i.test(s),
@@ -299,7 +290,7 @@ export const TOOLS = {
   },
 
   reazione: {
-    area: 'fisica', offer: true,
+    area: 'fisica', offer: true, world: 'officina',
     title: () => tr('Azione e reazione'),
     sub: () => tr('La terza legge di Newton'),
     // la terza legge di Newton, non quella di Keplero
@@ -336,6 +327,9 @@ export const TOOLS = {
       ok: tr('Giusto: il muro ti spinge con una forza uguale e opposta alla tua. Lui non si muove, tu sì.'),
     }),
   },
+
+  // ---------- gli attrezzi di fisica degli altri mondi, uno scaffale per mondo (tools-mondi.js) ----------
+  ...MONDI,
 };
 export const TOOL_IDS = Object.keys(TOOLS);
 
@@ -400,7 +394,7 @@ export function toolCard(queue, onEnd, { inLevel = false } = {}) {
     box.replaceChildren(
       h('div', { class: 'tool-tag' }, inLevel ? (queue.length > 1 ? tr('Nuovo attrezzo · {i} di {n}', { i: i + 1, n: queue.length }) : tr('Nuovo attrezzo')) : tr('Attrezzo')),
       h('h3', {}, T.title()),
-      toolAnim(id),
+      toolAnim(id) || '',   // chi non ha ancora il suo film mostra la scheda senza
       h('p', { html: T.body() }),
       T.widget(),
       h('p', { class: 'small tool-tip', html: T.tip() }),
@@ -423,9 +417,13 @@ export function toolboxPage() {
   };
   // due scaffali: la matematica delle formule e le idee della fisica
   const shelf = (title, ids) => (ids.length ? [h('h3', { class: 'tool-shelf' }, title), h('div', { class: 'tool-list' }, ids.map(item))] : []);
+  // la fisica è divisa per mondo, nell'ordine del percorso
+  const fis = TOOL_IDS.filter((id) => TOOLS[id].area === 'fisica');
+  const byWorld = WORLDS.filter((w) => fis.some((id) => TOOLS[id].world === w.id))
+    .flatMap((w) => [h('h4', { class: 'tool-world' }, tr(w.name)), h('div', { class: 'tool-list' }, fis.filter((id) => TOOLS[id].world === w.id).map(item))]);
   const wrap = h('div', {},
     ...shelf(tr('Matematica'), TOOL_IDS.filter((id) => TOOLS[id].area !== 'fisica')),
-    ...shelf(tr('Fisica'), TOOL_IDS.filter((id) => TOOLS[id].area === 'fisica')),
+    ...(fis.length ? [h('h3', { class: 'tool-shelf' }, tr('Fisica')), ...byWorld] : []),
     holder);
   const render = () => wrap.replaceWith(toolboxPage());
   return wrap;
