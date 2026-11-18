@@ -91,6 +91,11 @@ Lo svolgimento (`explain`) è anche quello che legge chi, con la lente Curioso, 
 `{got}` è il valore misurato. `measure` è il nome di un campo del risultato della simulazione (per la gara `times[0]`, `vEnd[0]`;
 per il laboratorio `y`; per la giostra `v`; vedi il `finish(...)` di ogni simulazione in `js/sims/`).
 
+I valori possono anche essere parole, per esempio il nome del pianeta di ogni prova: `vals: { n: [['Marte'], ['Giove']] }`. Nel testo
+`{n}` diventa la parola tradotta (serve la sua voce nel dizionario inglese; `node tools/i18n-strings.mjs` la chiede), mentre nelle
+formule (`derive`, `set`, `goal`, `solve`) resta la parola italiana, così si può usare come nome interno: `set: { target: 'n.toLowerCase()' }`.
+Quando più valori devono andare insieme (il pianeta e la sua distanza), se ne sceglie uno e gli altri si ricavano con `derive`.
+
 ## Gli aiuti
 
 Prima della soluzione c'è sempre un passaggio. Per ogni passo il motore usa, in ordine: i suggerimenti del passo (`hints`);

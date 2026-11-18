@@ -88,6 +88,7 @@ export default {
  "Galileo Galilei (1564-1642) capì che, senza aria, tutto cade allo stesso modo e che il moto si può misurare.": "Galileo Galilei (1564-1642) realised that, without air, everything falls the same way, and that motion can be measured.",
  "Isaac Newton (1642-1727) scrisse le leggi del moto: una forza non serve a mantenere il moto, ma a cambiarlo.": "Isaac Newton (1642-1727) wrote the laws of motion: a force is not needed to keep motion going, but to change it.",
  "In arrivo.": "Coming soon.",
+ "Giovanni Keplero (1571-1630) scoprì le leggi dei pianeti: girano intorno al Sole su ellissi, e più sono lontani più vanno piano.": "Johannes Kepler (1571-1630) discovered the laws of the planets: they go round the Sun on ellipses, and the farther away they are, the slower they go.",
  "Keplero": "Kepler",
  "Archimede": "Archimedes",
  "Il traguardo finale.": "The final goal.",
