@@ -102,10 +102,8 @@ export const WORLDS = [
   },
   {
     id: 'vulcano', n: 6, diff: 3, name: 'Il Vulcano', field: 'Termodinamica', place: 'Dal ghiacciaio alla lava', color: 'var(--coral)', mascot: 'termo',
-    // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
-    // (niente grado di Kelvin, niente prova d'ingresso), ma le zone pronte si giocano già.
-    zones: ['T01', 'T02', 'T03', 'T04'], building: true,
-    requires: ['oceano'],
+    zones: ['T01', 'T02', 'T03', 'T04'],
+    soon: [], requires: ['oceano'],
     intro: {
       e: 'Ciao, sono Termo! Nel Vulcano scopriremo che cos’è il caldo, perché il ghiaccio si scioglie, come si gonfia una mongolfiera e come funziona un motore.',
       s: 'Sono Termo, benvenuto nel Vulcano. Nell’Oceano hai visto la pressione dei fluidi; qui scopri la temperatura e il calore, i passaggi di stato, i gas e i motori: la termodinamica.',
@@ -133,7 +131,7 @@ export const GRADES = [
   { name: 'Newton', world: 'officina', desc: 'Isaac Newton (1642-1727) scrisse le leggi del moto: una forza non serve a mantenere il moto, ma a cambiarlo.' },
   { name: 'Keplero', world: 'cielo', desc: 'Giovanni Keplero (1571-1630) scoprì le leggi dei pianeti: girano intorno al Sole su ellissi, e più sono lontani più vanno piano.' },
   { name: 'Archimede', world: 'oceano', desc: 'Archimede di Siracusa (circa 287-212 a.C.) scoprì la spinta dei liquidi: chi entra nell’acqua riceve una spinta verso l’alto pari al peso dell’acqua che sposta.' },
-  { name: 'Kelvin', world: 'vulcano', desc: 'In arrivo.' },
+  { name: 'Kelvin', world: 'vulcano', desc: 'Lord Kelvin, William Thomson (1824-1907), capì che il freddo ha un fondo: lo zero assoluto, −273 °C, da cui parte la scala delle temperature che porta il suo nome.' },
   { name: 'Hooke', world: 'valle', desc: 'In arrivo.' },
   { name: 'Huygens', world: 'prisma', desc: 'In arrivo.' },
   { name: 'Faraday', world: 'centrale', desc: 'In arrivo.' },
