@@ -135,6 +135,12 @@ export const IDEE = {
   'legge di Charles (V/T costante)': { parole: 'Charles|V/T (=|resta)|V₁ ?/ ?T₁', da: 't03-4', mai: ['e'] },
   'legge di Gay-Lussac (P/T costante)': { parole: 'Gay-Lussac|P/T (=|resta|costante)|P₁ ?/ ?T₁', da: 't03-6', mai: ['e'] },
   'gas perfetti (P·V = n·R·T)': { parole: 'gas perfett|n ?· ?R ?· ?T', da: 't03-6', mai: ['e'] },
+  'energia interna': { parole: 'energia interna', da: 't04-1' },
+  'primo principio della termodinamica': { parole: 'primo principio della termodinamica', da: 't04-1' },
+  'rendimento': { parole: 'rendiment', da: 't04-2' },
+  'limite di Carnot (η = 1 − T fredda / T calda)': { parole: 'Carnot|η', da: 't04-3', mai: ['e'] },
+  'secondo principio della termodinamica': { parole: 'secondo principio|Clausius', da: 't04-5' },
+  'entropia': { parole: 'entropi', da: 't04-6' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

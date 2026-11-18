@@ -45,13 +45,19 @@ export class Gas extends Sim {
   init() {
     this.u = 0;
     this.hits = [];
+    this._reg = null;
     this.parts = Array.from({ length: 60 }, (_, i) => ({ x: (0.5 + i * 0.7548777) % 1, y: (0.5 + i * 0.5698403) % 1, a: i * 2.39996 + 0.3 }));
   }
 
-  step() {
+  // durante la prova le particelle si muovono con il tempo della simulazione (anche a velocità diverse da 1×);
+  // finita la prova, continuano a muoversi con i fotogrammi, solo per bellezza
+  step(dt) {
+    if (this._reg && dt) { const r = this._reg; this.move(r.N, r.w, r.h, r.v, dt); this.afterMove(); }
     this.u = clamp01(this.t / 2.6);
     if (this.t > 3) this.end();
   }
+
+  afterMove() {}
 
   end() {
     if (!this.running) return;
@@ -80,9 +86,8 @@ export class Gas extends Sim {
 
   // ---------- le particelle del gas ----------
   // muove le prime N particelle in una regione di w × h pixel, a v pixel al secondo; ogni colpo su una parete è segnato
-  move(N, w, h, v) {
+  move(N, w, h, v, dt) {
     if (this.calm) return;
-    const dt = Math.min(this.fdt, 0.05);
     for (let i = 0; i < N; i++) {
       const q = this.parts[i];
       q.x += (Math.cos(q.a) * v * dt) / w; q.y += (Math.sin(q.a) * v * dt) / h;
@@ -99,7 +104,8 @@ export class Gas extends Sim {
   // il gas nella regione (x0, y0)–(x1, y1): N particelle a v pixel al secondo, e i colpi sulle pareti che fanno la pressione
   gasIn(N, x0, y0, x1, y1, { col, v, r = 4, walls = true }) {
     const pad = r + 1, w = Math.max(2, x1 - x0 - 2 * pad), h = Math.max(2, y1 - y0 - 2 * pad);
-    if (this.live) this.move(N, w, h, v);
+    this._reg = { N, w, h, v };
+    if (this.result && !this.running) this.move(N, w, h, v, Math.min(this.fdt, 0.05));
     for (let i = 0; i < N; i++) { const q = this.parts[i]; this.ball(x0 + pad + q.x * w, y0 + pad + q.y * h, r, { color: col, fill: 0.5, width: 1.4, shine: false }); }
     if (!walls) return;
     for (const k of this.hits) {

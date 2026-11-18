@@ -112,6 +112,11 @@ export const PIECE_SVG = {
     P('M4 60h56', 'green', null, 1.6) + P('M10 58q2-5 6-4M50 58q3-6 7-3', 'green', null, 1.2) +
     `<g class="pz-hover">${P('M32 5c-11 0-18 8-18 17 0 8 6 13 11 19h14c5-6 11-11 11-19 0-9-7-17-18-17z', 'sun', 'orange', 1.8)}${P('M32 5v36M25 7q-4 17 1 34M39 7q4 17-1 34', 'sun', null, 1)}` +
     `${P('M26 41l1 6M38 41l-1 6', 'chalk', null, 1.2)}${P('M26 47h12v7H26z', 'orange', 'orange', 1.5)}<g class="pz-twinkle">${P('M32 46v-4', 'coral', null, 2.2)}</g></g>`),
+  battello: svg(
+    P('M2 50h60', 'sky', null, 1.6) + P('M8 55h6M30 57h8M50 55h6', 'sky', null, 1.2) +
+    `<g class="pz-bob">${P('M10 40h40l-5 9H15z', 'orange', 'orange', 1.8)}${P('M16 40v-9h20v9', 'chalk', null, 1.6)}${P('M28 31V19h5v12', 'coral', 'coral', 1.4)}` +
+    `<g class="pz-smoke">${P('M31 15q-3-3 0-6t1-5', 'chalk', null, 1.4)}</g>` +
+    `<g class="pz-wheel">${P(C(50, 42, 7), 'sun', null, 1.6)}${P('M50 34v16M42 42h16M44 36l12 12M56 36L44 48', 'sun', null, 1.2)}</g></g>`),
   terme: svg(
     P('M8 36h48v16q0 4-4 4H12q-4 0-4-4z', 'sky', 'sky', 1.8) + P('M8 42h48', 'coral', null, 1.4) +
     `<g class="pz-steam">${P('M20 30q-3-5 0-9t0-9M32 30q-3-5 0-9t0-9M44 30q-3-5 0-9t0-9', 'chalk', null, 1.6)}</g>` +
