@@ -534,6 +534,8 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .pz-bob { animation: pz-float 3.2s ease-in-out infinite; }
 @keyframes pz-float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(1.5px) rotate(-1.5deg); } }
 .pz-fly { animation: pz-fly 4.4s ease-in-out infinite; }
+.pz-steam { animation: pz-steam 2.6s ease-in-out infinite; }
+@keyframes pz-steam { 0% { transform: translateY(3px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-6px); opacity: 0; } }
 @keyframes pz-fly { 0% { transform: translate(-8px, 7px); opacity: 0; } 10%, 35% { transform: translate(-4px, 7px); opacity: 1; } 75% { transform: translate(6px, -6px) rotate(-7deg); opacity: 1; } 90% { transform: translate(10px, -10px) rotate(-8deg); opacity: 0; } 100% { transform: translate(-8px, 7px); opacity: 0; } }
 @keyframes pz-pump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 @keyframes pz-raise { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }

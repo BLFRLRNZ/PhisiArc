@@ -23,6 +23,7 @@ import G03 from './g03.js';
 import FL01 from './fl01.js';
 import FL02 from './fl02.js';
 import FL03 from './fl03.js';
+import T01 from './t01.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -38,7 +39,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -96,8 +97,18 @@ export const WORLDS = [
       c: 'Sono Goccia. Acqua e aria sembrano non opporsi a niente, eppure reggono navi da centomila tonnellate e aerei da quattrocento. Il segreto è la pressione, e da lì comincia l’Oceano.',
     },
   },
-  { id: 'vulcano', n: 6, diff: 3, name: 'Il Vulcano', field: 'Termodinamica', place: 'Dal ghiacciaio alla lava', color: 'var(--coral)', mascot: 'termo',
-    soon: ['T01 Temperatura, calore e come si propaga', 'T02 Stati della materia', 'T03 I gas', 'T04 Motori ed entropia'], requires: ['oceano'] },
+  {
+    id: 'vulcano', n: 6, diff: 3, name: 'Il Vulcano', field: 'Termodinamica', place: 'Dal ghiacciaio alla lava', color: 'var(--coral)', mascot: 'termo',
+    // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
+    // (niente grado di Kelvin, niente prova d'ingresso), ma le zone pronte si giocano già.
+    zones: ['T01'], building: true,
+    soon: ['T02 Stati della materia', 'T03 I gas', 'T04 Motori ed entropia'], requires: ['oceano'],
+    intro: {
+      e: 'Ciao, sono Termo! Nel Vulcano scopriremo che cos’è il caldo, perché il ghiaccio si scioglie, come si gonfia una mongolfiera e come funziona un motore.',
+      s: 'Sono Termo, benvenuto nel Vulcano. Nell’Oceano hai visto la pressione dei fluidi; qui scopri la temperatura e il calore, i passaggi di stato, i gas e i motori: la termodinamica.',
+      c: 'Sono Termo. Dal ghiacciaio alla lava, tutto quello che si scalda, si scioglie, bolle o si gonfia segue poche leggi: le stesse che fanno girare i motori, e che nessuno è mai riuscito a imbrogliare. È la termodinamica.',
+    },
+  },
   { id: 'valle', n: 7, diff: 3, name: 'La Valle delle Onde', field: 'Oscillazioni, onde e suono', place: 'Altalene, corde e strumenti', color: 'var(--mint)', mascot: 'boing',
     soon: ['O01 Molle e oscillazioni', 'O02 Le onde', 'O03 Il suono', 'O04 Risonanza ed effetto Doppler'], requires: ['vulcano'] },
   { id: 'prisma', n: 8, diff: 3, name: 'Il Prisma', field: 'Ottica', place: 'Specchi, lenti e colori', color: 'var(--pink)', mascot: 'iride',
