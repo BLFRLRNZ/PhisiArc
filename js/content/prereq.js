@@ -113,6 +113,8 @@ export const IDEE = {
   'legge di Stevino (P = ρ·g·h)': { parole: 'ρ ?· ?g ?· ?h|Stevino', da: 'fl01-3', mai: ['e'] },
   'principio di Pascal': { parole: 'principio di Pascal|torchio idraulic', da: 'fl01-5' },
   'pressione atmosferica': { parole: 'pressione atmosferic|\\d ?atm\\b|barometr|Torricelli', da: 'fl01-6' },
+  'principio di Archimede': { parole: '(principio|spinta) di Archimede', da: 'fl02-2' },
+  'spinta di Archimede (F = ρ·V·g)': { parole: 'ρ ?· ?V ?· ?g', da: 'fl02-2', mai: ['e'] },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
