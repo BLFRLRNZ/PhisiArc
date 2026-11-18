@@ -128,6 +128,9 @@ export const IDEE = {
   'convezione': { parole: 'convezion', da: 't01-3' },
   'conduzione del calore': { parole: 'conduzion|conduttor|isolant', da: 't01-5' },
   'irraggiamento': { parole: 'irraggia', da: 't01-6' },
+  'passaggi di stato': { parole: 'passaggi? di stato|stati della materia|fusione|condensa|sublima', da: 't02-1' },
+  'calore latente (Q = m·L)': { parole: 'calore latente|Q ?= ?m ?· ?L', da: 't02-3' },
+  'punto di ebollizione': { parole: 'punto di ebollizione', da: 't02-5' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

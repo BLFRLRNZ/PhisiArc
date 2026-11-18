@@ -296,4 +296,67 @@ export const MONDI = {
       ok: tr('Giusto: fra il Sole e la Terra c’è il vuoto, e solo l’irraggiamento lo attraversa.'),
     }),
   },
+
+  latente: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('Il calore latente: Q = m·L'),
+    sub: () => tr('Il calore che cambia lo stato'),
+    test: (s) => /calore latente|latent heat|Q ?= ?m ?· ?L/i.test(s),
+    body: () => tr('Per cambiare stato serve calore, anche se la temperatura resta ferma: è il <b>calore latente</b>, <b>Q = m·L</b>. Per fondere 1 kg di ghiaccio servono <b>334 kJ</b>; per farne evaporare 1 kg d’acqua <b>2260 kJ</b>, più di cinque volte quello che serve a scaldarla da 0 a 100 °C. Dai calore a 1 kg di ghiaccio.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const STEP = [[0, -20], [42, 0], [376, 0], [795, 100], [3055, 100]];
+      const draw = (Q) => {
+        // il grafico temperatura–calore di 1 kg di ghiaccio partito da −20 °C, con i due gradini
+        const X = (q) => 14 + (q / 3100) * 172, Y = (t) => 92 - ((t + 30) / 140) * 84;
+        let T = 100, state = tr('bolle: resta a 100 °C');
+        if (Q < 42) { T = -20 + (Q / 42) * 20; state = tr('ghiaccio'); }
+        else if (Q < 376) { T = 0; state = tr('si scioglie: resta a 0 °C'); }
+        else if (Q < 795) { T = ((Q - 376) / 419) * 100; state = tr('acqua'); }
+        let g = `<line x1="14" y1="${Y(0)}" x2="186" y2="${Y(0)}" class="ground"/><line x1="14" y1="${Y(100)}" x2="186" y2="${Y(100)}" class="ground"/>`;
+        g += `<polyline points="${STEP.map(([q, t]) => `${X(q).toFixed(1)},${Y(t).toFixed(1)}`).join(' ')}" class="edge"/>`;
+        g += `<circle cx="${X(Q).toFixed(1)}" cy="${Y(T).toFixed(1)}" r="5" class="tipdot"/><text x="8" y="${Y(0) + 4}" class="lb" text-anchor="end">0</text>`;
+        show.innerHTML = svg(196, 100, g) + `<div class="tool-f">Q = <span class="c2">${n(Q, 0)} kJ</span> → <span class="c1">${n(Math.round(T), 0)} °C</span></div><p class="small muted">${state}</p>`;
+      };
+      const a = slider(tr('calore dato (kJ)'), 0, 3000, 20, 200, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo il ghiaccio rinfresca tanto, il vapore scotta più dell’acqua bollente e il sudore, evaporando, ci tiene freschi.'),
+    check: () => ({
+      q: tr('Il ghiaccio si sta sciogliendo sul fuoco. Che cosa fa la temperatura?'),
+      options: [tr('resta a 0 °C finché c’è ghiaccio'), tr('sale piano piano'), tr('scende sotto zero')],
+      ok: tr('Giusto: il calore va tutto a sciogliere il ghiaccio, e il termometro aspetta.'),
+    }),
+  },
+
+  stati: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('Solido, liquido, gas'),
+    sub: () => tr('I passaggi di stato'),
+    test: (s) => /passaggi? di stato|stati della materia|states of matter|changes? of state|condensa|sublima|condensation|sublimat/i.test(s),
+    body: () => tr('La materia ha tre <b>stati</b>. Nel <b>solido</b> le particelle vibrano al loro posto; nel <b>liquido</b> restano vicine ma scivolano; nel <b>gas</b> volano libere. Scaldando si passa da solido a liquido (<b>fusione</b>) e da liquido a gas (<b>evaporazione</b>); raffreddando si torna indietro (<b>solidificazione</b>, <b>condensazione</b>). Scegli un passaggio.'),
+    widget() {
+      const PS = [[tr('fusione'), 0, 1, tr('Il ghiaccio si scioglie al sole.')], [tr('solidificazione'), 1, 0, tr('L’acqua nel freezer diventa ghiaccio.')], [tr('evaporazione'), 1, 2, tr('La pozzanghera si asciuga.')], [tr('condensazione'), 2, 1, tr('Gli occhiali si appannano entrando in casa.')], [tr('sublimazione'), 0, 2, tr('Il ghiaccio secco fuma senza sciogliersi.')], [tr('brinamento'), 2, 0, tr('Il vapore diventa brina sui vetri gelati.')]];
+      const POS = [[40, 84], [160, 84], [100, 20]], NAME = [tr('solido'), tr('liquido'), tr('gas')];
+      const show = h('div', { class: 'tool-show' });
+      const draw = (i) => {
+        const [, a, b, ex] = PS[i];
+        let g = POS.map(([x, y], k) => `<circle cx="${x}" cy="${y}" r="16" class="${['sqc', 'cell', 'sqa'][k]}"/><text x="${x}" y="${y + 32}" class="lb" text-anchor="middle">${NAME[k]}</text>`).join('');
+        const [x0, y0] = POS[a], [x1, y1] = POS[b], d = Math.hypot(x1 - x0, y1 - y0), ux = (x1 - x0) / d, uy = (y1 - y0) / d;
+        const ax = x0 + ux * 20, ay = y0 + uy * 20, bx = x1 - ux * 22, by = y1 - uy * 22;
+        g += `<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" class="frc"/><path d="M${(bx - ux * 7 - uy * 5).toFixed(1)} ${(by - uy * 7 + ux * 5).toFixed(1)}L${bx.toFixed(1)} ${by.toFixed(1)}L${(bx - ux * 7 + uy * 5).toFixed(1)} ${(by - uy * 7 - ux * 5).toFixed(1)}" class="frc"/>`;
+        show.innerHTML = svg(200, 124, g) + `<p class="small">${ex}</p>`;
+      };
+      const a = slider(tr('passaggio'), 0, PS.length - 1, 1, 0, draw, (i) => PS[i][0]);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Andando verso il gas si prende calore (il ghiaccio che fonde rinfresca); tornando indietro lo si restituisce (il vapore che si condensa scalda).'),
+    check: () => ({
+      q: tr('Come si chiama il passaggio da gas a liquido?'),
+      options: [tr('condensazione'), tr('evaporazione'), tr('sublimazione')],
+      ok: tr('Giusto: il vapore che torna goccioline, come sullo specchio del bagno.'),
+    }),
+  },
 };

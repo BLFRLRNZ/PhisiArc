@@ -24,6 +24,7 @@ import FL01 from './fl01.js';
 import FL02 from './fl02.js';
 import FL03 from './fl03.js';
 import T01 from './t01.js';
+import T02 from './t02.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -39,7 +40,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01, T02 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -101,8 +102,8 @@ export const WORLDS = [
     id: 'vulcano', n: 6, diff: 3, name: 'Il Vulcano', field: 'Termodinamica', place: 'Dal ghiacciaio alla lava', color: 'var(--coral)', mascot: 'termo',
     // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
     // (niente grado di Kelvin, niente prova d'ingresso), ma le zone pronte si giocano già.
-    zones: ['T01'], building: true,
-    soon: ['T02 Stati della materia', 'T03 I gas', 'T04 Motori ed entropia'], requires: ['oceano'],
+    zones: ['T01', 'T02'], building: true,
+    soon: ['T03 I gas', 'T04 Motori ed entropia'], requires: ['oceano'],
     intro: {
       e: 'Ciao, sono Termo! Nel Vulcano scopriremo che cos’è il caldo, perché il ghiaccio si scioglie, come si gonfia una mongolfiera e come funziona un motore.',
       s: 'Sono Termo, benvenuto nel Vulcano. Nell’Oceano hai visto la pressione dei fluidi; qui scopri la temperatura e il calore, i passaggi di stato, i gas e i motori: la termodinamica.',
