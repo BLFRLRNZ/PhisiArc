@@ -12,6 +12,11 @@ import M02 from './m02.js';
 import M03 from './m03.js';
 import M04 from './m04.js';
 import M05 from './m05.js';
+import D01 from './d01.js';
+import D02 from './d02.js';
+import D03 from './d03.js';
+import D04 from './d04.js';
+import D05 from './d05.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -27,7 +32,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -55,8 +60,16 @@ export const WORLDS = [
   // Dal più semplice al più difficile: ogni mondo è un campo della fisica e si apre solo dopo aver finito quello prima.
   // Il Cielo viene subito dopo l'Officina (la gravitazione continua Newton e usa il moto circolare della Pista);
   // la Frontiera viene prima dell'Abisso (l'energia dei nuclei si spiega con E = mc²).
-  { id: 'officina', n: 3, diff: 2, name: 'L’Officina', field: 'Dinamica: forze ed energia', place: 'Carrelli, rampe e montagne russe', color: 'var(--coral)', mascot: 'mela',
-    soon: ['D01 Le forze e Newton', 'D02 Attrito e piani inclinati', 'D03 Lavoro, energia e potenza', 'D04 Quantità di moto e urti', 'D05 Rotazioni ed equilibrio'], requires: ['pista'] },
+  {
+    id: 'officina', n: 3, diff: 2, name: 'L’Officina', field: 'Dinamica: forze ed energia', place: 'Carrelli, rampe e montagne russe', color: 'var(--coral)', mascot: 'mela',
+    zones: ['D01', 'D02', 'D03', 'D04', 'D05'],
+    soon: [], requires: ['pista'],
+    intro: {
+      e: 'Ciao, sono Mela! Nell’Officina si spinge, si tira e si lancia. Scopriremo che cosa fa partire le cose, e che cosa le ferma.',
+      s: 'Sono Mela, benvenuto nell’Officina. Nella Pista hai imparato a descrivere il moto; qui scopri le sue cause: le forze, le leggi di Newton e l’energia.',
+      c: 'Sono Mela, quella caduta in testa a Newton. Nella Pista hai visto come si muovono le cose; qui si scopre perché.',
+    },
+  },
   { id: 'cielo', n: 4, diff: 3, name: 'Il Cielo', field: 'Gravitazione', place: 'Osservatorio e sistema solare', color: '#a9b8ff', mascot: 'saturnino',
     soon: ['G01 La gravitazione universale', 'G02 Orbite e leggi di Keplero', 'G03 Il sistema solare'], requires: ['officina'] },
   { id: 'oceano', n: 5, diff: 2, name: 'L’Oceano', field: 'I fluidi', place: 'Porto e fondali', color: 'var(--sky)', mascot: 'goccia',
@@ -81,7 +94,7 @@ export const GRADES = [
   { name: 'Apprendista', world: null, desc: 'Si parte da qui.' },
   { name: 'Sperimentatore', world: 'laboratorio', desc: 'Sai prevedere, provare e misurare: il metodo di ogni scienziato.' },
   { name: 'Galileo', world: 'pista', desc: 'Galileo Galilei (1564-1642) capì che, senza aria, tutto cade allo stesso modo e che il moto si può misurare.' },
-  { name: 'Newton', world: 'officina', desc: 'In arrivo.' },
+  { name: 'Newton', world: 'officina', desc: 'Isaac Newton (1642-1727) scrisse le leggi del moto: una forza non serve a mantenere il moto, ma a cambiarlo.' },
   { name: 'Keplero', world: 'cielo', desc: 'In arrivo.' },
   { name: 'Archimede', world: 'oceano', desc: 'In arrivo.' },
   { name: 'Kelvin', world: 'vulcano', desc: 'In arrivo.' },
@@ -106,7 +119,7 @@ export const levelById = (id) => LEVEL_ZONE[id]?.levels.find((l) => l.id === id)
 
 export const zoneDone = (z) => ZONES[z].levels.every((l) => S.done[l.id]);
 export const worldReady = (w) => !!(w.zones && w.zones.length);
-export const worldDone = (w) => worldReady(w) && (!!(S.skip && S.skip[w.id]) || w.zones.every(zoneDone));
+export const worldDone = (w) => worldReady(w) && !w.building && (!!(S.skip && S.skip[w.id]) || w.zones.every(zoneDone));
 
 // Prova d'ingresso: chi conosce già un mondo può superarlo rispondendo alle domande dei suoi ripassi.
 export const EXAM_MAX_ERRORS = 2;

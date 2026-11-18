@@ -43,7 +43,7 @@ export const t = (s, vars) => {
 };
 
 // campi che non sono testi da mostrare: non si traducono mai
-const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try']);
+const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try', 'who']);
 // la lente 'c' (Curioso) è un campo di testo dentro T(...): si salta 'c' solo quando è un colore
 const isLensObj = (o) => o && typeof o === 'object' && !Array.isArray(o) && 'e' in o && 's' in o;
 
@@ -55,6 +55,12 @@ export function translateTree(o, seen = new Set()) {
   for (const k of Object.keys(o)) {
     if (!lens && SKIP.has(k)) continue;
     const v = o[k];
+    // le scelte di un selettore sono coppie [valore, etichetta]: il valore è un nome interno (ghiaccio, legno…)
+    // e non si traduce mai, anche se la stessa parola ha una traduzione altrove
+    if (k === 'options' && Array.isArray(v) && v.length && v.every((x) => Array.isArray(x))) {
+      for (const x of v) if (typeof x[1] === 'string' && x[1].length > 1 && EN[x[1]] != null) x[1] = EN[x[1]];
+      continue;
+    }
     if (typeof v === 'string') { if (v.length > 1 && EN[v] != null) o[k] = EN[v]; } else if (v && typeof v === 'object') translateTree(v, seen);
   }
   return o;

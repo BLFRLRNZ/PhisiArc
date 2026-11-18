@@ -10,6 +10,9 @@ import radice from './films/radice.js';
 import pitagora from './films/pitagora.js';
 import pi from './films/pi.js';
 import seno from './films/seno.js';
+import forza from './films/forza.js';
+import newton from './films/newton.js';
+import reazione from './films/reazione.js';
 
 setLocale(LOCALE);   // i numeri con la virgola in italiano, con il punto in inglese
-export const FILMS = { potenze, formula, quadrato, radice, pitagora, pi, seno };
+export const FILMS = { potenze, formula, quadrato, radice, pitagora, pi, seno, inerzia: forza, newton, reazione };

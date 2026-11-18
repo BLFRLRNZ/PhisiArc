@@ -26,8 +26,9 @@ export function runLevel(root, level, nav) {
   const TEST = typeof window !== 'undefined' && window.__phisiarcTest;
   let testSolve = null;
   if (TEST) TEST.solve = () => (testSolve ? testSolve() : false);
-  if (TEST) { TEST.busy = () => busy || !!(sim && sim.running); TEST.fast = (m) => { if (sim) sim.mul = m; }; }
+  if (TEST) { TEST.busy = () => busy || !!(sim && sim.running); TEST.fast = (m) => { if (sim) sim.mul = m; }; TEST.sim = () => sim; }
   let sim = null, pending = null, onResult = null, busy = false;
+  const holds = new Set();   // quello che la domanda aspetta prima di comparire (vedi hold/release in fondo)
 
   // ---------- attrezzi di matematica offerti, non imposti ----------
   // Un attrezzo mai incontrato che compare in una spiegazione, in un aiuto o in un riquadro «Per chi vuole la formula»
@@ -63,12 +64,12 @@ export function runLevel(root, level, nav) {
     h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', (level.exam ? tr('Prova') : KIND[level.kind].name)), h('strong', {}, tx(level.title, lens))), dots, hintBtn);
 
   const boss = level.kind === 'boss';
-  const who = CAST[boss ? 'vetrino' : world.mascot];
+  const who = CAST[level.who || (boss ? 'vetrino' : world.mascot)];
   const introText = tx(level.intro, lens);
   const speakBtn = h('button', { class: 'btn icon', title: tr('Ascolta'), 'aria-label': tr('Ascolta'), onclick: () => speak(readOut(true)), html: IC.sound });
+  const bubble = h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), offerTools(h('div', { html: introText })));
   const intro = h('div', { class: 'intro', style: `--c:${who.c}` },
-    h('div', { class: 'who', html: charSVG(who.id), onclick: (e) => hop(e.currentTarget.firstChild) }),
-    h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), offerTools(h('div', { html: introText }))));
+    h('div', { class: 'who', html: charSVG(who.id), onclick: (e) => hop(e.currentTarget.firstChild) }), bubble);
   const quest = h('div', { class: 'quest', tabindex: '-1' });
   const area = h('div', { class: 'area', 'aria-live': 'polite' });
   const hintBox = h('div', { class: 'hintbox', hidden: true, 'aria-live': 'polite' });
@@ -122,7 +123,7 @@ export function runLevel(root, level, nav) {
   };
 
   if (SimClass) {
-    sim = new SimClass(canvas, { ...(level.params || {}) });
+    sim = new SimClass(canvas, { lens, ...(level.params || {}) }); // la lente serve alle scritte di alcune simulazioni
     sim.onDone = (r) => {
       if (pending) { const p = pending; pending = null; p(r); }
       else if (onResult) onResult(r);
@@ -251,7 +252,7 @@ export function runLevel(root, level, nav) {
     testSolve = null; cutOption = null;
     ({ q: stepQ, free: stepFree, run: stepRun, tune: stepTune, num: stepNum, order: stepOrder, vars: stepVars })[st.kind](st);
     if (si > 0) requestAnimationFrame(toQuest);
-    if (voiceOn()) speak(readOut(si === 0));
+    if (voiceOn() && !holds.size) speak(readOut(si === 0));
   }
 
   function stepQ(st) {
@@ -632,8 +633,9 @@ export function runLevel(root, level, nav) {
     const modal = h('div', { class: 'modal' }, h('div', { class: 'card pop' },
       h('div', { class: 'cele', html: charSVG(who.id, { cls: 'party' }) }),
       h('div', { class: 'stars big', html: starsSVG(stars), 'aria-label': tr('{n} stelle su 3', { n: stars }) }),
-      h('h2', {}, wDone ? tr('{w}: completato!', { w: world.name }) : boss ? tr('Mito smontato!') : tr('Livello superato!')),
+      h('h2', {}, wDone ? tr('{w}: completato!', { w: world.name }) : boss ? (level.win ? tx(level.win, lens) : tr('Mito smontato!')) : tr('Livello superato!')),
       wDone ? h('p', {}, nw ? (nwOpen ? tr('Si apre {w}: {f}.', { w: nw.name, f: nw.field.toLowerCase() }) : tr('Il prossimo mondo è {w} ({f}): è in costruzione, arriva presto.', { w: nw.name, f: nw.field.toLowerCase() })) : tr('Hai finito tutto il percorso!')) : null,
+      !nx && world.building ? h('p', {}, tr('Le altre zone di {w} sono in costruzione: arrivano presto.', { w: world.name })) : null,
       gained ? h('p', { class: 'gain' }, h('span', { class: 'sun', html: IC.bolt }), joule) : h('p', {}, tr('Nessun joule in più: avevi già fatto così bene.')),
       errors || hints || solution ? h('p', { class: 'muted small' }, stars < 3 ? tr('Rigiocalo senza aiuti e senza errori per avere ★★★.') : '') : null,
       newPiece ? h('div', { class: 'piece' }, h('span', { class: 'pi', html: pieceSVG(newPiece.id) }), h('div', {}, h('b', {}, tr('Nuovo pezzo per il tuo parco: '), newPiece.name), h('div', { class: 'small' }, newPiece.desc))) : null,
@@ -687,11 +689,20 @@ export function runLevel(root, level, nav) {
     nav('#/mondo/' + world.id);
   }
 
+  // Prima della domanda, a volte, c'è qualcosa da guardare: le schede degli attrezzi nuovi.
+  // La domanda resta nascosta finché non sono finiti tutti (holds); poi la voce la legge.
+  function hold(k) { holds.add(k); quest.hidden = area.hidden = true; }
+  function release(k) {
+    holds.delete(k);
+    if (holds.size) return;
+    quest.hidden = area.hidden = false; quest.focus?.({ preventScroll: true });
+    if (voiceOn()) speak(readOut(si === 0));
+  }
   // Attrezzi di matematica nuovi che servono per rispondere (potenze di 10, radice, π…): prima di cominciare, la loro scheda da giocare.
   const toolsNew = level.exam || level.review ? [] : newTools(level, lens);
   if (toolsNew.length) {
-    quest.hidden = area.hidden = true;
-    textPane.insertBefore(toolCard(toolsNew, () => { quest.hidden = area.hidden = false; quest.focus?.(); }, { inLevel: true }), hintBox);
+    hold('tools');
+    textPane.insertBefore(toolCard(toolsNew, () => release('tools'), { inLevel: true }), hintBox);
   }
   renderStep();
 

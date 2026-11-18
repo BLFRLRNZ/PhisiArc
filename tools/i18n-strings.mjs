@@ -14,7 +14,7 @@ const EN = (await import(join(root, 'js/i18n/en.js'))).default;
 const C = await import(join(root, 'js/content/index.js'));
 const { CAST } = await import(join(root, 'js/cast.js'));
 
-const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try']);
+const SKIP = new Set(['id', 'kind', 'sim', 'mode', 'measure', 'goal', 'calc', 'derive', 'solve', 'only', 'controls', 'char', 'mascot', 'buddy', 'color', 'c', 'ic', 'svg', 'in', 'shape', 'requires', 'zones', 'params', 'set', 'seq', 'predict', 'vals', 'k', 'type', 'when', 'try', 'who']);
 const isLens = (o) => o && typeof o === 'object' && !Array.isArray(o) && 'e' in o && 's' in o;
 const wordy = (s) => /[A-Za-zÀ-ÿ]{2,}/.test(s.replace(/<[^>]+>/g, '')) && !/^(m\/s|km\/h|m\/s²|rad\/s|cm|mm|km|kg|Hz)$/.test(s);
 function walk(o, out, seen = new Set()) {
@@ -24,6 +24,8 @@ function walk(o, out, seen = new Set()) {
   for (const k of Object.keys(o)) {
     if (!lens && SKIP.has(k)) continue;
     const v = o[k];
+    // le scelte di un selettore, [valore, etichetta]: si traduce solo l'etichetta (come translateTree in js/i18n.js)
+    if (k === 'options' && Array.isArray(v) && v.length && v.every((x) => Array.isArray(x))) { for (const x of v) if (typeof x[1] === 'string' && wordy(x[1])) out.add(x[1]); continue; }
     if (typeof v === 'string') { if (v.length > 1 && wordy(v)) out.add(v); } else if (v && typeof v === 'object' && typeof v !== 'function') walk(v, out, seen);
   }
 }

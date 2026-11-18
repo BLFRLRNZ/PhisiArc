@@ -74,6 +74,27 @@ export const IDEE = {
   'tangente': { parole: 'tangent', da: 'm05-1' },
   'accelerazione centripeta': { parole: 'centripet', da: 'm05-2', mai: ['e'] },
   'forza e inerzia': { parole: '\\bforz[ae]\\b|inerzia', da: 'd01-1' },
+  'newton (unità)': { parole: '\\d ?N\\b|\\d newton', da: 'd01-2', mai: ['e'] },
+  'seconda legge (F = m·a)': { parole: 'm·a\\b|F ?/ ?m\\b', da: 'd01-2', mai: ['e'] },
+  'peso (P = m·g)': { parole: 'm·g\\b', da: 'd01-2', mai: ['e'] },
+  'azione e reazione': { parole: 'azione e reazione|terza legge', da: 'd01-4' },
+  'attrito': { parole: 'attrit', da: 'd01-1' },
+  'coefficiente d’attrito (μ)': { parole: 'μ|coefficiente d.attrito', da: 'd02-2', mai: ['e'] },
+  'parti del peso (P∥, P⊥)': { parole: 'P∥|P⊥', da: 'd02-3', mai: ['e'] },
+  'energia': { parole: 'energi', da: 'd03-2' },
+  'energia di posizione e di movimento (m·g·h, ½·m·v²)': { parole: 'm·g·h|½ ?· ?m ?· ?v²', da: 'd03-3', mai: ['e'] },
+  'joule': { parole: 'joule|\\d ?k?J\\b', da: 'd03-3' },
+  'lavoro (L = F·s)': { parole: 'L = F|F·s\\b|L = m·g·h', da: 'd03-5', mai: ['e'] },
+  'potenza in watt': { parole: 'watt|\\bkW\\b', da: 'd03-5' },
+  'quantità di moto': { parole: 'quantità di moto', da: 'd04-1' },
+  'p = m·v': { parole: 'p ?= ?m ?· ?v|m₁ ?· ?v', da: 'd04-2', mai: ['e'] },
+  'urti elastici e anelastici': { parole: 'anelastic|urto elastic', da: 'd04-3' },
+  'impulso (F·Δt = Δp)': { parole: 'impuls|F ?· ?Δt|Δp', da: 'd04-4', mai: ['e'] },
+  'fulcro': { parole: 'fulcr', da: 'd05-1' },
+  'momento di una forza (M = F·b)': { parole: 'M ?= ?F ?·|F ?· ?b\\b|N·m|moment[oi] (della|di una|delle|dei) forz', da: 'd05-2', mai: ['e'] },
+  'leva': { parole: '\\blev[ae]\\b', da: 'd05-3' },
+  'baricentro': { parole: 'baricentr', da: 'd05-4' },
+  'base d’appoggio': { parole: 'base d.appoggio', da: 'd05-4' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
@@ -89,5 +110,7 @@ export const ANTICIPI = {
   'm03-2': ['forza e inerzia'],
   'm05-3': ['forza e inerzia'],
   'm05-6': ['forza e inerzia'],
+  // l'attrito dell'aria, nella Pista: l'attrito vero e proprio si incontra nell'Officina
+  'm03-aria': ['attrito'],
 };
 

@@ -1,8 +1,10 @@
-// La cassetta degli attrezzi: gli strumenti di matematica che servono alle formule (potenze di 10, radice, Pitagora, π, seno…).
-// Nessuna formula è nascosta: la prima volta che un livello ha bisogno di un attrezzo PER RISPONDERE, prima di cominciare
-// compare la sua scheda. Quando invece l'attrezzo compare solo in una spiegazione, in un aiuto o in un riquadro facoltativo,
-// la scheda non interrompe: sotto il testo c'è un bottone per aprirla (level.js, offerTools).
-// Ogni scheda spiega lo strumento con un disegno da muovere e una domanda; poi resta nella cassetta per ripassarlo.
+// La cassetta degli attrezzi: gli strumenti di matematica che servono alle formule (potenze di 10, radice, Pitagora, π, seno…)
+// e, dall'Officina, le idee della fisica (l'inerzia, F = m·a, azione e reazione).
+// Nessuna formula è nascosta: la prima volta che un livello ha bisogno di un attrezzo di matematica PER RISPONDERE, prima di
+// cominciare compare la sua scheda. Quando invece l'attrezzo compare solo in una spiegazione, in un aiuto o in un riquadro
+// facoltativo, la scheda non interrompe: sotto il testo c'è un bottone per aprirla (level.js, offerTools).
+// Gli attrezzi di fisica (offer: true) non interrompono mai: si offrono con il bottone dove un testo ne parla.
+// Ogni scheda ha il suo piccolo film, un disegno da muovere e una domanda; poi resta nella cassetta per ripassarla.
 // Le schede si aprono solo nelle lenti con le formule (Studente e Curioso).
 import { h, tx, noBox } from './util.js';
 import { S, save } from './state.js';
@@ -226,6 +228,113 @@ export const TOOLS = {
       ok: tr('Giusto: una freccia verticale non ha ombra per terra. Per questo un sasso lanciato dritto in su non va avanti.'),
     }),
   },
+
+  // ---------- gli attrezzi di fisica: le idee dell'Officina ----------
+  inerzia: {
+    area: 'fisica', offer: true,
+    title: () => tr('La forza e l’inerzia'),
+    sub: () => tr('Senza forze, la velocità non cambia'),
+    test: (s) => /(?<!\p{L})(inerzia|inertia)(?!\p{L})/iu.test(s),
+    body: () => tr('Una <b>forza</b> è una spinta o un tiro: ha una direzione e un’intensità, e si disegna con una freccia. Le forze <b>cambiano la velocità</b>: la fanno crescere, calare o girare. Senza forze la velocità non cambia: un corpo fermo resta fermo, uno che si muove continua dritto e alla stessa velocità. È l’<b>inerzia</b>, la prima legge di Newton. Scegli il pavimento: quanto frena?'),
+    widget() {
+      const FL = [[tr('binario liscio'), 0], [tr('ghiaccio'), 0.02], [tr('legno'), 0.08], [tr('tappeto'), 0.25]];
+      const show = h('div', { class: 'tool-show' });
+      let a;
+      const draw = (i) => {
+        // un carrello parte a 2 m/s: dove si ferma? d = v² / (2·μ·g)
+        const [name, mu] = FL[i], d = mu ? 4 / (2 * mu * 9.81) : Infinity, X = (m) => 22 + m * 13, y = 60, end = Math.min(X(12), X(d));
+        let g = `<line x1="${X(0) - 8}" y1="${y}" x2="${X(12) + 4}" y2="${y}" class="ground"/>`;
+        g += `<line x1="${X(0)}" y1="${y + 12}" x2="${end}" y2="${y + 12}" class="unroll"/>`;
+        if (mu) g += `<line x1="${end}" y1="${y + 5}" x2="${end}" y2="${y + 19}" class="mk"/><text x="${end}" y="${y + 32}" class="lb" text-anchor="middle">${n(d, 1)} m</text>`;
+        else g += `<path d="M${X(12) - 4} ${y + 6}l8 6l-8 6" class="hop"/><text x="${X(12)}" y="${y + 32}" class="lb" text-anchor="end">${tr('non si ferma')}</text>`;
+        g += `<rect x="${X(0) - 12}" y="${y - 14}" width="24" height="10" rx="2" class="edge"/><circle cx="${X(0) - 6}" cy="${y - 3}" r="3" class="edge"/><circle cx="${X(0) + 6}" cy="${y - 3}" r="3" class="edge"/>`;
+        // la frenata del pavimento: una freccia all'indietro, lunga quanto frena
+        if (mu) g += `<line x1="${X(0) + 14}" y1="${y - 24}" x2="${X(0) + 14 - 6 - mu * 120}" y2="${y - 24}" class="frc"/><path d="M${X(0) + 14 - 6 - mu * 120 + 5} ${y - 28}l-5 4l5 4" class="frc"/>`;
+        show.innerHTML = svg(190, 100, g) + `<p class="small">${mu ? tr('<b>{p}</b>: il pavimento frena con una forza all’indietro. Partito a 2 m/s, il carrello si ferma dopo {d} m.', { p: name, d: n(d, 1) }) : tr('<b>{p}</b>: niente lo spinge e niente lo frena, e la velocità resta 2 m/s per sempre.', { p: name })}</p>`;
+        if (a) a.el.querySelector('output').textContent = name;
+      };
+      a = slider(tr('pavimento'), 0, 3, 1, 3, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Un disco da hockey, una sonda nello spazio, un passeggero quando l’autobus frena: tutti continuano come stavano andando, finché una forza non li cambia. Per questo esistono le cinture.'),
+    check: () => ({
+      q: tr('Un disco scivola su un ghiaccio perfettamente liscio, e niente lo tocca. Che cosa fa?'),
+      options: [tr('continua dritto, alla stessa velocità'), tr('rallenta fino a fermarsi'), tr('accelera piano piano')],
+      ok: tr('Giusto: senza forze la velocità non cambia, né in grandezza né in direzione.'),
+    }),
+  },
+
+  newton: {
+    area: 'fisica', offer: true,
+    title: () => tr('Forza, massa e accelerazione'),
+    sub: () => tr('La seconda legge di Newton: F = m · a'),
+    test: (s) => /m ?· ?a\b|F ?\/ ?m\b|seconda legge|second law/i.test(s),
+    body: () => tr('La <b>seconda legge di Newton</b>: <b>F = m · a</b>. Più forza, più accelerazione; più massa, meno accelerazione. La forza si misura in <b>newton</b> (N): 1 N dà a 1 kg un’accelerazione di 1 m/s². Muovi la forza e la massa: le barre sono la velocità dopo 1, 2 e 3 secondi.'),
+    widget() {
+      let F = 6, m = 2;
+      const show = h('div', { class: 'tool-show' });
+      const draw = () => {
+        const a = F / m, k = Math.min(10, 130 / (3 * a));
+        let g = '';
+        for (let s = 1; s <= 3; s++) {
+          const y = 14 + (s - 1) * 22, w = a * s * k, w0 = a * (s - 1) * k;
+          g += `<text x="4" y="${y + 9}" class="lb">${s} s</text><rect x="30" y="${y}" width="${w0}" height="12" rx="2" class="cell"/><rect x="${30 + w0}" y="${y}" width="${w - w0}" height="12" rx="2" class="sqb"/>`;
+        }
+        show.innerHTML = svg(190, 82, g)
+          + `<div class="tool-f"><span class="c3">a</span> = <span class="c2">F</span> / <span class="c4">m</span> = <span class="c2">${n(F)}</span> / <span class="c4">${n(m)}</span> = <span class="c3">${n(a)}</span> m/s²</div>`
+          + `<p class="small muted">${tr('Ogni secondo la velocità cresce dello stesso pezzo verde: {a} m/s.', { a: n(a) })}</p>`;
+      };
+      const a = slider(tr('forza F (N)'), 1, 12, 1, F, (x) => { F = x; draw(); });
+      const b = slider(tr('massa m (kg)'), 1, 6, 1, m, (x) => { m = x; draw(); });
+      a.set(); b.set();
+      return h('div', {}, show, a.el, b.el);
+    },
+    tip: () => tr('Con la stessa forza, massa doppia vuol dire accelerazione dimezzata. Per accelerare uguale una massa doppia serve una forza doppia.'),
+    check: () => ({
+      q: tr('Una forza di 6 N spinge un carrello di 3 kg, senza attriti. Quanto vale la sua accelerazione?'),
+      options: [tr('2 m/s²'), tr('18 m/s²'), tr('0,5 m/s²')],
+      ok: tr('Giusto: a = F / m = 6 / 3 = 2 m/s². Ogni secondo va 2 m/s più veloce.'),
+    }),
+  },
+
+  reazione: {
+    area: 'fisica', offer: true,
+    title: () => tr('Azione e reazione'),
+    sub: () => tr('La terza legge di Newton'),
+    test: (s) => /azione e reazione|terza legge|action and reaction|third law/i.test(s),
+    body: () => tr('Se un corpo spinge un altro, l’altro spinge il primo con una forza <b>uguale e opposta</b>: <b>F₁₂ = −F₂₁</b>. Le due forze agiscono su corpi diversi, e ognuno risponde secondo la sua massa: il più leggero prende più velocità. Cambia le masse dei due carrelli che si spingono via.'),
+    widget() {
+      let m1 = 1, m2 = 3;
+      const show = h('div', { class: 'tool-show' });
+      const draw = () => {
+        // la molla dà a tutti e due la stessa spinta: velocità 6 / m
+        const v1 = 6 / m1, v2 = 6 / m2, c = 95, y = 44, k = 10;
+        const cart = (x0, w) => `<rect x="${x0}" y="${y - 14}" width="${w}" height="10" rx="2" class="edge"/><circle cx="${x0 + 6}" cy="${y - 2}" r="3" class="edge"/><circle cx="${x0 + w - 6}" cy="${y - 2}" r="3" class="edge"/>`;
+        let g = `<line x1="6" y1="${y + 2}" x2="184" y2="${y + 2}" class="ground"/>` + cart(c - 34, 30) + cart(c + 4, 30);
+        for (let i = 0; i < Math.min(m1, 6); i++) g += `<rect x="${c - 32 + (i % 3) * 9}" y="${y - 22 - Math.floor(i / 3) * 8}" width="7" height="7" class="blk"/>`;
+        for (let i = 0; i < Math.min(m2, 6); i++) g += `<rect x="${c + 6 + (i % 3) * 9}" y="${y - 22 - Math.floor(i / 3) * 8}" width="7" height="7" class="blk"/>`;
+        // le due forze: uguali e opposte, sempre
+        g += `<line x1="${c - 2}" y1="10" x2="${c - 30}" y2="10" class="frc"/><path d="M${c - 25} 6l-5 4l5 4" class="frc"/><line x1="${c + 2}" y1="10" x2="${c + 30}" y2="10" class="frc"/><path d="M${c + 25} 6l5 4l-5 4" class="frc"/>`;
+        // le velocità: diverse
+        const xl = c - 4 - v1 * k, xr = c + 4 + v2 * k;
+        g += `<line x1="${c - 4}" y1="${y + 14}" x2="${xl}" y2="${y + 14}" class="arrow"/><path d="M${xl + 5} ${y + 10}l-5 4l5 4" class="arrow" fill="none"/>`;
+        g += `<line x1="${c + 4}" y1="${y + 14}" x2="${xr}" y2="${y + 14}" class="arrow"/><path d="M${xr - 5} ${y + 10}l5 4l-5 4" class="arrow" fill="none"/>`;
+        show.innerHTML = svg(190, 70, g)
+          + `<p class="small">${tr('Le due forze sono uguali (le frecce rosse). Le velocità no: {v1} m/s il carrello da {m1} kg, {v2} m/s quello da {m2} kg.', { v1: n(v1, 1), v2: n(v2, 1), m1, m2 })}</p>`;
+      };
+      const a = slider(tr('massa a sinistra (kg)'), 1, 6, 1, m1, (x) => { m1 = x; draw(); });
+      const b = slider(tr('massa a destra (kg)'), 1, 6, 1, m2, (x) => { m2 = x; draw(); });
+      a.set(); b.set();
+      return h('div', {}, show, a.el, b.el);
+    },
+    tip: () => tr('Camminare, nuotare, remare, volare in razzo: si spinge qualcosa all’indietro, e quella cosa spinge noi in avanti.'),
+    check: () => ({
+      q: tr('Stai sui pattini e spingi un muro. Che cosa succede?'),
+      options: [tr('vai indietro: il muro spinge te'), tr('niente: il muro è fermo'), tr('il muro si sposta un po’')],
+      ok: tr('Giusto: il muro ti spinge con una forza uguale e opposta alla tua. Lui non si muove, tu sì.'),
+    }),
+  },
 };
 export const TOOL_IDS = Object.keys(TOOLS);
 
@@ -247,7 +356,8 @@ export function toolsIn(level, lens) {
     if (typeof st.gen === 'function') { try { const g = st.gen(lens, 0); out.push(g.text, g.explain); } catch { /* niente */ } }
   }
   const txt = noBox(out.filter(Boolean).join('\n'));
-  return TOOL_IDS.filter((id) => TOOLS[id].test(txt));
+  // gli attrezzi di fisica non servono per rispondere: si offrono, non si aprono da soli
+  return TOOL_IDS.filter((id) => !TOOLS[id].offer && TOOLS[id].test(txt));
 }
 export const toolsOn = (lens) => lens === 's' || lens === 'c';
 export const toolState = (id) => (S.tools || {})[id] || 0; // 0 mai visto, 1 visto, 2 domanda giusta
@@ -305,12 +415,17 @@ export function toolCard(queue, onEnd, { inLevel = false } = {}) {
 // ---------- la pagina della cassetta ----------
 export function toolboxPage() {
   const holder = h('div', { class: 'tool-holder' });
-  const list = h('div', { class: 'tool-list' }, TOOL_IDS.map((id) => {
+  const item = (id) => {
     const st = toolState(id);
-    return h('button', { class: 'lvl-item tool-item' + (st ? ' seen' : ''), onclick: () => { holder.replaceChildren(toolCard([id], () => render())); holder.scrollIntoView({ behavior: 'smooth' }); } },
+    return h('button', { class: 'lvl-item tool-item' + (st ? ' seen' : ''), 'data-tool': id, onclick: () => { holder.replaceChildren(toolCard([id], () => render())); holder.scrollIntoView({ behavior: 'smooth' }); } },
       h('b', {}, TOOLS[id].title()), h('span', { class: 'small muted' }, st === 2 ? '✓ ' + TOOLS[id].sub() : st ? TOOLS[id].sub() : tr('Non l’hai ancora incontrato · ') + TOOLS[id].sub()));
-  }));
-  const wrap = h('div', {}, list, holder);
+  };
+  // due scaffali: la matematica delle formule e le idee della fisica
+  const shelf = (title, ids) => (ids.length ? [h('h3', { class: 'tool-shelf' }, title), h('div', { class: 'tool-list' }, ids.map(item))] : []);
+  const wrap = h('div', {},
+    ...shelf(tr('Matematica'), TOOL_IDS.filter((id) => TOOLS[id].area !== 'fisica')),
+    ...shelf(tr('Fisica'), TOOL_IDS.filter((id) => TOOLS[id].area === 'fisica')),
+    holder);
   const render = () => wrap.replaceWith(toolboxPage());
   return wrap;
 }

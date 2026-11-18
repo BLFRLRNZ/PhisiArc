@@ -86,6 +86,7 @@ export default {
  "Sperimentatore": "Experimenter",
  "Sai prevedere, provare e misurare: il metodo di ogni scienziato.": "You can predict, test and measure: the method of every scientist.",
  "Galileo Galilei (1564-1642) capì che, senza aria, tutto cade allo stesso modo e che il moto si può misurare.": "Galileo Galilei (1564-1642) realised that, without air, everything falls the same way, and that motion can be measured.",
+ "Isaac Newton (1642-1727) scrisse le leggi del moto: una forza non serve a mantenere il moto, ma a cambiarlo.": "Isaac Newton (1642-1727) wrote the laws of motion: a force is not needed to keep motion going, but to change it.",
  "In arrivo.": "Coming soon.",
  "Keplero": "Kepler",
  "Archimede": "Archimedes",

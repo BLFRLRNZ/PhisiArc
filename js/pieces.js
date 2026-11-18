@@ -50,6 +50,37 @@ export const PIECE_SVG = {
     `<g class="pz-spin2">` +
     P('M16 16l-8 22M48 16l8 22M26 17l-4 26M38 17l4 26', 'muted', null, 1) +
     P('M5 38h6v4H5zM53 38h6v4h-6zM19 43h6v4h-6zM39 43h6v4h-6z', 'sky', 'sky', 1.4) + `</g>`),
+  miniera: svg(
+    P('M2 58h60', 'muted', null, 1.4) + P('M6 61v-3M14 61v-3M22 61v-3M30 61v-3M38 61v-3M46 61v-3M54 61v-3', 'muted', null, 1.2) +
+    P('M44 58V36a10 10 0 0 1 20 0v22', 'chalk', null, 1.8) + P('M48 58V38a6 6 0 0 1 12 0v20', 'muted', null, 1.2) +
+    P('M2 47h6M3 51h5', 'coral', null, 1.6) + P('M8 42v12', 'coral', null, 2) +
+    `<g class="pz-launch">${P('M10 40h22l-3 12H13z', 'sky', 'sky')}${P('M14 40l3-6 4 3 4-5 4 8', 'sun', 'sun', 1.4)}` +
+    `${P(C(15, 55, 2.8) + C(27, 55, 2.8), 'chalk', null, 1.4)}${P('M33 45h6l-2-3M39 45l-2 3', 'coral', null, 1.4)}</g>`),
+  scivolo: svg(
+    P('M2 60h60', 'muted', null, 1.4) +
+    P('M8 60V18M17 60V18', 'chalk', null, 1.8) + P('M8 27h9M8 36h9M8 45h9M8 54h9', 'chalk', null, 1.2) +
+    P('M6 18h17', 'sun', null, 2.4) + P('M7 18v-7M22 18v-7M7 12h15', 'sun', null, 1.4) +
+    P('M23 18L47 50q5 6 13 6', 'sky', null, 2.8) + P('M23 23L45 52q4 5 15 6', 'sky', null, 1.2) + P('M45 52v8M58 58v2', 'muted', null, 1.4) +
+    `<g class="pz-slide">${P(C(26, 14, 2.6), 'pink', 'pink')}${P('M26 17l3 7M29 24l6 6M27 19l-4-4M27 19l4-4', 'pink', null, 1.6)}</g>`),
+  montagne: svg(
+    P('M2 60h60', 'muted', null, 1.4) + P('M6 14v46M12 20v40M34 33v27M40 33v27M56 54v6', 'muted', null, 1) +
+    P('M3 12h5C14 12 16 52 22 52S31 30 37 30S45 52 51 52H62', 'chalk', null, 2.4) + P('M3 16h5C14 16 16 56 22 56', 'sky', null, 1) +
+    `<g><rect x="-4.5" y="-7.5" width="9" height="5.5" rx="1.6" fill="var(--sky)" fill-opacity=".3" stroke="var(--sky)" stroke-width="1.4"/>` +
+    `<circle cx="-.5" cy="-10" r="1.9" fill="none" stroke="var(--pink)" stroke-width="1.3"/>` +
+    `<animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto" keyPoints="0;.08;.42;.62;1" keyTimes="0;.22;.45;.68;1" calcMode="linear" path="M3 12h5C14 12 16 52 22 52S31 30 37 30S45 52 51 52H62"/></g>`),
+  autoscontri: svg(
+    P('M2 60h60', 'muted', null, 1.4) + P('M2 6h60M8 6l3 3M20 6l3 3M32 6l3 3M44 6l3 3M56 6l3 3', 'muted', null, 1.2) +
+    `<g class="pz-bump1">${P('M17 42V6', 'chalk', null, 1.2)}${P('M8 56h17a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3z', 'sky', 'sky')}` +
+    `${P('M28 47h3v5h-3', 'chalk', null, 1.4)}${P(C(13, 39, 2.6), 'pink', 'pink', 1.4)}</g>` +
+    `<g class="pz-bump2">${P('M47 42V6', 'chalk', null, 1.2)}${P('M39 56h17a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H39a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3z', 'orange', 'orange')}` +
+    `${P('M36 47h-3v5h3', 'chalk', null, 1.4)}${P(C(51, 39, 2.6), 'sky', 'sky', 1.4)}</g>` +
+    `<g class="pz-spark">${P('M32 41v-5M28 43l-3-3M36 43l3-3', 'sun', null, 1.6)}</g>`),
+  bilico: svg(
+    P('M4 60h56', 'green', null, 1.6) + P('M7 59l3 1M14 59l3 1M44 59l3 1M52 59l3 1', 'green', null, 1.2) +
+    P('M32 41L25 58h14z', 'orange', 'orange') +
+    `<g class="pz-rock">${P('M4 39h56', 'sun', null, 3.2)}${P('M16 38v-7M40 38v-7', 'muted', null, 1.4)}` +
+    `${P(C(9, 25, 3), 'sky', 'sky')}${P('M9.5 28.5v8.5M9.5 37l5 1M10 31l5.5 1', 'sky', null, 1.6)}` +
+    `${P(C(46, 22.5, 3.8), 'pink', 'pink')}${P('M45.5 27v10M45.5 37l-5 1M45 30.5l-4.5 1.5', 'pink', null, 1.9)}</g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),

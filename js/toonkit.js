@@ -10,6 +10,8 @@
 //     tl.on(B.b, (S) => S.snd.tick());                    // una cosa che succede in un istante
 //     return { init, step, pose, back, front, ground };   // quello che la scena ha di suo (tutto facoltativo)
 //   });
+//
+// Se un film lo vedesse anche l'Esploratore (setLens('e')), le lettere e le formule si disegnano solo se formulas().
 import { COL, EASE, KN, KS, clamp, lerp, RIG } from './toon.js';
 
 export const rad = (d) => (d * Math.PI) / 180;
@@ -33,6 +35,11 @@ let locale = 'it-IT';
 export const setLocale = (l) => { locale = l; };
 export const num = (x, d = 2) => Number(x).toLocaleString(locale, { maximumFractionDigits: d, useGrouping: false });
 export const comma = () => (0.5).toLocaleString(locale).charAt(1);
+// la lente di chi guarda: all'Esploratore niente lettere né formule sullo schermo (oggi i film sono nella cassetta, per Studente e Curioso)
+let lensNow = 's';
+export const setLens = (l) => { lensNow = l || 's'; };
+export const lens = () => lensNow;
+export const formulas = () => lensNow !== 'e';
 
 // ---------- la fila delle battute ----------
 export function film(build) {
