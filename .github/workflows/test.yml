@@ -1,7 +1,8 @@
 # A ogni modifica: i controlli veloci su tutto (contenuti, prerequisiti, lenti, traduzioni), poi un Chrome gioca solo i
 # livelli toccati dalla modifica (tools/da-provare.mjs): la zona nuova, i livelli della simulazione cambiata, il primo
 # livello di ogni zona se cambiano i dati dei mondi. Se cambia il motore li gioca tutti. Le prove sono divise per lingua
-# e per lente e girano in parallelo. A mano (Run workflow) e ogni lunedì notte: tutti i livelli.
+# e per lente e girano in parallelo; la cassetta degli attrezzi si prova a parte, se cambia. A mano (Run workflow) e ogni
+# lunedì notte: tutto.
 name: Test
 
 on:
@@ -18,6 +19,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       livelli: ${{ steps.scelta.outputs.livelli }}
+      cassetta: ${{ steps.scelta.outputs.cassetta }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,12 +45,15 @@ jobs:
           if [ "$EVENTO" = pull_request ]; then BASE="$BASE_PR"; elif [ "$EVENTO" = push ]; then BASE="$PRIMA"; else BASE=""; fi
           if [ -n "$BASE" ] && git cat-file -e "$BASE^{commit}" 2>/dev/null; then
             LIVELLI=$(git diff --name-only "$BASE" HEAD | node tools/da-provare.mjs)
+            CASSETTA=$(git diff --name-only "$BASE" HEAD | node tools/da-provare.mjs --cassetta)
           else
-            echo "niente con cui confrontare: tutti i livelli"
+            echo "niente con cui confrontare: tutto"
             LIVELLI=tutto
+            CASSETTA=si
           fi
           echo "livelli da giocare: ${LIVELLI:-nessuno}"
           echo "livelli=$LIVELLI" >> "$GITHUB_OUTPUT"
+          echo "cassetta=$CASSETTA" >> "$GITHUB_OUTPUT"
 
   gioca:
     needs: controlli
@@ -78,9 +83,28 @@ jobs:
         run: |
           python3 -m http.server 8765 >/dev/null 2>&1 &
           sleep 1
-          if [ "$LINGUA" = it ] && [ "$LENTE" = s ]; then node tests/tools.mjs http://localhost:8765; fi
           if [ "$LIVELLI" = tutto ]; then
             node tests/play-all.mjs http://localhost:8765 "$LENTE"
           else
             node tests/play-all.mjs http://localhost:8765 "$LENTE" "$LIVELLI"
           fi
+
+  cassetta:
+    needs: controlli
+    if: needs.controlli.outputs.cassetta == 'si'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installa Playwright e Chrome
+        run: |
+          npm install --no-save --no-package-lock playwright@1.48.2
+          npx playwright install --with-deps chromium
+      - name: Prova la cassetta degli attrezzi
+        run: |
+          python3 -m http.server 8765 >/dev/null 2>&1 &
+          sleep 1
+          node tests/tools.mjs http://localhost:8765

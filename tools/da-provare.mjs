@@ -9,13 +9,16 @@
 // - documenti, strumenti di controllo, immagini: nessun livello (bastano i controlli veloci, che guardano sempre tutto).
 // Uso: node tools/da-provare.mjs file1 file2 ...   (oppure i nomi dei file uno per riga, in ingresso)
 // Scrive «tutto», oppure i livelli separati da virgole, oppure niente; la spiegazione va sullo standard error.
+// Con --cassetta scrive «si» se va provata la cassetta degli attrezzi (tests/tools.mjs): se cambiano la cassetta, i suoi
+// film, il motore o i test.
 import { readFileSync } from 'node:fs';
 
 globalThis.localStorage = { getItem: (k) => (k === 'phisiarc-lingua' ? 'it' : null), setItem() {}, removeItem() {} };
 globalThis.window = globalThis.window || {};
 const { ZONES } = await import('../js/content/index.js');
 
-let files = process.argv.slice(2);
+const CASSETTA = process.argv.includes('--cassetta');
+let files = process.argv.slice(2).filter((a) => a !== '--cassetta');
 if (!files.length && !process.stdin.isTTY) files = readFileSync(0, 'utf8').split('\n');
 files = files.map((f) => f.trim()).filter(Boolean);
 
@@ -32,6 +35,9 @@ const SMOKE = [
 ];
 // niente da giocare
 const NOTHING = [/\.md$/, /^docs\//, /^tools\//, /\.(png|jpg|svg|ico)$/, /^\.gitignore$/, /^_(film|sim)\.html$/, /^js\/content\/prereq\.js$/];
+
+// la cassetta degli attrezzi e i suoi film
+const TOOLBOX = [/^js\/(tools|toolfilm|toolanim|toon|toonkit)\.js$/, /^js\/films\//, /^js\/i18n\/en-tools\.js$/, /^tests\//, /^\.github\//];
 
 const out = new Set();
 let all = false;
@@ -56,5 +62,11 @@ for (const f of files) {
     all = true; why.push(`${f}: motore, tutto`);
   }
 }
-console.error(why.join('\n') || 'nessun file cambiato');
-console.log(all ? 'tutto' : [...out].join(','));
+if (CASSETTA) {
+  const yes = all || files.some((f) => TOOLBOX.some((r) => r.test(f)));
+  console.error(yes ? 'cassetta degli attrezzi: da provare' : 'cassetta degli attrezzi: non cambia');
+  console.log(yes ? 'si' : '');
+} else {
+  console.error(why.join('\n') || 'nessun file cambiato');
+  console.log(all ? 'tutto' : [...out].join(','));
+}

@@ -77,7 +77,8 @@ git diff --name-only main | node tools/da-provare.mjs   # quali livelli toccano 
 
 Girano anche su GitHub (`.github/workflows/test.yml`): a ogni modifica i controlli veloci guardano tutto, mentre il Chrome gioca
 solo i livelli toccati (la zona nuova, i livelli della simulazione cambiata; tutti, se cambia il motore), in italiano e in inglese,
-con le lenti in parallelo. Tutti i livelli si giocano anche ogni lunedì notte, o a mano con «Run workflow».
+con le lenti in parallelo; la cassetta degli attrezzi si prova solo se cambia. Tutto si prova anche ogni lunedì notte,
+o a mano con «Run workflow».
 
 ## La voce neurale
 
