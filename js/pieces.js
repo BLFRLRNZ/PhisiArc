@@ -68,6 +68,13 @@ export const PIECE_SVG = {
     `<g><rect x="-4.5" y="-7.5" width="9" height="5.5" rx="1.6" fill="var(--sky)" fill-opacity=".3" stroke="var(--sky)" stroke-width="1.4"/>` +
     `<circle cx="-.5" cy="-10" r="1.9" fill="none" stroke="var(--pink)" stroke-width="1.3"/>` +
     `<animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto" keyPoints="0;.08;.42;.62;1" keyTimes="0;.22;.45;.68;1" calcMode="linear" path="M3 12h5C14 12 16 52 22 52S31 30 37 30S45 52 51 52H62"/></g>`),
+  autoscontri: svg(
+    P('M2 60h60', 'muted', null, 1.4) + P('M2 6h60M8 6l3 3M20 6l3 3M32 6l3 3M44 6l3 3M56 6l3 3', 'muted', null, 1.2) +
+    `<g class="pz-bump1">${P('M17 42V6', 'chalk', null, 1.2)}${P('M8 56h17a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3z', 'sky', 'sky')}` +
+    `${P('M28 47h3v5h-3', 'chalk', null, 1.4)}${P(C(13, 39, 2.6), 'pink', 'pink', 1.4)}</g>` +
+    `<g class="pz-bump2">${P('M47 42V6', 'chalk', null, 1.2)}${P('M39 56h17a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H39a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3z', 'orange', 'orange')}` +
+    `${P('M36 47h-3v5h3', 'chalk', null, 1.4)}${P(C(51, 39, 2.6), 'sky', 'sky', 1.4)}</g>` +
+    `<g class="pz-spark">${P('M32 41v-5M28 43l-3-3M36 43l3-3', 'sun', null, 1.6)}</g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),

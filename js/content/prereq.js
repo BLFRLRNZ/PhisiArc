@@ -86,6 +86,10 @@ export const IDEE = {
   'joule': { parole: 'joule|\\d ?k?J\\b', da: 'd03-3' },
   'lavoro (L = F·s)': { parole: 'L = F|F·s\\b|L = m·g·h', da: 'd03-5', mai: ['e'] },
   'potenza in watt': { parole: 'watt|\\bkW\\b', da: 'd03-5' },
+  'quantità di moto': { parole: 'quantità di moto', da: 'd04-1' },
+  'p = m·v': { parole: 'p ?= ?m ?· ?v|m₁ ?· ?v', da: 'd04-2', mai: ['e'] },
+  'urti elastici e anelastici': { parole: 'anelastic|urto elastic', da: 'd04-3' },
+  'impulso (F·Δt = Δp)': { parole: 'impuls|F ?· ?Δt|Δp', da: 'd04-4', mai: ['e'] },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
