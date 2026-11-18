@@ -55,6 +55,12 @@ export function translateTree(o, seen = new Set()) {
   for (const k of Object.keys(o)) {
     if (!lens && SKIP.has(k)) continue;
     const v = o[k];
+    // le scelte di un selettore sono coppie [valore, etichetta]: il valore è un nome interno (ghiaccio, legno…)
+    // e non si traduce mai, anche se la stessa parola ha una traduzione altrove
+    if (k === 'options' && Array.isArray(v) && v.length && v.every((x) => Array.isArray(x))) {
+      for (const x of v) if (typeof x[1] === 'string' && x[1].length > 1 && EN[x[1]] != null) x[1] = EN[x[1]];
+      continue;
+    }
     if (typeof v === 'string') { if (v.length > 1 && EN[v] != null) o[k] = EN[v]; } else if (v && typeof v === 'object') translateTree(v, seen);
   }
   return o;

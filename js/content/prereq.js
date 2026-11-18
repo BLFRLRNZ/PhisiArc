@@ -78,6 +78,9 @@ export const IDEE = {
   'seconda legge (F = m·a)': { parole: 'm·a\\b|F ?/ ?m\\b', da: 'd01-2', mai: ['e'] },
   'peso (P = m·g)': { parole: 'm·g\\b', da: 'd01-2', mai: ['e'] },
   'azione e reazione': { parole: 'azione e reazione|terza legge', da: 'd01-4' },
+  'attrito': { parole: 'attrit', da: 'd01-1' },
+  'coefficiente d’attrito (μ)': { parole: 'μ|coefficiente d.attrito', da: 'd02-2', mai: ['e'] },
+  'parti del peso (P∥, P⊥)': { parole: 'P∥|P⊥', da: 'd02-3', mai: ['e'] },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
@@ -93,5 +96,7 @@ export const ANTICIPI = {
   'm03-2': ['forza e inerzia'],
   'm05-3': ['forza e inerzia'],
   'm05-6': ['forza e inerzia'],
+  // l'attrito dell'aria, nella Pista: l'attrito vero e proprio si incontra nell'Officina
+  'm03-aria': ['attrito'],
 };
 

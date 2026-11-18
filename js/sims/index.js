@@ -8,8 +8,9 @@ import { Lab } from './lab.js';
 import { River } from './river.js';
 import { Circle } from './circle.js';
 import { Cart } from './cart.js';
+import { Ramp } from './ramp.js';
 
-export const SIMS = { pendulum: Pendulum, scale: Scale, race: Race, fall: Fall, cannon: Cannon, lab: Lab, river: River, circle: Circle, cart: Cart };
+export const SIMS = { pendulum: Pendulum, scale: Scale, race: Race, fall: Fall, cannon: Cannon, lab: Lab, river: River, circle: Circle, cart: Cart, ramp: Ramp };
 
 // in inglese: etichette dei controlli e nomi degli oggetti disegnati
 for (const S of Object.values(SIMS)) translateTree(S.controls);

@@ -24,6 +24,8 @@ function walk(o, out, seen = new Set()) {
   for (const k of Object.keys(o)) {
     if (!lens && SKIP.has(k)) continue;
     const v = o[k];
+    // le scelte di un selettore, [valore, etichetta]: si traduce solo l'etichetta (come translateTree in js/i18n.js)
+    if (k === 'options' && Array.isArray(v) && v.length && v.every((x) => Array.isArray(x))) { for (const x of v) if (typeof x[1] === 'string' && wordy(x[1])) out.add(x[1]); continue; }
     if (typeof v === 'string') { if (v.length > 1 && wordy(v)) out.add(v); } else if (v && typeof v === 'object' && typeof v !== 'function') walk(v, out, seen);
   }
 }

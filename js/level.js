@@ -26,7 +26,7 @@ export function runLevel(root, level, nav) {
   const TEST = typeof window !== 'undefined' && window.__phisiarcTest;
   let testSolve = null;
   if (TEST) TEST.solve = () => (testSolve ? testSolve() : false);
-  if (TEST) { TEST.busy = () => busy || !!(sim && sim.running); TEST.fast = (m) => { if (sim) sim.mul = m; }; }
+  if (TEST) { TEST.busy = () => busy || !!(sim && sim.running); TEST.fast = (m) => { if (sim) sim.mul = m; }; TEST.sim = () => sim; }
   let sim = null, pending = null, onResult = null, busy = false;
   const holds = new Set();   // quello che la domanda aspetta prima di comparire (vedi hold/release in fondo)
 
@@ -123,7 +123,7 @@ export function runLevel(root, level, nav) {
   };
 
   if (SimClass) {
-    sim = new SimClass(canvas, { ...(level.params || {}) });
+    sim = new SimClass(canvas, { lens, ...(level.params || {}) }); // la lente serve alle scritte di alcune simulazioni
     sim.onDone = (r) => {
       if (pending) { const p = pending; pending = null; p(r); }
       else if (onResult) onResult(r);
