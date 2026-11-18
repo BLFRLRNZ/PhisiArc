@@ -99,6 +99,11 @@ export const IDEE = {
   'velocità di fuga': { parole: 'velocità di fuga', da: 'g01-1' },
   'gravitazione universale': { parole: 'gravitazione universale', da: 'g01-3' },
   'legge di gravitazione (F = G·m₁·m₂/r²)': { parole: '(?<![a-zA-Z])G ?· ?(m₁|M\\b)|6,67', da: 'g01-3', mai: ['e'] },
+  'velocità orbitale (v = √(G·M/r))': { parole: '√ ?\\(G ?·', da: 'g02-2', mai: ['e'] },
+  'ellisse': { parole: 'ellis', da: 'g02-3' },
+  'leggi di Keplero': { parole: 'kepler', da: 'g02-4' },
+  'terza legge di Keplero (T² ∝ a³)': { parole: 'T² ?(∝|è proporzionale)|T² ?/ ?a³', da: 'g02-4', mai: ['e'] },
+  'geostazionario': { parole: 'geostazion', da: 'g02-5' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
