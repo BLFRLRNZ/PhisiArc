@@ -95,6 +95,10 @@ export const IDEE = {
   'leva': { parole: '\\blev[ae]\\b', da: 'd05-3' },
   'baricentro': { parole: 'baricentr', da: 'd05-4' },
   'base d’appoggio': { parole: 'base d.appoggio', da: 'd05-4' },
+  'orbita': { parole: '\\borbit', da: 'g01-1' },
+  'velocità di fuga': { parole: 'velocità di fuga', da: 'g01-1' },
+  'gravitazione universale': { parole: 'gravitazione universale', da: 'g01-3' },
+  'legge di gravitazione (F = G·m₁·m₂/r²)': { parole: '(?<![a-zA-Z])G ?· ?(m₁|M\\b)|6,67', da: 'g01-3', mai: ['e'] },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

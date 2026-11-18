@@ -134,5 +134,8 @@ export default {
  "Un microscopio investigatore: guarda i miti da vicinissimo finché non crollano. Fa domande, non dà risposte.": "A detective microscope: looks at myths up close until they crumble. Asks questions, never gives answers.",
  "Mmh… guardiamolo più da vicino.": "Hmm… let’s take a closer look.",
  "Pesa le idee: da una parte il mito, dall’altra l’esperimento. Lavora in coppia con Vetrino.": "Weighs ideas: the myth on one side, the experiment on the other. Works as a pair with Vetrino.",
- "Mettiamolo sulla bilancia.": "Let’s weigh it up."
+ "Mettiamolo sulla bilancia.": "Let’s weigh it up.",
+ "Ciao, sono Saturnino! Giro, giro, ma non cado mai. Nel Cielo scopriremo perché la Luna non cade, e quanto peseresti sugli altri pianeti.": "Hi, I’m Saturnino! Round and round I go, but I never fall. In the Sky we’ll find out why the Moon doesn’t fall, and how much you’d weigh on other planets.",
+ "Sono Saturnino, benvenuto nel Cielo. Nell’Officina hai visto che le forze cambiano il moto; qui scopri la forza che tiene insieme il sistema solare: la gravità, dalla mela alla Luna.": "I’m Saturnino, welcome to the Sky. In the Workshop you saw that forces change motion; here you discover the force that holds the solar system together: gravity, from the apple to the Moon.",
+ "Sono Saturnino: giro, giro, ma non cado mai. Newton capì che la forza che fa cadere una mela è la stessa che tiene la Luna intorno alla Terra. Da qui comincia il Cielo.": "I’m Saturnino: round and round I go, but I never fall. Newton realised that the force that makes an apple fall is the same one that keeps the Moon going round the Earth. That’s where the Sky begins.",
 };
