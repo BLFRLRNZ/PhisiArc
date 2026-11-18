@@ -96,6 +96,11 @@ export const PIECE_SVG = {
     P('M24 41l6 2.4-6 2.4z', 'sky', 'sky', 1.2) + P('M31 41l6 2.4-6 2.4z', 'coral', 'coral', 1.2) +
     P('M41 41l6 2.4-6 2.4z', 'orange', 'orange', 1.2) + P('M57 41l5 2.4-5 2.4z', 'mint', 'mint', 1.2) +
     `<g class="pz-walk">${P('M18 49.5h4', 'sun', null, 1.2)}${P(C(23.5, 49.5, 1.5), 'sun', 'sun', 1.2)}</g>`),
+  sollevatore: svg(
+    P('M4 60h56', 'green', null, 1.6) +
+    P('M11 56h45V45M17 52h13V45', 'sun', 'sun', 0.6) + P('M11 34v22h45V40M17 34v18h13V40', 'muted', null, 1.6) +
+    `<g class="pz-pump">${P('M12 38h4M14 38V27M10 27h8', 'orange', null, 1.8)}</g>` +
+    `<g class="pz-raise">${P('M31 44h24', 'chalk', null, 2.2)}${P('M33 41h20l-3 3h-14z', 'sky', 'sky', 1.6)}${P('M40 37h5v4h-5z', 'sky', null, 1.4)}</g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),
