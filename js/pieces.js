@@ -89,6 +89,13 @@ export const PIECE_SVG = {
     P('M6 10h1M56 8h1M10 52h1M54 50h1M30 4h1', 'chalk', null, 1.6) +
     P(C(32, 34, 10), 'sky', 'sky', 2) + P('M25 30q4-3 8-1M34 39q3 1 5-2', 'mint', null, 1.4) + P(C(32, 34, 22), 'muted', null, 1) +
     `<g class="pz-orbit">${P('M43.6 18.4h8M42.6 15.4v6M52.6 15.4v6', 'sun', null, 1.6)}${P(C(47.6, 18.4, 2.2), 'sun', 'sun', 1.4)}</g>`),
+  sentiero: svg(
+    P('M8 10h1M56 8h1M30 6h1M44 18h1M20 22h1', 'chalk', null, 1.6) + P('M2 53h60', 'muted', null, 1.4) +
+    P(C(11, 42, 9), 'sun', 'sun', 1.6) +
+    P('M24 53V41M31 53V41M41 53V41M57 53V41', 'chalk', null, 1.2) +
+    P('M24 41l6 2.4-6 2.4z', 'sky', 'sky', 1.2) + P('M31 41l6 2.4-6 2.4z', 'coral', 'coral', 1.2) +
+    P('M41 41l6 2.4-6 2.4z', 'orange', 'orange', 1.2) + P('M57 41l5 2.4-5 2.4z', 'mint', 'mint', 1.2) +
+    `<g class="pz-walk">${P('M18 49.5h4', 'sun', null, 1.2)}${P(C(23.5, 49.5, 1.5), 'sun', 'sun', 1.2)}</g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),

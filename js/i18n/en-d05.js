@@ -449,4 +449,9 @@ export default {
  "Vuoto": "Empty",
  "In basso": "At the bottom",
  "In alto": "At the top",
+ // i nomi dei bambini sull’altalena (scelti fra i valori della prova): restano uguali
+ "Bea": "Bea",
+ "Ada": "Ada",
+ "Leo": "Leo",
+ "Teo": "Teo",
 };

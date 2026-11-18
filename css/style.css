@@ -528,6 +528,8 @@ a.lvl-item:hover { background: var(--glass2); border-color: transparent; }
 .pz-rock { transform-origin: 32px 40px; animation: pz-rock 3.2s ease-in-out infinite; }
 .pz-lift { animation: pz-lift 4s ease-in-out infinite; }
 .pz-orbit { transform-origin: 32px 34px; animation: pz-spin 7s linear infinite reverse; }
+.pz-walk { animation: pz-walk 3.4s linear infinite; }
+@keyframes pz-walk { 0% { transform: translateX(0); opacity: 0; } 8%, 88% { opacity: 1; } 100% { transform: translateX(34px); opacity: 0; } }
 @keyframes pz-lift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-34px); } }
 @keyframes pz-rock { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
 @keyframes pz-spark { 0%, 40%, 58%, 100% { opacity: 0; } 46% { opacity: 1; } }

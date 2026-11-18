@@ -104,6 +104,8 @@ export const IDEE = {
   'leggi di Keplero': { parole: 'kepler', da: 'g02-4' },
   'terza legge di Keplero (T² ∝ a³)': { parole: 'T² ?(∝|è proporzionale)|T² ?/ ?a³', da: 'g02-4', mai: ['e'] },
   'geostazionario': { parole: 'geostazion', da: 'g02-5' },
+  'unità astronomica (UA)': { parole: 'unità astronomic|\\bUA\\b', da: 'g03-2', mai: ['e'] },
+  'anno luce': { parole: 'anni? luce', da: 'g03-3' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

@@ -302,7 +302,8 @@ export const TOOLS = {
     area: 'fisica', offer: true,
     title: () => tr('Azione e reazione'),
     sub: () => tr('La terza legge di Newton'),
-    test: (s) => /azione e reazione|terza legge|action and reaction|third law/i.test(s),
+    // la terza legge di Newton, non quella di Keplero
+    test: (s) => /azione e reazione|terza legge(?! di Keplero)|action and reaction|(?<!Kepler[’']s )third law(?! of Kepler)/i.test(s),
     body: () => tr('Se un corpo spinge un altro, l’altro spinge il primo con una forza <b>uguale e opposta</b>: <b>F₁₂ = −F₂₁</b>. Le due forze agiscono su corpi diversi, e ognuno risponde secondo la sua massa: il più leggero prende più velocità. Cambia le masse dei due carrelli che si spingono via.'),
     widget() {
       let m1 = 1, m2 = 3;
