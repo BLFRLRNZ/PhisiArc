@@ -30,8 +30,18 @@ function walk(o, out, seen = new Set()) {
   }
 }
 
+// le parole scelte fra i valori (vals) che finiscono in un testo, come {n} → «Marte»: si traducono quando si inseriscono
+function valsWords(z, out) {
+  for (const l of z.levels) for (const st of l.steps || []) {
+    if (!st.vals) continue;
+    const keys = new Set();
+    for (const f of ['ask', 'explain', 'ok', 'high', 'low', 'text']) for (const m of JSON.stringify(st[f] ?? '').matchAll(/\{(\w+)(?::\d)?\}/g)) keys.add(m[1]);
+    const lists = isLens(st.vals) ? Object.values(st.vals) : [st.vals];
+    for (const v of lists) for (const [k, list] of Object.entries(v || {})) if (keys.has(k)) for (const x of [list].flat(3)) if (typeof x === 'string' && wordy(x)) out.add(x);
+  }
+}
 const groups = {};
-for (const [id, z] of Object.entries(C.ZONES)) { const s = new Set(); walk(z, s); groups[id] = s; }
+for (const [id, z] of Object.entries(C.ZONES)) { const s = new Set(); walk(z, s); valsWords(z, s); groups[id] = s; }
 const meta = new Set();
 walk({ WORLDS: C.WORLDS, GRADES: C.GRADES, LENSES: C.LENSES, KIND: C.KIND, CAST }, meta);
 for (const w of C.WORLDS) meta.delete(w.id);

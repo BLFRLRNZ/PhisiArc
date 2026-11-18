@@ -19,6 +19,7 @@ import D04 from './d04.js';
 import D05 from './d05.js';
 import G01 from './g01.js';
 import G02 from './g02.js';
+import G03 from './g03.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -34,7 +35,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -76,8 +77,8 @@ export const WORLDS = [
     // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
     // (niente grado di Keplero, niente prova d'ingresso), ma le zone pronte si giocano già.
     id: 'cielo', n: 4, diff: 3, name: 'Il Cielo', field: 'Gravitazione', place: 'Osservatorio e sistema solare', color: '#a9b8ff', mascot: 'saturnino',
-    zones: ['G01', 'G02'], building: true,
-    soon: ['G03 Il sistema solare'], requires: ['officina'],
+    zones: ['G01', 'G02', 'G03'], building: true,
+    soon: [], requires: ['officina'],
     intro: {
       e: 'Ciao, sono Saturnino! Giro, giro, ma non cado mai. Nel Cielo scopriremo perché la Luna non cade, e quanto peseresti sugli altri pianeti.',
       s: 'Sono Saturnino, benvenuto nel Cielo. Nell’Officina hai visto che le forze cambiano il moto; qui scopri la forza che tiene insieme il sistema solare: la gravità, dalla mela alla Luna.',

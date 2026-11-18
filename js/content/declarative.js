@@ -25,14 +25,15 @@
 // Nei testi, {nome} si sostituisce con il valore (con la virgola, fino a 2 decimali; {nome:1} fino a 1),
 // {ans} con la risposta e {got} con la misura.
 import { tx, pick, num } from '../util.js';
+import { t } from '../i18n.js';
 
 const LENS_KEYS = ['e', 's', 'c'];
 const byLens = (v, lens) => (v && typeof v === 'object' && !Array.isArray(v) && LENS_KEYS.some((k) => k in v) ? v[lens] ?? v.s ?? v.e : v);
 const formula = (src, names) => new Function(...names, `return (${src});`);
 
 // sostituisce {nome} con il numero formattato all'italiana (fino a 2 decimali)
-// ({nome:1} = al massimo un decimale)
-export const fill = (s, vars) => String(s ?? '').replace(/\{(\w+)(?::(\d))?\}/g, (m, k, d) => (k in vars ? (typeof vars[k] === 'number' ? num(vars[k], d != null ? +d : 2) : vars[k]) : m));
+// ({nome:1} = al massimo un decimale); le parole scelte fra i valori (un pianeta, «una volta e mezza») si traducono
+export const fill = (s, vars) => String(s ?? '').replace(/\{(\w+)(?::(\d))?\}/g, (m, k, d) => (k in vars ? (typeof vars[k] === 'number' ? num(vars[k], d != null ? +d : 2) : t(vars[k])) : m));
 
 // sceglie i valori a caso, poi calcola quelli derivati (derive: { v: 'a * t' }), nell'ordine in cui sono scritti
 function choose(st, lens, r) {
@@ -60,12 +61,15 @@ function compileNum(st) {
 
 function compileTune(st) {
   const measure = new Function('r', `return r.${st.measure};`);
+  // set qui sono formule, da calcolare a ogni prova: il passo compilato non le passa alla simulazione così come sono
+  const setSrc = st.set;
   return {
     ...st,
+    set: undefined,
     gen: (lens, r) => {
       const v = choose(st, lens, r), names = Object.keys(v);
       const goal = formula(st.goal, names)(...names.map((k) => v[k]));
-      const set = st.set ? Object.fromEntries(Object.entries(st.set).map(([k, src]) => [k, formula(src, names)(...names.map((n) => v[n]))])) : undefined;
+      const set = setSrc ? Object.fromEntries(Object.entries(setSrc).map(([k, src]) => [k, formula(src, names)(...names.map((n) => v[n]))])) : undefined;
       return { ...v, goal, vars: v, set, text: fill(tx(st.ask, lens), v) };
     },
     check: (res, tg, lens) => {
