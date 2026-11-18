@@ -81,6 +81,11 @@ export const IDEE = {
   'attrito': { parole: 'attrit', da: 'd01-1' },
   'coefficiente d’attrito (μ)': { parole: 'μ|coefficiente d.attrito', da: 'd02-2', mai: ['e'] },
   'parti del peso (P∥, P⊥)': { parole: 'P∥|P⊥', da: 'd02-3', mai: ['e'] },
+  'energia': { parole: 'energi', da: 'd03-2' },
+  'energia di posizione e di movimento (m·g·h, ½·m·v²)': { parole: 'm·g·h|½ ?· ?m ?· ?v²', da: 'd03-3', mai: ['e'] },
+  'joule': { parole: 'joule|\\d ?k?J\\b', da: 'd03-3' },
+  'lavoro (L = F·s)': { parole: 'L = F|F·s\\b|L = m·g·h', da: 'd03-5', mai: ['e'] },
+  'potenza in watt': { parole: 'watt|\\bkW\\b', da: 'd03-5' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

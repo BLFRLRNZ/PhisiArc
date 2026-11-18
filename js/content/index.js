@@ -14,6 +14,7 @@ import M04 from './m04.js';
 import M05 from './m05.js';
 import D01 from './d01.js';
 import D02 from './d02.js';
+import D03 from './d03.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -29,7 +30,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -61,8 +62,8 @@ export const WORLDS = [
     // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
     // (niente grado di Newton, niente prova d'ingresso), ma le zone pronte si giocano già.
     id: 'officina', n: 3, diff: 2, name: 'L’Officina', field: 'Dinamica: forze ed energia', place: 'Carrelli, rampe e montagne russe', color: 'var(--coral)', mascot: 'mela',
-    zones: ['D01', 'D02'], building: true,
-    soon: ['D03 Lavoro, energia e potenza', 'D04 Quantità di moto e urti', 'D05 Rotazioni ed equilibrio'], requires: ['pista'],
+    zones: ['D01', 'D02', 'D03'], building: true,
+    soon: ['D04 Quantità di moto e urti', 'D05 Rotazioni ed equilibrio'], requires: ['pista'],
     intro: {
       e: 'Ciao, sono Mela! Nell’Officina si spinge, si tira e si lancia. Scopriremo che cosa fa partire le cose, e che cosa le ferma.',
       s: 'Sono Mela, benvenuto nell’Officina. Nella Pista hai imparato a descrivere il moto; qui scopri le sue cause: le forze, le leggi di Newton e l’energia.',

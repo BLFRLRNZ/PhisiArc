@@ -62,6 +62,12 @@ export const PIECE_SVG = {
     P('M6 18h17', 'sun', null, 2.4) + P('M7 18v-7M22 18v-7M7 12h15', 'sun', null, 1.4) +
     P('M23 18L47 50q5 6 13 6', 'sky', null, 2.8) + P('M23 23L45 52q4 5 15 6', 'sky', null, 1.2) + P('M45 52v8M58 58v2', 'muted', null, 1.4) +
     `<g class="pz-slide">${P(C(26, 14, 2.6), 'pink', 'pink')}${P('M26 17l3 7M29 24l6 6M27 19l-4-4M27 19l4-4', 'pink', null, 1.6)}</g>`),
+  montagne: svg(
+    P('M2 60h60', 'muted', null, 1.4) + P('M6 14v46M12 20v40M34 33v27M40 33v27M56 54v6', 'muted', null, 1) +
+    P('M3 12h5C14 12 16 52 22 52S31 30 37 30S45 52 51 52H62', 'chalk', null, 2.4) + P('M3 16h5C14 16 16 56 22 56', 'sky', null, 1) +
+    `<g><rect x="-4.5" y="-7.5" width="9" height="5.5" rx="1.6" fill="var(--sky)" fill-opacity=".3" stroke="var(--sky)" stroke-width="1.4"/>` +
+    `<circle cx="-.5" cy="-10" r="1.9" fill="none" stroke="var(--pink)" stroke-width="1.3"/>` +
+    `<animateMotion dur="3.4s" repeatCount="indefinite" rotate="auto" keyPoints="0;.08;.42;.62;1" keyTimes="0;.22;.45;.68;1" calcMode="linear" path="M3 12h5C14 12 16 52 22 52S31 30 37 30S45 52 51 52H62"/></g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),
