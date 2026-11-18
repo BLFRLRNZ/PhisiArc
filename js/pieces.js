@@ -108,6 +108,10 @@ export const PIECE_SVG = {
   granite: svg(
     P('M18 24h28l-4 32H22z', 'chalk', null, 1.8) + P('M20 34h24l-3 22H23z', 'sun', 'sun', 1) + P('M38 24l8-16', 'coral', null, 2) +
     `<g class="pz-twinkle">${P('M24 26l3 3M30 22l3 3M36 26l3 3M27 18l3 3', 'sky', null, 2)}</g>`),
+  mongolfiera: svg(
+    P('M4 60h56', 'green', null, 1.6) + P('M10 58q2-5 6-4M50 58q3-6 7-3', 'green', null, 1.2) +
+    `<g class="pz-hover">${P('M32 5c-11 0-18 8-18 17 0 8 6 13 11 19h14c5-6 11-11 11-19 0-9-7-17-18-17z', 'sun', 'orange', 1.8)}${P('M32 5v36M25 7q-4 17 1 34M39 7q4 17-1 34', 'sun', null, 1)}` +
+    `${P('M26 41l1 6M38 41l-1 6', 'chalk', null, 1.2)}${P('M26 47h12v7H26z', 'orange', 'orange', 1.5)}<g class="pz-twinkle">${P('M32 46v-4', 'coral', null, 2.2)}</g></g>`),
   terme: svg(
     P('M8 36h48v16q0 4-4 4H12q-4 0-4-4z', 'sky', 'sky', 1.8) + P('M8 42h48', 'coral', null, 1.4) +
     `<g class="pz-steam">${P('M20 30q-3-5 0-9t0-9M32 30q-3-5 0-9t0-9M44 30q-3-5 0-9t0-9', 'chalk', null, 1.6)}</g>` +
