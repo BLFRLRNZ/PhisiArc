@@ -85,6 +85,10 @@ export const PIECE_SVG = {
     P('M4 60h56', 'green', null, 1.6) + P('M8 9h1M53 14h1M14 25h1M50 33h1M10 43h1', 'chalk', null, 1.6) +
     P('M26 59V4M38 59V4M26 12h12M26 24h12M26 36h12M26 48h12', 'muted', null, 1.4) + P('M20 60l6-5M44 60l-6-5', 'muted', null, 1.4) +
     `<g class="pz-lift">${P('M28 41h8v8h-8z', 'sun', 'sun', 1.8)}${P(C(32, 44.2, 1.5), 'sky', 'sky', 1.2)}</g>`),
+  satellite: svg(
+    P('M6 10h1M56 8h1M10 52h1M54 50h1M30 4h1', 'chalk', null, 1.6) +
+    P(C(32, 34, 10), 'sky', 'sky', 2) + P('M25 30q4-3 8-1M34 39q3 1 5-2', 'mint', null, 1.4) + P(C(32, 34, 22), 'muted', null, 1) +
+    `<g class="pz-orbit">${P('M43.6 18.4h8M42.6 15.4v6M52.6 15.4v6', 'sun', null, 1.6)}${P(C(47.6, 18.4, 2.2), 'sun', 'sun', 1.4)}</g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),
