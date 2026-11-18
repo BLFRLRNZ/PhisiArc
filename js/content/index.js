@@ -88,9 +88,7 @@ export const WORLDS = [
   },
   {
     id: 'oceano', n: 5, diff: 2, name: 'L’Oceano', field: 'I fluidi', place: 'Porto e fondali', color: 'var(--sky)', mascot: 'goccia',
-    // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
-    // (niente grado di Archimede, niente prova d'ingresso), ma le zone pronte si giocano già.
-    zones: ['FL01', 'FL02', 'FL03'], building: true,
+    zones: ['FL01', 'FL02', 'FL03'],
     soon: [], requires: ['cielo'],
     intro: {
       e: 'Ciao, sono Goccia! Nell’Oceano scopriremo perché l’acqua spinge, chi galleggia e chi va a fondo, e come fanno a volare gli aerei.',
@@ -120,7 +118,7 @@ export const GRADES = [
   { name: 'Galileo', world: 'pista', desc: 'Galileo Galilei (1564-1642) capì che, senza aria, tutto cade allo stesso modo e che il moto si può misurare.' },
   { name: 'Newton', world: 'officina', desc: 'Isaac Newton (1642-1727) scrisse le leggi del moto: una forza non serve a mantenere il moto, ma a cambiarlo.' },
   { name: 'Keplero', world: 'cielo', desc: 'Giovanni Keplero (1571-1630) scoprì le leggi dei pianeti: girano intorno al Sole su ellissi, e più sono lontani più vanno piano.' },
-  { name: 'Archimede', world: 'oceano', desc: 'In arrivo.' },
+  { name: 'Archimede', world: 'oceano', desc: 'Archimede di Siracusa (circa 287-212 a.C.) scoprì la spinta dei liquidi: chi entra nell’acqua riceve una spinta verso l’alto pari al peso dell’acqua che sposta.' },
   { name: 'Kelvin', world: 'vulcano', desc: 'In arrivo.' },
   { name: 'Hooke', world: 'valle', desc: 'In arrivo.' },
   { name: 'Huygens', world: 'prisma', desc: 'In arrivo.' },

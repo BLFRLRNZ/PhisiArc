@@ -89,6 +89,7 @@ export default {
  "Isaac Newton (1642-1727) scrisse le leggi del moto: una forza non serve a mantenere il moto, ma a cambiarlo.": "Isaac Newton (1642-1727) wrote the laws of motion: a force is not needed to keep motion going, but to change it.",
  "In arrivo.": "Coming soon.",
  "Giovanni Keplero (1571-1630) scoprì le leggi dei pianeti: girano intorno al Sole su ellissi, e più sono lontani più vanno piano.": "Johannes Kepler (1571-1630) discovered the laws of the planets: they go round the Sun on ellipses, and the farther away they are, the slower they go.",
+ "Archimede di Siracusa (circa 287-212 a.C.) scoprì la spinta dei liquidi: chi entra nell’acqua riceve una spinta verso l’alto pari al peso dell’acqua che sposta.": "Archimedes of Syracuse (about 287-212 BC) discovered the push of liquids: anything that enters water gets an upward push equal to the weight of the water it moves aside.",
  "Keplero": "Kepler",
  "Archimede": "Archimedes",
  "Il traguardo finale.": "The final goal.",
