@@ -21,6 +21,7 @@ import G01 from './g01.js';
 import G02 from './g02.js';
 import G03 from './g03.js';
 import FL01 from './fl01.js';
+import FL02 from './fl02.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -36,7 +37,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -88,8 +89,8 @@ export const WORLDS = [
     id: 'oceano', n: 5, diff: 2, name: 'L’Oceano', field: 'I fluidi', place: 'Porto e fondali', color: 'var(--sky)', mascot: 'goccia',
     // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
     // (niente grado di Archimede, niente prova d'ingresso), ma le zone pronte si giocano già.
-    zones: ['FL01'], building: true,
-    soon: ['FL02 Galleggiare: Archimede', 'FL03 Fluidi in movimento e volo'], requires: ['cielo'],
+    zones: ['FL01', 'FL02'], building: true,
+    soon: ['FL03 Fluidi in movimento e volo'], requires: ['cielo'],
     intro: {
       e: 'Ciao, sono Goccia! Nell’Oceano scopriremo perché l’acqua spinge, chi galleggia e chi va a fondo, e come fanno a volare gli aerei.',
       s: 'Sono Goccia, benvenuto nell’Oceano. Nel Cielo hai visto la forza di gravità; qui scopri che cosa fanno le forze dentro i liquidi e i gas: la pressione, il galleggiamento, il volo.',
