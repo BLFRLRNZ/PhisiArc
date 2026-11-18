@@ -105,6 +105,9 @@ export const PIECE_SVG = {
     P('M2 46h60', 'sky', null, 1.6) + P('M8 49h6M30 51h8M50 49h6', 'sky', null, 1.2) +
     `<g class="pz-bob">${P('M10 37h44l-4 9H14z', 'orange', 'orange', 1.8)}${P('M14 42h36', 'chalk', null, 1)}${P(C(32, 42, 2.2), 'chalk', null, 1)}` +
     `${P('M16 29h8v8h-8zM26 29h8v8h-8zM36 29h8v8h-8zM21 21h8v8h-8z', 'sun', 'sun', 1.3)}</g>`),
+  granite: svg(
+    P('M18 24h28l-4 32H22z', 'chalk', null, 1.8) + P('M20 34h24l-3 22H23z', 'sun', 'sun', 1) + P('M38 24l8-16', 'coral', null, 2) +
+    `<g class="pz-twinkle">${P('M24 26l3 3M30 22l3 3M36 26l3 3M27 18l3 3', 'sky', null, 2)}</g>`),
   terme: svg(
     P('M8 36h48v16q0 4-4 4H12q-4 0-4-4z', 'sky', 'sky', 1.8) + P('M8 42h48', 'coral', null, 1.4) +
     `<g class="pz-steam">${P('M20 30q-3-5 0-9t0-9M32 30q-3-5 0-9t0-9M44 30q-3-5 0-9t0-9', 'chalk', null, 1.6)}</g>` +
