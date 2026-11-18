@@ -44,7 +44,7 @@ let all = false;
 const why = [];
 for (const f of files) {
   let m;
-  if ((m = f.match(/^js\/content\/([a-z]\d\d)\.js$/)) || (m = f.match(/^js\/i18n\/en-([a-z]\d\d)\.js$/))) {
+  if ((m = f.match(/^js\/content\/([a-z]+\d\d)\.js$/)) || (m = f.match(/^js\/i18n\/en-([a-z]+\d\d)\.js$/))) {
     const ids = ofZone(m[1].toUpperCase());
     if (!ids.length) { all = true; why.push(`${f}: zona sconosciuta, tutto`); continue; }
     ids.forEach((i) => out.add(i)); why.push(`${f}: la zona ${m[1].toUpperCase()}`);

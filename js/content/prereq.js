@@ -106,6 +106,13 @@ export const IDEE = {
   'geostazionario': { parole: 'geostazion', da: 'g02-5' },
   'unità astronomica (UA)': { parole: 'unità astronomic|\\bUA\\b', da: 'g03-2', mai: ['e'] },
   'anno luce': { parole: 'anni? luce', da: 'g03-3' },
+  'pressione': { parole: '\\bpression[ei]\\b(?! della luce)', da: 'fl01-1' },
+  'pascal (unità)': { parole: '\\d ?k?Pa\\b|\\bpascal\\b', da: 'fl01-2', mai: ['e'] },
+  'P = F/A': { parole: 'P ?= ?F ?/ ?A|F₁ ?/ ?A₁', da: 'fl01-2', mai: ['e'] },
+  'densità': { parole: 'densit', da: 'fl01-3' },
+  'legge di Stevino (P = ρ·g·h)': { parole: 'ρ ?· ?g ?· ?h|Stevino', da: 'fl01-3', mai: ['e'] },
+  'principio di Pascal': { parole: 'principio di Pascal|torchio idraulic', da: 'fl01-5' },
+  'pressione atmosferica': { parole: 'pressione atmosferic|\\d ?atm\\b|barometr|Torricelli', da: 'fl01-6' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
@@ -123,5 +130,7 @@ export const ANTICIPI = {
   'm05-6': ['forza e inerzia'],
   // l'attrito dell'aria, nella Pista: l'attrito vero e proprio si incontra nell'Officina
   'm03-aria': ['attrito'],
+  // la pressione dell'acqua nella canna del giardino: un modo di dire; la pressione si studia nell'Oceano (FL01)
+  'm03-5': ['pressione'],
 };
 
