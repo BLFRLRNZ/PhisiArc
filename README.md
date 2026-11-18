@@ -71,9 +71,13 @@ node tools/check-prereq.mjs      # nessuna idea usata prima di essere spiegata (
 node tools/i18n-strings.mjs --check   # ogni frase ha la sua traduzione inglese
 node tests/tools.mjs URL         # la cassetta degli attrezzi si apre e si supera; ogni film dura un minuto e disegna tutto
 node tests/play-all.mjs URL      # un Chrome gioca tutti i livelli nelle tre lenti (serve playwright)
+node tests/play-all.mjs URL s g03-1,g03-2   # solo alcuni livelli, in una lente
+git diff --name-only main | node tools/da-provare.mjs   # quali livelli toccano i file cambiati
 ```
 
-Girano anche su GitHub a ogni push (`.github/workflows/test.yml`).
+Girano anche su GitHub (`.github/workflows/test.yml`): a ogni modifica i controlli veloci guardano tutto, mentre il Chrome gioca
+solo i livelli toccati (la zona nuova, i livelli della simulazione cambiata; tutti, se cambia il motore), in italiano e in inglese,
+con le lenti in parallelo. Tutti i livelli si giocano anche ogni lunedì notte, o a mano con «Run workflow».
 
 ## La voce neurale
 

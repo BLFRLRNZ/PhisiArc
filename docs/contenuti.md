@@ -118,7 +118,8 @@ si capisca anche senza scorrere fino alla simulazione.
 2. `node tools/check-prereq.mjs`: nessuna idea usata prima di essere spiegata. Legge i testi, lente per lente: se introduci un'idea nuova,
    aggiungila a `IDEE` in `js/content/prereq.js` con le sue parole e il livello che la spiega.
 3. `node tests/play-all.mjs http://localhost:8765` con il gioco servito in locale: un Chrome gioca tutti i livelli nelle tre lenti.
-   Gli stessi controlli girano su GitHub a ogni push.
+   Su GitHub i controlli veloci guardano sempre tutto, mentre il Chrome gioca solo i livelli toccati dalla modifica
+   (`tools/da-provare.mjs`: per una zona nuova, i suoi livelli e il primo di ogni zona), oppure tutti se cambia il motore.
 
 ## I salvataggi
 
