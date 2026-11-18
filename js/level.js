@@ -64,7 +64,7 @@ export function runLevel(root, level, nav) {
     h('span', { class: 'kind k-' + level.kind }, h('span', { html: KIND[level.kind].ic }), ' ', (level.exam ? tr('Prova') : KIND[level.kind].name)), h('strong', {}, tx(level.title, lens))), dots, hintBtn);
 
   const boss = level.kind === 'boss';
-  const who = CAST[boss ? 'vetrino' : world.mascot];
+  const who = CAST[level.who || (boss ? 'vetrino' : world.mascot)];
   const introText = tx(level.intro, lens);
   const speakBtn = h('button', { class: 'btn icon', title: tr('Ascolta'), 'aria-label': tr('Ascolta'), onclick: () => speak(readOut(true)), html: IC.sound });
   const bubble = h('div', { class: 'bubble' }, h('div', { class: 'who-name' }, who.name, speakBtn), offerTools(h('div', { html: introText })));

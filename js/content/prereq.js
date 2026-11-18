@@ -90,6 +90,11 @@ export const IDEE = {
   'p = m·v': { parole: 'p ?= ?m ?· ?v|m₁ ?· ?v', da: 'd04-2', mai: ['e'] },
   'urti elastici e anelastici': { parole: 'anelastic|urto elastic', da: 'd04-3' },
   'impulso (F·Δt = Δp)': { parole: 'impuls|F ?· ?Δt|Δp', da: 'd04-4', mai: ['e'] },
+  'fulcro': { parole: 'fulcr', da: 'd05-1' },
+  'momento di una forza (M = F·b)': { parole: 'M ?= ?F ?·|F ?· ?b\\b|N·m|moment[oi] (della|di una|delle|dei) forz', da: 'd05-2', mai: ['e'] },
+  'leva': { parole: '\\blev[ae]\\b', da: 'd05-3' },
+  'baricentro': { parole: 'baricentr', da: 'd05-4' },
+  'base d’appoggio': { parole: 'base d.appoggio', da: 'd05-4' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

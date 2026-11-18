@@ -75,6 +75,12 @@ export const PIECE_SVG = {
     `<g class="pz-bump2">${P('M47 42V6', 'chalk', null, 1.2)}${P('M39 56h17a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H39a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3z', 'orange', 'orange')}` +
     `${P('M36 47h-3v5h3', 'chalk', null, 1.4)}${P(C(51, 39, 2.6), 'sky', 'sky', 1.4)}</g>` +
     `<g class="pz-spark">${P('M32 41v-5M28 43l-3-3M36 43l3-3', 'sun', null, 1.6)}</g>`),
+  bilico: svg(
+    P('M4 60h56', 'green', null, 1.6) + P('M7 59l3 1M14 59l3 1M44 59l3 1M52 59l3 1', 'green', null, 1.2) +
+    P('M32 41L25 58h14z', 'orange', 'orange') +
+    `<g class="pz-rock">${P('M4 39h56', 'sun', null, 3.2)}${P('M16 38v-7M40 38v-7', 'muted', null, 1.4)}` +
+    `${P(C(9, 25, 3), 'sky', 'sky')}${P('M9.5 28.5v8.5M9.5 37l5 1M10 31l5.5 1', 'sky', null, 1.6)}` +
+    `${P(C(46, 22.5, 3.8), 'pink', 'pink')}${P('M45.5 27v10M45.5 37l-5 1M45 30.5l-4.5 1.5', 'pink', null, 1.9)}</g>`),
   grado: svg(
     P('M4 24l28-13 28 13-28 13z', 'chalk', 'sky') + P('M14 29v13c9 7 27 7 36 0V29', 'chalk', 'sky') + P('M32 24l20 4v16', 'sun', null, 1.6) +
     `<g class="pz-tassel">${P('M52 44l-3 9h6z', 'sun', 'sun')}</g>`),
