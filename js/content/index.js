@@ -74,10 +74,8 @@ export const WORLDS = [
     },
   },
   {
-    // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
-    // (niente grado di Keplero, niente prova d'ingresso), ma le zone pronte si giocano già.
     id: 'cielo', n: 4, diff: 3, name: 'Il Cielo', field: 'Gravitazione', place: 'Osservatorio e sistema solare', color: '#a9b8ff', mascot: 'saturnino',
-    zones: ['G01', 'G02', 'G03'], building: true,
+    zones: ['G01', 'G02', 'G03'],
     soon: [], requires: ['officina'],
     intro: {
       e: 'Ciao, sono Saturnino! Giro, giro, ma non cado mai. Nel Cielo scopriremo perché la Luna non cade, e quanto peseresti sugli altri pianeti.',
@@ -108,7 +106,7 @@ export const GRADES = [
   { name: 'Sperimentatore', world: 'laboratorio', desc: 'Sai prevedere, provare e misurare: il metodo di ogni scienziato.' },
   { name: 'Galileo', world: 'pista', desc: 'Galileo Galilei (1564-1642) capì che, senza aria, tutto cade allo stesso modo e che il moto si può misurare.' },
   { name: 'Newton', world: 'officina', desc: 'Isaac Newton (1642-1727) scrisse le leggi del moto: una forza non serve a mantenere il moto, ma a cambiarlo.' },
-  { name: 'Keplero', world: 'cielo', desc: 'In arrivo.' },
+  { name: 'Keplero', world: 'cielo', desc: 'Giovanni Keplero (1571-1630) scoprì le leggi dei pianeti: girano intorno al Sole su ellissi, e più sono lontani più vanno piano.' },
   { name: 'Archimede', world: 'oceano', desc: 'In arrivo.' },
   { name: 'Kelvin', world: 'vulcano', desc: 'In arrivo.' },
   { name: 'Hooke', world: 'valle', desc: 'In arrivo.' },
