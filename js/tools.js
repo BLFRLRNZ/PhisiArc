@@ -260,7 +260,7 @@ export const TOOLS = {
     area: 'fisica', offer: true, world: 'officina',
     title: () => tr('Forza, massa e accelerazione'),
     sub: () => tr('La seconda legge di Newton: F = m · a'),
-    test: (s) => /m ?· ?a\b|F ?\/ ?m\b|seconda legge|second law/i.test(s),
+    test: (s) => /m ?· ?a\b|F ?\/ ?m\b|seconda legge|(?<!Kepler[’']s )second law(?! of (thermodynamics|Kepler))/i.test(s),
     body: () => tr('La <b>seconda legge di Newton</b>: <b>F = m · a</b>. Più forza, più accelerazione; più massa, meno accelerazione. La forza si misura in <b>newton</b> (N): 1 N dà a 1 kg un’accelerazione di 1 m/s². Muovi la forza e la massa: le barre sono la velocità dopo 1, 2 e 3 secondi.'),
     widget() {
       let F = 6, m = 2;

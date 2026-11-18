@@ -417,4 +417,87 @@ export const MONDI = {
       ok: tr('Giusto: a volume fisso la pressione va come la temperatura in kelvin.'),
     }),
   },
+  primo: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('Il primo principio: Q = ΔU + L'),
+    sub: () => tr('Il calore si divide fra il gas e il lavoro'),
+    test: (s) => /primo principio della termodinamica|first law of thermodynamics|energia interna|internal energy/i.test(s),
+    body: () => tr('Il calore <b>Q</b> dato a un gas non sparisce: una parte diventa <b>lavoro L</b>, perché il gas si dilata e spinge; il resto alza la sua <b>energia interna ΔU</b>, cioè lo scalda. <b>Q = ΔU + L</b>: l’energia si conserva. Dai calore all’aria sotto un pistone.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (Q) => {
+        // l'aria a pressione costante: 2/7 del calore diventano lavoro, 5/7 energia interna
+        const L = (Q * 2) / 7, U = Q - L, hp = 30 + L * 0.9, B = (x, v, cls) => `<rect x="${x}" y="${(96 - v * 0.55).toFixed(1)}" width="20" height="${(v * 0.55).toFixed(1)}" class="${cls}"/>`;
+        let g = `<path d="M14 18V96H66V18" class="edge"/><rect x="16" y="${(96 - hp).toFixed(1)}" width="48" height="${hp.toFixed(1)}" class="cell"/><line x1="16" y1="${(96 - hp).toFixed(1)}" x2="64" y2="${(96 - hp).toFixed(1)}" class="side"/>`;
+        g += `<rect x="28" y="${(96 - hp - 14).toFixed(1)}" width="24" height="12" class="blk"/><line x1="100" y1="96" x2="196" y2="96" class="ground"/>`;
+        g += B(108, Q, 'sqa') + B(140, U, 'sqc') + B(172, L, 'sqb');
+        g += `<text x="118" y="108" class="lb" text-anchor="middle">Q</text><text x="150" y="108" class="lb" text-anchor="middle">ΔU</text><text x="182" y="108" class="lb" text-anchor="middle">${tr('lavoro')}</text>`;
+        show.innerHTML = svg(200, 112, g) + `<div class="tool-f">${n(Q, 0)} J = <span class="c1">${n(U, 0)} J</span> + <span class="c2">${n(L, 0)} J</span></div>`;
+      };
+      const a = slider(tr('calore dato (J)'), 0, 140, 10, 70, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Vale anche al contrario: se un gas si espande senza ricevere calore, il lavoro viene dalla sua energia interna e il gas si raffredda. Per questo la bomboletta spray si raffredda mentre la usi.'),
+    check: () => ({
+      q: tr('Un gas riceve 100 J di calore e fa 30 J di lavoro. La sua energia interna…'),
+      options: [tr('cresce di 70 J'), tr('cresce di 130 J'), tr('resta uguale')],
+      ok: tr('Giusto: 100 J = 70 J di energia interna + 30 J di lavoro.'),
+    }),
+  },
+  carnot: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('Il rendimento: η = 1 − T fredda / T calda'),
+    sub: () => tr('Quanto calore può diventare lavoro'),
+    test: (s) => /Carnot|rendiment|efficiency of an engine|maximum efficiency/i.test(s),
+    body: () => tr('Un motore termico prende calore dalla caldaia, ne trasforma una parte in lavoro e cede il resto al lato freddo. Il massimo possibile, senza nessuna perdita, è il <b>rendimento di Carnot</b>: <b>η = 1 − T fredda / T calda</b>, con le temperature in kelvin. Scegli la caldaia, con il lato freddo a 20 °C.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (tc) => {
+        const K = tc + 273.15, eta = Math.max(0, 1 - 293.15 / K), L = 100 * eta, w = (J) => (1 + J * 0.12).toFixed(1);
+        let g = `<rect x="20" y="6" width="110" height="20" class="sqa"/><rect x="20" y="88" width="110" height="20" class="sqc"/><circle cx="75" cy="57" r="13" class="tri"/>`;
+        g += `<line x1="75" y1="26" x2="75" y2="44" class="shx" style="stroke-width:${w(100)}"/>`;
+        if (100 - L > 0.5) g += `<line x1="75" y1="70" x2="75" y2="88" class="unroll" style="stroke-width:${w(100 - L)}"/>`;
+        if (L > 0.5) g += `<line x1="88" y1="57" x2="150" y2="57" class="shy" style="stroke-dasharray:none;stroke-width:${w(L)}"/>`;
+        g += `<text x="75" y="20" class="lb" text-anchor="middle">${n(tc, 0)} °C</text><text x="75" y="102" class="lb" text-anchor="middle">20 °C</text><text x="156" y="61" class="lb">${n(L, 0)} J</text>`;
+        show.innerHTML = svg(200, 112, g) + `<div class="tool-f">η = 1 − 293 / ${n(K, 0)} = <span class="c2">${n(L, 0)}%</span></div>`;
+      };
+      const a = slider(tr('caldaia (°C)'), 20, 800, 10, 200, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo le centrali usano vapore caldissimo e nessun motore arriva al 100%: servirebbe un lato freddo allo zero assoluto.'),
+    check: () => ({
+      q: tr('Un motore ideale lavora fra 400 K e 300 K. Il suo rendimento massimo è…'),
+      options: [tr('25%'), tr('75%'), tr('100%')],
+      ok: tr('Giusto: 1 − 300 / 400 = 0,25.'),
+    }),
+  },
+  entropia: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('L’entropia: il disordine che cresce'),
+    sub: () => tr('Il secondo principio della termodinamica'),
+    test: (s) => /entropi|secondo principio della termodinamica|second law of thermodynamics/i.test(s),
+    body: () => tr('Il calore passa da solo dal caldo al freddo, mai al contrario: è il <b>secondo principio</b>. Dietro c’è l’<b>entropia</b>, che conta in quanti modi si possono disporre le particelle: da sole, le cose vanno verso gli stati con più modi, cioè più disordinati. Prendi un gas di N particelle.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const DOTS = Array.from({ length: 20 }, (_, i) => [(0.5 + i * 0.7548777) % 1, (0.5 + i * 0.5698403) % 1]);
+      const draw = (N) => {
+        const box = (x0, all) => DOTS.slice(0, N).map(([u, v]) => `<circle cx="${(x0 + 4 + u * (all ? 36 : 80)).toFixed(1)}" cy="${(16 + v * 64).toFixed(1)}" r="2.6" class="tipdot"/>`).join('');
+        let g = `<rect x="4" y="12" width="88" height="72" class="edge"/><line x1="48" y1="12" x2="48" y2="84" class="shy"/><rect x="108" y="12" width="88" height="72" class="edge"/><line x1="152" y1="12" x2="152" y2="84" class="shy"/>`;
+        g += box(6, true) + box(110, false);
+        g += `<text x="48" y="100" class="lb" text-anchor="middle">${tr('tutte a sinistra')}</text><text x="152" y="100" class="lb" text-anchor="middle">${tr('sparpagliate')}</text>`;
+        show.innerHTML = svg(200, 106, g) + `<div class="tool-f">N = ${N}: ${tr('una volta su')} <span class="c2">${n(2 ** N, 0)}</span></div>`;
+      };
+      const a = slider(tr('particelle'), 2, 20, 1, 6, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo il profumo si sparge, il ghiaccio si scioglie nella bibita e un uovo rotto non torna intero: l’entropia di un sistema isolato non diminuisce mai.'),
+    check: () => ({
+      q: tr('Con 10 particelle, quante volte su 1024 sono tutte nella metà sinistra?'),
+      options: [tr('una volta'), tr('512 volte'), tr('10 volte')],
+      ok: tr('Giusto: un solo modo su 2 elevato a 10, cioè 1024.'),
+    }),
+  },
 };
