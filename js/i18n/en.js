@@ -21,6 +21,7 @@ import g02 from './en-g02.js';
 import g03 from './en-g03.js';
 import fl01 from './en-fl01.js';
 import fl02 from './en-fl02.js';
+import fl03 from './en-fl03.js';
 import tools from './en-tools.js';
 
-export default { ...ui, ...meta, ...extra, ...f01, ...f02, ...f03, ...m01, ...m02, ...m03, ...m04, ...m05, ...d01, ...d02, ...d03, ...d04, ...d05, ...g01, ...g02, ...g03, ...fl01, ...fl02, ...tools };
+export default { ...ui, ...meta, ...extra, ...f01, ...f02, ...f03, ...m01, ...m02, ...m03, ...m04, ...m05, ...d01, ...d02, ...d03, ...d04, ...d05, ...g01, ...g02, ...g03, ...fl01, ...fl02, ...fl03, ...tools };

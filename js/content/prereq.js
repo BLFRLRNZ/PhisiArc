@@ -115,6 +115,12 @@ export const IDEE = {
   'pressione atmosferica': { parole: 'pressione atmosferic|\\d ?atm\\b|barometr|Torricelli', da: 'fl01-6' },
   'principio di Archimede': { parole: '(principio|spinta) di Archimede', da: 'fl02-2' },
   'spinta di Archimede (F = ρ·V·g)': { parole: 'ρ ?· ?V ?· ?g', da: 'fl02-2', mai: ['e'] },
+  'equazione di continuità (A·v costante)': { parole: 'A₁ ?· ?v₁|continuità|A ?· ?v (costante|resta)', da: 'fl03-2', mai: ['e'] },
+  'principio di Bernoulli': { parole: 'Bernoulli|Venturi', da: 'fl03-3' },
+  'P + ½·ρ·v² costante': { parole: 'P ?\\+ ?½|½ ?· ?ρ ?· ?\\(v', da: 'fl03-3', mai: ['e'] },
+  'portanza': { parole: 'portanz', da: 'fl03-4' },
+  'L = ½·ρ·v²·S·C': { parole: 'L ?= ?½', da: 'fl03-4', mai: ['e'] },
+  'stallo': { parole: '\\bstall', da: 'fl03-4' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
