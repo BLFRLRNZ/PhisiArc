@@ -17,6 +17,7 @@ import D02 from './d02.js';
 import D03 from './d03.js';
 import D04 from './d04.js';
 import D05 from './d05.js';
+import G01 from './g01.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -32,7 +33,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -70,8 +71,18 @@ export const WORLDS = [
       c: 'Sono Mela, quella caduta in testa a Newton. Nella Pista hai visto come si muovono le cose; qui si scopre perché.',
     },
   },
-  { id: 'cielo', n: 4, diff: 3, name: 'Il Cielo', field: 'Gravitazione', place: 'Osservatorio e sistema solare', color: '#a9b8ff', mascot: 'saturnino',
-    soon: ['G01 La gravitazione universale', 'G02 Orbite e leggi di Keplero', 'G03 Il sistema solare'], requires: ['officina'] },
+  {
+    // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
+    // (niente grado di Keplero, niente prova d'ingresso), ma le zone pronte si giocano già.
+    id: 'cielo', n: 4, diff: 3, name: 'Il Cielo', field: 'Gravitazione', place: 'Osservatorio e sistema solare', color: '#a9b8ff', mascot: 'saturnino',
+    zones: ['G01'], building: true,
+    soon: ['G02 Orbite e leggi di Keplero', 'G03 Il sistema solare'], requires: ['officina'],
+    intro: {
+      e: 'Ciao, sono Saturnino! Giro, giro, ma non cado mai. Nel Cielo scopriremo perché la Luna non cade, e quanto peseresti sugli altri pianeti.',
+      s: 'Sono Saturnino, benvenuto nel Cielo. Nell’Officina hai visto che le forze cambiano il moto; qui scopri la forza che tiene insieme il sistema solare: la gravità, dalla mela alla Luna.',
+      c: 'Sono Saturnino: giro, giro, ma non cado mai. Newton capì che la forza che fa cadere una mela è la stessa che tiene la Luna intorno alla Terra. Da qui comincia il Cielo.',
+    },
+  },
   { id: 'oceano', n: 5, diff: 2, name: 'L’Oceano', field: 'I fluidi', place: 'Porto e fondali', color: 'var(--sky)', mascot: 'goccia',
     soon: ['FL01 La pressione', 'FL02 Galleggiare: Archimede', 'FL03 Fluidi in movimento e volo'], requires: ['cielo'] },
   { id: 'vulcano', n: 6, diff: 3, name: 'Il Vulcano', field: 'Termodinamica', place: 'Dal ghiacciaio alla lava', color: 'var(--coral)', mascot: 'termo',

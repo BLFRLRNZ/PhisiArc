@@ -16,6 +16,7 @@ import d02 from './en-d02.js';
 import d03 from './en-d03.js';
 import d04 from './en-d04.js';
 import d05 from './en-d05.js';
+import g01 from './en-g01.js';
 import tools from './en-tools.js';
 
-export default { ...ui, ...meta, ...extra, ...f01, ...f02, ...f03, ...m01, ...m02, ...m03, ...m04, ...m05, ...d01, ...d02, ...d03, ...d04, ...d05, ...tools };
+export default { ...ui, ...meta, ...extra, ...f01, ...f02, ...f03, ...m01, ...m02, ...m03, ...m04, ...m05, ...d01, ...d02, ...d03, ...d04, ...d05, ...g01, ...tools };
