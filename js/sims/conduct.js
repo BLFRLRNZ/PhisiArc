@@ -19,7 +19,9 @@ const E_SKIN = 1800, E_METAL = 15000, E_WOOD = 400, T_SKIN = 34;
 const erfc = (z) => { const t = 1 / (1 + 0.3275911 * z), y = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))); return y * Math.exp(-z * z); };
 export const rodT = (alpha, x, s) => (s <= 0 ? TA : TA + (TH - TA) * erfc(x / (2 * Math.sqrt(alpha * s))));
 export const contact = (amb) => ({ metal: (E_SKIN * T_SKIN + E_METAL * amb) / (E_SKIN + E_METAL), wood: (E_SKIN * T_SKIN + E_WOOD * amb) / (E_SKIN + E_WOOD) });
-const feel = (T) => (T < 24 ? 'freddo!' : T < 31 ? 'fresco' : T < 37 ? 'tiepido' : T < 44 ? 'caldo' : 'scotta!');
+// i nomi scritti per intero, così il dizionario inglese li trova
+const NAMES = { rame: () => i18n('rame'), ferro: () => i18n('ferro'), vetro: () => i18n('vetro'), legno: () => i18n('legno'), nera: () => i18n('nera'), bianca: () => i18n('bianca'), lucida: () => i18n('lucida') };
+const feel = (T) => (T < 24 ? i18n('freddo!') : T < 31 ? i18n('fresco') : T < 37 ? i18n('tiepido') : T < 44 ? i18n('caldo') : i18n('scotta!'));
 const feelCol = (T) => (T < 24 ? 'sky' : T < 31 ? 'mint' : T < 37 ? 'chalk' : T < 44 ? 'orange' : 'coral');
 
 export class Conduct extends Sim {
@@ -71,7 +73,7 @@ export class Conduct extends Sim {
         const xa = (k / 24) * L, T = live ? rodT(al, xa + L / 48, s) : TA, hot = clamp01((T - TA) / (TH - TA)), xs = X(xa) - (k === 0 ? 30 : 0);
         g.save(); g.fillStyle = hot > 0.5 ? this.c('coral') : hot > 0.15 ? this.c('orange') : this.c(col); g.globalAlpha = 0.55 + 0.45 * hot; g.fillRect(xs, y - 3, X(xa + L / 24) - xs + 0.5, 6); g.restore();
       }
-      this.text(i18n(name), rx1 + 6, y + 4, { size: 11, color: this.c(col), weight: 700 });
+      this.text(NAMES[name](), rx1 + 6, y + 4, { size: 11, color: this.c(col), weight: 700 });
       // le palline di cera: cadono quando lì si arriva a 50 °C
       for (const xb of BEADS) {
         const tm = (() => { if (!live) return Infinity; let lo = 0, hi = SECS * 4; if (rodT(al, xb, hi) < MELT) return Infinity; for (let it = 0; it < 30; it++) { const mid = (lo + hi) / 2; if (rodT(al, xb, mid) >= MELT) hi = mid; else lo = mid; } return hi; })();
@@ -111,11 +113,14 @@ export class Conduct extends Sim {
       g.save(); g.fillStyle = k === 'nera' ? '#05070d' : this.c(col); g.globalAlpha = k === 'nera' ? 1 : k === 'bianca' ? 0.85 : 0.35; g.fillRect(cx - cw / 2, top, cw, ch); g.restore();
       if (k === 'lucida') this.line([[cx - cw / 2 + 8, top + 8], [cx - cw / 2 + 8, yb - 8]], { color: this.c('chalk'), width: 3, alpha: 0.7 });
       this.line([[cx - cw / 2, top], [cx - cw / 2, yb], [cx + cw / 2, yb], [cx + cw / 2, top], [cx - cw / 2, top]], { color: this.c(col), width: 2.4 });
-      this.text(i18n(k), cx, yb + 16, { size: 11, align: 'center', color: this.c(col), weight: 700 });
+      this.text(NAMES[k](), cx, yb + 16, { size: 11, align: 'center', color: this.c(col), weight: 700 });
       this.text(`${fmt(Math.round(T), 0)} °C`, cx, top + ch / 2 + 5, { size: 13, align: 'center', color: this.c('coral'), weight: 700 });
     });
     const rows = [[E ? i18n('Tre lattine d’acqua al sole, per dieci minuti') : i18n('Tre lattine d’acqua a 20 °C, al sole per dieci minuti'), this.c('chalk'), 700]];
-    if (this.result) rows.push([E ? i18n('la nera si scalda di più: prende quasi tutta la luce') : i18n('la nera assorbe quasi tutta la luce, la lucida la riflette'), this.c('mint'), 700]);
+    if (this.result) {
+      rows.push([E ? i18n('la nera si scalda di più') : i18n('la nera assorbe quasi tutta la luce'), this.c('mint'), 700]);
+      rows.push([E ? i18n('prende quasi tutta la luce') : i18n('la bianca e la lucida la riflettono'), this.c('sky'), 600]);
+    }
     this.box(rows);
   }
 
@@ -143,7 +148,7 @@ export class Conduct extends Sim {
         // il calore al contatto: dalla mano alla panchina se la panchina è più fredda, al contrario se è più calda
         const d = T_SKIN - Tc, Lw = Math.min(46, Math.abs(d) * 3.2);
         if (Lw > 3) for (const dx of [-10, 10]) this.arrow(cx + dx, d > 0 ? hy - 22 : hy + 18, cx + dx, d > 0 ? hy - 22 + Lw : hy + 18 - Lw, { color: this.c('orange'), width: 2.4, head: 7 });
-        this.text(i18n(feel(Tc)), cx, hy - 82, { size: 14, align: 'center', color: this.c(feelCol(Tc)), weight: 700 });
+        this.text(feel(Tc), cx, hy - 82, { size: 14, align: 'center', color: this.c(feelCol(Tc)), weight: 700 });
         if (!E) this.text(i18n('al tocco: {T} °C', { T: fmt(Math.round(Tc), 0) }), cx, hy - 100, { size: 11, align: 'center', color: this.c(feelCol(Tc)) });
       }
     });
