@@ -359,4 +359,62 @@ export const MONDI = {
       ok: tr('Giusto: il vapore che torna goccioline, come sullo specchio del bagno.'),
     }),
   },
+  boyle: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('La legge di Boyle: P·V costante'),
+    sub: () => tr('Schiacciare un gas senza scaldarlo'),
+    test: (s) => /Boyle/i.test(s),
+    body: () => tr('Se schiacci un gas senza scaldarlo, le sue particelle hanno meno spazio e sbattono più spesso sulle pareti: la pressione sale. Metà volume, doppia pressione: <b>P·V resta costante</b> (Robert Boyle, 1662). Schiaccia 100 mL d’aria a 1 bar.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      // posti fissi delle particelle, dentro il gas: si stringono con lui
+      const DOTS = Array.from({ length: 18 }, (_, i) => [(0.5 + i * 0.7548777) % 1, (0.5 + i * 0.5698403) % 1]);
+      const draw = (V) => {
+        const P = 100 / V, x0 = 40, x1 = 186, xp = x0 + (V / 100) * (x1 - x0), a = Math.PI * 0.75 + Math.PI * 1.5 * Math.min(1, P / 5);
+        let g = `<circle cx="16" cy="50" r="12" class="tri"/><line x1="16" y1="50" x2="${(16 + Math.cos(a) * 9).toFixed(1)}" y2="${(50 + Math.sin(a) * 9).toFixed(1)}" class="frc"/><line x1="28" y1="50" x2="${x0}" y2="50" class="ground"/>`;
+        g += `<rect x="${x0}" y="34" width="${(xp - x0).toFixed(1)}" height="32" class="cell"/>`;
+        g += DOTS.map(([u, v]) => `<circle cx="${(x0 + 4 + u * (xp - x0 - 8)).toFixed(1)}" cy="${(38 + v * 24).toFixed(1)}" r="2.6" class="tipdot"/>`).join('');
+        g += `<path d="M${x1 + 6} 34H${x0}V66H${x1 + 6}" class="edge"/><line x1="${xp.toFixed(1)}" y1="35" x2="${xp.toFixed(1)}" y2="65" class="side"/><line x1="${xp.toFixed(1)}" y1="50" x2="${Math.min(198, xp + 60).toFixed(1)}" y2="50" class="side"/>`;
+        g += `<text x="${x0}" y="84" class="lb">0</text><text x="${x1}" y="84" class="lb" text-anchor="end">100 mL</text>`;
+        show.innerHTML = svg(200, 92, g) + `<div class="tool-f">P·V = <span class="c2">${n(P, 2)} bar</span> × <span class="c1">${n(V, 0)} mL</span> = 100</div>`;
+      };
+      const a = slider(tr('volume (mL)'), 20, 100, 5, 50, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo le bolle si gonfiano salendo verso la superficie, e chi va sott’acqua con le bombole risale sempre respirando, mai trattenendo il fiato.'),
+    check: () => ({
+      q: tr('Schiacci l’aria di una siringa chiusa a un terzo del volume, senza scaldarla. La pressione…'),
+      options: [tr('triplica'), tr('diventa un terzo'), tr('resta uguale')],
+      ok: tr('Giusto: un terzo del volume, il triplo della pressione.'),
+    }),
+  },
+  gas: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('Le leggi dei gas: P·V = n·R·T'),
+    sub: () => tr('Pressione, volume e temperatura in kelvin'),
+    test: (s) => /Charles|Gay-Lussac|gas perfett|ideal gas/i.test(s),
+    body: () => tr('Pressione, volume e temperatura di un gas sono legati, con la temperatura <b>in kelvin</b>. A pressione fissa il volume cresce come T (<b>Charles</b>); a volume fisso cresce la pressione (<b>Gay-Lussac</b>); a T fissa resta costante P·V (<b>Boyle</b>). Tutto insieme: <b>P·V = n·R·T</b>. Scalda o raffredda un palloncino da 3 L.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const X = (t) => 22 + ((t + 300) / 400) * 170, Y = (v) => 96 - (v / 4) * 84, Vof = (t) => (3 * (t + 273.15)) / 293.15;
+      const draw = (t) => {
+        const V = Vof(t), r = 13 * Math.cbrt(V / 3);
+        let g = `<line x1="22" y1="96" x2="194" y2="96" class="ground"/><line x1="22" y1="96" x2="22" y2="8" class="ground"/>`;
+        g += `<line x1="${X(-273.15).toFixed(1)}" y1="${Y(0)}" x2="${X(-100).toFixed(1)}" y2="${Y(Vof(-100)).toFixed(1)}" class="shy"/><line x1="${X(-100).toFixed(1)}" y1="${Y(Vof(-100)).toFixed(1)}" x2="${X(100).toFixed(1)}" y2="${Y(Vof(100)).toFixed(1)}" class="edge"/>`;
+        g += `<circle cx="${X(t).toFixed(1)}" cy="${Y(V).toFixed(1)}" r="4.5" class="tipdot"/><circle cx="62" cy="34" r="${r.toFixed(1)}" class="sqa"/><path d="M62 ${(34 + r).toFixed(1)}l-3 5h6z" class="sqa"/>`;
+        g += `<text x="${X(-273.15).toFixed(1)}" y="108" class="lb" text-anchor="middle">−273 °C</text><text x="${X(0).toFixed(1)}" y="108" class="lb" text-anchor="middle">0 °C</text><text x="26" y="16" class="lb">V</text>`;
+        show.innerHTML = svg(200, 112, g) + `<div class="tool-f">t = <span class="c1">${n(t, 0)} °C</span> = ${n(t + 273, 0)} K → V = <span class="c2">${n(V, 2)} L</span></div><p class="small muted">${tr('A pressione costante, il volume è proporzionale alla temperatura in kelvin: la retta arriva a zero a −273 °C.')}</p>`;
+      };
+      const a = slider(tr('temperatura (°C)'), -100, 100, 10, 20, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo i palloncini si sgonfiano al freddo, le gomme si gonfiano dopo un lungo viaggio e le bombole non vanno lasciate al sole.'),
+    check: () => ({
+      q: tr('Un gas chiuso in una bombola passa da 300 K a 600 K. La pressione…'),
+      options: [tr('raddoppia'), tr('si dimezza'), tr('resta uguale')],
+      ok: tr('Giusto: a volume fisso la pressione va come la temperatura in kelvin.'),
+    }),
+  },
 };

@@ -131,6 +131,10 @@ export const IDEE = {
   'passaggi di stato': { parole: 'passaggi? di stato|stati della materia|fusione|condensa|sublima', da: 't02-1' },
   'calore latente (Q = m·L)': { parole: 'calore latente|Q ?= ?m ?· ?L', da: 't02-3' },
   'punto di ebollizione': { parole: 'punto di ebollizione', da: 't02-5' },
+  'legge di Boyle (P·V costante)': { parole: 'Boyle|\\bP ?· ?V\\b', da: 't03-3' },
+  'legge di Charles (V/T costante)': { parole: 'Charles|V/T (=|resta)|V₁ ?/ ?T₁', da: 't03-4', mai: ['e'] },
+  'legge di Gay-Lussac (P/T costante)': { parole: 'Gay-Lussac|P/T (=|resta|costante)|P₁ ?/ ?T₁', da: 't03-6', mai: ['e'] },
+  'gas perfetti (P·V = n·R·T)': { parole: 'gas perfett|n ?· ?R ?· ?T', da: 't03-6', mai: ['e'] },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
