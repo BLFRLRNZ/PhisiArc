@@ -205,4 +205,95 @@ export const MONDI = {
       ok: tr('Giusto: l’acqua accelera perché davanti la pressione è più bassa. Più velocità, meno pressione.'),
     }),
   },
+
+  // ---------- il Vulcano ----------
+  temperatura: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('Temperatura e kelvin'),
+    sub: () => tr('Quanto si agitano le particelle'),
+    test: (s) => /zero assoluto|absolute zero|kelvin|\d ?K\b|T ?= ?t ?\+ ?273/i.test(s),
+    body: () => tr('La <b>temperatura</b> dice quanto si agitano le particelle: più è alta, più corrono. A <b>−273 °C</b> sono ferme: è lo <b>zero assoluto</b>, e da lì parte la scala <b>Kelvin</b>, <b>T = t + 273</b>. Un grado Celsius e un kelvin sono lo stesso salto: cambia solo lo zero. Muovi la temperatura.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (t) => {
+        const K = t + 273, sp = Math.sqrt(Math.max(0, K) / 300), Y = (c) => 108 - ((c + 273) / 573) * 96;
+        // a sinistra le particelle, con una scia lunga quanto corrono; a destra il termometro con le due scale
+        let g = '';
+        [[30, 30], [72, 22], [50, 60], [96, 52], [24, 88], [66, 96], [104, 90]].forEach(([x, y], i) => {
+          const a = i * 2.4, L = 16 * sp;
+          g += `<line x1="${x}" y1="${y}" x2="${(x - Math.cos(a) * L).toFixed(1)}" y2="${(y - Math.sin(a) * L).toFixed(1)}" class="mk"/><circle cx="${x}" cy="${y}" r="5" class="${t < 0 ? 'sqc' : t < 150 ? 'cell' : 'sqa'}"/>`;
+        });
+        g += `<rect x="146" y="10" width="10" height="100" rx="5" class="edge"/><line x1="151" y1="108" x2="151" y2="${Y(t).toFixed(1)}" class="frc"/>`;
+        for (const c of [-273, 0, 100, 300]) g += `<text x="140" y="${Y(c) + 4}" class="lb" text-anchor="end">${c}</text><text x="162" y="${Y(c) + 4}" class="lb">${c + 273}</text>`;
+        show.innerHTML = svg(200, 118, g) + `<div class="tool-f">t = <span class="c2">${n(t, 0)} °C</span> → T = <span class="c1">${n(K, 0)} K</span></div>`
+          + `<p class="small muted">${K <= 0 ? tr('Zero assoluto: le particelle sono ferme.') : tr('Le scie sono lunghe quanto corrono le particelle.')}</p>`;
+      };
+      const a = slider(tr('temperatura (°C)'), -273, 300, 1, 20, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('In fisica si usano i kelvin perché il loro zero è vero: a 0 K non c’è più agitazione. Per questo 200 K è davvero il doppio di 100 K, mentre 20 °C non è il doppio di 10 °C.'),
+    check: () => ({
+      q: tr('Quanti kelvin sono 27 °C?'),
+      options: ['300 K', '27 K', '246 K'],
+      ok: tr('Giusto: 27 + 273 = 300 K.'),
+    }),
+  },
+
+  calore: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('Il calore: Q = m·c·ΔT'),
+    sub: () => tr('Energia che passa dal caldo al freddo'),
+    test: (s) => /calore specifico|specific heat|Q ?= ?m ?· ?c/i.test(s),
+    body: () => tr('Il <b>calore</b> è energia che passa da un corpo caldo a uno freddo. Per scaldare un corpo ne serve <b>Q = m·c·ΔT</b>: più massa e più gradi, più calore. Il <b>calore specifico</b> c dice quanto una sostanza è lenta a scaldarsi: per 1 kg d’acqua e 1 °C servono 4186 J, per il ferro 450. Scegli la sostanza e i gradi.'),
+    widget() {
+      const ST = [[tr('acqua'), 4186], [tr('olio'), 2000], [tr('sabbia'), 830], [tr('ferro'), 450]];
+      let i = 0, dT = 20;
+      const show = h('div', { class: 'tool-show' });
+      const draw = () => {
+        const [name, c] = ST[i], Q = c * dT, w = Math.max(2, (Q / (4186 * 50)) * 170);
+        const g = `<text x="8" y="16" class="lb">Q</text><rect x="8" y="22" width="${w.toFixed(1)}" height="16" rx="3" class="sqa"/>`
+          + `<text x="8" y="58" class="lb">${tr('1 kg di {x}, {d} °C in più', { x: name, d: dT })}</text>`;
+        show.innerHTML = svg(190, 66, g) + `<div class="tool-f">Q = 1 kg × <span class="c4">${n(c, 0)}</span> × <span class="c1">${dT}</span> = <span class="c2">${n(Q / 1000, 1)} kJ</span></div>`;
+      };
+      const a = slider(tr('sostanza'), 0, ST.length - 1, 1, 0, (x) => { i = x; draw(); }, (x) => ST[x][0]);
+      const b = slider(tr('gradi in più ΔT'), 1, 50, 1, dT, (x) => { dT = x; draw(); });
+      a.set(); b.set();
+      return h('div', {}, show, a.el, b.el);
+    },
+    tip: () => tr('D’estate il mare resta fresco e la sabbia scotta: stesso sole, ma l’acqua ha il calore specifico più alto di quasi tutte le sostanze.'),
+    check: () => ({
+      q: tr('Stesso fuoco, stessa massa: chi si scalda di più, l’acqua o il ferro?'),
+      options: [tr('il ferro: ha il calore specifico più piccolo'), tr('l’acqua'), tr('tutti e due uguale')],
+      ok: tr('Giusto: ΔT = Q / (m·c), e il calore specifico del ferro è quasi 10 volte più piccolo di quello dell’acqua.'),
+    }),
+  },
+
+  propagazione: {
+    area: 'fisica', offer: true, world: 'vulcano',
+    title: () => tr('I tre viaggi del calore'),
+    sub: () => tr('Conduzione, convezione, irraggiamento'),
+    test: (s) => /conduzion|convezion|irraggia|conduction|convection|thermal radiation/i.test(s),
+    body: () => tr('Il calore viaggia in tre modi. Per <b>conduzione</b>, di particella in particella, nei solidi: i metalli conducono, legno e lana isolano. Per <b>convezione</b>, nei liquidi e nei gas: il caldo sale, il freddo scende, e la materia gira. Per <b>irraggiamento</b>, con la luce e gli infrarossi, anche nel vuoto. Scegli il viaggio.'),
+    widget() {
+      const M = [[tr('conduzione'), tr('Un cucchiaino nel tè: il calore risale il metallo fino alle dita.')], [tr('convezione'), tr('Una pentola sul fuoco: l’acqua calda sale dal fondo, quella fredda scende ai lati.')], [tr('irraggiamento'), tr('Il Sole: il calore arriva con la luce, attraverso il vuoto.')]];
+      const show = h('div', { class: 'tool-show' });
+      const draw = (i) => {
+        let g;
+        if (i === 0) g = `<path d="M14 30h40v40H14z" class="edge"/><rect x="14" y="44" width="40" height="26" class="wat"/><rect x="34" y="46" width="140" height="10" rx="3" class="cell"/><rect x="34" y="46" width="70" height="10" rx="3" class="sqa"/>` + arrowH(108, 168, 34, 'frc');
+        else if (i === 1) g = `<path d="M50 20V86H140V20" class="edge"/><rect x="51" y="30" width="88" height="55" class="wat"/><ellipse cx="74" cy="57" rx="14" ry="20" class="circ"/><ellipse cx="116" cy="57" rx="14" ry="20" class="circ"/>` + arrowV(95, 80, 38, 'frc') + `<path d="M80 96q5-6 10 0t10 0" class="frc"/>`;
+        else g = `<circle cx="30" cy="48" r="16" class="blk"/>` + [0, 1, 2].map((k) => arrowH(52, 146, 34 + k * 14, 'mk')).join('') + `<circle cx="164" cy="48" r="10" class="sqc"/>`;
+        show.innerHTML = svg(190, 100, g) + `<p class="small">${M[i][1]}</p>`;
+      };
+      const a = slider(tr('viaggio'), 0, 2, 1, 0, draw, (i) => M[i][0]);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Un thermos li ferma tutti e tre: il vuoto fra le pareti blocca conduzione e convezione, l’argento rimanda indietro l’irraggiamento.'),
+    check: () => ({
+      q: tr('Come arriva sulla Terra il calore del Sole?'),
+      options: [tr('per irraggiamento'), tr('per conduzione'), tr('per convezione')],
+      ok: tr('Giusto: fra il Sole e la Terra c’è il vuoto, e solo l’irraggiamento lo attraversa.'),
+    }),
+  },
 };

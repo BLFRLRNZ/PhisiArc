@@ -105,6 +105,10 @@ export const PIECE_SVG = {
     P('M2 46h60', 'sky', null, 1.6) + P('M8 49h6M30 51h8M50 49h6', 'sky', null, 1.2) +
     `<g class="pz-bob">${P('M10 37h44l-4 9H14z', 'orange', 'orange', 1.8)}${P('M14 42h36', 'chalk', null, 1)}${P(C(32, 42, 2.2), 'chalk', null, 1)}` +
     `${P('M16 29h8v8h-8zM26 29h8v8h-8zM36 29h8v8h-8zM21 21h8v8h-8z', 'sun', 'sun', 1.3)}</g>`),
+  terme: svg(
+    P('M8 36h48v16q0 4-4 4H12q-4 0-4-4z', 'sky', 'sky', 1.8) + P('M8 42h48', 'coral', null, 1.4) +
+    `<g class="pz-steam">${P('M20 30q-3-5 0-9t0-9M32 30q-3-5 0-9t0-9M44 30q-3-5 0-9t0-9', 'chalk', null, 1.6)}</g>` +
+    P('M56 36q3-10 8-12', 'coral', null, 2) + P('M60 26q2 2 0 4', 'coral', null, 1.4)),
   idrovolante: svg(
     P('M2 50h60', 'sky', null, 1.6) + P('M8 54h6M30 56h8M50 54h6', 'sky', null, 1.2) +
     `<g class="pz-fly">${P('M12 33q5-6 17-6h14q9 0 12 4-2 4-12 4H15q-3 0-3-2z', 'sun', 'sun', 1.8)}${P('M14 32l-4-11h6l6 7', 'sun', null, 1.6)}` +

@@ -121,6 +121,13 @@ export const IDEE = {
   'portanza': { parole: 'portanz', da: 'fl03-4' },
   'L = ½·ρ·v²·S·C': { parole: 'L ?= ?½', da: 'fl03-4', mai: ['e'] },
   'stallo': { parole: '\\bstall', da: 'fl03-4' },
+  'zero assoluto': { parole: 'zero assoluto', da: 't01-1' },
+  'kelvin': { parole: 'kelvin|\\d ?K\\b', da: 't01-1', mai: ['e'] },
+  'equilibrio termico': { parole: 'equilibrio termico', da: 't01-2' },
+  'calore specifico (Q = m·c·ΔT)': { parole: 'calore specifico|Q ?= ?m ?· ?c', da: 't01-3' },
+  'convezione': { parole: 'convezion', da: 't01-3' },
+  'conduzione del calore': { parole: 'conduzion|conduttor|isolant', da: 't01-5' },
+  'irraggiamento': { parole: 'irraggia', da: 't01-6' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
