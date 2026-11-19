@@ -27,6 +27,7 @@ import T01 from './t01.js';
 import T02 from './t02.js';
 import T03 from './t03.js';
 import T04 from './t04.js';
+import O01 from './o01.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -42,7 +43,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01, T02, T03, T04 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01, T02, T03, T04, O01 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -110,8 +111,18 @@ export const WORLDS = [
       c: 'Sono Termo. Dal ghiacciaio alla lava, tutto quello che si scalda, si scioglie, bolle o si gonfia segue poche leggi: le stesse che fanno girare i motori, e che nessuno è mai riuscito a imbrogliare. È la termodinamica.',
     },
   },
-  { id: 'valle', n: 7, diff: 3, name: 'La Valle delle Onde', field: 'Oscillazioni, onde e suono', place: 'Altalene, corde e strumenti', color: 'var(--mint)', mascot: 'boing',
-    soon: ['O01 Molle e oscillazioni', 'O02 Le onde', 'O03 Il suono', 'O04 Risonanza ed effetto Doppler'], requires: ['vulcano'] },
+  {
+    id: 'valle', n: 7, diff: 3, name: 'La Valle delle Onde', field: 'Oscillazioni, onde e suono', place: 'Altalene, corde e strumenti', color: 'var(--mint)', mascot: 'boing',
+    // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
+    // (niente grado di Hooke, niente prova d'ingresso), ma le zone pronte si giocano già.
+    zones: ['O01'], building: true,
+    soon: ['O02 Le onde', 'O03 Il suono', 'O04 Risonanza ed effetto Doppler'], requires: ['vulcano'],
+    intro: {
+      e: 'Boing, boing! Sono Boing, e non sto mai fermo. Nella Valle delle Onde scopriremo come oscillano le molle e le altalene, come viaggiano le onde e da dove viene il suono.',
+      s: 'Sono Boing, benvenuto nella Valle delle Onde. Nel Vulcano hai visto il calore e i motori; qui scopri le oscillazioni, le onde e il suono: tutto quello che va avanti e indietro e porta energia senza portare materia.',
+      c: 'Sono Boing. Una molla, una corda di chitarra, il mare, la voce: sembrano cose diverse, ma oscillano tutte allo stesso modo. Capire un’oscillazione vuol dire capire le onde, e le onde sono ovunque.',
+    },
+  },
   { id: 'prisma', n: 8, diff: 3, name: 'Il Prisma', field: 'Ottica', place: 'Specchi, lenti e colori', color: 'var(--pink)', mascot: 'iride',
     soon: ['OT01 Raggi e riflessione', 'OT02 Rifrazione e lenti', 'OT03 Colori e spettro', 'OT04 La luce è un’onda'], requires: ['valle'] },
   { id: 'centrale', n: 9, diff: 4, name: 'La Centrale', field: 'Elettromagnetismo', place: 'Cariche, circuiti e magneti', color: 'var(--sun)', mascot: 'lampo',

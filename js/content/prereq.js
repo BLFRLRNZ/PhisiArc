@@ -141,6 +141,12 @@ export const IDEE = {
   'limite di Carnot (η = 1 − T fredda / T calda)': { parole: 'Carnot|η', da: 't04-3', mai: ['e'] },
   'secondo principio della termodinamica': { parole: 'secondo principio|Clausius', da: 't04-5' },
   'entropia': { parole: 'entropi', da: 't04-6' },
+  'legge di Hooke': { parole: 'Hooke', da: 'o01-1' },
+  'costante elastica (F = k·x)': { parole: 'costante elastica|k ?· ?x', da: 'o01-1', mai: ['e'] },
+  'frequenza': { parole: 'frequenz|hertz|\\d ?Hz\\b', da: 'o01-3', mai: ['e'] },
+  'energia elastica': { parole: 'energia elastica', da: 'o01-5' },
+  'smorzamento': { parole: 'smorzament|ammortizz', da: 'o01-5' },
+  'moto armonico': { parole: 'moto armonico', da: 'o01-6' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
