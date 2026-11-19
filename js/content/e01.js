@@ -144,7 +144,7 @@ export default {
         {
           kind: 'q',
           text: T('D’inverno tocchi una maniglia e prendi la scossa. Il tuo corpo è…', 'Cammini sulla moquette, tocchi la maniglia e prendi la scossa. Che cosa è successo?', 'Perché d’inverno, toccando una maniglia, si prende la scossa?'),
-          options: [T('un conduttore', 'ti eri caricato camminando, e la carica è saltata', 'il corpo si carica camminando'), T('un isolante', 'la maniglia di metallo era carica e ti ha dato la scossa', 'la maniglia accumula cariche con il freddo'), T('una calamita', 'hai preso un po’ della corrente elettrica della casa', 'il freddo produce elettricità nel metallo')],
+          options: [T('un conduttore', 'ti eri caricato camminando, e la carica è saltata', 'il corpo si carica camminando'), T('un isolante', 'la maniglia di metallo era carica e ti ha dato la scossa', 'la maniglia accumula cariche con il freddo'), T('una calamita', 'la maniglia era collegata alla presa di casa', 'il freddo produce elettricità nel metallo')],
           answer: 0,
           explain: T('Giusto: anche il tuo corpo conduce.', 'Esatto: le scarpe strofinano la moquette, tu ti carichi e la carica salta sul metallo.', 'Esatto: le scarpe strofinano il pavimento, e la carica salta sul metallo. D’inverno l’aria è secca e non la porta via, così resta su di te finché tocchi un conduttore.'),
         },

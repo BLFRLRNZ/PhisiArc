@@ -1010,4 +1010,58 @@ export const MONDI = {
       ok: tr('Giusto: F = q·E = 2 × 1000 = 2000 N.'),
     }),
   },
+  ohm: {
+    area: 'fisica', offer: true, world: 'centrale',
+    title: () => tr('La legge di Ohm: V = R·I'),
+    sub: () => tr('Tensione, corrente e resistenza'),
+    test: (s) => /legge di ohm|ohm[’']s law|V ?= ?R ?· ?I|I ?= ?V ?\/ ?R/i.test(s),
+    body: () => tr('La pila spinge le cariche con una <b>tensione</b> V, in volt; ogni cosa nel circuito le frena con una <b>resistenza</b> R, in ohm (Ω). La <b>corrente</b> che passa, in ampere, è <b>I = V/R</b>: raddoppi la tensione e raddoppia, raddoppi la resistenza e si dimezza. Muovi la tensione e la resistenza.'),
+    widget() {
+      let V = 6, R = 6;
+      const show = h('div', { class: 'tool-show' });
+      const draw = () => {
+        const I = V / R;
+        let g = `<text x="8" y="22" class="lb">${tr('corrente')}</text><rect x="8" y="30" width="${Math.max(2, Math.min(184, I * 30))}" height="14" rx="2" class="sqb"/>`;
+        g += `<line x1="8" y1="58" x2="192" y2="58" class="mk"/>`;
+        for (let a = 0; a <= 6; a++) g += `<text x="${8 + a * 30}" y="72" class="lb" text-anchor="middle">${a}</text>`;
+        show.innerHTML = svg(200, 80, g) + `<div class="tool-f">I = <span class="c2">${n(V)} V</span> / <span class="c1">${n(R)} Ω</span> = <span class="c3">${n(I, 2)} A</span></div>`;
+      };
+      const a = slider(tr('tensione V (volt)'), 0, 12, 1, V, (x) => { V = x; draw(); });
+      const b = slider(tr('resistenza R (ohm)'), 2, 12, 1, R, (x) => { R = x; draw(); });
+      a.set(); b.set();
+      return h('div', {}, show, a.el, b.el);
+    },
+    tip: () => tr('Per questo un filo grosso e corto porta tanta corrente senza scaldarsi troppo: ha poca resistenza.'),
+    check: () => ({
+      q: tr('Una lampadina da 6 Ω è collegata a 12 V. Quanta corrente passa?'),
+      options: [tr('2 A'), tr('72 A'), tr('0,5 A')],
+      ok: tr('Giusto: I = V/R = 12/6 = 2 A.'),
+    }),
+  },
+  potenzael: {
+    area: 'fisica', offer: true, world: 'centrale',
+    title: () => tr('La potenza elettrica: P = V·I'),
+    sub: () => tr('L’energia che un apparecchio usa ogni secondo'),
+    test: (s) => /potenza elettric|\belectric power|P ?= ?V ?· ?I/i.test(s),
+    body: () => tr('Un apparecchio elettrico usa ogni secondo un’energia pari alla <b>tensione</b> per la <b>corrente</b>: <b>P = V·I</b>, in watt. In casa la tensione è 230 V: un phon da 2300 W chiede 10 A. Gli apparecchi accesi insieme sommano le loro correnti, e il contatore di casa di solito regge 3 kW. Muovi la corrente.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (I) => {
+        const P = 230 * I, over = P > 3000, x3 = 8 + (3000 / 3680) * 184;
+        let g = `<text x="8" y="22" class="lb">${tr('potenza')}</text><rect x="8" y="30" width="${Math.max(2, (P / 3680) * 184)}" height="14" rx="2" class="${over ? 'sqc' : 'sqb'}"/>`;
+        g += `<line x1="${x3}" y1="26" x2="${x3}" y2="50" class="arrow"/><text x="${x3}" y="64" class="lb" text-anchor="middle">3 kW</text>`;
+        show.innerHTML = svg(200, 72, g) + `<div class="tool-f">P = 230 V × <span class="c1">${n(I)} A</span> = <span class="c3">${n(P, 0)} W</span></div>`
+          + `<p class="small muted">${over ? tr('Oltre 3 kW: il contatore di casa salta.') : tr('Sotto i 3 kW: il contatore di casa regge.')}</p>`;
+      };
+      const a = slider(tr('corrente I (ampere)'), 0, 16, 1, 5, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo in bolletta si pagano i kilowattora: un apparecchio da 1 kW acceso per un’ora usa 1 kWh.'),
+    check: () => ({
+      q: tr('Un bollitore da 2300 W è collegato a 230 V. Quanta corrente passa?'),
+      options: [tr('10 A'), tr('529 A'), tr('0,1 A')],
+      ok: tr('Giusto: I = P/V = 2300/230 = 10 A.'),
+    }),
+  },
 };

@@ -193,6 +193,13 @@ export const IDEE = {
   'formula di Coulomb': { parole: 'k ?· ?q|q₁ ?· ?q₂', da: 'e01-4', mai: ['e'] },
   'campo elettrico': { parole: 'campo elettric|linee di campo|N/C', da: 'e01-5' },
   'gabbia di Faraday': { parole: 'gabbia di faraday', da: 'e01-8' },
+  'corrente elettrica': { parole: 'corrente elettric|ampere|amperometr', da: 'e02-1' },
+  'tensione elettrica (volt)': { parole: '\\bvolt\\b|\\d ?V\\b|voltmetr', da: 'e02-1' },
+  'resistenza elettrica (ohm)': { parole: '\\bohm\\b|Ω', da: 'e02-2' },
+  'legge di Ohm': { parole: 'legge di ohm', da: 'e02-2' },
+  'formula di Ohm': { parole: 'I ?= ?V ?/ ?R|V ?= ?R ?· ?I', da: 'e02-2', mai: ['e'] },
+  'serie e parallelo': { parole: 'in serie|in parallelo', da: 'e02-3' },
+  'cortocircuito': { parole: 'cortocircuit', da: 'e02-5' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
@@ -212,5 +219,7 @@ export const ANTICIPI = {
   'm03-aria': ['attrito'],
   // la pressione dell'acqua nella canna del giardino: un modo di dire; la pressione si studia nell'Oceano (FL01)
   'm03-5': ['pressione'],
+  // una risposta sbagliata, quasi per scherzo: la corrente elettrica si studia nella Centrale (E02)
+  'ot02-7': ['corrente elettrica'],
 };
 
