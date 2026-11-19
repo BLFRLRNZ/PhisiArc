@@ -829,4 +829,60 @@ export const MONDI = {
       ok: tr('Giusto: 1/q = 1/10 − 1/20 = 1/20.'),
     }),
   },
+  dispersione: {
+    area: 'fisica', offer: true, world: 'prisma',
+    title: () => tr('La dispersione: ogni colore ha il suo n'),
+    sub: () => tr('Perché il prisma apre la luce nei colori'),
+    test: (s) => /dispersion|spettr|spectrum/i.test(s),
+    body: () => tr('La luce bianca è una miscela di colori. Nel vetro ogni colore ha un <b>indice di rifrazione</b> un po’ diverso: il violetto va più piano e si piega di più, il rosso di meno. Così un prisma separa la luce bianca nello <b>spettro</b>: rosso, arancione, giallo, verde, blu, indaco, violetto. Scegli un colore: il disegno esagera la differenza.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const COL = [['rosso', '#ff4b4b', 1.513], ['arancione', '#ff9b3d', 1.514], ['giallo', '#ffe14d', 1.517], ['verde', '#4fe36b', 1.519], ['blu', '#3d8bff', 1.523], ['indaco', '#6b5bff', 1.526], ['violetto', '#b05bff', 1.532]];
+      const draw = (k) => {
+        const [name, col, nn] = COL[k], dev = 2 * Math.asin(nn * 0.5) * (180 / Math.PI) - 60;
+        // deviazione minima di un prisma di 60°, disegnata cinque volte più grande attorno a quella del giallo
+        const shown = ((39 + (dev - 39) * 5) * Math.PI) / 180, y0 = 50, a0 = (18 * Math.PI) / 180, out = a0 - shown;
+        let g = `<polygon points="88,82 112,40 136,82" class="tri"/><line x1="14" y1="${(y0 + 28).toFixed(1)}" x2="100" y2="${y0}" class="arrow"/>`;
+        g += `<line x1="124" y1="${y0}" x2="${(124 + 70 * Math.cos(out)).toFixed(1)}" y2="${(y0 - 70 * Math.sin(out)).toFixed(1)}" stroke="${col}" stroke-width="3" stroke-linecap="round"/>`;
+        show.innerHTML = svg(200, 104, g) + `<div class="tool-f">${tr(name)}: n = <span class="c1">${n(nn, 3)}</span>, ${tr('deviazione')} <span class="c2">${n(dev, 1)}°</span></div>`;
+      };
+      const a = slider(tr('colore (dal rosso al violetto)'), 0, 6, 1, 0, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo i diamanti, che separano molto i colori, mandano lampi di tutti i colori dell’arcobaleno.'),
+    check: () => ({
+      q: tr('In un prisma di vetro, quale colore si piega di più?'),
+      options: [tr('il violetto'), tr('il rosso'), tr('il verde')],
+      ok: tr('Giusto: ha l’indice di rifrazione più grande.'),
+    }),
+  },
+  colori: {
+    area: 'fisica', offer: true, world: 'prisma',
+    title: () => tr('I colori della luce: rosso, verde e blu'),
+    sub: () => tr('Come si mescolano le luci'),
+    test: (s) => /colori primari|sintesi additiva|primary colours|additive/i.test(s),
+    body: () => tr('I <b>colori primari</b> della luce sono rosso, verde e blu. Sommandoli si ottengono gli altri: rosso + verde = giallo, rosso + blu = magenta, verde + blu = ciano, tutti e tre = bianco. È la <b>sintesi additiva</b>. Le pitture invece tolgono colori alla luce: è la sintesi sottrattiva. Accendi le luci.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' }), on = { r: true, g: true, b: false };
+      const NAME = { 100: 'rosso', '010': 'verde', '001': 'blu', 110: 'giallo', 101: 'magenta', '011': 'ciano', 111: 'bianco', '000': 'nero' };
+      const draw = () => {
+        let g = '<rect x="0" y="0" width="200" height="104" fill="#000"/>';
+        [['r', '#ff0000', 80, 42], ['g', '#00ff00', 120, 42], ['b', '#0000ff', 100, 72]].forEach(([k, c, x, y]) => { if (on[k]) g += `<circle cx="${x}" cy="${y}" r="30" fill="${c}" style="mix-blend-mode:screen"/>`; });
+        show.innerHTML = svg(200, 104, `<g style="isolation:isolate">${g}</g>`) + `<div class="tool-f">${tr('al centro: {c}', { c: tr(NAME[['r', 'g', 'b'].map((k) => (on[k] ? 1 : 0)).join('')]) })}</div>`;
+      };
+      const bts = h('div', { class: 'chips' }, ['r', 'g', 'b'].map((k) => {
+        const b = h('button', { class: 'chip' + (on[k] ? ' on' : ''), onclick: () => { on[k] = !on[k]; b.classList.toggle('on', on[k]); draw(); } }, tr({ r: 'Luce rossa', g: 'Luce verde', b: 'Luce blu' }[k]));
+        return b;
+      }));
+      draw();
+      return h('div', {}, show, bts);
+    },
+    tip: () => tr('Per questo lo schermo del telefono, visto con una lente, è fatto di puntini rossi, verdi e blu.'),
+    check: () => ({
+      q: tr('Luce rossa più luce blu dà…'),
+      options: [tr('il magenta'), tr('il viola scuro'), tr('il nero')],
+      ok: tr('Giusto: rosso + blu = magenta.'),
+    }),
+  },
 };
