@@ -885,4 +885,68 @@ export const MONDI = {
       ok: tr('Giusto: rosso + blu = magenta.'),
     }),
   },
+  young: {
+    area: 'fisica', offer: true, world: 'prisma',
+    title: () => tr('Le due fenditure: Δy = λ·L/d'),
+    sub: () => tr('L’interferenza della luce'),
+    test: (s) => /\byoung\b|due fenditure|double.slit|two slits/i.test(s),
+    body: () => tr('Da due fenditure vicine partono due onde di luce che si sommano: dove arrivano in fase si rinforzano, dove arrivano in opposizione si cancellano. Sullo schermo compaiono strisce chiare e scure, distanti <b>Δy = λ·L/d</b>: λ è la lunghezza d’onda, L la distanza dello schermo, d quella fra le fenditure. Qui d = 0,3 mm e L = 2 m. Cambia il colore della luce.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const COL = { 400: '#b05bff', 450: '#3d8bff', 500: '#3dd6c4', 550: '#7be34f', 600: '#ff9b3d', 650: '#ff4b4b', 700: '#d93030' };
+      const draw = (lam) => {
+        // lo schermo visto di fronte, 10 px per millimetro: una striscia chiara ogni Δy
+        const dy = (lam * 1e-9 * 2) / 0.3e-3 * 1e3;
+        let g = '<rect x="10" y="20" width="180" height="64" fill="#000"/>';
+        for (let x = 10; x < 190; x += 2) {
+          const k = Math.cos((Math.PI * (x + 1 - 100)) / (dy * 10)) ** 2 * Math.exp(-(((x - 100) / 70) ** 2));
+          g += `<rect x="${x}" y="20" width="2" height="64" fill="${COL[lam]}" opacity="${k.toFixed(2)}"/>`;
+        }
+        g += '<rect x="10" y="20" width="180" height="64" class="edge"/>';
+        show.innerHTML = svg(200, 104, g) + `<div class="tool-f">Δy = ${lam} nm × 2 m / 0,3 mm = <span class="c1">${n(dy, 2)} mm</span></div>`;
+      };
+      const a = slider(tr('lunghezza d’onda (nm)'), 400, 700, 50, 650, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo Young, con due fenditure e un righello, misurò per primo la lunghezza d’onda della luce: meno di un millesimo di millimetro.'),
+    check: () => ({
+      q: tr('Se avvicini le due fenditure, le strisce sullo schermo…'),
+      options: [tr('si allargano'), tr('si stringono'), tr('restano uguali')],
+      ok: tr('Giusto: Δy = λ·L/d, con d al denominatore.'),
+    }),
+  },
+  malus: {
+    area: 'fisica', offer: true, world: 'prisma',
+    title: () => tr('La polarizzazione: I = I₀·cos² θ'),
+    sub: () => tr('Due filtri polarizzatori'),
+    test: (s) => /polarizz|polari[sz]|malus/i.test(s),
+    body: () => tr('La luce è un’onda <b>trasversale</b>: oscilla di traverso rispetto alla direzione in cui viaggia. Un filtro <b>polarizzatore</b> lascia passare solo le oscillazioni in una direzione. Dopo due filtri girati di un angolo θ passa la frazione <b>I = I₀·cos² θ</b> della luce (legge di Malus): tutta a 0°, metà a 45°, niente a 90°. Gira il secondo filtro.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (th) => {
+        const I = Math.cos((th * Math.PI) / 180) ** 2, ca = Math.cos((th * Math.PI) / 180), sa = Math.sin((th * Math.PI) / 180);
+        const filt = (x, c, s) => {
+          let f = `<circle cx="${x}" cy="44" r="28" class="area"/>`;
+          for (let k = -21; k <= 21; k += 7) {
+            const h2 = Math.sqrt(28 * 28 - k * k) - 2;
+            f += `<line x1="${(x + k * c - h2 * s).toFixed(1)}" y1="${(44 + k * s + h2 * c).toFixed(1)}" x2="${(x + k * c + h2 * s).toFixed(1)}" y2="${(44 + k * s - h2 * c).toFixed(1)}" class="edge"/>`;
+          }
+          return f;
+        };
+        let g = filt(64, 1, 0) + filt(136, ca, sa);
+        g += `<rect x="20" y="86" width="160" height="10" class="ground" fill="none"/><rect x="20" y="86" width="${(160 * I).toFixed(1)}" height="10" class="blk"/>`;
+        show.innerHTML = svg(200, 104, g) + `<div class="tool-f">I = I₀ · cos² ${th}° = <span class="c1">${n(100 * I, 0)} %</span></div>`;
+      };
+      const a = slider(tr('angolo fra i due filtri (°)'), 0, 90, 5, 45, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo gli occhiali da sole polarizzati tolgono i riflessi dell’acqua: la luce riflessa oscilla soprattutto in orizzontale, e il filtro degli occhiali è verticale.'),
+    check: () => ({
+      q: tr('Due filtri polarizzatori sono girati di 90° l’uno rispetto all’altro. Passa…'),
+      options: [tr('niente'), tr('metà della luce'), tr('tutta la luce')],
+      ok: tr('Giusto: cos² 90° = 0.'),
+    }),
+  },
 };

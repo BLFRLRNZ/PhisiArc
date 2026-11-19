@@ -33,6 +33,7 @@ import o04 from './en-o04.js';
 import ot01 from './en-ot01.js';
 import ot02 from './en-ot02.js';
 import ot03 from './en-ot03.js';
+import ot04 from './en-ot04.js';
 import tools from './en-tools.js';
 
-export default { ...ui, ...meta, ...extra, ...f01, ...f02, ...f03, ...m01, ...m02, ...m03, ...m04, ...m05, ...d01, ...d02, ...d03, ...d04, ...d05, ...g01, ...g02, ...g03, ...fl01, ...fl02, ...fl03, ...t01, ...t02, ...t03, ...t04, ...o01, ...o02, ...o03, ...o04, ...ot01, ...ot02, ...ot03, ...tools };
+export default { ...ui, ...meta, ...extra, ...f01, ...f02, ...f03, ...m01, ...m02, ...m03, ...m04, ...m05, ...d01, ...d02, ...d03, ...d04, ...d05, ...g01, ...g02, ...g03, ...fl01, ...fl02, ...fl03, ...t01, ...t02, ...t03, ...t04, ...o01, ...o02, ...o03, ...o04, ...ot01, ...ot02, ...ot03, ...ot04, ...tools };

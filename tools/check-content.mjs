@@ -24,6 +24,7 @@ const text = (v, lens) => { try { const t = tx(v, lens); return typeof t === 'st
 const ids = new Set();
 let nLevels = 0, nSteps = 0;
 for (const w of WORLDS) for (const zid of w.zones || []) if (!ZONES[zid]) bad(w.id, `la zona ${zid} non esiste`);
+const pieceOf = new Map(); // nome del pezzo -> livello che lo dà
 for (const [zid, z] of Object.entries(ZONES)) {
   if (!PREREQ[zid]) bad(zid, 'manca nella mappa dei prerequisiti');
   if (!WORLDS.some((w) => (w.zones || []).includes(zid))) bad(zid, 'non è in nessun mondo');
@@ -43,6 +44,8 @@ for (const [zid, z] of Object.entries(ZONES)) {
       for (const k of Object.keys(l.params)) if (!(k in def)) warn.push(`${at}: il parametro “${k}” non è tra quelli predefiniti di ${l.sim}`);
     }
     if (l.piece && !PIECE_SVG[l.piece.id]) bad(at, `il pezzo “${l.piece.id}” non ha un disegno in pieces.js`);
+    if (l.piece && pieceOf.has(l.piece.id)) bad(at, `il pezzo “${l.piece.id}” è già il pezzo di ${pieceOf.get(l.piece.id)}: ogni pezzo ha un nome suo`);
+    if (l.piece) pieceOf.set(l.piece.id, l.id);
     if (l.kind === 'costruisci' && !l.piece) bad(at, 'un Costruisci deve dare un pezzo del parco');
     for (const lens of LENSES) {
       const where = `${at} [${lens}]`;

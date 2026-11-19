@@ -120,9 +120,12 @@ export const PIECE_SVG = {
     P('M4 58h56', 'green', null, 1.6) + P('M6 30h14v14H6z', 'muted', null, 2) + P(C(12, 37, 2.6), 'sun', 'sun', 1.4) + P('M25 31q3 6 0 12q-3-6 0-12z', 'sky', null, 1.8) +
     `<path class="pz-flow" pathLength="1" d="M26 33L41 14M26 41L41 40" stroke="var(--sun)" stroke-width="1.4"/>` + P('M41 10h18v34H41z', 'chalk', null, 2) +
     `<g class="pz-meter">${P('M45 16h10v8H45z', 'orange', 'orange', 1) + P('M44 24l6 6 6-6z', 'coral', 'coral', 1)}</g>`),
-  fontana: svg(
+  arcobaleno: svg(
     P('M4 58h56', 'green', null, 1.6) + P('M12 52q20 6 40 0', 'sky', null, 2.4) + P('M32 52q-2-26-12-30M32 52q2-26 12-30M32 52V18', 'sky', null, 1.6) +
     `<g class="pz-meter">${P('M10 40a22 22 0 0 1 44 0', 'coral', null, 2.2) + P('M14 40a18 18 0 0 1 36 0', 'sun', null, 2.2) + P('M18 40a14 14 0 0 1 28 0', 'mint', null, 2.2)}</g>`),
+  finestra: svg(
+    P('M4 58h56', 'green', null, 1.6) + P('M10 8h36v42H10z', 'chalk', null, 2.2) + P('M28 8v42M10 29h36', 'chalk', null, 1.4) +
+    `<g class="pz-meter">${P('M12 10h14v17H12zM30 31h14v17H30z', 'sun', 'sun', 0.6)}</g>` + P(C(53, 47, 7) + 'M48 52L58 42M50.6 53.6L59.6 44.6M46.4 49.4L55.4 40.4', 'sky', null, 1.4)),
   tappeto: svg(
     P('M10 40q22 10 44 0', 'sky', null, 3) + P('M12 40l-4 16M52 40l4 16', 'muted', null, 2.6) + P('M4 58h56', 'green', null, 1.6) +
     `<g class="pz-meter">${P(C(32, 14, 3.4), 'sun', null, 2) + P('M32 18v10M26 22l6 3 6-3M28 36l4-8 4 8', 'sun', null, 2)}</g>`),

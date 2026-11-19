@@ -258,7 +258,7 @@ export default {
         'Nel parco arriva la fontana arcobaleno! Con il Sole alle spalle, negli spruzzi compare un arcobaleno. Ma dove guardare? Un trucco: l’altezza del Sole più quella della cima dell’arcobaleno fa sempre 42 gradi.',
         'Costruisci la fontana arcobaleno del parco. Il Sole è alle tue spalle, alto un certo numero di gradi; gli spruzzi sono davanti. La cima dell’arcobaleno è a 42° meno l’altezza del Sole: alza lo sguardo proprio lì.',
         'La fontana arcobaleno: le gocce degli spruzzi fanno da prismi, e i colori arrivano all’occhio solo dalle gocce a 42° dal punto opposto al Sole. Lo stesso arco si vede negli spruzzi delle cascate e dei tubi per innaffiare. [[cima = 42° − altezza del Sole]]'),
-      piece: { id: 'fontana', name: 'La fontana arcobaleno', desc: 'Il Sole alle spalle e lo sguardo al punto giusto: negli spruzzi compare l’arcobaleno.' },
+      piece: { id: 'arcobaleno', name: 'La fontana arcobaleno', desc: 'Il Sole alle spalle e lo sguardo al punto giusto: negli spruzzi compare l’arcobaleno.' },
       steps: [
         {
           kind: 'tune', rounds: 2,
