@@ -393,7 +393,7 @@ export const MONDI = {
     area: 'fisica', offer: true, world: 'vulcano',
     title: () => tr('Le leggi dei gas: P·V = n·R·T'),
     sub: () => tr('Pressione, volume e temperatura in kelvin'),
-    test: (s) => /Charles|Gay-Lussac|gas perfett|ideal gas/i.test(s),
+    test: (s) => /Charles(?! de Coulomb)|Gay-Lussac|gas perfett|ideal gas/i.test(s),
     body: () => tr('Pressione, volume e temperatura di un gas sono legati, con la temperatura <b>in kelvin</b>. A pressione fissa il volume cresce come T (<b>Charles</b>); a volume fisso cresce la pressione (<b>Gay-Lussac</b>); a T fissa resta costante P·V (<b>Boyle</b>). Tutto insieme: <b>P·V = n·R·T</b>. Scalda o raffredda un palloncino da 3 L.'),
     widget() {
       const show = h('div', { class: 'tool-show' });
@@ -947,6 +947,67 @@ export const MONDI = {
       q: tr('Due filtri polarizzatori sono girati di 90° l’uno rispetto all’altro. Passa…'),
       options: [tr('niente'), tr('metà della luce'), tr('tutta la luce')],
       ok: tr('Giusto: cos² 90° = 0.'),
+    }),
+  },
+
+  // ---------- la Centrale ----------
+  coulomb: {
+    area: 'fisica', offer: true, world: 'centrale',
+    title: () => tr('La legge di Coulomb: F = k·q₁·q₂/r²'),
+    sub: () => tr('La forza fra due cariche'),
+    test: (s) => /legge di coulomb|coulomb[’']s law|k ?· ?q₁/i.test(s),
+    body: () => tr('Due cariche si spingono, se sono dello stesso segno, o si tirano, se sono di segno opposto. La forza cresce con le <b>cariche</b> e cala con il <b>quadrato della distanza</b>: <b>F = k·q₁·q₂ / r²</b>, con k = 9 × 10⁹ N·m²/C². È la stessa forma della gravitazione universale: distanza doppia, forza quattro volte più piccola. Muovi la distanza e la seconda carica.'),
+    widget() {
+      let r = 10, q = 1;
+      const show = h('div', { class: 'tool-show' });
+      const draw = () => {
+        // q₁ = 1 µC; r in centimetri: F = 9·10⁹ × 10⁻⁶ × q·10⁻⁶ / (r/100)² = 90·q/r² newton
+        const F = (90 * q) / (r * r), y = 34, x1 = 30, x2 = x1 + r * 7, R2 = 7 + 2 * q;
+        let g = `<circle cx="${x1}" cy="${y}" r="9" class="sqc"/><circle cx="${x2}" cy="${y}" r="${R2}" class="sqc"/>`;
+        g += `<line x1="${x1}" y1="${y + 20}" x2="${x2}" y2="${y + 20}" class="mk"/><text x="${(x1 + x2) / 2}" y="${y + 34}" class="lb" text-anchor="middle">r = ${n(r)} cm</text>`;
+        g += `<text x="8" y="${y + 58}" class="lb">${tr('forza')}</text><rect x="8" y="${y + 64}" width="${Math.max(2, Math.min(184, F * 18))}" height="12" rx="2" class="sqb"/>`;
+        show.innerHTML = svg(200, 120, g)
+          + `<div class="tool-f">F = 9·10⁹ × 1 µC × <span class="c2">${n(q)} µC</span> / (<span class="c1">${n(r / 100, 2)} m</span>)² = <span class="c3">${n(F, 2)} N</span></div>`;
+      };
+      const a = slider(tr('distanza r (cm)'), 5, 20, 1, r, (x) => { r = x; draw(); });
+      const b = slider(tr('seconda carica q₂ (µC)'), 1, 4, 1, q, (x) => { q = x; draw(); });
+      a.set(); b.set();
+      return h('div', {}, show, a.el, b.el);
+    },
+    tip: () => tr('Per questo un palloncino strofinato attira i capelli solo da vicino: a distanza doppia la forza è già un quarto.'),
+    check: () => ({
+      q: tr('La distanza fra due cariche si dimezza. La forza…'),
+      options: [tr('diventa 4 volte più grande'), tr('raddoppia'), tr('resta uguale')],
+      ok: tr('Giusto: r² diventa 4 volte più piccolo, e la forza 4 volte più grande.'),
+    }),
+  },
+  campo: {
+    area: 'fisica', offer: true, world: 'centrale',
+    title: () => tr('Il campo elettrico: E = F/q'),
+    sub: () => tr('La forza su ogni coulomb di carica'),
+    test: (s) => /campo elettric|electric field|N\/C/i.test(s),
+    body: () => tr('Intorno a una carica Q c’è un <b>campo elettrico</b>: in ogni punto, una carica di prova q sente una forza <b>F = q·E</b>. Il campo di una carica cala con il quadrato della distanza, <b>E = k·Q/r²</b>, e si misura in newton al coulomb (N/C). Le linee di campo escono dalle cariche positive ed entrano nelle negative. Allontana la carica di prova.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (r) => {
+        // Q = 1 µC; r in centimetri: E = 9·10⁹ × 10⁻⁶ / (r/100)² = 9·10⁷ / r² N/C
+        const E = 9e7 / (r * r), x0 = 30, y = 46, x = x0 + r * 3, L = Math.max(4, Math.min(70, 70 * (100 / (r * r))));
+        let g = '';
+        for (let k = 0; k < 12; k++) { const a = (k / 12) * Math.PI * 2; g += `<line x1="${x0 + 12 * Math.cos(a)}" y1="${y + 12 * Math.sin(a)}" x2="${x0 + 40 * Math.cos(a)}" y2="${y + 40 * Math.sin(a)}" class="shy"/>`; }
+        g += `<circle cx="${x0}" cy="${y}" r="9" class="sqc"/><circle cx="${x}" cy="${y}" r="4" class="tipdot"/>`;
+        g += `<line x1="${x}" y1="${y}" x2="${x + L}" y2="${y}" class="arrow"/><path d="M${x + L - 6} ${y - 5}L${x + L} ${y}L${x + L - 6} ${y + 5}" class="arrow" fill="none"/>`;
+        show.innerHTML = svg(200, 92, g)
+          + `<div class="tool-f">E = 9·10⁹ × 1 µC / (<span class="c1">${n(r / 100, 2)} m</span>)² = <span class="c3">${E.toLocaleString(LOCALE, { maximumFractionDigits: 0 })} N/C</span></div>`;
+      };
+      const a = slider(tr('distanza dalla carica (cm)'), 10, 50, 5, 10, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo i parafulmini sono appuntiti: vicino a una punta il campo è fortissimo, e l’aria intorno lascia passare le cariche.'),
+    check: () => ({
+      q: tr('In un punto il campo è di 1000 N/C. Che forza sente una carica di 2 C?'),
+      options: [tr('2000 N'), tr('500 N'), tr('1000 N')],
+      ok: tr('Giusto: F = q·E = 2 × 1000 = 2000 N.'),
     }),
   },
 };

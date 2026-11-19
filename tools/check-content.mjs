@@ -47,6 +47,11 @@ for (const [zid, z] of Object.entries(ZONES)) {
     if (l.piece && pieceOf.has(l.piece.id)) bad(at, `il pezzo “${l.piece.id}” è già il pezzo di ${pieceOf.get(l.piece.id)}: ogni pezzo ha un nome suo`);
     if (l.piece) pieceOf.set(l.piece.id, l.id);
     if (l.kind === 'costruisci' && !l.piece) bad(at, 'un Costruisci deve dare un pezzo del parco');
+    // nelle condizioni delle prove libere il risultato del lancio si chiama r; se però un controllo si chiama r,
+    // r è il controllo e il risultato si legge come res
+    if (Sim && 'r' in Sim.prototype.defaults.call({})) for (const st of l.steps) for (const c of st.need || []) {
+      if (/\br\./.test(c.when)) bad(at, `la condizione «${c.when}» legge il risultato come r, ma qui r è un controllo: usa res`);
+    }
     for (const lens of LENSES) {
       const where = `${at} [${lens}]`;
       if (!text(l.intro, lens)) bad(where, 'manca l’introduzione');
