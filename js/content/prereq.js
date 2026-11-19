@@ -156,6 +156,9 @@ export const IDEE = {
   'velocità del suono (343 m/s)': { parole: '343 ?m/s|velocità del suono', da: 'o03-1' },
   'ultrasuoni e infrasuoni': { parole: 'ultrasuon|infrasuon', da: 'o03-4' },
   'ottava': { parole: '\\bottava', da: 'o03-4' },
+  'risonanza': { parole: 'risonanz', da: 'o04-1' },
+  'effetto Doppler': { parole: 'doppler', da: 'o04-4' },
+  'numero di Mach e bang supersonico': { parole: '\\bmach\\b|supersonic', da: 'o04-5' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

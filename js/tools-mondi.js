@@ -671,4 +671,57 @@ export const MONDI = {
       ok: tr('Giusto: sopra i 20 000 Hz noi non lo sentiamo.'),
     }),
   },
+  risonanza: {
+    area: 'fisica', offer: true, world: 'valle',
+    title: () => tr('La risonanza'),
+    sub: () => tr('Spinte a tempo, oscillazioni enormi'),
+    test: (s) => /risonanz|resonan/i.test(s),
+    body: () => tr('Ogni oscillatore ha una sua <b>frequenza naturale</b>. Se una forza periodica lo spinge proprio con quella frequenza, ogni spinta arriva in fase e l’ampiezza cresce: è la <b>risonanza</b>. Fuori risonanza le spinte a volte aiutano e a volte frenano. Cambia la frequenza della forza e guarda la curva.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const Q = 8, A = (r) => 1 / Math.sqrt((1 - r * r) ** 2 + (r / Q) ** 2), X = (r) => 14 + ((r - 0.4) / 1.2) * 180, Y = (a) => 88 - (a / Q) * 74;
+      const draw = (r) => {
+        const pts = Array.from({ length: 121 }, (_, i) => { const x = 0.4 + (i / 120) * 1.2; return `${X(x).toFixed(1)},${Y(A(x)).toFixed(1)}`; }).join(' ');
+        let g = `<line x1="14" y1="88" x2="194" y2="88" class="ground"/><line x1="${X(1)}" y1="10" x2="${X(1)}" y2="88" class="shy"/><polyline points="${pts}" class="edge"/>`;
+        g += `<line x1="${X(r).toFixed(1)}" y1="${Y(A(r)).toFixed(1)}" x2="${X(r).toFixed(1)}" y2="88" class="mk"/><circle cx="${X(r).toFixed(1)}" cy="${Y(A(r)).toFixed(1)}" r="4" class="tipdot"/>`;
+        g += `<text x="${X(1)}" y="102" class="lb" text-anchor="middle">${tr('naturale')}</text>`;
+        show.innerHTML = svg(200, 106, g) + `<div class="tool-f">${tr('ampiezza')} × <span class="c1">${n(A(r), 1)}</span></div>`;
+      };
+      const a = slider(tr('frequenza della forza, rispetto a quella naturale'), 0.5, 1.5, 0.02, 0.8, draw, (v) => `${n(v, 2)} ×`);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo i soldati rompono il passo sui ponti, e i grattacieli hanno grandi smorzatori in cima.'),
+    check: () => ({
+      q: tr('Un’altalena fa un’oscillazione ogni 2 s. Per farla salire di più, la spingi…'),
+      options: [tr('ogni 2 s'), tr('ogni secondo'), tr('ogni 3 s')],
+      ok: tr('Giusto: con il suo ritmo, ogni spinta aiuta.'),
+    }),
+  },
+  doppler: {
+    area: 'fisica', offer: true, world: 'valle',
+    title: () => tr('L’effetto Doppler'),
+    sub: () => tr('La sirena che cambia nota'),
+    test: (s) => /doppler/i.test(s),
+    body: () => tr('Se la sorgente si muove, le onde davanti a lei si stringono e quelle dietro si allargano. Chi sta davanti sente una frequenza più alta, <b>f′ = f·v/(v − vₛ)</b>; chi sta dietro una più bassa, <b>f′ = f·v/(v + vₛ)</b>. Cambia la velocità della sirena, che suona a 700 Hz.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (vs) => {
+        let g = `<line x1="6" y1="86" x2="194" y2="86" class="ground"/>`;
+        for (let k = 1; k <= 6; k++) { const r = 13 * k, cx = 112 - (vs / 343) * r * 3; g += `<circle cx="${cx.toFixed(1)}" cy="50" r="${r}" fill="none" class="edge" opacity="${(1 - k / 8).toFixed(2)}"/>`; }
+        g += `<rect x="104" y="44" width="16" height="12" class="blk"/>`;
+        if (vs > 0) g += `<line x1="122" y1="50" x2="140" y2="50" class="arrow"/>`;
+        show.innerHTML = svg(200, 100, g) + `<div class="tool-f">${tr('davanti')} <span class="c2">${Math.round((700 * 343) / (343 - vs))} Hz</span> · ${tr('dietro')} <span class="c1">${Math.round((700 * 343) / (343 + vs))} Hz</span></div>`;
+      };
+      const a = slider(tr('velocità della sirena (m/s)'), 0, 80, 5, 30, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo i radar della polizia misurano la velocità delle auto, e gli astronomi quella delle stelle e delle galassie.'),
+    check: () => ({
+      q: tr('Un’ambulanza si allontana. La sua sirena sembra…'),
+      options: [tr('più grave'), tr('più acuta'), tr('uguale')],
+      ok: tr('Giusto: dietro la sorgente le onde si allargano.'),
+    }),
+  },
 };

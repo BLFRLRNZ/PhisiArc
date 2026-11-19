@@ -54,7 +54,7 @@ Il tasto Aiuto resta acceso, ma a ogni passo il primo tocco avvisa soltanto: usa
 Un mondo si può aprire prima di essere finito: le zone pronte vanno in `zones`, quelle ancora da scrivere restano in `soon`
 e il mondo porta `building: true`. Finché è in costruzione non conta come finito (niente grado, niente prova d'ingresso,
 il mondo dopo non si apre), e alla fine dell'ultima zona pronta il gioco dice che le altre arrivano presto.
-L'Officina, il Cielo, l'Oceano e il Vulcano sono stati costruiti così, una zona alla volta; oggi sono completi, e il prossimo mondo da costruire è la Valle delle Onde.
+L'Officina, il Cielo, l'Oceano, il Vulcano e la Valle delle Onde sono stati costruiti così, una zona alla volta; oggi sono completi, e il prossimo mondo da costruire è il Prisma.
 
 ## Graduale dentro ogni mondo
 
