@@ -310,7 +310,8 @@ export function runLevel(root, level, nav) {
   //   runs: quanti lanci servono;
   //   distinct: true → ogni lancio deve avere valori dei controlli diversi dai lanci già contati;
   //   need: [{ when: 'vc > 0', try: { vc: 2 }, msg: T(…) }, …] → serve un lancio per ogni condizione.
-  //         when è una formula breve sui valori dei controlli (e su r, il risultato); try sono valori che la soddisfano
+  //         when è una formula breve sui valori dei controlli (e su r, il risultato; res, se un controllo si chiama r);
+  //         try sono valori che la soddisfano
   //         (li usa il test automatico); msg dice che cosa manca quando un lancio non serve a niente.
   function stepFree(st) {
     const conds = (st.need || []).map((c) => ({ ...c, ok: false }));
@@ -318,7 +319,12 @@ export function runLevel(root, level, nav) {
     const keys = st.controls ?? level.controls ?? [];
     const seen = new Set();
     let n = 0;
-    const holds = (c, res) => { const p = { ...sim.params }, names = Object.keys(p); try { return !!new Function(...names, 'r', `return (${c.when});`)(...names.map((k) => p[k]), res); } catch { return false; } };
+    // il risultato si chiama r (e res); se però un controllo si chiama r, r è il controllo e il risultato resta res
+    const holds = (c, res) => {
+      const p = { ...sim.params }, names = Object.keys(p).filter((k) => k !== 'res'), own = names.includes('r');
+      const args = own ? [...names, 'res'] : [...names, 'r', 'res'], vals = [...names.map((k) => p[k]), ...(own ? [res] : [res, res])];
+      try { return !!new Function(...args, `return (${c.when});`)(...vals); } catch { return false; }
+    };
     const sig = () => JSON.stringify(keys.map((k) => sim.params[k]));
     const info = h('div', { class: 'muted small' });
     const fb = h('div', { class: 'fb say muted', hidden: true });

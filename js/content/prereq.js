@@ -185,6 +185,14 @@ export const IDEE = {
   'polarizzazione': { parole: 'polarizz', da: 'ot04-5' },
   'legge di Malus (cos² θ)': { parole: 'malus|cos² ?θ', da: 'ot04-5', mai: ['e'] },
   'diffrazione': { parole: 'diffrazion|diffrang', da: 'ot04-8' },
+  'carica elettrica': { parole: 'caric[ah]e? elettric|carich?[ae] (uguali|opposte|positiv|negativ)', da: 'e01-1' },
+  'unità di carica (coulomb)': { parole: '\\d ?[nµ]C\\b|nanocoulomb|in coulomb', da: 'e01-2', mai: ['e'] },
+  'conservazione della carica': { parole: 'conservazione della carica', da: 'e01-2' },
+  'elettroscopio': { parole: 'elettroscop', da: 'e01-3' },
+  'legge di Coulomb': { parole: 'legge di coulomb', da: 'e01-4' },
+  'formula di Coulomb': { parole: 'k ?· ?q|q₁ ?· ?q₂', da: 'e01-4', mai: ['e'] },
+  'campo elettrico': { parole: 'campo elettric|linee di campo|N/C', da: 'e01-5' },
+  'gabbia di Faraday': { parole: 'gabbia di faraday', da: 'e01-8' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
