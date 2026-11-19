@@ -27,7 +27,7 @@ export class Wave extends Sim {
   static controls = {
     f: { label: 'Frequenza della mano', labelE: 'Scosse al secondo', min: 0.5, max: 3, step: 0.25, unit: 'Hz', unitE: '' },
     tens: { label: 'Tensione della corda', type: 'select', options: [['bassa', 'bassa'], ['media', 'media'], ['alta', 'alta']] },
-    caso: { label: 'Che cosa succede', type: 'select', options: [['muro', 'contro il palo'], ['stesso', 'due impulsi in su'], ['opposti', 'uno su e uno giù']] },
+    caso: { label: 'Che cosa succede', type: 'select', options: [['muro', 'contro il palo'], ['stesso', 'due onde in su'], ['opposti', 'uno su e uno giù']] },
     eco: { label: 'Tensione della corda', type: 'select', options: [['bassa', 'bassa'], ['alta', 'alta']] },
   };
 
@@ -175,7 +175,7 @@ export class Wave extends Sim {
     this.rope(x0, x1, y, L, disp, s, 'chalk', 2.6);
     const meet = p.caso !== 'muro' && Math.abs(tl - L / (2 * v)) < 0.12;
     if (meet) this.text(p.caso === 'stesso' ? (E ? i18n('si sommano!') : i18n('interferenza costruttiva')) : (E ? i18n('si annullano!') : i18n('interferenza distruttiva')), X(L / 2), y - 90, { size: 13, align: 'center', weight: 700, color: this.c('sun') });
-    const rows = [[p.caso === 'muro' ? (E ? i18n('Un impulso verso il palo') : i18n('un impulso contro l’estremo fisso')) : p.caso === 'stesso' ? (E ? i18n('Due impulsi verso l’alto') : i18n('due impulsi verso l’alto, uno contro l’altro')) : (E ? i18n('Un impulso su e uno giù') : i18n('un impulso su e uno giù, uno contro l’altro')), this.c('chalk'), 700]];
+    const rows = [[p.caso === 'muro' ? (E ? i18n('Un’onda verso il palo') : i18n('un impulso contro l’estremo fisso')) : p.caso === 'stesso' ? (E ? i18n('Due onde verso l’alto') : i18n('due impulsi verso l’alto, uno contro l’altro')) : (E ? i18n('Un’onda su e una giù') : i18n('un impulso su e uno giù, uno contro l’altro')), this.c('chalk'), 700]];
     if (this.result) rows.push([p.caso === 'muro' ? (E ? i18n('torna indietro capovolto') : i18n('dall’estremo fisso torna capovolto')) : (E ? i18n('si attraversano e proseguono come prima') : i18n('si sovrappongono, poi proseguono intatti')), this.c('mint'), 700]);
     this.box(rows);
   }
@@ -220,7 +220,7 @@ export class Wave extends Sim {
     if (back) this.ripple(x0, y, Math.min(0.6, this.clock - this.echoAt), { color: this.c('sun'), r0: 8, r1: 40, dur: 0.6 });
     const shown = this.live ? Math.max(0, Math.min(tl, tEcho)) : 0;
     this.text(i18n('cronometro: {t} s', { t: fmt(shown, 1) }), x0, H - 40, { size: 14, weight: 700, color: this.c(back ? 'sun' : 'chalk'), mono: true });
-    const rows = [[E ? i18n('Tensione {t}: l’impulso corre a {v} metri al secondo', { t: i18n(p.eco), v }) : i18n('tensione {t}: v = {v} m/s', { t: i18n(p.eco), v }), this.c('chalk'), 700]];
+    const rows = [[E ? i18n('Tensione {t}: l’onda corre a {v} metri al secondo', { t: i18n(p.eco), v }) : i18n('tensione {t}: v = {v} m/s', { t: i18n(p.eco), v }), this.c('chalk'), 700]];
     if (this.result) rows.push([E ? i18n('l’eco torna dopo {t} secondi', { t: nice(tEcho, 1) }) : i18n('l’eco torna dopo {t} s, capovolto', { t: nice(tEcho, 2) }), this.c('sun'), 700]);
     this.box(rows);
   }

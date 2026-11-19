@@ -30,6 +30,58 @@ function tone(freq, dur, when = 0, type = 'sine', vol = 0.12) {
   } catch { /* niente audio */ }
 }
 
+// ---------- i suoni delle simulazioni (la Valle delle Onde) ----------
+// Una nota che si sente davvero: la frequenza scelta col cursore, il volume, la durata. trem fa pulsare il volume
+// (la sveglia che trilla, una voce dentro un casco). Restituisce un comando per spegnerla prima.
+export function note(freq, { vol = 0.1, dur = 1.2, when = 0, type = 'sine', trem = 0 } = {}) {
+  if (!S.settings.sound || !(vol > 0)) return null;
+  try {
+    const c = audioCtx();
+    if (c.state === 'suspended') c.resume().catch(() => {});
+    const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + when, v = Math.min(0.3, vol);
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(v, t + 0.04);
+    g.gain.setValueAtTime(v, t + Math.max(0.05, dur - 0.12));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    if (trem) {
+      // il tremolo: un oscillatore lento fa salire e scendere il volume fra zero e il massimo
+      const lfo = c.createOscillator(), depth = c.createGain(), am = c.createGain();
+      lfo.frequency.value = trem; depth.gain.value = 0.5; am.gain.value = 0.5;
+      lfo.connect(depth).connect(am.gain);
+      o.connect(am).connect(g);
+      lfo.start(t); lfo.stop(t + dur + 0.05);
+    } else o.connect(g);
+    g.connect(c.destination);
+    o.start(t);
+    o.stop(t + dur + 0.05);
+    return { stop: () => { try { g.gain.cancelScheduledValues(c.currentTime); g.gain.setTargetAtTime(0.0001, c.currentTime, 0.03); o.stop(c.currentTime + 0.2); } catch { /* già finita */ } } };
+  } catch { return null; }
+}
+
+// Un boato: rumore che si spegne piano, filtrato verso i bassi (il tuono, un'esplosione).
+export function boom({ vol = 0.3, dur = 1.6, when = 0, cut = 260 } = {}) {
+  if (!S.settings.sound || !(vol > 0)) return;
+  try {
+    const c = audioCtx();
+    if (c.state === 'suspended') c.resume().catch(() => {});
+    const n = Math.floor(c.sampleRate * dur), buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+    let b = 0;
+    for (let i = 0; i < n; i++) { b = (b + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = b * 3.5; } // rumore «marrone», cupo
+    const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), t = c.currentTime + when;
+    src.buffer = buf;
+    f.type = 'lowpass';
+    f.frequency.value = cut;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(Math.min(0.6, vol), t + 0.06);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f).connect(g).connect(c.destination);
+    src.start(t);
+    src.stop(t + dur + 0.05);
+  } catch { /* niente audio */ }
+}
+
 export const sfx = {
   ok: () => { tone(660, 0.15); tone(880, 0.2, 0.1); },
   no: () => tone(220, 0.22, 0, 'triangle', 0.1),

@@ -153,6 +153,9 @@ export const IDEE = {
   'onda longitudinale': { parole: 'longitudinal|rarefazion', da: 'o02-4' },
   'sovrapposizione e interferenza': { parole: 'sovrapposizion|interferen', da: 'o02-5' },
   'onda stazionaria': { parole: '\\bstazionari|ventri\\b', da: 'o02-6' },
+  'velocità del suono (343 m/s)': { parole: '343 ?m/s|velocità del suono', da: 'o03-1' },
+  'ultrasuoni e infrasuoni': { parole: 'ultrasuon|infrasuon', da: 'o03-4' },
+  'ottava': { parole: '\\bottava', da: 'o03-4' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
