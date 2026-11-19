@@ -724,4 +724,56 @@ export const MONDI = {
       ok: tr('Giusto: dietro la sorgente le onde si allargano.'),
     }),
   },
+  // ---------- il Prisma ----------
+  ombra: {
+    area: 'fisica', offer: true, world: 'prisma',
+    title: () => tr('Ombre e triangoli simili: S = h·D/d'),
+    sub: () => tr('La luce va dritta'),
+    test: (s) => /penombr|propagazione rettilinea|camera oscura|triangoli simili|rectilinear|pinhole|penumbra/i.test(s),
+    body: () => tr('La luce si propaga in <b>linea retta</b>: un oggetto opaco ferma i raggi e dietro lascia l’<b>ombra</b>. Con una sorgente piccola, l’ombra sul muro è alta <b>S = h·D/d</b>: h è l’oggetto, d la sua distanza dalla lampada, D quella del muro. Con una sorgente larga, intorno c’è la penombra. Sposta l’oggetto.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (d) => {
+        const X = (m) => 12 + m * 45, yc = 52, S = (0.4 * 4) / d, sp = Math.min(48, (S * 45) / 2);
+        let g = `<line x1="${X(4)}" y1="4" x2="${X(4)}" y2="100" class="ground"/><circle cx="${X(0)}" cy="${yc}" r="4" class="tipdot"/>`;
+        g += `<polyline points="${X(0)},${yc} ${X(d)},${yc - 9} ${X(4)},${(yc - sp).toFixed(1)}" class="edge"/><polyline points="${X(0)},${yc} ${X(d)},${yc + 9} ${X(4)},${(yc + sp).toFixed(1)}" class="edge"/>`;
+        g += `<line x1="${X(d)}" y1="${yc - 9}" x2="${X(d)}" y2="${yc + 9}" class="shx"/><line x1="${X(4) - 3}" y1="${(yc - sp).toFixed(1)}" x2="${X(4) - 3}" y2="${(yc + sp).toFixed(1)}" class="side"/>`;
+        show.innerHTML = svg(200, 104, g) + `<div class="tool-f">S = 0,4 × 4 / ${n(d, 1)} = <span class="c1">${n(S, 2)} m</span></div>`;
+      };
+      const a = slider(tr('distanza dalla lampada (m)'), 0.5, 3.5, 0.5, 1, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo, con un bastone e la sua ombra, Talete misurò l’altezza della grande piramide.'),
+    check: () => ({
+      q: tr('Un oggetto alto 30 cm è a 1 m da una lampada; il muro è a 3 m. L’ombra è alta…'),
+      options: [tr('90 cm'), tr('30 cm'), tr('10 cm')],
+      ok: tr('Giusto: 30 cm × 3 / 1 = 90 cm.'),
+    }),
+  },
+  riflessione: {
+    area: 'fisica', offer: true, world: 'prisma',
+    title: () => tr('La riflessione: i = r'),
+    sub: () => tr('Come rimbalza la luce su uno specchio'),
+    test: (s) => /incidenza|angolo di riflessione|angle of (incidence|reflection)|specchio piano|plane mirror/i.test(s),
+    body: () => tr('Un raggio che colpisce uno specchio si riflette: l’<b>angolo di incidenza</b> e l’<b>angolo di riflessione</b>, misurati dalla <b>normale</b>, sono uguali, e i due raggi stanno da parti opposte. In uno specchio piano l’immagine sta dietro lo specchio, alla stessa distanza dell’oggetto. Cambia l’angolo del raggio.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (i) => {
+        const a = (i * Math.PI) / 180, R = 72, x0 = 100, y0 = 88, sx = x0 - R * Math.sin(a), sy = y0 - R * Math.cos(a), ox = x0 + R * Math.sin(a);
+        let g = `<line x1="14" y1="${y0}" x2="186" y2="${y0}" class="unroll"/><line x1="${x0}" y1="8" x2="${x0}" y2="${y0}" class="shy"/>`;
+        g += `<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${x0}" y2="${y0}" class="frc"/><line x1="${x0}" y1="${y0}" x2="${ox.toFixed(1)}" y2="${sy.toFixed(1)}" class="frc"/>`;
+        show.innerHTML = svg(200, 96, g) + `<div class="tool-f">i = <span class="c2">${i}°</span> → r = <span class="c1">${i}°</span></div>`;
+      };
+      const a = slider(tr('angolo di incidenza (°)'), 0, 80, 5, 40, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo i catarifrangenti delle biciclette, fatti di tanti specchietti ad angolo, rimandano la luce dei fari proprio verso l’auto.'),
+    check: () => ({
+      q: tr('Un raggio arriva su uno specchio con un angolo di incidenza di 25°. L’angolo di riflessione è…'),
+      options: [tr('25°'), tr('65°'), tr('50°')],
+      ok: tr('Giusto: uguale all’angolo di incidenza.'),
+    }),
+  },
 };
