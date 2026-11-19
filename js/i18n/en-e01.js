@@ -186,7 +186,7 @@ export default {
  "la maniglia di metallo era carica e ti ha dato la scossa": "the metal door handle was charged and gave you a shock",
  "la maniglia accumula cariche con il freddo": "the door handle collects charges in the cold",
  "una calamita": "a magnet",
- "hai preso un po’ della corrente elettrica della casa": "you got some of the house’s electric current",
+ "la maniglia era collegata alla presa di casa": "the door handle was connected to the socket at home",
  "il freddo produce elettricità nel metallo": "the cold makes electricity in the metal",
  "Giusto: anche il tuo corpo conduce.": "Right: your body conducts too.",
  "Esatto: le scarpe strofinano la moquette, tu ti carichi e la carica salta sul metallo.": "Exactly: your shoes rub on the carpet, you get charged and the charge jumps onto the metal.",

@@ -129,6 +129,9 @@ export const PIECE_SVG = {
   volante: svg(
     P('M4 60h56', 'green', null, 1.6) + P('M22 8v46h20V8', 'sky', null, 1.8) + P('M18 58h28', 'chalk') + P(C(32, 50, 5) + 'M29.5 50h5M32 47.5v5', 'coral', 'coral', 1.6) +
     `<g class="pz-meter">${P(C(32, 24, 4.5) + 'M29.5 24h5M32 21.5v5', 'coral', 'coral', 1.6)}${P('M26 33l2 2M38 33l-2 2', 'sun', null, 1.2)}</g>` + P('M14 12v40M12 22h4M12 32h4M12 42h4', 'muted', null, 1.2)),
+  luci: svg(
+    P('M4 60h56', 'green', null, 1.6) + P('M32 6v52', 'chalk') + P('M8 26L32 8l24 18', 'pink') + P('M8 26q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0', 'pink', null, 1.6) +
+    `<g class="pz-meter">${P(C(12, 33, 2.6) + C(22, 33, 2.6) + C(32, 33, 2.6) + C(42, 33, 2.6) + C(52, 33, 2.6), 'sun', 'sun', 1.4)}</g>` + P('M14 58v-8h36v8', 'muted', null, 1.4)),
   tappeto: svg(
     P('M10 40q22 10 44 0', 'sky', null, 3) + P('M12 40l-4 16M52 40l4 16', 'muted', null, 2.6) + P('M4 58h56', 'green', null, 1.6) +
     `<g class="pz-meter">${P(C(32, 14, 3.4), 'sun', null, 2) + P('M32 18v10M26 22l6 3 6-3M28 36l4-8 4 8', 'sun', null, 2)}</g>`),
