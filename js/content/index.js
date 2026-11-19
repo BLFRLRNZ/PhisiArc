@@ -34,6 +34,7 @@ import O04 from './o04.js';
 import OT01 from './ot01.js';
 import OT02 from './ot02.js';
 import OT03 from './ot03.js';
+import OT04 from './ot04.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -49,7 +50,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01, T02, T03, T04, O01, O02, O03, O04, OT01, OT02, OT03 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01, T02, T03, T04, O01, O02, O03, O04, OT01, OT02, OT03, OT04 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -129,10 +130,8 @@ export const WORLDS = [
   },
   {
     id: 'prisma', n: 8, diff: 3, name: 'Il Prisma', field: 'Ottica', place: 'Specchi, lenti e colori', color: 'var(--pink)', mascot: 'iride',
-    // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
-    // (niente grado di Huygens, niente prova d'ingresso), ma le zone pronte si giocano già.
-    zones: ['OT01', 'OT02', 'OT03'], building: true,
-    soon: ['OT04 La luce è un’onda'], requires: ['valle'],
+    zones: ['OT01', 'OT02', 'OT03', 'OT04'],
+    soon: [], requires: ['valle'],
     intro: {
       e: 'Ciao, sono Iride, un prisma di vetro! Nel Prisma scopriremo come viaggia la luce, come rimbalza sugli specchi, come si piega nell’acqua e perché la luce bianca è fatta di tutti i colori.',
       s: 'Sono Iride, benvenuto nel Prisma. Nella Valle delle Onde hai visto le onde e il suono; qui scopri la luce: i raggi, gli specchi, le lenti, i colori e, alla fine, la luce come onda. È l’ottica.',
@@ -158,7 +157,7 @@ export const GRADES = [
   { name: 'Archimede', world: 'oceano', desc: 'Archimede di Siracusa (circa 287-212 a.C.) scoprì la spinta dei liquidi: chi entra nell’acqua riceve una spinta verso l’alto pari al peso dell’acqua che sposta.' },
   { name: 'Kelvin', world: 'vulcano', desc: 'Lord Kelvin, William Thomson (1824-1907), capì che il freddo ha un fondo: lo zero assoluto, −273 °C, da cui parte la scala delle temperature che porta il suo nome.' },
   { name: 'Hooke', world: 'valle', desc: 'Robert Hooke (1635-1703) scoprì che una molla risponde con una forza proporzionale a quanto la tiri: da lì partono le oscillazioni, le onde e il suono.' },
-  { name: 'Huygens', world: 'prisma', desc: 'In arrivo.' },
+  { name: 'Huygens', world: 'prisma', desc: 'Christiaan Huygens (1629-1695) capì che la luce viaggia come un’onda: ogni punto raggiunto dall’onda diventa a sua volta una sorgente di onde nuove.' },
   { name: 'Faraday', world: 'centrale', desc: 'In arrivo.' },
   { name: 'Einstein', world: 'frontiera', desc: 'In arrivo.' },
   { name: 'Bohr', world: 'abisso', desc: 'In arrivo.' },

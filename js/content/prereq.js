@@ -179,6 +179,12 @@ export const IDEE = {
   'colori primari e sintesi additiva': { parole: 'colori primari|sintesi additiva', da: 'ot03-4' },
   'sintesi sottrattiva': { parole: 'sottrattiv', da: 'ot03-4' },
   'ultravioletto': { parole: 'ultraviolett', da: 'ot03-8' },
+  'nanometro': { parole: 'nanometr|\\d nm\\b', da: 'ot04-1' },
+  'esperimento di Young': { parole: '\\byoung', da: 'ot04-1' },
+  'reticolo': { parole: 'reticol', da: 'ot04-4' },
+  'polarizzazione': { parole: 'polarizz', da: 'ot04-5' },
+  'legge di Malus (cos² θ)': { parole: 'malus|cos² ?θ', da: 'ot04-5', mai: ['e'] },
+  'diffrazione': { parole: 'diffrazion|diffrang', da: 'ot04-8' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

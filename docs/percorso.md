@@ -14,7 +14,7 @@ Ogni mondo usa solo idee già viste nei mondi precedenti, e un controllo automat
 | 5 | L'Oceano | I fluidi | FL01 Pressione · FL02 Archimede · FL03 Fluidi in movimento e volo | ●● |
 | 6 | Il Vulcano | Termodinamica | T01 Temperatura, calore **e come si propaga** · T02 Stati della materia · T03 I gas · T04 Motori ed entropia | ●●● |
 | 7 | La Valle delle Onde | Onde e suono | O01 Molle e oscillazioni · O02 Le onde · O03 Il suono · O04 Risonanza e Doppler | ●●● |
-| 8 | Il Prisma | Ottica | OT01 Riflessione · OT02 Rifrazione e lenti · OT03 Colori e spettro · OT04 La luce è un'onda | ●●● |
+| 8 | Il Prisma | Ottica | OT01 Raggi e riflessione · OT02 Rifrazione e lenti · OT03 Colori e spettro · OT04 La luce è un'onda | ●●● |
 | 9 | La Centrale | Elettromagnetismo | E01 Cariche e campi · E02 Circuiti · E03 Magneti · E04 Induzione · **E05 Onde elettromagnetiche** | ●●●● |
 | 10 | La Frontiera | Relatività | R01–R04, fino ai buchi neri | ●●●●● |
 | 11 | L'Abisso Quantico | Quanti e nuclei | Q01–Q04, fino a fissione e fusione | ●●●●● |
@@ -54,7 +54,7 @@ Il tasto Aiuto resta acceso, ma a ogni passo il primo tocco avvisa soltanto: usa
 Un mondo si può aprire prima di essere finito: le zone pronte vanno in `zones`, quelle ancora da scrivere restano in `soon`
 e il mondo porta `building: true`. Finché è in costruzione non conta come finito (niente grado, niente prova d'ingresso,
 il mondo dopo non si apre), e alla fine dell'ultima zona pronta il gioco dice che le altre arrivano presto.
-L'Officina, il Cielo, l'Oceano, il Vulcano e la Valle delle Onde sono stati costruiti così, una zona alla volta; oggi sono completi, e il prossimo mondo da costruire è il Prisma.
+L'Officina, il Cielo, l'Oceano, il Vulcano, la Valle delle Onde e il Prisma sono stati costruiti così, una zona alla volta; oggi sono completi, e il prossimo mondo da costruire è la Centrale.
 
 ## Graduale dentro ogni mondo
 

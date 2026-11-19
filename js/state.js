@@ -36,7 +36,7 @@ const fresh = () => ({
 // ---------- versioni del salvataggio ----------
 // Ogni salvataggio porta il numero di versione (v). Quando cambia la forma dei dati, o si rinomina una zona
 // o un livello, si alza VERSION e si aggiunge qui il passo che porta i vecchi salvataggi alla forma nuova.
-export const VERSION = 3;
+export const VERSION = 4;
 // Livelli o zone rinominati: 'vecchio-id': 'nuovo-id'. Le stelle e gli sblocchi seguono il nuovo nome.
 export const RENAMED = {};
 const MIGRATIONS = {
@@ -50,6 +50,16 @@ const MIGRATIONS = {
   2: (o) => {
     o.settings = o.settings || {};
     if (!o.settings.introChosen) o.settings.intro = true;
+    return o;
+  },
+  // 3 → 4: il pezzo della fontana arcobaleno (ot03-6) aveva per errore lo stesso nome di quello della fontana di f03-4
+  // ('fontana'); ora si chiama 'arcobaleno'. Chi ha finito ot03-6 lo ritrova nel parco, e la fontana di f03-4 resta
+  // solo a chi l'ha costruita.
+  3: (o) => {
+    if (!Array.isArray(o.park)) return o;
+    const done = o.done || {};
+    if (done['ot03-6'] && !o.park.includes('arcobaleno')) o.park.push('arcobaleno');
+    if (!done['f03-4']) o.park = o.park.filter((p) => p !== 'fontana');
     return o;
   },
 };
