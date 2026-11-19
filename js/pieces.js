@@ -112,6 +112,10 @@ export const PIECE_SVG = {
     P('M4 60h56', 'green', null, 1.6) + P('M10 58q2-5 6-4M50 58q3-6 7-3', 'green', null, 1.2) +
     `<g class="pz-hover">${P('M32 5c-11 0-18 8-18 17 0 8 6 13 11 19h14c5-6 11-11 11-19 0-9-7-17-18-17z', 'sun', 'orange', 1.8)}${P('M32 5v36M25 7q-4 17 1 34M39 7q4 17-1 34', 'sun', null, 1)}` +
     `${P('M26 41l1 6M38 41l-1 6', 'chalk', null, 1.2)}${P('M26 47h12v7H26z', 'orange', 'orange', 1.5)}<g class="pz-twinkle">${P('M32 46v-4', 'coral', null, 2.2)}</g></g>`),
+  labirinto: svg(
+    P('M4 56h56', 'green', null, 1.6) + P('M8 52V8h48v44', 'muted', null, 2) + P('M14 49l10-10M14 23l10-10', 'sky', null, 3) +
+    `<path class="pz-flow" pathLength="1" d="M8 44h11V18h26" stroke="var(--coral)" stroke-width="1.8"/>` +
+    `<g class="pz-meter">${P('M48 12l2 4 4 1-3 3 1 4-4-2-4 2 1-4-3-3 4-1z', 'sun', 'sun', 1.4)}</g>`),
   tappeto: svg(
     P('M10 40q22 10 44 0', 'sky', null, 3) + P('M12 40l-4 16M52 40l4 16', 'muted', null, 2.6) + P('M4 58h56', 'green', null, 1.6) +
     `<g class="pz-meter">${P(C(32, 14, 3.4), 'sun', null, 2) + P('M32 18v10M26 22l6 3 6-3M28 36l4-8 4 8', 'sun', null, 2)}</g>`),

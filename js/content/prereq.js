@@ -159,6 +159,12 @@ export const IDEE = {
   'risonanza': { parole: 'risonanz', da: 'o04-1' },
   'effetto Doppler': { parole: 'doppler', da: 'o04-4' },
   'numero di Mach e bang supersonico': { parole: '\\bmach\\b|supersonic', da: 'o04-5' },
+  'raggi di luce': { parole: 'raggi? di luce|propagazione rettilinea', da: 'ot01-1' },
+  'penombra': { parole: 'penombr', da: 'ot01-1' },
+  'camera oscura': { parole: 'camera oscura', da: 'ot01-2' },
+  'legge della riflessione': { parole: 'incidenza|angolo di riflessione', da: 'ot01-3' },
+  'immagine virtuale': { parole: 'virtual', da: 'ot01-4' },
+  'riflessione speculare e diffusa': { parole: 'riflessione (diffusa|speculare)', da: 'ot01-5' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
