@@ -3,7 +3,7 @@
 // solo nelle lenti con le formule. Ogni scheda ha la spiegazione, un disegno da muovere e una domanda; il piccolo film
 // arriverà con l'ampliamento della cassetta (toolfilm.js: chi non ha ancora un film mostra la scheda senza).
 import { h } from './util.js';
-import { t as tr } from './i18n.js';
+import { t as tr, LOCALE } from './i18n.js';
 import { n, svg, slider } from './toolui.js';
 
 const G = 9.81;
@@ -606,6 +606,69 @@ export const MONDI = {
       q: tr('Una corda ha la frequenza più bassa a 100 Hz. Con 3 ventri vibra a…'),
       options: [tr('300 Hz'), tr('150 Hz'), tr('33 Hz')],
       ok: tr('Giusto: tre volte la frequenza più bassa.'),
+    }),
+  },
+  suono: {
+    area: 'fisica', offer: true, world: 'valle',
+    title: () => tr('La velocità del suono: d = v·t'),
+    sub: () => tr('Il lampo, il tuono e l’eco'),
+    test: (s) => /velocità del suono|343 ?m\/s|speed of sound/i.test(s),
+    body: () => tr('Il <b>suono</b> è un’onda di pressione: ha bisogno di un mezzo, e nel vuoto non passa. Nell’aria corre a <b>343 m/s</b>, circa un chilometro ogni 3 secondi; nell’acqua a 1480 m/s, nel ferro a 5000 m/s. Fra il lampo e il tuono, <b>d = v·t</b>. Conta i secondi dopo un lampo.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (t) => {
+        const d = 0.343 * t, X = (km) => 24 + km * 40;
+        let g = `<line x1="10" y1="84" x2="196" y2="84" class="ground"/>`;
+        for (let k = 0; k <= 4; k++) g += `<line x1="${X(k)}" y1="84" x2="${X(k)}" y2="90" class="ground"/><text x="${X(k)}" y="102" class="lb" text-anchor="middle">${k} km</text>`;
+        g += `<circle cx="${X(0)}" cy="58" r="5" class="tipdot"/><line x1="${X(0)}" y1="63" x2="${X(0)}" y2="76" class="arrow"/>`;
+        g += `<polyline points="${X(d).toFixed(1)},14 ${(X(d) - 6).toFixed(1)},40 ${(X(d) + 4).toFixed(1)},42 ${(X(d) - 2).toFixed(1)},84" class="frc"/>`;
+        // il fronte del tuono, centrato sul fulmine, che arriva all'omino
+        for (const dr of [0, 7, 14]) { const r = X(d) - X(0) - dr; if (r > 4) g += `<path d="M${(X(d) - r).toFixed(1)} 84 A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${X(d).toFixed(1)} ${(84 - r).toFixed(1)}" fill="none" class="shy" opacity="${(1 - dr / 20).toFixed(2)}"/>`; }
+        show.innerHTML = svg(200, 106, g) + `<div class="tool-f">d = 343 m/s × <span class="c2">${t} s</span> = <span class="c1">${n(d, 2)} km</span></div>`;
+      };
+      const a = slider(tr('secondi fra il lampo e il tuono'), 1, 12, 1, 6, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo i temporali si contano: 3 secondi di ritardo, un chilometro di distanza.'),
+    check: () => ({
+      q: tr('Fra il lampo e il tuono passano 9 secondi. Il temporale è a circa…'),
+      options: [tr('3 km'), tr('9 km'), tr('300 m')],
+      ok: tr('Giusto: 343 m/s per 9 s fa circa 3 km.'),
+    }),
+  },
+  udito: {
+    area: 'fisica', offer: true, world: 'valle',
+    title: () => tr('Acuto e grave: da 20 a 20 000 Hz'),
+    sub: () => tr('Chi sente che cosa'),
+    test: (s) => /ultrasuon|infrasuon|ultrasound|infrasound/i.test(s),
+    body: () => tr('L’<b>altezza</b> di un suono è la sua frequenza: più vibrazioni al secondo, suono più acuto. Il volume, invece, è l’ampiezza. Noi sentiamo da circa <b>20 Hz</b> a <b>20 000 Hz</b>: sotto ci sono gli <b>infrasuoni</b>, sopra gli <b>ultrasuoni</b>. Sposta la frequenza e guarda chi la sente.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const F = (k) => 10 ** (1 + k / 25), X = (f) => 62 + ((Math.log10(f) - 1) / 4) * 124;
+      const who = [['elefante', 16, 12000], ['persona', 20, 20000], ['cane', 67, 45000], ['pipistrello', 2000, 100000]];
+      const fmtF = (k) => `${Math.round(F(k)).toLocaleString(LOCALE)} Hz`;
+      const draw = (k) => {
+        const f = F(k);
+        let g = '';
+        who.forEach(([nm, a, b], i) => {
+          const y = 14 + i * 20, on = f >= a && f <= b;
+          g += `<text x="58" y="${y + 4}" class="lb" text-anchor="end">${tr(nm)}</text><line x1="${X(a).toFixed(1)}" y1="${y}" x2="${X(b).toFixed(1)}" y2="${y}" class="${on ? 'shx' : 'ground'}"/>`;
+        });
+        for (const [v, l] of [[10, '10'], [100, '100'], [1000, '1k'], [10000, '10k'], [100000, '100k']]) g += `<line x1="${X(v).toFixed(1)}" y1="86" x2="${X(v).toFixed(1)}" y2="90" class="ground"/><text x="${X(v).toFixed(1)}" y="101" class="lb" text-anchor="middle">${l}</text>`;
+        g += `<line x1="${X(f).toFixed(1)}" y1="4" x2="${X(f).toFixed(1)}" y2="88" class="arrow" stroke-width="2"/>`;
+        const kind = f < 20 ? tr('un infrasuono') : f > 20000 ? tr('un ultrasuono') : tr('un suono udibile');
+        show.innerHTML = svg(200, 106, g) + `<div class="tool-f"><span class="c2">${fmtF(k)}</span>: <span class="c1">${kind}</span></div>`;
+      };
+      const a = slider(tr('frequenza'), 0, 100, 1, 45, draw, fmtF);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo i pipistrelli cacciano al buio: mandano ultrasuoni e ascoltano l’eco degli insetti.'),
+    check: () => ({
+      q: tr('Un suono a 50 000 Hz è…'),
+      options: [tr('un ultrasuono'), tr('un infrasuono'), tr('un suono udibile')],
+      ok: tr('Giusto: sopra i 20 000 Hz noi non lo sentiamo.'),
     }),
   },
 };
