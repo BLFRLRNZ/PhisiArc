@@ -175,6 +175,10 @@ export const IDEE = {
   'diottrie': { parole: 'diottri', da: 'ot02-4', mai: ['e'] },
   'immagine reale': { parole: 'immagin[ei] real', da: 'ot02-5' },
   'equazione delle lenti (1/p + 1/q = 1/f)': { parole: '1/[pq]\\b', da: 'ot02-5', mai: ['e'] },
+  'spettro e dispersione': { parole: 'spettr|dispersion', da: 'ot03-1' },
+  'colori primari e sintesi additiva': { parole: 'colori primari|sintesi additiva', da: 'ot03-4' },
+  'sintesi sottrattiva': { parole: 'sottrattiv', da: 'ot03-4' },
+  'ultravioletto': { parole: 'ultraviolett', da: 'ot03-8' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
