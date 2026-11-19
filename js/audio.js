@@ -33,17 +33,24 @@ function tone(freq, dur, when = 0, type = 'sine', vol = 0.12) {
 // ---------- i suoni delle simulazioni (la Valle delle Onde) ----------
 // Una nota che si sente davvero: la frequenza scelta col cursore, il volume, la durata. trem fa pulsare il volume
 // (la sveglia che trilla, una voce dentro un casco). Restituisce un comando per spegnerla prima.
-export function note(freq, { vol = 0.1, dur = 1.2, when = 0, type = 'sine', trem = 0 } = {}) {
+export function note(freq, { vol = 0.1, dur = 1.2, when = 0, type = 'sine', trem = 0, path = null, vols = null } = {}) {
   if (!S.settings.sound || !(vol > 0)) return null;
   try {
     const c = audioCtx();
     if (c.state === 'suspended') c.resume().catch(() => {});
     const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + when, v = Math.min(0.3, vol);
     o.type = type;
-    o.frequency.value = freq;
+    o.frequency.setValueAtTime(freq, t);
+    // path: la frequenza che cambia nel tempo, [[secondi, hertz], ...] (la sirena che passa)
+    if (path) for (const [dt, f] of path) o.frequency.linearRampToValueAtTime(f, t + dt);
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(v, t + 0.04);
-    g.gain.setValueAtTime(v, t + Math.max(0.05, dur - 0.12));
+    if (vols) {
+      // vols: il volume che cambia nel tempo, [[secondi, volume], ...] (più forte quando è vicina)
+      for (const [dt, w] of vols) g.gain.linearRampToValueAtTime(Math.max(0.0001, Math.min(0.3, w)), t + dt);
+    } else {
+      g.gain.exponentialRampToValueAtTime(v, t + 0.04);
+      g.gain.setValueAtTime(v, t + Math.max(0.05, dur - 0.12));
+    }
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     if (trem) {
       // il tremolo: un oscillatore lento fa salire e scendere il volume fra zero e il massimo
@@ -61,14 +68,15 @@ export function note(freq, { vol = 0.1, dur = 1.2, when = 0, type = 'sine', trem
 }
 
 // Un boato: rumore che si spegne piano, filtrato verso i bassi (il tuono, un'esplosione).
-export function boom({ vol = 0.3, dur = 1.6, when = 0, cut = 260 } = {}) {
+export function boom({ vol = 0.3, dur = 1.6, when = 0, cut = 260, white = false } = {}) {
   if (!S.settings.sound || !(vol > 0)) return;
   try {
     const c = audioCtx();
     if (c.state === 'suspended') c.resume().catch(() => {});
     const n = Math.floor(c.sampleRate * dur), buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
     let b = 0;
-    for (let i = 0; i < n; i++) { b = (b + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = b * 3.5; } // rumore «marrone», cupo
+    // rumore «marrone», cupo (il tuono); oppure bianco, che frigge (un vetro che si rompe)
+    for (let i = 0; i < n; i++) { const r = Math.random() * 2 - 1; b = (b + 0.02 * r) / 1.02; d[i] = white ? r * 0.5 : b * 3.5; }
     const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), t = c.currentTime + when;
     src.buffer = buf;
     f.type = 'lowpass';
