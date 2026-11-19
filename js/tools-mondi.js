@@ -776,4 +776,57 @@ export const MONDI = {
       ok: tr('Giusto: uguale all’angolo di incidenza.'),
     }),
   },
+  rifrazione: {
+    area: 'fisica', offer: true, world: 'prisma',
+    title: () => tr('La rifrazione: sin i = n · sin r'),
+    sub: () => tr('Come si piega la luce entrando nell’acqua'),
+    test: (s) => /rifrazion|rifratt|snell|refract/i.test(s),
+    body: () => tr('Quando la luce passa dall’aria a un materiale trasparente cambia velocità, e il raggio si piega: è la <b>rifrazione</b>. Entrando nell’acqua o nel vetro il raggio si avvicina alla normale: <b>sin i = n · sin r</b>, dove n è l’<b>indice di rifrazione</b>: 1,33 per l’acqua, 1,5 per il vetro. Uscendo succede il contrario, e oltre l’angolo limite la luce non esce più. Cambia l’angolo.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (i) => {
+        const a = (i * Math.PI) / 180, r = Math.asin(Math.sin(a) / 1.33), R = 50, x0 = 100, y0 = 54;
+        const sx = x0 - R * Math.sin(a), sy = y0 - R * Math.cos(a), ex = x0 + R * Math.sin(r), ey = y0 + R * Math.cos(r);
+        let g = `<rect x="10" y="${y0}" width="180" height="52" class="wat"/><line x1="10" y1="${y0}" x2="190" y2="${y0}" class="edge"/><line x1="${x0}" y1="2" x2="${x0}" y2="106" class="shy"/>`;
+        g += `<polyline points="${sx.toFixed(1)},${sy.toFixed(1)} ${x0},${y0} ${ex.toFixed(1)},${ey.toFixed(1)}" class="frc"/>`;
+        show.innerHTML = svg(200, 108, g) + `<div class="tool-f">i = <span class="c2">${i}°</span> → r = <span class="c1">${n((r * 180) / Math.PI, 1)}°</span></div>`;
+      };
+      const a = slider(tr('angolo di incidenza (°)'), 0, 80, 5, 40, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo una piscina sembra meno profonda di quanto è: la luce del fondo si piega uscendo, e lo vediamo più in alto.'),
+    check: () => ({
+      q: tr('Un raggio passa dall’aria all’acqua. Rispetto alla normale, il raggio rifratto…'),
+      options: [tr('si avvicina'), tr('si allontana'), tr('resta uguale')],
+      ok: tr('Giusto: nell’acqua la luce è più lenta, e il raggio si avvicina alla normale.'),
+    }),
+  },
+  lente: {
+    area: 'fisica', offer: true, world: 'prisma',
+    title: () => tr('Le lenti: 1/p + 1/q = 1/f'),
+    sub: () => tr('Dove si forma l’immagine'),
+    test: (s) => /lente convergente|lenti convergenti|distanza focale|immagin[ei] real|1\/p \+ 1\/q|converging lens|focal length|real image|lens equation/i.test(s),
+    body: () => tr('Una <b>lente convergente</b> fa incontrare i raggi paralleli nel <b>fuoco</b>, a distanza f. Un oggetto oltre il fuoco, a distanza p, dà un’<b>immagine reale</b> e capovolta a distanza q: <b>1/p + 1/q = 1/f</b>. L’immagine è q/p volte più grande dell’oggetto. Con l’oggetto dentro il fuoco la lente fa da lente d’ingrandimento. Sposta l’oggetto.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (p) => {
+        const f = 10, q = (p * f) / (p - f), k = 1.5, x0 = 100, y0 = 52, ho = 16, hi = ho * (q / p), xo = x0 - p * k, xi = x0 + q * k;
+        let g = `<line x1="4" y1="${y0}" x2="196" y2="${y0}" class="ground"/><ellipse cx="${x0}" cy="${y0}" rx="5" ry="40" class="area"/>`;
+        g += `<line x1="${xo}" y1="${y0}" x2="${xo}" y2="${y0 - ho}" class="side"/><line x1="${xi.toFixed(1)}" y1="${y0}" x2="${xi.toFixed(1)}" y2="${(y0 + hi).toFixed(1)}" class="unroll"/>`;
+        g += `<polyline points="${xo},${y0 - ho} ${x0},${y0 - ho} ${xi.toFixed(1)},${(y0 + hi).toFixed(1)}" class="frc"/><line x1="${xo}" y1="${y0 - ho}" x2="${xi.toFixed(1)}" y2="${(y0 + hi).toFixed(1)}" class="frc"/>`;
+        g += `<circle cx="${x0 - f * k}" cy="${y0}" r="2.5" class="tipdot"/><circle cx="${x0 + f * k}" cy="${y0}" r="2.5" class="tipdot"/>`;
+        show.innerHTML = svg(200, 104, g) + `<div class="tool-f">1/${p} + 1/q = 1/10 → q = <span class="c1">${n(q, 1)} cm</span></div>`;
+      };
+      const a = slider(tr('distanza dell’oggetto, p (cm)'), 15, 60, 5, 20, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo la macchina fotografica, per mettere a fuoco, sposta l’obiettivo: gli oggetti vicini fanno immagini più lontane.'),
+    check: () => ({
+      q: tr('Un oggetto è a 20 cm da una lente con f = 10 cm. L’immagine si forma a…'),
+      options: [tr('20 cm'), tr('10 cm'), tr('30 cm')],
+      ok: tr('Giusto: 1/q = 1/10 − 1/20 = 1/20.'),
+    }),
+  },
 };

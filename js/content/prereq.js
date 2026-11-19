@@ -165,6 +165,16 @@ export const IDEE = {
   'legge della riflessione': { parole: 'incidenza|angolo di riflessione', da: 'ot01-3' },
   'immagine virtuale': { parole: 'virtual', da: 'ot01-4' },
   'riflessione speculare e diffusa': { parole: 'riflessione (diffusa|speculare)', da: 'ot01-5' },
+  'rifrazione': { parole: 'rifrazion|rifratt', da: 'ot02-1' },
+  'indice di rifrazione (n)': { parole: 'indice di rifrazione|\\bn = 1,', da: 'ot02-1', mai: ['e'] },
+  'legge di Snell': { parole: 'snell', da: 'ot02-1', mai: ['e'] },
+  'riflessione totale e angolo limite': { parole: 'riflessione totale|angolo limite', da: 'ot02-3' },
+  'fibra ottica': { parole: 'fibr[ae] ottic', da: 'ot02-3' },
+  'lenti convergenti e divergenti': { parole: 'convergent|divergent', da: 'ot02-4' },
+  'fuoco e distanza focale': { parole: 'focale|nel fuoco|dentro il fuoco|oltre il fuoco|fuoco virtuale', da: 'ot02-4' },
+  'diottrie': { parole: 'diottri', da: 'ot02-4', mai: ['e'] },
+  'immagine reale': { parole: 'immagin[ei] real', da: 'ot02-5' },
+  'equazione delle lenti (1/p + 1/q = 1/f)': { parole: '1/[pq]\\b', da: 'ot02-5', mai: ['e'] },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
