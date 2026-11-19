@@ -555,4 +555,57 @@ export const MONDI = {
       ok: tr('Giusto: T = 1/f = 1/4 di secondo.'),
     }),
   },
+  onda: {
+    area: 'fisica', offer: true, world: 'valle',
+    title: () => tr('L’onda: v = λ·f'),
+    sub: () => tr('Velocità, lunghezza d’onda e frequenza'),
+    test: (s) => /lunghezza d.onda|wavelength|v ?= ?λ ?· ?f/i.test(s),
+    body: () => tr('Un’<b>onda</b> trasporta energia, non materia: ogni punto del mezzo oscilla sul posto, e a correre è la forma. La <b>lunghezza d’onda</b> λ è la distanza fra due creste; in un periodo l’onda avanza proprio di λ, quindi <b>v = λ·f</b>. La velocità la decide il mezzo, la frequenza la sorgente. Cambia la frequenza su una corda dove l’onda corre a 3 m/s.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (f) => {
+        const lam = 3 / f, X = (m) => 14 + m * 30, pts = Array.from({ length: 181 }, (_, i) => { const m = (i / 180) * 6; return `${X(m).toFixed(1)},${(48 - 26 * Math.sin((2 * Math.PI * m) / lam)).toFixed(1)}`; }).join(' ');
+        let g = `<line x1="14" y1="48" x2="194" y2="48" class="ground"/><polyline points="${pts}" class="edge"/>`;
+        g += `<line x1="${X(0)}" y1="88" x2="${X(lam).toFixed(1)}" y2="88" class="mk"/><line x1="${X(0)}" y1="82" x2="${X(0)}" y2="94" class="mk"/><line x1="${X(lam).toFixed(1)}" y1="82" x2="${X(lam).toFixed(1)}" y2="94" class="mk"/>`;
+        g += `<text x="${X(lam / 2).toFixed(1)}" y="104" class="lb" text-anchor="middle">λ</text><text x="194" y="104" class="lb" text-anchor="end">6 m</text>`;
+        show.innerHTML = svg(200, 108, g) + `<div class="tool-f">λ = v / f = <span class="c1">${n(lam, 2)} m</span></div>`;
+      };
+      const a = slider(tr('frequenza (Hz)'), 0.5, 3, 0.25, 1, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo le onde di uno tsunami, velocissime e con un periodo di molti minuti, sono lunghe centinaia di chilometri.'),
+    check: () => ({
+      q: tr('Un’onda corre a 6 m/s con frequenza 2 Hz. Quanto è lunga?'),
+      options: [tr('3 m'), tr('12 m'), tr('4 m')],
+      ok: tr('Giusto: λ = v / f = 6 / 2 = 3 m.'),
+    }),
+  },
+  stazionarie: {
+    area: 'fisica', offer: true, world: 'valle',
+    title: () => tr('Le onde stazionarie: f = n·v/(2L)'),
+    sub: () => tr('Le note di una corda fissa ai capi'),
+    test: (s) => /\bstazionari|ventri\b|standing wave|antinode/i.test(s),
+    body: () => tr('Su una corda fissa ai due capi, l’onda che va e quella riflessa si sommano. Solo per certe frequenze nasce un’<b>onda stazionaria</b>: <b>nodi</b> sempre fermi e <b>ventri</b> che oscillano. La corda deve contenere un numero intero di mezze onde: λ = 2L/n, e <b>f = n·v/(2L)</b>. Scegli quanti ventri, su una corda di 6 m dove l’onda corre a 4 m/s.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (k) => {
+        const X = (m) => 16 + m * 28, line = (sg) => Array.from({ length: 169 }, (_, i) => { const m = (i / 168) * 6; return `${X(m).toFixed(1)},${(46 - sg * 28 * Math.sin((k * Math.PI * m) / 6)).toFixed(1)}`; }).join(' ');
+        let g = `<line x1="${X(0)}" y1="10" x2="${X(0)}" y2="82" class="ground"/><line x1="${X(6)}" y1="10" x2="${X(6)}" y2="82" class="ground"/>`;
+        g += `<polyline points="${line(-1)}" class="edge" opacity=".4"/><polyline points="${line(1)}" class="edge"/>`;
+        for (let i = 0; i <= k; i++) g += `<circle cx="${X((6 * i) / k).toFixed(1)}" cy="46" r="3" class="c2"/>`;
+        g += `<text x="${X(3).toFixed(1)}" y="100" class="lb" text-anchor="middle">${k === 1 ? tr('1 ventre, 2 nodi') : tr('{n} ventri, {m} nodi', { n: k, m: k + 1 })}</text>`;
+        show.innerHTML = svg(200, 106, g) + `<div class="tool-f">λ = <span class="c1">${n(12 / k, 2)} m</span>, f = <span class="c2">${n(k / 3, 2)} Hz</span></div>`;
+      };
+      const a = slider(tr('ventri'), 1, 6, 1, 3, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo una chitarra suona note precise: premendo un tasto accorci la corda, e la nota sale.'),
+    check: () => ({
+      q: tr('Una corda ha la frequenza più bassa a 100 Hz. Con 3 ventri vibra a…'),
+      options: [tr('300 Hz'), tr('150 Hz'), tr('33 Hz')],
+      ok: tr('Giusto: tre volte la frequenza più bassa.'),
+    }),
+  },
 };

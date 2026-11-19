@@ -147,6 +147,12 @@ export const IDEE = {
   'energia elastica': { parole: 'energia elastica', da: 'o01-5' },
   'smorzamento': { parole: 'smorzament|ammortizz', da: 'o01-5' },
   'moto armonico': { parole: 'moto armonico', da: 'o01-6' },
+  'lunghezza d’onda': { parole: 'lunghezza d.onda', da: 'o02-1' },
+  'onda trasversale': { parole: 'trasversal', da: 'o02-1' },
+  'v = λ·f': { parole: 'λ', da: 'o02-3', mai: ['e'] },
+  'onda longitudinale': { parole: 'longitudinal|rarefazion', da: 'o02-4' },
+  'sovrapposizione e interferenza': { parole: 'sovrapposizion|interferen', da: 'o02-5' },
+  'onda stazionaria': { parole: '\\bstazionari|ventri\\b', da: 'o02-6' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

@@ -58,7 +58,7 @@ const sims = new Set();
 const simFiles = ['js/sims', 'js/sims/art'].flatMap((d) => readdirSync(join(root, d)).filter((f) => f.endsWith('.js')).map((f) => join(root, d, f)));
 for (const f of simFiles) {
   const src = readFileSync(f, 'utf8');
-  for (const m of src.matchAll(/(?:text\(|label: |name: |xl: |yl: |\bt: |options: \[\[[^\]]*?, |\], \[[^\]]*?, |-?\d+'?: )'([^'\n]+)'/g)) if (/[a-zà-ù]{3,}/i.test(m[1]) && !/^(sim-bg|accent2|chalk|muted|orange|sun|coral|sky|mint|pink|ink|car2)$/.test(m[1])) sims.add(m[1]);
+  for (const m of src.matchAll(/(?:text\(|labelE?: |name: |xl: |yl: |\bt: |options: \[\[[^\]]*?, |\], \[[^\]]*?, |-?\d+'?: )'([^'\n]+)'/g)) if (/[a-zà-ù]{3,}/i.test(m[1]) && !/^(sim-bg|accent2|chalk|muted|orange|sun|coral|sky|mint|pink|ink|car2)$/.test(m[1])) sims.add(m[1]);
 }
 for (const m of readFileSync(join(root, 'js/state.js'), 'utf8').matchAll(/new Error\(t\('([^']+)'\)/g)) code.add(m[1]);
 groups.code = code;
