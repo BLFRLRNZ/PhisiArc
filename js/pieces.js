@@ -112,6 +112,10 @@ export const PIECE_SVG = {
     P('M4 60h56', 'green', null, 1.6) + P('M10 58q2-5 6-4M50 58q3-6 7-3', 'green', null, 1.2) +
     `<g class="pz-hover">${P('M32 5c-11 0-18 8-18 17 0 8 6 13 11 19h14c5-6 11-11 11-19 0-9-7-17-18-17z', 'sun', 'orange', 1.8)}${P('M32 5v36M25 7q-4 17 1 34M39 7q4 17-1 34', 'sun', null, 1)}` +
     `${P('M26 41l1 6M38 41l-1 6', 'chalk', null, 1.2)}${P('M26 47h12v7H26z', 'orange', 'orange', 1.5)}<g class="pz-twinkle">${P('M32 46v-4', 'coral', null, 2.2)}</g></g>`),
+  onde: svg(
+    P('M4 60h56', 'green', null, 1.6) + P('M8 58V20M56 58V20', 'muted', null, 2.4) +
+    `<g class="pz-stand">${P('M8 36q8-16 16 0t16 0t16 0', 'sky', null, 2.2)}</g>` +
+    P(C(8, 36, 1.6) + C(24, 36, 1.6) + C(40, 36, 1.6) + C(56, 36, 1.6), 'sun', 'sun', 1)),
   cavallino: svg(
     P('M4 60h56', 'green', null, 1.6) + P('M26 60h12', 'muted', null, 3) +
     `<g class="pz-pump">${P('M32 58l-6-3 12-3-12-3 12-3-12-3 12-3-6-2', 'sun', null, 1.6)}${P('M18 32q0-6 8-6h12l6-10 6 2-2 8-6 6v4q0 4-6 4H24q-6 0-6-4z', 'orange', 'orange', 1.8)}` +

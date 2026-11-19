@@ -139,7 +139,9 @@ export function runLevel(root, level, nav) {
     for (const k of keys) {
       // labels può cambiare solo il nome del controllo (stringa) o anche min, max, passo e unità (oggetto).
       const ov = (level.labels || {})[k];
-      const def = { ...SimClass.controls[k], ...(typeof ov === 'string' ? { label: ov } : ov || {}) };
+      const def = { ...SimClass.controls[k], ...(typeof ov === 'string' ? { label: ov, labelE: null } : ov || {}) };
+      // per l'Esploratore un controllo può avere un nome e un'unità più semplici: «Scosse al secondo» invece di «Frequenza, Hz»
+      if (lens === 'e') { def.label = def.labelE || def.label; def.unit = def.unitE ?? def.unit; }
       let el, update;
       if (def.type === 'toggle') {
         const b = h('button', { class: 'chip', onclick: () => { sim.set({ [k]: !sim.params[k] }); update(); } });
