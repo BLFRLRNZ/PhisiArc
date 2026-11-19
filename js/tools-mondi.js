@@ -500,4 +500,59 @@ export const MONDI = {
       ok: tr('Giusto: un solo modo su 2 elevato a 10, cioè 1024.'),
     }),
   },
+  // ---------- la Valle delle Onde ----------
+  hooke: {
+    area: 'fisica', offer: true, world: 'valle',
+    title: () => tr('La legge di Hooke: F = k·x'),
+    sub: () => tr('La forza di una molla'),
+    test: (s) => /Hooke|costante elastica|spring constant/i.test(s),
+    body: () => tr('Una molla tirata, o schiacciata, risponde con una forza proporzionale a quanto è deformata: <b>F = k·x</b>. La <b>costante elastica</b> k dice quanto è dura la molla, in N/m: il doppio della forza, il doppio dell’allungamento. Appendi dei pesi a una molla da 20 N/m.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (w) => {
+        const F = (w / 1000) * 9.81, x = (F / 20) * 100, y1 = 34 + x * 2.6, zig = Array.from({ length: 10 }, (_, i) => `${i % 2 ? 62 : 78},${(12 + ((y1 - 14) * (i + 0.5)) / 10).toFixed(1)}`).join(' ');
+        let g = `<line x1="40" y1="8" x2="100" y2="8" class="ground"/><polyline points="70,8 70,12 ${zig} 70,${(y1 - 2).toFixed(1)} 70,${y1.toFixed(1)}" class="edge"/>`;
+        for (let i = 0; i < w / 50; i++) g += `<rect x="58" y="${(y1 + 2 + i * 7).toFixed(1)}" width="24" height="6" class="blk"/>`;
+        g += `<line x1="112" y1="34" x2="112" y2="${34 + 30 * 2.6}" class="ground"/>`;
+        for (const c of [0, 10, 20, 30]) g += `<line x1="112" y1="${34 + c * 2.6}" x2="120" y2="${34 + c * 2.6}" class="ground"/><text x="124" y="${38 + c * 2.6}" class="lb">${c} cm</text>`;
+        g += `<line x1="80" y1="${y1.toFixed(1)}" x2="110" y2="${y1.toFixed(1)}" class="frc"/>`;
+        show.innerHTML = svg(200, 120, g) + `<div class="tool-f">F = <span class="c1">${n(F, 2)} N</span> → x = <span class="c2">${n(x, 1)} cm</span></div>`;
+      };
+      const a = slider(tr('pesi appesi (g)'), 0, 300, 50, 100, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo una bilancia a molla, il dinamometro, si può tarare in newton: l’allungamento cresce in proporzione al peso.'),
+    check: () => ({
+      q: tr('Una molla si allunga di 3 cm con 2 N. Con 6 N si allunga di…'),
+      options: [tr('9 cm'), tr('3 cm'), tr('6 cm')],
+      ok: tr('Giusto: il triplo della forza, il triplo dell’allungamento.'),
+    }),
+  },
+  oscillatore: {
+    area: 'fisica', offer: true, world: 'valle',
+    title: () => tr('Periodo e frequenza: T = 2π·√(m/k)'),
+    sub: () => tr('Il ritmo di una massa su una molla'),
+    test: (s) => /frequenz|hertz|frequency|T ?= ?2π ?· ?√ ?\(m/i.test(s),
+    body: () => tr('Il <b>periodo</b> T è il tempo di un’oscillazione completa, la <b>frequenza</b> f = 1/T il numero di oscillazioni in un secondo, in <b>hertz</b>. Per una massa su una molla <b>T = 2π·√(m/k)</b>, e non dipende da quanto la tiri. Cambia la massa su una molla da 20 N/m.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (m) => {
+        const T = 2 * Math.PI * Math.sqrt(m / 20), X = (t) => 14 + (t / 3) * 180, pts = Array.from({ length: 121 }, (_, i) => { const t = (i / 120) * 3; return `${X(t).toFixed(1)},${(50 - 32 * Math.cos((2 * Math.PI * t) / T)).toFixed(1)}`; }).join(' ');
+        let g = `<line x1="14" y1="50" x2="194" y2="50" class="ground"/><polyline points="${pts}" class="edge"/>`;
+        if (T <= 3) g += `<line x1="${X(0)}" y1="12" x2="${X(0)}" y2="94" class="shy"/><line x1="${X(T).toFixed(1)}" y1="12" x2="${X(T).toFixed(1)}" y2="94" class="shy"/><line x1="${X(0)}" y1="90" x2="${X(T).toFixed(1)}" y2="90" class="mk"/><text x="${((X(0) + X(T)) / 2).toFixed(1)}" y="104" class="lb" text-anchor="middle">T</text>`;
+        g += `<text x="194" y="64" class="lb" text-anchor="end">3 s</text>`;
+        show.innerHTML = svg(200, 108, g) + `<div class="tool-f">T = <span class="c1">${n(T, 2)} s</span>, f = <span class="c2">${n(1 / T, 2)} Hz</span></div>`;
+      };
+      const a = slider(tr('massa (kg)'), 0.1, 2, 0.1, 0.5, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Per questo un’auto carica oscilla più lentamente sulle sue molle, e gli orologi a bilanciere tengono il tempo con una piccola molla.'),
+    check: () => ({
+      q: tr('Una massa su una molla fa 4 oscillazioni al secondo. Quanto vale il periodo?'),
+      options: [tr('0,25 s'), tr('4 s'), tr('0,4 s')],
+      ok: tr('Giusto: T = 1/f = 1/4 di secondo.'),
+    }),
+  },
 };
