@@ -132,6 +132,10 @@ export const PIECE_SVG = {
   luci: svg(
     P('M4 60h56', 'green', null, 1.6) + P('M32 6v52', 'chalk') + P('M8 26L32 8l24 18', 'pink') + P('M8 26q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0', 'pink', null, 1.6) +
     `<g class="pz-meter">${P(C(12, 33, 2.6) + C(22, 33, 2.6) + C(32, 33, 2.6) + C(42, 33, 2.6) + C(52, 33, 2.6), 'sun', 'sun', 1.4)}</g>` + P('M14 58v-8h36v8', 'muted', null, 1.4)),
+  ruota: svg(
+    P('M4 60h56', 'green', null, 1.6) + P('M20 60l12-30 12 30', 'chalk') + P('M26 60h12', 'orange', 'orange', 1.6) +
+    `<g class="pz-wheel">${P(C(32, 28, 20) + 'M32 8v40M12 28h40M18 14l28 28M46 14L18 42', 'pink', null, 1.6)}</g>` +
+    P('M28 6h8v5h-8zM49 24h6v6h-6zM9 24h6v6H9zM28 46h8v5h-8z', 'sun', 'sun', 1.4)),
   tappeto: svg(
     P('M10 40q22 10 44 0', 'sky', null, 3) + P('M12 40l-4 16M52 40l4 16', 'muted', null, 2.6) + P('M4 58h56', 'green', null, 1.6) +
     `<g class="pz-meter">${P(C(32, 14, 3.4), 'sun', null, 2) + P('M32 18v10M26 22l6 3 6-3M28 36l4-8 4 8', 'sun', null, 2)}</g>`),

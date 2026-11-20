@@ -37,8 +37,9 @@ import { Colors } from './colors.js';
 import { LightWave } from './lightwave.js';
 import { Charges } from './charges.js';
 import { Circuit } from './circuit.js';
+import { Magnets } from './magnets.js';
 
-export const SIMS = { pendulum: Pendulum, scale: Scale, race: Race, fall: Fall, cannon: Cannon, lab: Lab, river: River, circle: Circle, cart: Cart, ramp: Ramp, coaster: Coaster, collide: Collide, lever: Lever, tilt: Tilt, orbit: Orbit, weigh: Weigh, kepler: Kepler, solar: Solar, press: Press, hydro: Hydro, float: Float, flow: Flow, heat: Heat, conduct: Conduct, phase: Phase, gas: Gas, engine: Engine, spring: Spring, wave: Wave, sound: Sound, resonance: Resonance, doppler: Doppler, rays: Rays, lens: Lens, colors: Colors, luce: LightWave, cariche: Charges, circuito: Circuit };
+export const SIMS = { pendulum: Pendulum, scale: Scale, race: Race, fall: Fall, cannon: Cannon, lab: Lab, river: River, circle: Circle, cart: Cart, ramp: Ramp, coaster: Coaster, collide: Collide, lever: Lever, tilt: Tilt, orbit: Orbit, weigh: Weigh, kepler: Kepler, solar: Solar, press: Press, hydro: Hydro, float: Float, flow: Flow, heat: Heat, conduct: Conduct, phase: Phase, gas: Gas, engine: Engine, spring: Spring, wave: Wave, sound: Sound, resonance: Resonance, doppler: Doppler, rays: Rays, lens: Lens, colors: Colors, luce: LightWave, cariche: Charges, circuito: Circuit, magneti: Magnets };
 
 // in inglese: etichette dei controlli e nomi degli oggetti disegnati
 // (controllo per controllo, così il nome di un controllo, per esempio k, non conta mai)

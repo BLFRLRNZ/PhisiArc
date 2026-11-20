@@ -1064,4 +1064,65 @@ export const MONDI = {
       ok: tr('Giusto: I = P/V = 2300/230 = 10 A.'),
     }),
   },
+  elettrocalamita: {
+    area: 'fisica', offer: true, world: 'centrale',
+    title: () => tr('L’elettrocalamita'),
+    sub: () => tr('Più spire e più corrente, più forza'),
+    test: (s) => /elettrocalamit|electromagnets?\b|N ?· ?I\b/i.test(s),
+    body: () => tr('Un filo con la corrente crea intorno a sé un <b>campo magnetico</b>. Avvolto in tante <b>spire</b> intorno a un chiodo di ferro diventa un’<b>elettrocalamita</b>: il campo cresce con il numero di spire N e con la corrente I, cioè con il prodotto <b>N·I</b>. Raddoppi le spire, o la corrente, e il campo raddoppia; spegni la corrente e sparisce. Muovi le spire e la corrente.'),
+    widget() {
+      let N = 20, I = 2;
+      const show = h('div', { class: 'tool-show' });
+      const draw = () => {
+        const k = Math.min(15, Math.round((N * I) / 10)), turns = N / 5, on = I > 0;
+        // il chiodo, le spire avvolte intorno e le graffette appese sotto
+        let g = `<rect x="30" y="12" width="140" height="10" rx="3" class="tri"/>`;
+        for (let i = 0; i < turns; i++) { const x = 46 + (i * 108) / (turns - 1); g += `<line x1="${x - 3}" y1="7" x2="${x + 3}" y2="27" class="${on ? 'frc' : 'tri'}"/>`; }
+        for (let i = 0; i < k; i++) g += `<rect x="${37 + (i % 8) * 16.5}" y="${34 + Math.floor(i / 8) * 18}" width="9" height="14" rx="4" class="sqb"/>`;
+        g += `<text x="100" y="80" class="lb" text-anchor="middle">${k === 1 ? tr('1 graffetta sollevata') : tr('{n} graffette sollevate', { n: k })}</text>`;
+        show.innerHTML = svg(200, 86, g) + `<div class="tool-f">N · I = <span class="c1">${N}</span> × <span class="c2">${n(I)} A</span> = <span class="c3">${n(N * I)}</span></div>`;
+      };
+      const a = slider(tr('spire N'), 10, 50, 10, N, (x) => { N = x; draw(); });
+      const b = slider(tr('corrente I (ampere)'), 0, 3, 1, I, (x) => { I = x; draw(); });
+      a.set(); b.set();
+      return h('div', {}, show, a.el, b.el);
+    },
+    tip: () => tr('Le gru dei rottamatori usano elettrocalamite enormi: quando spengono la corrente, il ferro cade proprio dove vogliono.'),
+    check: () => ({
+      q: tr('Un’elettrocalamita con 20 spire e 2 A solleva 4 graffette. Quante ne solleva con 40 spire e 2 A?'),
+      options: [tr('8 graffette'), tr('4 graffette'), tr('2 graffette')],
+      ok: tr('Giusto: il doppio delle spire, il doppio del campo: 8 graffette.'),
+    }),
+  },
+  forzafilo: {
+    area: 'fisica', offer: true, world: 'centrale',
+    title: () => tr('La forza su un filo: F = B·I·L'),
+    sub: () => tr('Come la calamita spinge una corrente'),
+    test: (s) => /B ?· ?I ?· ?L|forza su un filo|force on a wire/i.test(s),
+    body: () => tr('Un filo lungo L, con una corrente I, in un campo magnetico B, sente una forza <b>F = B·I·L</b>, in newton: il campo in tesla, la corrente in ampere, la lunghezza in metri. La forza è di traverso, perpendicolare al filo e al campo, e cambia verso se inverti la corrente. È la forza che fa girare i motori elettrici. Muovi il campo e la corrente, con un filo lungo 0,5 m.'),
+    widget() {
+      let B = 0.6, I = 6;
+      const show = h('div', { class: 'tool-show' });
+      const draw = () => {
+        const F = B * I * 0.5, len = Math.min(78, F * 14.4 + 6);
+        // il campo entra nel foglio (le crocette, più fitte se è più forte); la corrente va a destra; la forza spinge in su
+        let g = '';
+        for (let r = 0; r < 3; r++) for (let c = 0; c < 6; c++) { const x = 22 + c * 31, y = 24 + r * 26; if (Math.abs(x - 100) > 12) g += `<text x="${x}" y="${y}" class="lb" text-anchor="middle" opacity="${(0.25 + 0.75 * B).toFixed(2)}">×</text>`; }
+        g += `<text x="190" y="12" class="lb" text-anchor="end">B</text>`;
+        g += `<line x1="20" y1="88" x2="172" y2="88" class="arrow"/><polyline points="164,82 172,88 164,94" class="frc"/><text x="182" y="92" class="lb">I</text>`;
+        if (F > 0) g += `<polyline points="100,88 100,${88 - len}" class="frc"/><polyline points="93,${95 - len} 100,${88 - len} 107,${95 - len}" class="frc"/><text x="110" y="${98 - len}" class="lb">F</text>`;
+        show.innerHTML = svg(200, 100, g) + `<div class="tool-f">F = <span class="c1">${n(B, 1)}</span> × <span class="c2">${n(I)}</span> × ${n(0.5, 1)} = <span class="c3">${n(F, 2)} N</span></div>`;
+      };
+      const a = slider(tr('campo B (tesla)'), 0.1, 1, 0.1, B, (x) => { B = x; draw(); });
+      const b = slider(tr('corrente I (ampere)'), 0, 10, 1, I, (x) => { I = x; draw(); });
+      a.set(); b.set();
+      return h('div', {}, show, a.el, b.el);
+    },
+    tip: () => tr('In un motore la bobina ha tante spire, e su ognuna agisce la stessa forza: si sommano tutte, e il motore gira con più forza.'),
+    check: () => ({
+      q: tr('Un filo lungo 0,2 m, con 5 A, sta in un campo di 0,5 T. Quanto vale la forza?'),
+      options: [tr('0,5 N'), tr('50 N'), tr('2 N')],
+      ok: tr('Giusto: F = 0,5 × 5 × 0,2 = 0,5 N.'),
+    }),
+  },
 };

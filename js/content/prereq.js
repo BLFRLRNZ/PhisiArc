@@ -200,6 +200,13 @@ export const IDEE = {
   'formula di Ohm': { parole: 'I ?= ?V ?/ ?R|V ?= ?R ?· ?I', da: 'e02-2', mai: ['e'] },
   'serie e parallelo': { parole: 'in serie|in parallelo', da: 'e02-3' },
   'cortocircuito': { parole: 'cortocircuit', da: 'e02-5' },
+  'poli magnetici': { parole: 'polo nord|polo sud|poli (uguali|opposti)', da: 'e03-2' },
+  'campo magnetico': { parole: 'campo magnetic', da: 'e03-3' },
+  'bussola': { parole: 'bussol', da: 'e03-3' },
+  'tesla (unità)': { parole: '\\btesla\\b', da: 'e03-3', mai: ['e'] },
+  'esperimento di Ørsted': { parole: 'ørsted|oersted', da: 'e03-4' },
+  'elettrocalamita': { parole: 'elettrocalamit', da: 'e03-4' },
+  'forza su un filo (F = B·I·L)': { parole: 'B ?· ?I ?· ?L', da: 'e03-5', mai: ['e'] },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 
