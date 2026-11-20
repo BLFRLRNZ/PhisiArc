@@ -1125,4 +1125,57 @@ export const MONDI = {
       ok: tr('Giusto: F = 0,5 × 5 × 0,2 = 0,5 N.'),
     }),
   },
+  faraday: {
+    area: 'fisica', offer: true, world: 'centrale',
+    title: () => tr('La legge di Faraday: V = N·ΔΦ/Δt'),
+    sub: () => tr('La tensione indotta da un campo che cambia'),
+    test: (s) => /ΔΦ|legge di faraday|faraday[’']s law/i.test(s),
+    body: () => tr('Quando il campo magnetico dentro una bobina cambia, nasce una <b>tensione indotta</b>. È tanto più grande quanto più cambia il <b>flusso</b> Φ, cioè il campo per l’area della spira, in weber; quanto più in fretta cambia; e quante più <b>spire</b> N ha la bobina: <b>V = N·ΔΦ/Δt</b>. Qui il flusso cambia di 0,001 Wb: muovi le spire e il tempo.'),
+    widget() {
+      let N = 200, dt = 0.5;
+      const show = h('div', { class: 'tool-show' });
+      const draw = () => {
+        const V = (N * 0.001) / dt;
+        let g = `<text x="8" y="22" class="lb">${tr('tensione indotta')}</text><rect x="8" y="30" width="${Math.max(2, (V / 4) * 184)}" height="14" rx="2" class="sqb"/>`;
+        g += `<line x1="8" y1="58" x2="192" y2="58" class="mk"/>`;
+        for (let a = 0; a <= 4; a++) g += `<text x="${8 + a * 46}" y="72" class="lb" text-anchor="middle">${a} V</text>`;
+        show.innerHTML = svg(200, 80, g) + `<div class="tool-f">V = <span class="c1">${N}</span> × ${n(0.001, 3)} / <span class="c2">${n(dt, 1)}</span> = <span class="c3">${n(V, 2)} V</span></div>`;
+      };
+      const a = slider(tr('spire N'), 100, 400, 100, N, (x) => { N = x; draw(); });
+      const b = slider(tr('tempo Δt (secondi)'), 0.1, 1, 0.1, dt, (x) => { dt = x; draw(); });
+      a.set(); b.set();
+      return h('div', {}, show, a.el, b.el);
+    },
+    tip: () => tr('Per questo la dinamo di una bici fa più luce quando vai veloce: la calamita gira più in fretta, e il campo cambia in meno tempo.'),
+    check: () => ({
+      q: tr('Una bobina ha 100 spire, e il flusso cambia di 0,002 Wb in 0,1 s. Quanto vale la tensione indotta?'),
+      options: [tr('2 V'), tr('0,02 V'), tr('20 V')],
+      ok: tr('Giusto: V = 100 × 0,002 / 0,1 = 2 V.'),
+    }),
+  },
+  trasformatore: {
+    area: 'fisica', offer: true, world: 'centrale',
+    title: () => tr('Il trasformatore: V₂ = V₁·N₂/N₁'),
+    sub: () => tr('Alzare e abbassare la tensione'),
+    test: (s) => /trasformator|transformer|N₂ ?\/ ?N₁/i.test(s),
+    body: () => tr('Due bobine sullo stesso nucleo di ferro. La corrente alternata nella prima fa un campo che cambia di continuo, e il campo induce una tensione nella seconda. Le tensioni stanno come le spire: <b>V₂ = V₁·N₂/N₁</b>. Meno spire nella seconda bobina abbassano la tensione, più spire la alzano. Qui la prima ha 1000 spire, collegate ai 230 V della presa: muovi le spire della seconda.'),
+    widget() {
+      const show = h('div', { class: 'tool-show' });
+      const draw = (N2) => {
+        const r = N2 / 1000, V2 = 230 * r;
+        let g = `<text x="8" y="16" class="lb">V₁</text><rect x="26" y="6" width="${(230 / 460) * 166}" height="13" rx="2" class="sqc"/>`;
+        g += `<text x="8" y="40" class="lb">V₂</text><rect x="26" y="30" width="${Math.max(2, (V2 / 460) * 166)}" height="13" rx="2" class="sqb"/>`;
+        show.innerHTML = svg(200, 50, g) + `<div class="tool-f">N₂ / N₁ = <span class="c1">${n(r, 2)}</span></div><div class="tool-f">V₂ = 230 V × ${n(r, 2)} = <span class="c3">${n(V2, 1)} V</span></div>`;
+      };
+      const a = slider(tr('spire della seconda bobina'), 50, 2000, 50, 500, draw);
+      a.set();
+      return h('div', {}, show, a.el);
+    },
+    tip: () => tr('Le linee dell’alta tensione viaggiano a centinaia di migliaia di volt: con meno corrente i fili scaldano meno, e si spreca meno energia.'),
+    check: () => ({
+      q: tr('Un trasformatore ha 200 spire nella prima bobina e 20 nella seconda. Con 230 V nella prima, quanti volt dà la seconda?'),
+      options: [tr('23 V'), tr('2300 V'), tr('230 V')],
+      ok: tr('Giusto: V₂ = 230 × 20 / 200 = 23 V.'),
+    }),
+  },
 };

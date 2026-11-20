@@ -207,6 +207,18 @@ export const IDEE = {
   'esperimento di Ørsted': { parole: 'ørsted|oersted', da: 'e03-4' },
   'elettrocalamita': { parole: 'elettrocalamit', da: 'e03-4' },
   'forza su un filo (F = B·I·L)': { parole: 'B ?· ?I ?· ?L', da: 'e03-5', mai: ['e'] },
+  'induzione elettromagnetica': { parole: 'induzion|indott', da: 'e04-1' },
+  'galvanometro': { parole: 'galvanometr', da: 'e04-1', mai: ['e'] },
+  'legge di Faraday (formula)': { parole: 'ΔΦ', da: 'e04-2', mai: ['e'] },
+  'flusso magnetico': { parole: 'flusso magnetic|weber', da: 'e04-2', mai: ['e'] },
+  'dinamo': { parole: '\\bdinamo\\b', da: 'e04-2' },
+  'legge di Lenz': { parole: '\\blenz\\b', da: 'e04-3' },
+  'freno magnetico': { parole: 'fren[oi] magnetic', da: 'e04-3' },
+  'generatore': { parole: 'generator', da: 'e04-4' },
+  'corrente alternata': { parole: 'alternat|corrente continua', da: 'e04-4' },
+  'trasformatore': { parole: 'trasformator', da: 'e04-5' },
+  'formula del trasformatore': { parole: 'N₂ ?/ ?N₁', da: 'e04-5', mai: ['e'] },
+  'alta tensione': { parole: 'alta tensione', da: 'e04-5' },
   'simboli delle formule': { parole: '[√π½]|[a-zA-Zθ][²ₓᵧ]|v₀', da: 'f01-3', mai: ['e'] },
 };
 

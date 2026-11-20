@@ -132,6 +132,9 @@ export const PIECE_SVG = {
   luci: svg(
     P('M4 60h56', 'green', null, 1.6) + P('M32 6v52', 'chalk') + P('M8 26L32 8l24 18', 'pink') + P('M8 26q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0q4 5 8 0', 'pink', null, 1.6) +
     `<g class="pz-meter">${P(C(12, 33, 2.6) + C(22, 33, 2.6) + C(32, 33, 2.6) + C(42, 33, 2.6) + C(52, 33, 2.6), 'sun', 'sun', 1.4)}</g>` + P('M14 58v-8h36v8', 'muted', null, 1.4)),
+  macchinine: svg(
+    P('M14 22h36a12 12 0 0 1 0 24H14a12 12 0 0 1 0-24z', 'muted', null, 5) + P('M14 22h36a12 12 0 0 1 0 24H14a12 12 0 0 1 0-24z', 'chalk', null, 0.8) +
+    `<g class="pz-wheel">${P('M30 42h9v6h-9zM44 16h9v6h-9z', 'coral', 'coral', 1.4)}</g>` + P('M8 8h10v8H8zM13 16v6', 'mint', null, 1.4)),
   ruota: svg(
     P('M4 60h56', 'green', null, 1.6) + P('M20 60l12-30 12 30', 'chalk') + P('M26 60h12', 'orange', 'orange', 1.6) +
     `<g class="pz-wheel">${P(C(32, 28, 20) + 'M32 8v40M12 28h40M18 14l28 28M46 14L18 42', 'pink', null, 1.6)}</g>` +
