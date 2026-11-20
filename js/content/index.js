@@ -38,6 +38,7 @@ import OT04 from './ot04.js';
 import E01 from './e01.js';
 import E02 from './e02.js';
 import E03 from './e03.js';
+import E04 from './e04.js';
 
 export const KIND = {
   lezione: { ic: IC.lezione, name: 'Lezione' },
@@ -53,7 +54,7 @@ export const LENSES = {
   c: { name: 'Curioso', age: 'adulti', char: 'lampo', desc: 'Le idee della fisica e dove le incontri ogni giorno, con le formule solo se le vuoi.' },
 };
 
-export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01, T02, T03, T04, O01, O02, O03, O04, OT01, OT02, OT03, OT04, E01, E02, E03 };
+export const ZONES = { F01, F02, F03, M01, M02, M03, M04, M05, D01, D02, D03, D04, D05, G01, G02, G03, FL01, FL02, FL03, T01, T02, T03, T04, O01, O02, O03, O04, OT01, OT02, OT03, OT04, E01, E02, E03, E04 };
 // in inglese le frasi si traducono prima di compilare; poi i passi scritti solo a testo diventano giocabili
 for (const z of Object.values(ZONES)) compileZone(translateTree(z));
 
@@ -145,8 +146,8 @@ export const WORLDS = [
     id: 'centrale', n: 9, diff: 4, name: 'La Centrale', field: 'Elettromagnetismo', place: 'Cariche, circuiti e magneti', color: 'var(--sun)', mascot: 'lampo',
     // In costruzione (building): le zone si aggiungono una alla volta. Finché il mondo non è completo non conta come finito
     // (niente grado di Faraday, niente prova d'ingresso), ma le zone pronte si giocano già.
-    zones: ['E01', 'E02', 'E03'], building: true,
-    soon: ['E04 Induzione e generatori', 'E05 Onde elettromagnetiche'], requires: ['prisma'],
+    zones: ['E01', 'E02', 'E03', 'E04'], building: true,
+    soon: ['E05 Onde elettromagnetiche'], requires: ['prisma'],
     intro: {
       e: 'Ciao, sono Lampo, una lampadina sempre accesa! Nella Centrale scopriremo le cariche elettriche, la corrente che accende le lampadine, le calamite e come si produce l’elettricità.',
       s: 'Sono Lampo, benvenuto nella Centrale. Nel Prisma hai visto la luce; qui scopri le cariche e i loro campi, i circuiti, i magneti, l’induzione e, alla fine, le onde elettromagnetiche: la luce stessa. È l’elettromagnetismo.',
